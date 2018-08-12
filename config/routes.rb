@@ -1,3 +1,8 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root to: "nouns#index"
+  resources :nouns, only: [:index, :show]
+
+  namespace :api do
+    resources :nouns, only: [:index, :show, :create, :update, :destroy]
+  end
 end

@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FlashCards</title>
+    <title>Flash Cards</title>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
-
   <body>
-    <%= yield %>
+    <% if controller_name == "sessions" %>
+      <body>
+        <%= yield %>
+      </body>
+    <% else %>
+      <body>
+        <div id="admin-framework">
+          <div id="admin-row" class="row">
+            <div id="admin-sidebar" class="col-xs-2 match-height-layout">
+              <div id="admin-sidebar-body">
+                <ul>
+                  <li><a href="/nouns">Nouns</a></li>
+                  <li><a href="/verbs">Verbs</a></li>
+                  <li><a href="/adjectives">Adjectives</a></li>
+                </ul>
+              </div>
+            </div>
+            <div id="admin-right-column" class="col-xs-10 match-height-layout">
+              <div id="admin-right-column-content">
+                <%= yield %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    <% end %>
   </body>
 </html>

@@ -1,0 +1,50 @@
+$button-color: #01647C;
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #F5F6F7;
+  height: 100%;
+}
+
+#admin-framework {
+  height: 100%;
+
+  #admin-row {
+    margin: 0;
+    height: 100%;
+
+    #admin-sidebar {
+      background-color: white;
+      padding: 0;
+      height: 100%;
+
+      #admin-sidebar-body {
+        padding: 36px 32px;
+        font-family: 'TeachableSans-SemiBold';
+        font-size: 13px;
+        color: #B0B0B0;
+
+        li {
+          &:not(:last-of-type) { padding-bottom: 30px; }
+
+          .highlight {
+            color: $button-color;
+            cursor: default;
+            font-family: 'TeachableSans-ExtraBold';
+          }
+        }
+      }
+    }
+
+    #admin-right-column {
+      padding: 0;
+
+      #admin-right-column-content {
+        padding: 40px;
+      }
+    }
+  }
+}

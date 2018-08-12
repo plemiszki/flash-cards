@@ -1,0 +1,112 @@
+.btn {
+  // I want .btn.disabled to work (not fire click handlers) but don't want the styles that come with .btn
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  white-space: normal;
+}
+
+.yes-field-error {
+  margin-top: 10px;
+  color: red;
+  height: 10px;
+  margin-bottom: 40px;
+}
+
+.no-field-error {
+  margin-bottom: 30px;
+}
+
+.component {
+  margin-bottom: 62px;
+
+  h1 {
+    margin-top: 10px;
+    display: inline-block;
+    font-size: 20px;
+    color: #2C2F33;
+    letter-spacing: 1.08px;
+    margin-bottom: 28px;
+  }
+}
+
+.white-box {
+  background: #FFFFFF;
+  padding: 36px 32px;
+  border-radius: 6px;
+  box-shadow: 1px 2px 3px 0px #E6E9EC;
+  position: relative;
+  color: #5F5F5F;
+
+  h2 {
+    font-family: 'TeachableSans-Medium';
+    font-size: 12px;
+    color: #2C2F33;
+    margin-bottom: 15px;
+  }
+
+  input, textarea {
+    border: 1px solid #E4E9ED;
+    border-radius: 3px;
+    color: #5F5F5F;
+    letter-spacing: inherit;
+    padding: 13px;
+
+    &.error {
+      border: 1px solid red;
+
+      &:hover {
+        border: 1px solid red;
+      }
+    }
+  }
+
+  input, .nice-select {
+    width: 100%;
+  }
+
+  textarea {
+    resize: none;
+    width: 100%;
+  }
+}
+
+@mixin button {
+  display: inline-block;
+  font-family: 'TeachableSans-Bold';
+  padding: 15px 40px;
+  text-align: center;
+  font-size: 12px;
+  border-radius: 100px;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+  }
+
+  &.standard-width {
+    min-width: 150px;
+  }
+}
+
+.delete-button {
+  @include button;
+  float: right;
+  color: #E9563D;
+  border: solid 0.5px #E9563D;
+
+  &:hover {
+    color: #E9563D;
+  }
+}
+
+.orange-button {
+  @include button;
+  background-color: #FF7F45;
+
+  &:hover {
+    background-color: #FF6D2C;
+  }
+}
