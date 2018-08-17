@@ -46,7 +46,6 @@ export default class NounDetails extends Component {
   }
 
   render() {
-    console.log(Images);
     return (
       <div id="noun-details" className="component details-component">
         <h1>Noun Details</h1>

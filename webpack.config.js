@@ -1,26 +1,26 @@
 module.exports = {
+  mode: 'development',
   context: __dirname,
   entry: './redux/entry.jsx',
   output: {
-    path: './app/assets/javascripts',
+    path: __dirname + '/app/assets/javascripts/me',
     filename: 'bundle.js',
-    // devtoolModuleFilenameTemplate: '[resourcePath]',
-    // devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
+    devtoolModuleFilenameTemplate: '[resourcePath]',
+    devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          presets: ['react', 'es2015-without-strict']
-        }
+        use: [
+          { loader: 'babel-loader' }
+        ]
       }
     ]
   },
-  // devtool: 'source-maps',
+  devtool: 'source-maps',
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   }
 };
