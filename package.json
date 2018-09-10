@@ -19,6 +19,9 @@
     "handy-tools": "1.0.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-redux": "5.0.7",
+    "redux": "4.0.0",
+    "redux-thunk": "^2.3.0",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0"
   }

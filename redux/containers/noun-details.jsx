@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchNoun } from '../actions/index';
 import HandyTools from 'handy-tools';
 
-export default class NounDetails extends Component {
+class NounDetails extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      fetching: true,
-      noun: {
-        english: '',
-        englishPlural: '',
-        foreign: '',
-        foreignPlural: '',
-        gender: ''
-      },
-      nounSaved: {
-        english: '',
-        englishPlural: '',
-        foreign: '',
-        foreignPlural: '',
-        gender: ''
-      },
-      errors: []
+      fetching: this.props.fetching,
+      noun: this.props.noun,
+      nounSaved: this.props.nounSaved,
+      errors: this.props.errors
     };
+  }
+
+  componentDidMount() {
+    console.log('comp did mount');
+    this.props.fetchNoun(2);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('will receive props');
+    console.log(nextProps);
   }
 
   changeFieldArgs() {
@@ -46,6 +47,9 @@ export default class NounDetails extends Component {
   }
 
   render() {
+    console.log('render noun details');
+    console.log('state: ', this.state);
+    console.log('props: ', this.props);
     return (
       <div id="noun-details" className="component details-component">
         <h1>Noun Details</h1>
@@ -63,7 +67,7 @@ export default class NounDetails extends Component {
             <a className={ "btn orange-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               Save
             </a>
-            <a className={ "btn delete-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
@@ -72,3 +76,18 @@ export default class NounDetails extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ nouns }) => {
+  console.log('map state to props');
+  return {
+    fetching: false,
+    noun: nouns.noun,
+    errors: nouns.errors
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ fetchNoun }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NounDetails);
