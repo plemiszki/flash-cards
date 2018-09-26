@@ -1,7 +1,7 @@
 module.exports = {
   mode: 'development',
   context: __dirname,
-  entry: './redux/entry.jsx',
+  entry: './frontend/entry.jsx',
   output: {
     path: __dirname + '/app/assets/javascripts/me',
     filename: 'bundle.js',

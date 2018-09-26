@@ -6,5 +6,5 @@ json.noun do
   json.foreignPlural @noun.foreign_plural
   json.transliterated @noun.transliterated
   json.transliteratedPlural @noun.transliterated_plural
-  json.gender @noun.gender
+  json.gender @noun.gender.to_s
 end

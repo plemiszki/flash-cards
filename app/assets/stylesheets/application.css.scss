@@ -17,9 +17,11 @@
 
  @import 'bootstrap-sprockets';
  @import 'bootstrap';
- // @import 'library/nice-select';
+ @import 'library/nice-select';
 
  @import 'handy-tools/styles/reset';
  @import 'handy-tools/styles/fonts';
  @import 'handy-tools/styles/general';
- @import 'handy-tools/styles/layout';
+ @import 'handy-tools/styles/admin-layout';
+ @import 'handy-tools/styles/admin-table';
+ @import 'handy-tools/styles/sign-in';
