@@ -14,6 +14,12 @@ class Api::NounsController < AdminController
     end
   end
 
+  def destroy
+    noun = Noun.find(params[:id])
+    noun.destroy
+    render json: noun
+  end
+
   private
 
   def noun_params

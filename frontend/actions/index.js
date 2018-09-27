@@ -1,5 +1,18 @@
 import HandyTools from 'handy-tools';
 
+export function standardDelete(directory, id) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'DELETE',
+      url: `/api/nouns/${id}`
+    }).then(
+      () => {
+        window.location.pathname = `/${directory}`;
+      }
+    );
+  }
+}
+
 export function fetchNoun(id) {
   return (dispatch) => {
     return $.ajax({

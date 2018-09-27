@@ -9,8 +9,6 @@ export default function(state = {}, action) {
       noun: action.noun
     });
   case 'ERRORS':
-    console.log('state in errors case');
-    console.log(state);
     return Object.assign({}, state, {
       errors: action.errors.responseJSON
     });

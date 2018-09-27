@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchNoun, updateNoun } from '../actions/index';
+import { fetchNoun, updateNoun, standardDelete } from '../actions/index';
 import HandyTools from 'handy-tools';
-import _details from './_details.jsx';
+import Details from './modules/details.js';
 
-class NounDetails extends _details {
+class NounDetails extends React.Component {
   constructor(props) {
     super(props);
 
@@ -72,10 +72,6 @@ class NounDetails extends _details {
     });
   }
 
-  clickDelete() {
-    console.log('delete!');
-  }
-
   render() {
     return (
       <div id="noun-details" className="component details-component">
@@ -129,9 +125,9 @@ class NounDetails extends _details {
           </div>
           <div>
             <a className={ "btn orange-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { this.saveButtonText() }
+              { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
@@ -142,8 +138,6 @@ class NounDetails extends _details {
 }
 
 const mapStateToProps = (reducers) => {
-  console.log('map state to props');
-  console.log(reducers);
   return {
     fetching: reducers.nounsReducer.fetching,
     noun: reducers.nounsReducer.noun,
@@ -152,7 +146,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchNoun, updateNoun }, dispatch);
+  return bindActionCreators({ fetchNoun, updateNoun, standardDelete }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NounDetails);
