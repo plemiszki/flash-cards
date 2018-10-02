@@ -1,5 +1,10 @@
 class Api::NounsController < AdminController
 
+  def index
+    @nouns = Noun.all
+    render 'index.json.jbuilder'
+  end
+
   def show
     @noun = Noun.find(params[:id])
     render 'show.json.jbuilder'

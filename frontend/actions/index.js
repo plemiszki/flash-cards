@@ -13,6 +13,20 @@ export function standardDelete(directory, id) {
   }
 }
 
+export function standardFetchIndex(directory) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'GET',
+      url: `/api/${directory}`
+    }).then(
+      (response) => dispatch({
+        type: 'STANDARD_FETCH_INDEX',
+        entities: response.entities
+      })
+    );
+  }
+}
+
 export function fetchNoun(id) {
   return (dispatch) => {
     return $.ajax({
