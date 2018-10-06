@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { standardFetchIndex } from '../actions/index';
 import HandyTools from 'handy-tools';
+import _ from 'lodash';
 import Index from './modules/index.js';
 
 const directory = window.location.pathname.split('/')[1] || 'nouns';
@@ -60,7 +61,7 @@ class StandardIndex extends React.Component {
                   );
                 })}
               </tr>
-              { filteredEntities.map((entity, index) => {
+              { _.sortBy(filteredEntities, [HandyTools.commonSort.bind(this)]).map((entity, index) => {
                 return(
                   <tr key={ index }>
                     { this.props.columns.map((column, index) => {
