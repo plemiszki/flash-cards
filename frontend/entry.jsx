@@ -22,7 +22,7 @@ $(document).ready(function() {
   if (document.querySelector('#nouns-index')) {
     ReactDOM.render(
       <Provider store={ store }>
-        <StandardIndex entityNamePlural='Nouns' columns={ ['foreign', 'transliterated', 'english'] } />
+        <StandardIndex entityName='Noun' entityNamePlural='Nouns' columns={ ['foreign', 'transliterated', 'english'] } />
       </Provider>,
       document.querySelector('#nouns-index')
     );

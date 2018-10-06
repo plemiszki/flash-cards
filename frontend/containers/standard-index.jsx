@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { standardFetchIndex } from '../actions/index';
 import HandyTools from 'handy-tools';
+import Index from './modules/index.js';
 
-const directory = window.location.pathname.split('/')[1];
+const directory = window.location.pathname.split('/')[1] || 'nouns';
 
 class StandardIndex extends React.Component {
   constructor(props) {
@@ -12,7 +13,9 @@ class StandardIndex extends React.Component {
 
     this.state = {
       fetching: true,
-      entities: []
+      entities: [],
+      searchProperty: this.props.columns[0],
+      searchText: ''
     };
   }
 
@@ -26,19 +29,24 @@ class StandardIndex extends React.Component {
   }
 
   render() {
+    let filteredEntities = HandyTools.filterSearchText(this.state.entities, this.state.searchText, this.state.searchProperty);
     return(
       <div className="component">
         <h1>{ this.props.entityNamePlural }</h1>
+        <a className={ "blue-button btn float-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { this.props.entityName }</a>
+        <input className="search-box margin" onChange={ HandyTools.changeStateToTarget.bind(this, 'searchText') } value={ this.state.searchText } />
         <div className="white-box">
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
-          <table className="admin-table">
+          <table className="admin-table sortable blue-headers">
             <thead>
               <tr>
                 { this.props.columns.map((column, index) => {
                   return(
                     <th key={ index }>
-                      { HandyTools.capitalize(column) }
+                      <div className={ HandyTools.sortClass.bind(this)(column) } onClick={ HandyTools.changeState.bind(this, 'searchProperty', column) }>
+                        { HandyTools.capitalize(column) }
+                      </div>
                     </th>
                   );
                 })}
@@ -52,7 +60,7 @@ class StandardIndex extends React.Component {
                   );
                 })}
               </tr>
-              { this.state.entities.map((entity, index) => {
+              { filteredEntities.map((entity, index) => {
                 return(
                   <tr key={ index }>
                     { this.props.columns.map((column, index) => {
