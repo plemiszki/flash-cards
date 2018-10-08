@@ -16,6 +16,7 @@
         <div id="admin-framework">
           <div id="admin-row" class="row">
             <div id="admin-sidebar" class="col-xs-2 match-height-layout">
+              <%= button_to "Sign out", sign_out_path, { method: :delete, class: "sidebar-button" } %>
               <div id="admin-sidebar-body">
                 <ul>
                   <li><a href="/nouns">Nouns</a></li>
