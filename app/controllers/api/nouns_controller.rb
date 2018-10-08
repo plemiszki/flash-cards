@@ -5,6 +5,16 @@ class Api::NounsController < AdminController
     render 'index.json.jbuilder'
   end
 
+  def create
+    @noun = Noun.new(noun_params)
+    if @noun.save
+      @nouns = Noun.all
+      render 'index.json.jbuilder'
+    else
+      render json: @noun.errors.full_messages, status: 422
+    end
+  end
+
   def show
     @noun = Noun.find(params[:id])
     render 'show.json.jbuilder'

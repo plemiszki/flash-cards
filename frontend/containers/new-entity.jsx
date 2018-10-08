@@ -1,40 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchNoun, updateNoun, standardDelete } from '../actions/index';
+import { standardCreate } from '../actions/index';
+import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
-import Details from './modules/details.js';
 
-class NounDetails extends React.Component {
+class NewEntity extends React.Component {
   constructor(props) {
     super(props);
 
-    let emptyNoun = {
-      english: '',
-      englishSaved: '',
-      foreign: '',
-      foreignSaved: '',
-      transliterated: '',
-      transliteratedSaved: ''
-    };
-
     this.state = {
-      fetching: true,
-      noun: emptyNoun,
-      nounSaved: emptyNoun,
+      fetching: false,
+      [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity),
       errors: []
     };
   }
 
   componentDidMount() {
-    this.props.fetchNoun(window.location.pathname.split("/")[2]).then(() => {
+    HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+  }
+
+  clickAdd(e) {
+    e.preventDefault();
+    this.setState({
+      fetching: true
+    });
+    this.props.standardCreate({
+      directory: this.props.entityNamePlural,
+      entityName: this.props.entityName,
+      entity: this.state[this.props.entityName]
+    }).then(() => {
       this.setState({
         fetching: false,
-        noun: this.props.noun,
-        nounSaved: HandyTools.deepCopy(this.props.noun),
-        changesToSave: false
-      }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+        [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity)
+      });
+      this.props.updateIndex(this.props.entities);
+    }, () => {
+      this.setState({
+        fetching: false,
+        errors: this.props.errors
       });
     });
   }
@@ -42,50 +46,34 @@ class NounDetails extends React.Component {
   changeFieldArgs() {
     return {
       allErrors: Errors,
-      errorsArray: this.state.errors,
-      changesFunction: this.checkForChanges.bind(this)
+      errorsArray: this.state.errors
     }
   }
 
-  checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.noun, this.state.nounSaved);
-  }
-
-  clickSave() {
-    this.setState({
-      fetching: true,
-      justSaved: true
-    }, function() {
-      this.props.updateNoun(window.location.pathname.split("/")[2], this.state.noun).then(() => {
-        this.setState({
-          fetching: false,
-          noun: this.props.noun,
-          nounSaved: HandyTools.deepCopy(this.props.noun),
-          changesToSave: false
-        });
-      }, () => {
-        this.setState({
-          fetching: false,
-          errors: this.props.errors
-        });
-      });
-    });
-  }
-
   render() {
-    return (
-      <div id="noun-details" className="component details-component">
-        <h1>Noun Details</h1>
-        <div className="white-box">
+    return(
+      <div className="component admin-modal">
+        <form className="white-box">
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
-          <div className="row">
-            <div className="col-xs-4">
+          { this.renderFields() }
+          <input type="submit" className={ "blue-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } value={ `Add ${HandyTools.capitalize(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
+        </form>
+      </div>
+    );
+  }
+
+  renderFields() {
+    switch (this.props.entityName) {
+      case 'noun':
+        return([
+          <div key="1" className="row">
+            <div className="col-xs-5">
               <h2>English</h2>
               <input className={ HandyTools.errorClass(this.state.errors, Errors.english) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.english || "" } data-entity="noun" data-field="english" />
               { HandyTools.renderFieldError(this.state.errors, Errors.english) }
             </div>
-            <div className="col-xs-4">
+            <div className="col-xs-5">
               <h2>English Plural</h2>
               <input className={ HandyTools.errorClass(this.state.errors, Errors.englishPlural) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.englishPlural || "" } data-entity="noun" data-field="englishPlural" />
               { HandyTools.renderFieldError(this.state.errors, Errors.englishPlural) }
@@ -96,56 +84,47 @@ class NounDetails extends React.Component {
                 <option value={ "1" }>Male</option>
                 <option value={ "2" }>Female</option>
               </select>
-              { HandyTools.renderFieldError([], []) }
+              { HandyTools.renderDropdownFieldError([], []) }
             </div>
-          </div>
-          <div className="row">
-            <div className="col-xs-4">
+          </div>,
+          <div key="2" className="row">
+            <div className="col-xs-5">
               <h2>Hindi</h2>
               <input className={ HandyTools.errorClass(this.state.errors, Errors.foreign) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.foreign || "" } data-entity="noun" data-field="foreign" />
               { HandyTools.renderFieldError(this.state.errors, Errors.foreign) }
             </div>
-            <div className="col-xs-4">
+            <div className="col-xs-5">
               <h2>Hindi Plural</h2>
               <input className={ HandyTools.errorClass(this.state.errors, Errors.foreignPlural) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.foreignPlural || "" } data-entity="noun" data-field="foreignPlural" />
               { HandyTools.renderFieldError(this.state.errors, Errors.foreignPlural) }
             </div>
-          </div>
-          <div className="row">
-            <div className="col-xs-4">
+          </div>,
+          <div key="3" className="row">
+            <div className="col-xs-5">
               <h2>Transliterated</h2>
               <input className={ HandyTools.errorClass(this.state.errors, Errors.transliterated) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.transliterated || "" } data-entity="noun" data-field="transliterated" />
               { HandyTools.renderFieldError(this.state.errors, Errors.transliterated) }
             </div>
-            <div className="col-xs-4">
+            <div className="col-xs-5">
               <h2>Transliterated Plural</h2>
               <input className={ HandyTools.errorClass(this.state.errors, Errors.transliteratedPlural) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.transliteratedPlural || "" } data-entity="noun" data-field="transliteratedPlural" />
               { HandyTools.renderFieldError(this.state.errors, Errors.transliteratedPlural) }
             </div>
           </div>
-          <div>
-            <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { Details.saveButtonText.call(this) }
-            </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
-              Delete
-            </a>
-          </div>
-        </div>
-      </div>
-    );
+        ]);
+    }
   }
 }
 
 const mapStateToProps = (reducers) => {
   return {
-    noun: reducers.nounsReducer.noun,
-    errors: reducers.nounsReducer.errors
+    entities: reducers.standardReducer.entities,
+    errors: reducers.standardReducer.errors
   };
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchNoun, updateNoun, standardDelete }, dispatch);
+  return bindActionCreators({ standardCreate }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NounDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(NewEntity);

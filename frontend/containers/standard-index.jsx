@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { standardFetchIndex } from '../actions/index';
+import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
 import _ from 'lodash';
 import Index from './modules/index.js';
+import NewEntity from './new-entity.jsx';
 
 const directory = window.location.pathname.split('/')[1] || 'nouns';
 
@@ -16,7 +18,8 @@ class StandardIndex extends React.Component {
       fetching: true,
       entities: [],
       searchProperty: this.props.columns[0],
-      searchText: ''
+      searchText: '',
+      newEntityModalOpen: false
     };
   }
 
@@ -29,12 +32,19 @@ class StandardIndex extends React.Component {
     });
   }
 
+  updateIndex(entities) {
+    this.setState({
+      newEntityModalOpen: false,
+      entities: entities
+    })
+  }
+
   render() {
     let filteredEntities = HandyTools.filterSearchText(this.state.entities, this.state.searchText, this.state.searchProperty);
     return(
       <div className="component">
-        <h1>{ this.props.entityNamePlural }</h1>
-        <a className={ "blue-button btn float-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { this.props.entityName }</a>
+        <h1>{ HandyTools.capitalize(this.props.entityNamePlural) }</h1>
+        <a className={ "blue-button btn float-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { HandyTools.capitalize(this.props.entityName) }</a>
         <input className="search-box margin" onChange={ HandyTools.changeStateToTarget.bind(this, 'searchText') } value={ this.state.searchText } />
         <div className="white-box">
           { HandyTools.renderSpinner(this.state.fetching) }
@@ -79,6 +89,9 @@ class StandardIndex extends React.Component {
             </tbody>
           </table>
         </div>
+        <Modal isOpen={ this.state.newEntityModalOpen } onRequestClose={ Index.closeModal.bind(this) } contentLabel="Modal" style={ Index.newEntityModalStyles(this.props.modalDimensions) }>
+          <NewEntity entityName={ this.props.entityName } entityNamePlural={ this.props.entityNamePlural } initialEntity={ this.props.initialNewEntity } updateIndex={ this.updateIndex.bind(this) } />
+        </Modal>
       </div>
     );
   }

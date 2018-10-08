@@ -1,5 +1,26 @@
 import HandyTools from 'handy-tools';
 
+export function standardCreate(args) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'POST',
+      url: `/api/${args.directory}`,
+      data: {
+        [args.entityName]: HandyTools.convertObjectKeysToUnderscore(args.entity)
+      }
+    }).then(
+      (response) => dispatch({
+        type: 'STANDARD_CREATE',
+        entities: response.entities
+      }),
+      (response) => dispatch({
+        type: 'ERRORS',
+        errors: response
+      })
+    );
+  }
+}
+
 export function standardDelete(directory, id) {
   return (dispatch) => {
     return $.ajax({
