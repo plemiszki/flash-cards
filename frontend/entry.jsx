@@ -36,4 +36,19 @@ $(document).ready(function() {
       document.querySelector('#noun-details')
     );
   }
+
+  if (document.querySelector('#verbs-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='verb'
+          entityNamePlural='verbs'
+          columns={ ['infinitive', 'english'] }
+          initialNewEntity={ { english: '', infinitive: '' } }
+          modalDimensions={ { width: 900, height: 240 } }
+        />
+      </Provider>,
+      document.querySelector('#verbs-index')
+    );
+  }
 });

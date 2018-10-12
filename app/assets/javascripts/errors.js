@@ -17,5 +17,8 @@ Errors = {
   ],
   transliteratedPlural: [
     "Transliterated plural can't be blank"
+  ],
+  infinitive: [
+    "Infinitive can't be blank"
   ]
 }

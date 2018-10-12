@@ -112,6 +112,21 @@ class NewEntity extends React.Component {
             </div>
           </div>
         ]);
+      case 'verb':
+        return([
+          <div key="1" className="row">
+            <div className="col-xs-6">
+              <h2>English</h2>
+              <input className={ HandyTools.errorClass(this.state.errors, Errors.english) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.verb.english || "" } data-entity="verb" data-field="english" />
+              { HandyTools.renderFieldError(this.state.errors, Errors.english) }
+            </div>
+            <div className="col-xs-6">
+              <h2>Infinitive</h2>
+              <input className={ HandyTools.errorClass(this.state.errors, Errors.infinitive) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.verb.infinitive || "" } data-entity="verb" data-field="infinitive" />
+              { HandyTools.renderFieldError(this.state.errors, Errors.infinitive) }
+            </div>
+          </div>
+        ]);
     }
   }
 }
