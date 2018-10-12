@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchNoun, updateNoun, standardDelete } from '../actions/index';
 import HandyTools from 'handy-tools';
-import Details from './modules/details.js';
+import Details from './modules/details.jsx';
 
 class NounDetails extends React.Component {
   constructor(props) {
@@ -80,16 +80,8 @@ class NounDetails extends React.Component {
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
-            <div className="col-xs-4">
-              <h2>English</h2>
-              <input className={ HandyTools.errorClass(this.state.errors, Errors.english) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.english || "" } data-entity="noun" data-field="english" />
-              { HandyTools.renderFieldError(this.state.errors, Errors.english) }
-            </div>
-            <div className="col-xs-4">
-              <h2>English Plural</h2>
-              <input className={ HandyTools.errorClass(this.state.errors, Errors.englishPlural) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.englishPlural || "" } data-entity="noun" data-field="englishPlural" />
-              { HandyTools.renderFieldError(this.state.errors, Errors.englishPlural) }
-            </div>
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural', columnHeader: 'English Plural' }) }
             <div className="col-xs-2">
               <h2>Gender</h2>
               <select onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.gender } data-entity="noun" data-field="gender">
@@ -100,28 +92,12 @@ class NounDetails extends React.Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-4">
-              <h2>Hindi</h2>
-              <input className={ HandyTools.errorClass(this.state.errors, Errors.foreign) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.foreign || "" } data-entity="noun" data-field="foreign" />
-              { HandyTools.renderFieldError(this.state.errors, Errors.foreign) }
-            </div>
-            <div className="col-xs-4">
-              <h2>Hindi Plural</h2>
-              <input className={ HandyTools.errorClass(this.state.errors, Errors.foreignPlural) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.foreignPlural || "" } data-entity="noun" data-field="foreignPlural" />
-              { HandyTools.renderFieldError(this.state.errors, Errors.foreignPlural) }
-            </div>
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'foreign', columnHeader: 'Hindi' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'foreignPlural', columnHeader: 'Hindi Plural' }) }
           </div>
           <div className="row">
-            <div className="col-xs-4">
-              <h2>Transliterated</h2>
-              <input className={ HandyTools.errorClass(this.state.errors, Errors.transliterated) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.transliterated || "" } data-entity="noun" data-field="transliterated" />
-              { HandyTools.renderFieldError(this.state.errors, Errors.transliterated) }
-            </div>
-            <div className="col-xs-4">
-              <h2>Transliterated Plural</h2>
-              <input className={ HandyTools.errorClass(this.state.errors, Errors.transliteratedPlural) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.transliteratedPlural || "" } data-entity="noun" data-field="transliteratedPlural" />
-              { HandyTools.renderFieldError(this.state.errors, Errors.transliteratedPlural) }
-            </div>
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliterated' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliteratedPlural', columnHeader: 'Transliterated Plural' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
