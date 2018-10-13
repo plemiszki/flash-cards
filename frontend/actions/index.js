@@ -1,6 +1,20 @@
 import HandyTools from 'handy-tools';
 
-export function standardCreate(args) {
+export function fetchEntities(directory) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'GET',
+      url: `/api/${directory}`
+    }).then(
+      (response) => dispatch({
+        type: 'FETCH_ENTITIES',
+        entities: response.entities
+      })
+    );
+  }
+}
+
+export function createEntity(args) {
   return (dispatch) => {
     return $.ajax({
       method: 'POST',
@@ -10,7 +24,7 @@ export function standardCreate(args) {
       }
     }).then(
       (response) => dispatch({
-        type: 'STANDARD_CREATE',
+        type: 'CREATE_ENTITY',
         entities: response.entities
       }),
       (response) => dispatch({
@@ -21,64 +35,50 @@ export function standardCreate(args) {
   }
 }
 
-export function standardDelete(directory, id) {
+export function fetchEntity(args) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'GET',
+      url: `/api/${args.directory}/${args.id}`
+    }).then(
+      (response) => dispatch({
+        type: `FETCH_ENTITY`,
+        entity: response.entity
+      })
+    );
+  }
+}
+
+export function updateEntity(args) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'PATCH',
+      url: `/api/${args.directory}/${args.id}`,
+      data: {
+        [args.entityName]: HandyTools.convertObjectKeysToUnderscore(args.entity)
+      }
+    }).then(
+      (response) => dispatch({
+        type: 'UPDATE_ENTITY',
+        entity: response.entity
+      }),
+      (response) => dispatch({
+        type: 'ERRORS',
+        errors: response
+      })
+    );
+  }
+}
+
+export function deleteEntity(directory, id) {
   return (dispatch) => {
     return $.ajax({
       method: 'DELETE',
-      url: `/api/nouns/${id}`
+      url: `/api/${directory}/${id}`
     }).then(
       () => {
         window.location.pathname = `/${directory}`;
       }
-    );
-  }
-}
-
-export function standardFetchIndex(directory) {
-  return (dispatch) => {
-    return $.ajax({
-      method: 'GET',
-      url: `/api/${directory}`
-    }).then(
-      (response) => dispatch({
-        type: 'STANDARD_FETCH_INDEX',
-        entities: response.entities
-      })
-    );
-  }
-}
-
-export function fetchNoun(id) {
-  return (dispatch) => {
-    return $.ajax({
-      method: 'GET',
-      url: `/api/nouns/${id}`
-    }).then(
-      (response) => dispatch({
-        type: 'FETCH_NOUN',
-        noun: response.noun
-      })
-    );
-  }
-}
-
-export function updateNoun(id, noun) {
-  return (dispatch) => {
-    return $.ajax({
-      method: 'PATCH',
-      url: `/api/nouns/${id}`,
-      data: {
-        noun: HandyTools.convertObjectKeysToUnderscore(noun)
-      }
-    }).then(
-      (response) => dispatch({
-        type: 'UPDATE_NOUN',
-        noun: response.noun
-      }),
-      (response) => dispatch({
-        type: 'ERRORS',
-        errors: response
-      })
     );
   }
 }

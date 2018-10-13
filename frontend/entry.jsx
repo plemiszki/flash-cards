@@ -8,6 +8,7 @@ let store = configureStore();
 
 import StandardIndex from './containers/standard-index';
 import NounDetails from './containers/noun-details';
+import VerbDetails from './containers/verb-details';
 
 $(document).ready(function() {
 
@@ -49,6 +50,15 @@ $(document).ready(function() {
         />
       </Provider>,
       document.querySelector('#verbs-index')
+    );
+  }
+
+  if (document.querySelector('#verb-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <VerbDetails entityName='verb' />
+      </Provider>,
+      document.querySelector('#verb-details')
     );
   }
 });

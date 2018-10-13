@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { standardFetchIndex } from '../actions/index';
+import { fetchEntities } from '../actions/index';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
 import _ from 'lodash';
@@ -24,7 +24,7 @@ class StandardIndex extends React.Component {
   }
 
   componentDidMount() {
-    this.props.standardFetchIndex(directory).then(() => {
+    this.props.fetchEntities(directory).then(() => {
       this.setState({
         fetching: false,
         entities: this.props.entities
@@ -104,7 +104,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ standardFetchIndex }, dispatch);
+  return bindActionCreators({ fetchEntities }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StandardIndex);

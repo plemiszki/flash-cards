@@ -23,6 +23,6 @@ export default {
       fetching: true
     });
     let urlSections = window.location.pathname.split("/");
-    this.props.standardDelete(urlSections[1], urlSections[2]);
+    this.props.deleteEntity(urlSections[1], urlSections[2]);
   }
 }

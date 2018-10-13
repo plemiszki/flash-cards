@@ -1,4 +1,4 @@
-json.noun do
+json.entity do
   json.id @noun.id
   json.english @noun.english
   json.englishPlural @noun.english_plural

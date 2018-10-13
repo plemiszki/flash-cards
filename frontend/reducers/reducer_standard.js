@@ -1,13 +1,21 @@
 export default function(state = {}, action) {
   switch (action.type) {
-  case 'STANDARD_FETCH_INDEX':
+  case 'FETCH_ENTITIES':
     return Object.assign({}, state, {
       entities: action.entities
     });
-  case 'STANDARD_CREATE':
+  case 'CREATE_ENTITY':
     return Object.assign({}, state, {
       entities: action.entities,
       errors: action.errors
+    });
+  case 'FETCH_ENTITY':
+    return Object.assign({}, state, {
+      entity: action.entity
+    });
+  case 'UPDATE_ENTITY':
+    return Object.assign({}, state, {
+      entity: action.entity
     });
   case 'ERRORS':
     return Object.assign({}, state, {

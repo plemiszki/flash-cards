@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { standardCreate } from '../actions/index';
+import { createEntity } from '../actions/index';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
 import Details from './modules/details.jsx';
@@ -26,7 +26,7 @@ class NewEntity extends React.Component {
     this.setState({
       fetching: true
     });
-    this.props.standardCreate({
+    this.props.createEntity({
       directory: this.props.entityNamePlural,
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
@@ -108,7 +108,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ standardCreate }, dispatch);
+  return bindActionCreators({ createEntity }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewEntity);
