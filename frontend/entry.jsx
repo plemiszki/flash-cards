@@ -9,6 +9,7 @@ let store = configureStore();
 import StandardIndex from './containers/standard-index';
 import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
+import AdjectiveDetails from './containers/adjective-details';
 
 $(document).ready(function() {
 
@@ -59,6 +60,30 @@ $(document).ready(function() {
         <VerbDetails entityName='verb' />
       </Provider>,
       document.querySelector('#verb-details')
+    );
+  }
+
+  if (document.querySelector('#adjectives-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='adjective'
+          entityNamePlural='adjectives'
+          columns={ ['masculine', 'feminine', 'english'] }
+          initialNewEntity={ { english: '', masculine: '', feminine: '' } }
+          modalDimensions={ { width: 900, height: 240 } }
+        />
+      </Provider>,
+      document.querySelector('#adjectives-index')
+    );
+  }
+
+  if (document.querySelector('#adjective-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <AdjectiveDetails entityName='adjective' />
+      </Provider>,
+      document.querySelector('#adjective-details')
     );
   }
 });

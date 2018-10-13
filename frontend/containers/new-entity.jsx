@@ -96,6 +96,14 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'verb', property: 'infinitive' }) }
           </div>
         ]);
+      case 'adjective':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
+          </div>
+        ]);
     }
   }
 }

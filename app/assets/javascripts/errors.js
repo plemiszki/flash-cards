@@ -20,5 +20,11 @@ Errors = {
   ],
   infinitive: [
     "Infinitive can't be blank"
+  ],
+  masculine: [
+    "Masculine can't be blank"
+  ],
+  feminine: [
+    "Feminine can't be blank"
   ]
 }
