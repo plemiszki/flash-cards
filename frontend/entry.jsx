@@ -10,6 +10,8 @@ import StandardIndex from './containers/standard-index';
 import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
+import CardDetails from './containers/card-details';
+import TagDetails from './containers/tag-details';
 
 $(document).ready(function() {
 
@@ -84,6 +86,54 @@ $(document).ready(function() {
         <AdjectiveDetails entityName='adjective' />
       </Provider>,
       document.querySelector('#adjective-details')
+    );
+  }
+
+  if (document.querySelector('#cards-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='card'
+          entityNamePlural='cards'
+          columns={ ['question', 'answer'] }
+          initialNewEntity={ { question: '', answer: '' } }
+          modalDimensions={ { width: 900, height: 359 } }
+        />
+      </Provider>,
+      document.querySelector('#cards-index')
+    );
+  }
+
+  if (document.querySelector('#card-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <CardDetails entityName='card' />
+      </Provider>,
+      document.querySelector('#card-details')
+    );
+  }
+
+  if (document.querySelector('#tags-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='tag'
+          entityNamePlural='tags'
+          columns={ ['name'] }
+          initialNewEntity={ { name: '' } }
+          modalDimensions={ { width: 500, height: 240 } }
+        />
+      </Provider>,
+      document.querySelector('#tags-index')
+    );
+  }
+
+  if (document.querySelector('#tag-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <TagDetails entityName='tag' />
+      </Provider>,
+      document.querySelector('#tag-details')
     );
   }
 });

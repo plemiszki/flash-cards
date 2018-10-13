@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181013193151) do
+ActiveRecord::Schema.define(version: 20181013201040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,17 @@ ActiveRecord::Schema.define(version: 20181013193151) do
     t.string "english",   null: false
     t.string "masculine", null: false
     t.string "feminine",  null: false
+  end
+
+  create_table "card_tags", force: :cascade do |t|
+    t.integer "tag_id",                     null: false
+    t.integer "card_id",                    null: false
+    t.string  "card_type", default: "card"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.string "question", null: false
+    t.string "answer",   null: false
   end
 
   create_table "nouns", force: :cascade do |t|
@@ -31,6 +42,10 @@ ActiveRecord::Schema.define(version: 20181013193151) do
     t.datetime "updated_at",            null: false
     t.string   "transliterated"
     t.string   "transliterated_plural"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
   end
 
   create_table "users", force: :cascade do |t|

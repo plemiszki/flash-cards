@@ -26,5 +26,14 @@ Errors = {
   ],
   feminine: [
     "Feminine can't be blank"
+  ],
+  question: [
+    "Question can't be blank"
+  ],
+  answer: [
+    "Answer can't be blank"
+  ],
+  name: [
+    "Name can't be blank"
   ]
 }
