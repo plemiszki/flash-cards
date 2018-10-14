@@ -5,37 +5,24 @@ import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
 import HandyTools from 'handy-tools';
 import Details from './modules/details.jsx';
 
-class TagDetails extends React.Component {
+class QuestionDetails extends React.Component {
   constructor(props) {
     super(props);
 
-    let emptyTag = {
+    let emptyQuestion = {
       name: ''
     };
 
     this.state = {
       fetching: true,
-      tag: emptyTag,
-      tagSaved: emptyTag,
+      question: emptyQuestion,
+      questionSaved: emptyQuestion,
       errors: []
     };
   }
 
   componentDidMount() {
-    this.props.fetchEntity({
-      id: window.location.pathname.split('/')[2],
-      directory: window.location.pathname.split('/')[1],
-      entityName: this.props.entityName
-    }).then(() => {
-      this.setState({
-        fetching: false,
-        tag: this.props.tag,
-        tagSaved: HandyTools.deepCopy(this.props.tag),
-        changesToSave: false
-      }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
-      });
-    });
+    Details.fetchEntity.bind(this)();
   }
 
   changeFieldArgs() {
@@ -47,7 +34,7 @@ class TagDetails extends React.Component {
   }
 
   checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.tag, this.state.tagSaved);
+    return !HandyTools.objectsAreEqual(this.state.question, this.state.questionSaved);
   }
 
   clickSave() {
@@ -55,36 +42,19 @@ class TagDetails extends React.Component {
       fetching: true,
       justSaved: true
     }, function() {
-      this.props.updateEntity({
-        id: window.location.pathname.split('/')[2],
-        directory: window.location.pathname.split('/')[1],
-        entityName: 'tag',
-        entity: this.state.tag
-      }).then(() => {
-        this.setState({
-          fetching: false,
-          tag: this.props.tag,
-          tagSaved: HandyTools.deepCopy(this.props.tag),
-          changesToSave: false
-        });
-      }, () => {
-        this.setState({
-          fetching: false,
-          errors: this.props.errors
-        });
-      });
+      Details.updateEntity.bind(this)();
     });
   }
 
   render() {
     return (
-      <div id="tag-details" className="component details-component">
-        <h1>Tag Details</h1>
+      <div id="question-details" className="component details-component">
+        <h1>Question Details</h1>
         <div className="white-box">
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'tag', property: 'name' }) }
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'question', property: 'name' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
@@ -102,7 +72,7 @@ class TagDetails extends React.Component {
 
 const mapStateToProps = (reducers) => {
   return {
-    tag: reducers.standardReducer.entity,
+    question: reducers.standardReducer.entity,
     errors: reducers.standardReducer.errors
   };
 };
@@ -111,4 +81,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchEntity, updateEntity, deleteEntity }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TagDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionDetails);

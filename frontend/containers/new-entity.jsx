@@ -114,9 +114,11 @@ class NewEntity extends React.Component {
           </div>
         ]);
       case 'tag':
+      case 'quiz':
+      case 'question':
         return([
           <div key="1" className="row">
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'tag', property: 'name' }) }
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: this.props.entityName, property: 'name' }) }
           </div>
         ]);
     }

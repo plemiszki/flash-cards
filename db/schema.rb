@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181013201040) do
+ActiveRecord::Schema.define(version: 20181014153032) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,24 @@ ActiveRecord::Schema.define(version: 20181013201040) do
     t.datetime "updated_at",            null: false
     t.string   "transliterated"
     t.string   "transliterated_plural"
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
+  create_table "quiz_questions", force: :cascade do |t|
+    t.integer "quiz_id",     null: false
+    t.integer "question_id", null: false
+    t.integer "amount",      null: false
+    t.integer "tag_id"
+    t.index ["question_id"], name: "index_quiz_questions_on_question_id", using: :btree
+    t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id", using: :btree
+    t.index ["tag_id"], name: "index_quiz_questions_on_tag_id", using: :btree
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.string "name", null: false
   end
 
   create_table "tags", force: :cascade do |t|

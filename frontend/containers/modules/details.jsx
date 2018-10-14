@@ -3,6 +3,31 @@ import HandyTools from 'handy-tools';
 
 export default {
 
+  clickDelete() {
+    this.setState({
+      fetching: true
+    });
+    let urlSections = window.location.pathname.split('/');
+    this.props.deleteEntity(urlSections[1], urlSections[2]);
+  },
+
+  fetchEntity() {
+    this.props.fetchEntity({
+      id: window.location.pathname.split('/')[2],
+      directory: window.location.pathname.split('/')[1],
+      entityName: this.props.entityName
+    }).then(() => {
+      this.setState({
+        fetching: false,
+        [this.props.entityName]: this.props[this.props.entityName],
+        [`${this.props.entityName}Saved`]: HandyTools.deepCopy(this.props[this.props.entityName]),
+        changesToSave: false
+      }, () => {
+        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+      });
+    });
+  },
+
   renderField(args) {
     let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
     return(
@@ -18,11 +43,26 @@ export default {
     return this.state.changesToSave ? 'Save' : (this.state.justSaved ? 'Saved' : 'No Changes');
   },
 
-  clickDelete() {
-    this.setState({
-      fetching: true
+  updateEntity() {
+    let entityName = this.props.entityName;
+    this.props.updateEntity({
+      id: window.location.pathname.split('/')[2],
+      directory: window.location.pathname.split('/')[1],
+      entityName: entityName,
+      entity: this.state[entityName]
+    }).then(() => {
+      let savedEntity = this.props[entityName];
+      this.setState({
+        fetching: false,
+        [entityName]: savedEntity,
+        [`${entityName}Saved`]: HandyTools.deepCopy(savedEntity),
+        changesToSave: false
+      });
+    }, () => {
+      this.setState({
+        fetching: false,
+        errors: this.props.errors
+      });
     });
-    let urlSections = window.location.pathname.split("/");
-    this.props.deleteEntity(urlSections[1], urlSections[2]);
   }
 }

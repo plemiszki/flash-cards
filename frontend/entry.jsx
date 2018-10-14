@@ -11,6 +11,8 @@ import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
 import CardDetails from './containers/card-details';
+import QuizDetails from './containers/quiz-details';
+import QuestionDetails from './containers/question-details';
 import TagDetails from './containers/tag-details';
 
 $(document).ready(function() {
@@ -25,7 +27,8 @@ $(document).ready(function() {
           entityNamePlural='nouns'
           columns={ ['foreign', 'transliterated', 'english'] }
           initialNewEntity={ { english: '', englishPlural: '', foreign: '', foreignPlural: '', gender: 1 } }
-          modalDimensions={ { width: 900, height: 478 } }
+          modalRows={ 3 }
+          modalDimensions={ { width: 900 } }
         />
       </Provider>,
       document.querySelector('#nouns-index')
@@ -49,7 +52,7 @@ $(document).ready(function() {
           entityNamePlural='verbs'
           columns={ ['infinitive', 'english'] }
           initialNewEntity={ { english: '', infinitive: '' } }
-          modalDimensions={ { width: 900, height: 240 } }
+          modalDimensions={ { width: 900 } }
         />
       </Provider>,
       document.querySelector('#verbs-index')
@@ -73,7 +76,7 @@ $(document).ready(function() {
           entityNamePlural='adjectives'
           columns={ ['masculine', 'feminine', 'english'] }
           initialNewEntity={ { english: '', masculine: '', feminine: '' } }
-          modalDimensions={ { width: 900, height: 240 } }
+          modalDimensions={ { width: 900 } }
         />
       </Provider>,
       document.querySelector('#adjectives-index')
@@ -97,7 +100,8 @@ $(document).ready(function() {
           entityNamePlural='cards'
           columns={ ['question', 'answer'] }
           initialNewEntity={ { question: '', answer: '' } }
-          modalDimensions={ { width: 900, height: 359 } }
+          modalRows={ 2 }
+          modalDimensions={ { width: 900 } }
         />
       </Provider>,
       document.querySelector('#cards-index')
@@ -113,6 +117,54 @@ $(document).ready(function() {
     );
   }
 
+  if (document.querySelector('#quizzes-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='quiz'
+          entityNamePlural='quizzes'
+          columns={ ['name'] }
+          initialNewEntity={ { name: '' } }
+          modalDimensions={ { width: 700 } }
+        />
+      </Provider>,
+      document.querySelector('#quizzes-index')
+    );
+  }
+
+  if (document.querySelector('#quiz-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <QuizDetails entityName='quiz' />
+      </Provider>,
+      document.querySelector('#quiz-details')
+    );
+  }
+
+  if (document.querySelector('#questions-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='question'
+          entityNamePlural='questions'
+          columns={ ['name'] }
+          initialNewEntity={ { name: '' } }
+          modalDimensions={ { width: 700 } }
+        />
+      </Provider>,
+      document.querySelector('#questions-index')
+    );
+  }
+
+  if (document.querySelector('#question-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <QuestionDetails entityName='question' />
+      </Provider>,
+      document.querySelector('#question-details')
+    );
+  }
+
   if (document.querySelector('#tags-index')) {
     ReactDOM.render(
       <Provider store={ store }>
@@ -121,7 +173,7 @@ $(document).ready(function() {
           entityNamePlural='tags'
           columns={ ['name'] }
           initialNewEntity={ { name: '' } }
-          modalDimensions={ { width: 500, height: 240 } }
+          modalDimensions={ { width: 500 } }
         />
       </Provider>,
       document.querySelector('#tags-index')

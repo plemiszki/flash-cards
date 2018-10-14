@@ -12,7 +12,13 @@ export default {
     });
   },
 
-  newEntityModalStyles(args) {
+  newEntityModalStyles(modalDimensions, rows) {
+    let height;
+    if (rows) {
+      height = 121 + (rows * 119);
+    } else {
+      height = modalDimensions.height || 240;
+    }
     return {
       overlay: {
         background: 'rgba(0, 0, 0, 0.50)'
@@ -21,8 +27,8 @@ export default {
         background: 'white',
         padding: 0,
         margin: 'auto',
-        maxWidth: args.width || 1000,
-        height: args.height || 359
+        maxWidth: modalDimensions.width || 1000,
+        height: height
       }
     }
   }

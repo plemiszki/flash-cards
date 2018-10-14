@@ -89,7 +89,7 @@ class StandardIndex extends React.Component {
             </tbody>
           </table>
         </div>
-        <Modal isOpen={ this.state.newEntityModalOpen } onRequestClose={ Index.closeModal.bind(this) } contentLabel="Modal" style={ Index.newEntityModalStyles(this.props.modalDimensions) }>
+        <Modal isOpen={ this.state.newEntityModalOpen } onRequestClose={ Index.closeModal.bind(this) } contentLabel="Modal" style={ Index.newEntityModalStyles(this.props.modalDimensions, this.props.modalRows) }>
           <NewEntity entityName={ this.props.entityName } entityNamePlural={ this.props.entityNamePlural } initialEntity={ this.props.initialNewEntity } updateIndex={ this.updateIndex.bind(this) } />
         </Modal>
       </div>

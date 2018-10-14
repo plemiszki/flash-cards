@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :adjectives, only: [:index, :show]
   resources :cards, only: [:index, :show]
   resources :tags, only: [:index, :show]
+  resources :quizzes, only: [:index, :show]
+  resources :questions, only: [:index, :show]
 
   namespace :api do
     resources :nouns, only: [:index, :show, :create, :update, :destroy]
@@ -13,5 +15,8 @@ Rails.application.routes.draw do
     resources :cards, only: [:index, :show, :create, :update, :destroy]
     resources :tags, only: [:index, :show, :create, :update, :destroy]
     resources :card_tags, only: [:create, :destroy]
+    resources :quizzes, only: [:index, :show, :create, :update, :destroy]
+    resources :questions, only: [:index, :show, :create, :update, :destroy]
+    resources :quiz_questions, only: [:create, :destroy]
   end
 end
