@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import HandyTools from 'handy-tools';
+import MatchHeight from 'jquery-match-height';
 
 export default {
 

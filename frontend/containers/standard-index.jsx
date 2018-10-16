@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
 import _ from 'lodash';
 import Index from './modules/index.js';
+import Common from './modules/common.js';
 import NewEntity from './new-entity.jsx';
 
 const directory = window.location.pathname.split('/')[1] || 'nouns';
@@ -94,6 +95,10 @@ class StandardIndex extends React.Component {
         </Modal>
       </div>
     );
+  }
+
+  componentDidUpdate() {
+    Common.matchColumnHeight();
   }
 }
 
