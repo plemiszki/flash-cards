@@ -17,7 +17,8 @@ class QuizDetails extends React.Component {
       fetching: true,
       quiz: emptyQuiz,
       quizSaved: emptyQuiz,
-      errors: []
+      errors: [],
+      quizQuestions: []
     };
   }
 
@@ -56,14 +57,39 @@ class QuizDetails extends React.Component {
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quiz', property: 'name' }) }
           </div>
-          <div>
-            <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { Details.saveButtonText.call(this) }
-            </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
-              Delete
-            </a>
-          </div>
+          <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            { Details.saveButtonText.call(this) }
+          </a>
+          <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+            Delete
+          </a>
+          <hr className="divider m-top" />
+          <table className="admin-table no-links m-bottom">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Tag</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              { this.state.quizQuestions.map((quizQuestion, index) => {
+                return(
+                  <tr key={ index }>
+                    <td>{ quizQuestion.questionName }</td>
+                    <td>{ quizQuestion.tag }</td>
+                    <td>{ quizQuestion.amount }</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <a className="gray-outline-button small-width small-padding">Add New</a>
         </div>
       </div>
     );
@@ -73,6 +99,7 @@ class QuizDetails extends React.Component {
 const mapStateToProps = (reducers) => {
   return {
     quiz: reducers.standardReducer.entity,
+    quizQuestions: reducers.standardReducer.array1,
     errors: reducers.standardReducer.errors
   };
 };

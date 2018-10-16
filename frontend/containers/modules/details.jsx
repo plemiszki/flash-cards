@@ -18,12 +18,16 @@ export default {
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
     }).then(() => {
-      this.setState({
+      let newState = {
         fetching: false,
         [this.props.entityName]: this.props[this.props.entityName],
         [`${this.props.entityName}Saved`]: HandyTools.deepCopy(this.props[this.props.entityName]),
         changesToSave: false
-      }, () => {
+      };
+      if (this.props.array1Name) {
+        Object.assign(newState, { [this.props.array1Name]: this.props[this.props.array1Name] });
+      }
+      this.setState(newState, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
       });
     });

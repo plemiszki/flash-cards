@@ -11,7 +11,8 @@ export default function(state = {}, action) {
     });
   case 'FETCH_ENTITY':
     return Object.assign({}, state, {
-      entity: action.entity
+      entity: action.entity,
+      array1: action.array1
     });
   case 'UPDATE_ENTITY':
     return Object.assign({}, state, {

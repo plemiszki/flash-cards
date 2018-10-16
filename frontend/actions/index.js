@@ -43,7 +43,8 @@ export function fetchEntity(args) {
     }).then(
       (response) => dispatch({
         type: `FETCH_ENTITY`,
-        entity: response.entity
+        entity: response.entity,
+        array1: response.array1
       })
     );
   }

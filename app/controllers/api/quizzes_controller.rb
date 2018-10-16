@@ -17,6 +17,7 @@ class Api::QuizzesController < AdminController
 
   def show
     @quiz = Quiz.find(params[:id])
+    @quiz_questions = @quiz.quiz_questions
     render 'show.json.jbuilder'
   end
 
