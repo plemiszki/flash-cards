@@ -73,14 +73,18 @@ export function updateEntity(args) {
   }
 }
 
-export function deleteEntity(directory, id) {
+export function deleteEntity(directory, id, callback) {
   return (dispatch) => {
     return $.ajax({
       method: 'DELETE',
       url: `/api/${directory}/${id}`
     }).then(
-      () => {
-        window.location.pathname = `/${directory}`;
+      (response) => {
+        if (callback) {
+          callback.call({}, response);
+        } else {
+          window.location.pathname = `/${directory}`;
+        }
       }
     );
   }

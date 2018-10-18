@@ -59,11 +59,16 @@ class QuizDetails extends React.Component {
     });
   }
 
-  updateQuizQuestions(quizQuestions) {
+  updateQuizQuestions(response) {
     this.setState({
       newQuizQuestionModalOpen: false,
-      quizQuestions: quizQuestions
+      quizQuestions: response.entities || response
     });
+  }
+
+  deleteQuizQuestion(e) {
+    let id = e.target.dataset.id;
+    this.props.deleteEntity('quiz_questions', id, this.updateQuizQuestions.bind(this));
   }
 
   render() {
@@ -89,10 +94,12 @@ class QuizDetails extends React.Component {
                 <th>Question</th>
                 <th>Tag</th>
                 <th>Amount</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -103,6 +110,7 @@ class QuizDetails extends React.Component {
                     <td>{ quizQuestion.questionName }</td>
                     <td>{ quizQuestion.tagName }</td>
                     <td>{ quizQuestion.amount }</td>
+                    <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) } data-id={ quizQuestion.id }></td>
                   </tr>
                 );
               })}

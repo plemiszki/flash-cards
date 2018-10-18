@@ -13,7 +13,8 @@ class Api::QuizQuestionsController < AdminController
   def destroy
     quiz_question = QuizQuestion.find(params[:id])
     quiz_question.destroy
-    render json: quiz_question
+    @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id)
+    render 'index.json.jbuilder'
   end
 
   private
