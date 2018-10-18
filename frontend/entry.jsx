@@ -135,7 +135,7 @@ $(document).ready(function() {
   if (document.querySelector('#quiz-details')) {
     ReactDOM.render(
       <Provider store={ store }>
-        <QuizDetails entityName='quiz' array1Name='quizQuestions' />
+        <QuizDetails entityName='quiz' array1Name='quizQuestions' array2Name='questions' array3Name='tags' />
       </Provider>,
       document.querySelector('#quiz-details')
     );

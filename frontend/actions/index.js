@@ -20,7 +20,7 @@ export function createEntity(args) {
       method: 'POST',
       url: `/api/${args.directory}`,
       data: {
-        [args.entityName]: HandyTools.convertObjectKeysToUnderscore(args.entity)
+        [HandyTools.convertToUnderscore(args.entityName)]: HandyTools.convertObjectKeysToUnderscore(args.entity)
       }
     }).then(
       (response) => dispatch({
@@ -44,7 +44,9 @@ export function fetchEntity(args) {
       (response) => dispatch({
         type: `FETCH_ENTITY`,
         entity: response.entity,
-        array1: response.array1
+        array1: response.array1,
+        array2: response.array2,
+        array3: response.array3
       })
     );
   }
@@ -56,7 +58,7 @@ export function updateEntity(args) {
       method: 'PATCH',
       url: `/api/${args.directory}/${args.id}`,
       data: {
-        [args.entityName]: HandyTools.convertObjectKeysToUnderscore(args.entity)
+        [HandyTools.convertToUnderscore(args.entityName)]: HandyTools.convertObjectKeysToUnderscore(args.entity)
       }
     }).then(
       (response) => dispatch({

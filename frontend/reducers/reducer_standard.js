@@ -12,7 +12,9 @@ export default function(state = {}, action) {
   case 'FETCH_ENTITY':
     return Object.assign({}, state, {
       entity: action.entity,
-      array1: action.array1
+      array1: action.array1,
+      array2: action.array2,
+      array3: action.array3
     });
   case 'UPDATE_ENTITY':
     return Object.assign({}, state, {

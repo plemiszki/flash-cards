@@ -27,10 +27,35 @@ export default {
       if (this.props.array1Name) {
         Object.assign(newState, { [this.props.array1Name]: this.props[this.props.array1Name] });
       }
+      if (this.props.array2Name) {
+        Object.assign(newState, { [this.props.array2Name]: this.props[this.props.array2Name] });
+      }
+      if (this.props.array3Name) {
+        Object.assign(newState, { [this.props.array3Name]: this.props[this.props.array3Name] });
+      }
       this.setState(newState, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
+  },
+
+  renderDropDown(args) {
+    let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
+    return(
+      <div className={ `col-xs-${args.columnWidth}` }>
+        <h2>{ columnHeader }</h2>
+        <select className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property }>
+          { HandyTools.alphabetizeArrayOfObjects(args.options, 'name').map((option, index) => {
+            return(
+              <option key={ index } value={ args.optionValueProperty || option.id }>
+                { option[args.optionDisplayProperty] }
+              </option>
+            );
+          })}
+        </select>
+        { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
+      </div>
+    );
   },
 
   renderField(args) {
@@ -38,8 +63,8 @@ export default {
     return(
       <div className={ `col-xs-${args.columnWidth}` }>
         <h2>{ columnHeader }</h2>
-        <input className={ HandyTools.errorClass(this.state.errors, Errors[args.property]) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property } />
-        { HandyTools.renderFieldError(this.state.errors, Errors[args.property]) }
+        <input className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property } />
+        { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
       </div>
     );
   },

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
+import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
+import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
+import NewEntity from './new-entity.jsx';
+import Common from './modules/common.js';
 import Details from './modules/details.jsx';
 
 class QuizDetails extends React.Component {
@@ -18,7 +21,10 @@ class QuizDetails extends React.Component {
       quiz: emptyQuiz,
       quizSaved: emptyQuiz,
       errors: [],
-      quizQuestions: []
+      quizQuestions: [],
+      questions: [],
+      tags: [],
+      newQuizQuestionModalOpen: false
     };
   }
 
@@ -44,6 +50,19 @@ class QuizDetails extends React.Component {
       justSaved: true
     }, function() {
       Details.updateEntity.bind(this)();
+    });
+  }
+
+  clickNewQuizQuestion() {
+    this.setState({
+      newQuizQuestionModalOpen: true
+    });
+  }
+
+  updateQuizQuestions(quizQuestions) {
+    this.setState({
+      newQuizQuestionModalOpen: false,
+      quizQuestions: quizQuestions
     });
   }
 
@@ -78,21 +97,36 @@ class QuizDetails extends React.Component {
                 <td></td>
                 <td></td>
               </tr>
-              { this.state.quizQuestions.map((quizQuestion, index) => {
+              { HandyTools.alphabetizeArrayOfObjects(this.state.quizQuestions, 'questionName').map((quizQuestion, index) => {
                 return(
                   <tr key={ index }>
                     <td>{ quizQuestion.questionName }</td>
-                    <td>{ quizQuestion.tag }</td>
+                    <td>{ quizQuestion.tagName }</td>
                     <td>{ quizQuestion.amount }</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          <a className="gray-outline-button small-width small-padding">Add New</a>
+          <a className="gray-outline-button small-width small-padding" onClick={ this.clickNewQuizQuestion.bind(this) }>Add New</a>
         </div>
+        <Modal isOpen={ this.state.newQuizQuestionModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 900 }, 1) }>
+          <NewEntity
+            entityName="quizQuestion"
+            entityNamePlural="quizQuestions"
+            initialEntity={ { quizId: this.state.quiz.id, questionId: Common.firstElementPropertyOrBlank(this.state.questions, 'id'), tagId: Common.firstElementPropertyOrBlank(this.state.tags, 'id'), amount: '0' } }
+            callback={ this.updateQuizQuestions.bind(this) }
+            buttonText="Add Question"
+            array1={ this.state.questions }
+            array2={ this.state.tags }
+          />
+        </Modal>
       </div>
     );
+  }
+
+  componentDidUpdate() {
+    Common.matchColumnHeight();
   }
 }
 
@@ -100,6 +134,8 @@ const mapStateToProps = (reducers) => {
   return {
     quiz: reducers.standardReducer.entity,
     quizQuestions: reducers.standardReducer.array1,
+    questions: reducers.standardReducer.array2,
+    tags: reducers.standardReducer.array3,
     errors: reducers.standardReducer.errors
   };
 };

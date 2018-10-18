@@ -27,7 +27,7 @@ class NewEntity extends React.Component {
       fetching: true
     });
     this.props.createEntity({
-      directory: this.props.entityNamePlural,
+      directory: HandyTools.convertToUnderscore(this.props.entityNamePlural),
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
     }).then(() => {
@@ -35,7 +35,7 @@ class NewEntity extends React.Component {
         fetching: false,
         [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity)
       });
-      this.props.updateIndex(this.props.entities);
+      this.props.callback(this.props.entities);
     }, () => {
       this.setState({
         fetching: false,
@@ -58,7 +58,7 @@ class NewEntity extends React.Component {
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           { this.renderFields() }
-          <input type="submit" className={ "blue-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } value={ `Add ${HandyTools.capitalize(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
+          <input type="submit" className={ "blue-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } value={ this.props.buttonText || `Add ${HandyTools.capitalize(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
         </form>
       </div>
     );
@@ -121,6 +121,14 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 12, entity: this.props.entityName, property: 'name' }) }
           </div>
         ]);
+      case 'quizQuestion':
+        return(
+          <div className="row">
+            { Details.renderDropDown.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', options: this.props.array1, optionDisplayProperty: 'name' }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', options: this.props.array2, optionDisplayProperty: 'name' }) }
+            { Details.renderField.bind(this)({ columnWidth: 2, entity: 'quizQuestion', property: 'amount' }) }
+          </div>
+        );
     }
   }
 }
