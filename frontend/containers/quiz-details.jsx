@@ -122,7 +122,7 @@ class QuizDetails extends React.Component {
           <NewEntity
             entityName="quizQuestion"
             entityNamePlural="quizQuestions"
-            initialEntity={ { quizId: this.state.quiz.id, questionId: Common.firstElementPropertyOrBlank(this.state.questions, 'id'), tagId: Common.firstElementPropertyOrBlank(this.state.tags, 'id'), amount: '0' } }
+            initialEntity={ { quizId: this.state.quiz.id, questionId: Common.firstElementPropertyOrBlank(this.state.questions, 'id'), tagId: Common.firstElementPropertyOrBlank(this.state.tags, 'id'), amount: '1' } }
             callback={ this.updateQuizQuestions.bind(this) }
             buttonText="Add Question"
             array1={ this.state.questions }

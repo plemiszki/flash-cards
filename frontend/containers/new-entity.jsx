@@ -124,8 +124,8 @@ class NewEntity extends React.Component {
       case 'quizQuestion':
         return(
           <div className="row">
-            { Details.renderDropDown.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', options: this.props.array1, optionDisplayProperty: 'name' }) }
-            { Details.renderDropDown.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', options: this.props.array2, optionDisplayProperty: 'name' }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', options: this.props.array2, optionDisplayProperty: 'name', maxOptions: 2 }) }
             { Details.renderField.bind(this)({ columnWidth: 2, entity: 'quizQuestion', property: 'amount' }) }
           </div>
         );

@@ -42,7 +42,7 @@ export default {
   renderDropDown(args) {
     let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
     return(
-      <div className={ `col-xs-${args.columnWidth}` }>
+      <div className={ `col-xs-${args.columnWidth} ` + (args.maxOptions ? `select-scroll-${args.maxOptions}` : 'select-scroll-6') }>
         <h2>{ columnHeader }</h2>
         <select className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property }>
           { HandyTools.alphabetizeArrayOfObjects(args.options, 'name').map((option, index) => {
