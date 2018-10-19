@@ -6,6 +6,6 @@ class QuizQuestion < ActiveRecord::Base
 
   belongs_to :quiz
   belongs_to :question
-  belongs_to :tag
+  belongs_to :tag, optional: true
 
 end

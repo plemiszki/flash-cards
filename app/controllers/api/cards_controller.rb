@@ -17,6 +17,8 @@ class Api::CardsController < AdminController
 
   def show
     @card = Card.find(params[:id])
+    @card_tags = CardTag.where(card_id: @card.id)
+    @tags = Tag.all.order(:name)
     render 'show.json.jbuilder'
   end
 

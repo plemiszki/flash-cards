@@ -40,11 +40,21 @@ export default {
   },
 
   renderDropDown(args) {
+
+    function renderNoneOption(args) {
+      if (args.optional) {
+        return(
+          <option key={ -1 } value={ '' }>(None)</option>
+        );
+      }
+    }
+
     let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
     return(
       <div className={ `col-xs-${args.columnWidth} ` + (args.maxOptions ? `select-scroll-${args.maxOptions}` : 'select-scroll-6') }>
         <h2>{ columnHeader }</h2>
         <select className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property }>
+          { renderNoneOption(args) }
           { HandyTools.alphabetizeArrayOfObjects(args.options, 'name').map((option, index) => {
             return(
               <option key={ index } value={ args.optionValueProperty || option.id }>
@@ -53,7 +63,7 @@ export default {
             );
           })}
         </select>
-        { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
+        { HandyTools.renderDropdownFieldError(this.state.errors, Errors[args.property] || []) }
       </div>
     );
   },
@@ -64,6 +74,17 @@ export default {
       <div className={ `col-xs-${args.columnWidth}` }>
         <h2>{ columnHeader }</h2>
         <input className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property } />
+        { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
+      </div>
+    );
+  },
+
+  renderTextBox(args) {
+    let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
+    return(
+      <div className={ `col-xs-${args.columnWidth}` }>
+        <h2>{ columnHeader }</h2>
+        <textarea rows={ args.rows } className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property }></textarea>
         { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
       </div>
     );

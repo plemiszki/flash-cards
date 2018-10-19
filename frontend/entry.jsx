@@ -111,7 +111,7 @@ $(document).ready(function() {
   if (document.querySelector('#card-details')) {
     ReactDOM.render(
       <Provider store={ store }>
-        <CardDetails entityName='card' />
+        <CardDetails entityName='card' array1Name='cardTags' array2Name='tags' />
       </Provider>,
       document.querySelector('#card-details')
     );
