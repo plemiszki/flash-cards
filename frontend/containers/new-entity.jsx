@@ -70,7 +70,7 @@ class NewEntity extends React.Component {
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural', columnHeader: 'English Plural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural' }) }
             <div className="col-xs-2">
               <h2>Gender</h2>
               <select onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.gender } data-entity="noun" data-field="gender">
@@ -86,22 +86,31 @@ class NewEntity extends React.Component {
           </div>,
           <div key="3" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliterated' }) }
-            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliteratedPlural', columnHeader: 'Transliterated Plural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliteratedPlural' }) }
           </div>
         ]);
       case 'verb':
         return([
           <div key="1" className="row">
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'verb', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'verb', property: 'infinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
           </div>
         ]);
       case 'adjective':
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
+          </div>,
+          <div key="2" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
+          </div>,
+          <div key="3" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
           </div>
         ]);
       case 'card':
@@ -110,7 +119,7 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
           </div>,
           <div key="2" className="row">
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'answer' }) }
+            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
           </div>
         ]);
       case 'tag':

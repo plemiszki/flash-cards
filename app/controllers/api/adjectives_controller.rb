@@ -38,7 +38,7 @@ class Api::AdjectivesController < AdminController
   private
 
   def adjective_params
-    params[:adjective].permit(:english, :masculine, :feminine)
+    params[:adjective].permit(:english, :masculine, :feminine, :masculine_plural, :transliterated_masculine, :transliterated_feminine, :transliterated_masculine_plural)
   end
 
 end

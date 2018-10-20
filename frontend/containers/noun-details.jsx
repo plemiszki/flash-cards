@@ -90,7 +90,7 @@ class NounDetails extends React.Component {
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural', columnHeader: 'English Plural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural' }) }
             <div className="col-xs-2">
               <h2>Gender</h2>
               <select onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.gender } data-entity="noun" data-field="gender">
@@ -106,7 +106,7 @@ class NounDetails extends React.Component {
           </div>
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliterated' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliteratedPlural', columnHeader: 'Transliterated Plural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliteratedPlural' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>

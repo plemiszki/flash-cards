@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import HandyTools from 'handy-tools';
 import MatchHeight from 'jquery-match-height';
+import ChangeCase from 'change-case';
 
-export default {
+let Details = {
 
   clickDelete() {
     this.setState({
@@ -39,6 +40,10 @@ export default {
     });
   },
 
+  getColumnHeader(args) {
+    return args.columnHeader || ChangeCase.titleCase(args.property);
+  },
+
   renderDropDown(args) {
 
     function renderNoneOption(args) {
@@ -49,7 +54,7 @@ export default {
       }
     }
 
-    let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
+    let columnHeader = Details.getColumnHeader(args);
     return(
       <div className={ `col-xs-${args.columnWidth} ` + (args.maxOptions ? `select-scroll-${args.maxOptions}` : 'select-scroll-6') }>
         <h2>{ columnHeader }</h2>
@@ -69,7 +74,7 @@ export default {
   },
 
   renderField(args) {
-    let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
+    let columnHeader = Details.getColumnHeader(args);
     return(
       <div className={ `col-xs-${args.columnWidth}` }>
         <h2>{ columnHeader }</h2>
@@ -80,7 +85,7 @@ export default {
   },
 
   renderTextBox(args) {
-    let columnHeader = args.columnHeader || HandyTools.capitalize(args.property);
+    let columnHeader = Details.getColumnHeader(args);
     return(
       <div className={ `col-xs-${args.columnWidth}` }>
         <h2>{ columnHeader }</h2>
@@ -117,3 +122,5 @@ export default {
     });
   }
 }
+
+export default Details;

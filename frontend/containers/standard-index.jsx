@@ -57,7 +57,7 @@ class StandardIndex extends React.Component {
                   return(
                     <th key={ index }>
                       <div className={ HandyTools.sortClass.bind(this)(column) } onClick={ HandyTools.changeState.bind(this, 'searchProperty', column) }>
-                        { HandyTools.capitalize(column) }
+                        { this.props.columnHeaders && this.props.columnHeaders[index] ? this.props.columnHeaders[index] : HandyTools.capitalize(column) }
                       </div>
                     </th>
                   );

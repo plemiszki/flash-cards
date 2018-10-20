@@ -50,8 +50,9 @@ $(document).ready(function() {
         <StandardIndex
           entityName='verb'
           entityNamePlural='verbs'
-          columns={ ['infinitive', 'english'] }
-          initialNewEntity={ { english: '', infinitive: '' } }
+          columns={ ['infinitive', 'transliteratedInfinitive', 'english'] }
+          columnHeaders={ ['', 'Transliterated', ''] }
+          initialNewEntity={ { english: '', transliteratedInfinitive: '', infinitive: '' } }
           modalDimensions={ { width: 900 } }
         />
       </Provider>,
@@ -74,8 +75,10 @@ $(document).ready(function() {
         <StandardIndex
           entityName='adjective'
           entityNamePlural='adjectives'
-          columns={ ['masculine', 'feminine', 'english'] }
+          columns={ ['masculine', 'transliteratedMasculine', 'english'] }
+          columnHeaders={ ['', 'Transliterated', ''] }
           initialNewEntity={ { english: '', masculine: '', feminine: '' } }
+          modalRows={ 3 }
           modalDimensions={ { width: 900 } }
         />
       </Provider>,
@@ -100,8 +103,7 @@ $(document).ready(function() {
           entityNamePlural='cards'
           columns={ ['question', 'answer'] }
           initialNewEntity={ { question: '', answer: '' } }
-          modalRows={ 2 }
-          modalDimensions={ { width: 900 } }
+          modalDimensions={ { width: 900, height: 432 } }
         />
       </Provider>,
       document.querySelector('#cards-index')

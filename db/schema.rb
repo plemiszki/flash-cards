@@ -10,15 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181014153032) do
+ActiveRecord::Schema.define(version: 20181020033422) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "adjectives", force: :cascade do |t|
-    t.string "english",   null: false
-    t.string "masculine", null: false
-    t.string "feminine",  null: false
+    t.string "english",                         null: false
+    t.string "masculine",                       null: false
+    t.string "feminine",                        null: false
+    t.string "transliterated_masculine"
+    t.string "transliterated_feminine"
+    t.string "masculine_plural"
+    t.string "transliterated_masculine_plural"
   end
 
   create_table "card_tags", force: :cascade do |t|
@@ -78,8 +82,9 @@ ActiveRecord::Schema.define(version: 20181014153032) do
   end
 
   create_table "verbs", force: :cascade do |t|
-    t.string "english",    null: false
-    t.string "infinitive", null: false
+    t.string "english",                   null: false
+    t.string "infinitive",                null: false
+    t.string "transliterated_infinitive"
   end
 
 end

@@ -87,8 +87,9 @@ class VerbDetails extends React.Component {
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'verb', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'verb', property: 'infinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
