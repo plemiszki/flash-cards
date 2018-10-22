@@ -38,6 +38,11 @@ class Api::QuizzesController < AdminController
     render json: quiz
   end
 
+  def run
+    @quiz = Quiz.find(params[:id])
+    render 'run.json.jbuilder'
+  end
+
   private
 
   def quiz_params

@@ -89,3 +89,17 @@ export function deleteEntity(directory, id, callback) {
     );
   }
 }
+
+export function runQuiz(id) {
+  return (dispatch) => {
+    return $.ajax({
+      method: 'GET',
+      url: `/api/quizzes/${id}/run`
+    }).then(
+      (response) => dispatch({
+        type: 'RUN_QUIZ',
+        quiz: response.quiz
+      })
+    );
+  }
+}

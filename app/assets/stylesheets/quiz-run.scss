@@ -1,0 +1,18 @@
+#quiz-run {
+
+  p.question {
+    font-family: 'TeachableSans-ExtraBold';
+    font-size: 30px;
+    color: black;
+  }
+
+  p.answer {
+    font-size: 14px;
+    margin-bottom: 15px;
+
+    &:first-of-type {
+      margin-top: -15px;
+      margin-bottom: 5px;
+    }
+  }
+}

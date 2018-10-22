@@ -9,4 +9,9 @@ class QuizzesController < AdminController
     render 'show.html.erb'
   end
 
+  def run
+    @quiz = Quiz.find_by(id: params[:id])
+    render 'run.html.erb'
+  end
+
 end

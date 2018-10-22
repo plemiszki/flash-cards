@@ -12,6 +12,7 @@ import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
 import CardDetails from './containers/card-details';
 import QuizDetails from './containers/quiz-details';
+import QuizRun from './containers/quiz-run';
 import QuestionDetails from './containers/question-details';
 import TagDetails from './containers/tag-details';
 
@@ -140,6 +141,15 @@ $(document).ready(function() {
         <QuizDetails entityName='quiz' array1Name='quizQuestions' array2Name='questions' array3Name='tags' />
       </Provider>,
       document.querySelector('#quiz-details')
+    );
+  }
+
+  if (document.querySelector('#quiz-run')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <QuizRun entityName='quiz' />
+      </Provider>,
+      document.querySelector('#quiz-run')
     );
   }
 

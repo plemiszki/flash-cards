@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :tags, only: [:index, :show]
   resources :quizzes, only: [:index, :show]
   resources :questions, only: [:index, :show]
+  get '/quizzes/:id/run' => 'quizzes#run'
 
   namespace :api do
     resources :nouns, only: [:index, :show, :create, :update, :destroy]
@@ -18,5 +19,6 @@ Rails.application.routes.draw do
     resources :quizzes, only: [:index, :show, :create, :update, :destroy]
     resources :questions, only: [:index, :show, :create, :update, :destroy]
     resources :quiz_questions, only: [:create, :destroy]
+    get '/quizzes/:id/run' => 'quizzes#run'
   end
 end

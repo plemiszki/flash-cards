@@ -5,7 +5,7 @@ class Quiz < ActiveRecord::Base
   has_many :quiz_questions
   has_many :questions, through: :quiz_questions
 
-  def start
+  def run
     result = []
     @nouns = Noun.all.to_a.shuffle
     @verbs = Verb.all.to_a.shuffle
@@ -20,22 +20,22 @@ class Quiz < ActiveRecord::Base
           noun = @nouns.pop
           plural = (rand(2) == 1)
           result << {
-            question: (plural ? noun.english_plural : noun.english),
+            question: (plural ? noun.english_plural.capitalize : noun.english.capitalize),
             answer_transliterated: (plural ? noun.transliterated_plural : noun.transliterated),
             answer_hindi: (plural ? noun.foreign_plural : noun.foreign)
           }
         when 'Single Verb'
           verb = @verbs.pop
           result << {
-            question: verb.english,
-            # answer_transliterated: TODO,
+            question: verb.english.capitalize,
+            answer_transliterated: verb.transliterated_infinitive,
             answer_hindi: verb.infinitive
           }
         when 'Single Adjective'
           adjective = @adjectives.pop
           result << {
-            question: adjective.english,
-            # answer_transliterated: TODO,
+            question: adjective.english.capitalize,
+            answer_transliterated: adjective.transliterated_masculine,
             answer_hindi: adjective.masculine
           }
         when 'Subject is a Noun'
