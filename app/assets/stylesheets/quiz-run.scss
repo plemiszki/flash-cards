@@ -8,11 +8,14 @@
 
   p.answer {
     font-size: 14px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 
     &:first-of-type {
       margin-top: -15px;
-      margin-bottom: 5px;
+    }
+
+    &:last-of-type {
+      margin-bottom: 15px;
     }
   }
 }

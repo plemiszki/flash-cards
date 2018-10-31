@@ -53,7 +53,7 @@ class QuizRun extends React.Component {
       }
     } else {
       let quizQuestion = this.state.quiz.questions[this.state.questionNumber];
-      if ([quizQuestion.answerTransliterated, quizQuestion.answerHindi].indexOf(this.state.answer) > -1) {
+      if (quizQuestion.answers.indexOf(this.state.answer) > -1) {
         this.setState({
           status: 'correct'
         });
@@ -119,10 +119,11 @@ class QuizRun extends React.Component {
 
   renderAnswers() {
     if (this.state.quiz.questions && this.state.showAnswers) {
-      return([
-        <p className="answer">{ this.state.quiz.questions[this.state.questionNumber].answerHindi }</p>,
-        <p className="answer">{ this.state.quiz.questions[this.state.questionNumber].answerTransliterated }</p>
-      ]);
+      return this.state.quiz.questions[this.state.questionNumber].answers.map(function(answer, index) {
+        return(
+          <p key={ index } className="answer">{ answer }</p>
+        );
+      });
     } else {
       return '';
     }
