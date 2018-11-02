@@ -70,7 +70,8 @@ class Quiz < ActiveRecord::Base
           card = @cards.pop
           result << {
             question: card.question,
-            answers: [card.answer]
+            answers: [card.answer],
+            textbox: card.answer.include?("\n")
           }
         end
       end
@@ -88,7 +89,7 @@ class Quiz < ActiveRecord::Base
   end
 
   def get_random_english_subject
-    ['I', 'You', 'He', 'She', 'It', 'We', 'This', 'That', 'They', 'These', 'Those'][rand(11)]
+    ['I', 'You', 'He', 'She', 'It', 'This', 'That', 'We', 'They', 'These', 'Those'][rand(11)]
   end
 
   def a_or_an(input)

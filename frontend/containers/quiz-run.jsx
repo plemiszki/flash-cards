@@ -80,7 +80,7 @@ class QuizRun extends React.Component {
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <p className="question m-bottom">{ this.renderQuestion() }</p>
           <form>
-            <input className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+            { this.renderInput() }
             { this.renderAnswers() }
             <input type="submit" className={ this.buttonClass() + " standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
             <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
@@ -114,6 +114,18 @@ class QuizRun extends React.Component {
       return this.state.quiz.questions[this.state.questionNumber].question;
     } else {
       return '';
+    }
+  }
+
+  renderInput() {
+    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].textbox) {
+      return(
+        <textarea rows="5" columns="12" className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+      );
+    } else {
+      return(
+        <input className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+      );
     }
   }
 
