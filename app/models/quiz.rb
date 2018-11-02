@@ -76,7 +76,7 @@ class Quiz < ActiveRecord::Base
         end
       end
     end
-    result
+    result.shuffle
   end
 
   private
@@ -210,7 +210,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'They', 'These'
+    when 'They'
       [
         {
           english: 'they',
@@ -220,6 +220,17 @@ class Quiz < ActiveRecord::Base
           transliterated: 'ye',
           transliterated_be: 'hai'
         },
+        {
+          english: 'they',
+          english_be: 'are',
+          hindi: 'वे',
+          hindi_be: 'हैं',
+          transliterated: 've',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'They', 'These'
+      [
         {
           english: 'these',
           english_be: 'are',
