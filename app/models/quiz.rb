@@ -67,8 +67,17 @@ class Quiz < ActiveRecord::Base
           }
         when 'Subject is Adjective'
           adjective = @adjectives.pop
-          subject_objects = get_subject_object(get_random_plural_english_subject)
+          subject_objects = get_subject_object(get_random_english_subject)
           question_subject_object = subject_objects.sample
+          transliterated_adjectives = proper_adjective_forms(adjective, question_subject_object[:english]).map { |obj| obj[:transliterated] }
+          result << {
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]}.",
+            answers: subject_objects.map do |hash|
+              transliterated_adjectives.map do |adj|
+                ["#{hash[:transliterated]} #{adj} #{hash[:transliterated_be]}"]
+              end
+            end.flatten.uniq
+          }
         when 'Subject is Adjective Noun'
           noun = @nouns.pop
           adjective = @adjectives.pop
@@ -108,6 +117,20 @@ class Quiz < ActiveRecord::Base
 
   def a_or_an(input)
     input.starts_with?('a') ? 'an' : 'a'
+  end
+
+  def proper_adjective_forms(adjective, subject)
+    case subject
+    when 'I', 'you', 'it', 'this', 'that'
+      result = [{ transliterated: adjective.transliterated_masculine }, { transliterated: adjective.transliterated_feminine }]
+    when 'he'
+      result = [{ transliterated: adjective.transliterated_masculine }]
+    when 'she'
+      result = [{ transliterated: adjective.transliterated_feminine }]
+    when 'we', 'they', 'these', 'those'
+      result = [{ transliterated: adjective.transliterated_masculine_plural }, { transliterated: adjective.transliterated_feminine }]
+    end
+    result
   end
 
   def get_subject_object(english_subject)
@@ -243,7 +266,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'They', 'These'
+    when 'These'
       [
         {
           english: 'these',
