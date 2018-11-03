@@ -56,13 +56,23 @@ class Quiz < ActiveRecord::Base
             end.flatten.uniq
           }
         when 'Subject are Nouns'
-          #
-        when 'Subject is an Adjective'
+          noun = @nouns.pop
+          subject_objects = get_subject_object(get_random_plural_english_subject)
+          question_subject_object = subject_objects.sample
+          result << {
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{noun[:english_plural]}.",
+            answers: subject_objects.map do |hash|
+              ["#{hash[:transliterated]} #{noun[:transliterated_plural]} #{hash[:transliterated_be]}"]
+            end.flatten.uniq
+          }
+        when 'Subject is Adjective'
           adjective = @adjectives.pop
-        when 'Subject is an Adjective Noun'
+          subject_objects = get_subject_object(get_random_plural_english_subject)
+          question_subject_object = subject_objects.sample
+        when 'Subject is Adjective Noun'
           noun = @nouns.pop
           adjective = @adjectives.pop
-        when 'Noun is an Adjective'
+        when 'Noun is Adjective'
           noun = @nouns.pop
           adjective = @adjectives.pop
         when 'Card'
@@ -88,8 +98,12 @@ class Quiz < ActiveRecord::Base
     @cards = Card.all.to_a.shuffle if @cards.empty?
   end
 
-  def get_random_english_subject
-    ['I', 'You', 'He', 'She', 'It', 'This', 'That', 'We', 'They', 'These', 'Those'][rand(11)]
+  def get_random_plural_english_subject
+    get_random_english_subject(true)
+  end
+
+  def get_random_english_subject(plural = false)
+    ['We', 'They', 'These', 'Those', 'I', 'You', 'He', 'She', 'It', 'This', 'That'][plural ? rand(4) : rand(11)]
   end
 
   def a_or_an(input)
