@@ -126,7 +126,9 @@ $(document).ready(function() {
         <StandardIndex
           entityName='quiz'
           entityNamePlural='quizzes'
-          columns={ ['name'] }
+          columns={ ['name', ''] }
+          columnClasses={ ['', 'play-column'] }
+          columnLinks={ ['', '/run'] }
           initialNewEntity={ { name: '' } }
           modalDimensions={ { width: 700 } }
         />

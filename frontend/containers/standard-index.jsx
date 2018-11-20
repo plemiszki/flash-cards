@@ -77,8 +77,8 @@ class StandardIndex extends React.Component {
                   <tr key={ index }>
                     { this.props.columns.map((column, index) => {
                       return(
-                        <td key={ index }>
-                          <a href={ `${directory}/${entity.id}` }>
+                        <td key={ index } className={ this.props.columnClasses ? this.props.columnClasses[index] : '' }>
+                          <a href={ `${directory}/${entity.id}${this.props.columnLinks && this.props.columnLinks[index] ? this.props.columnLinks[index] : ''}` }>
                             { entity[column] }
                           </a>
                         </td>
