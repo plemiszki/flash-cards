@@ -9,7 +9,7 @@ import Index from './modules/index.js';
 import Common from './modules/common.js';
 import NewEntity from './new-entity.jsx';
 
-const directory = window.location.pathname.split('/')[1] || 'nouns';
+const directory = window.location.pathname.split('/')[1] || 'quizzes';
 
 class StandardIndex extends React.Component {
   constructor(props) {

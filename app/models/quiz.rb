@@ -69,7 +69,7 @@ class Quiz < ActiveRecord::Base
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_english_subject)
           question_subject_object = subject_objects.sample
-          transliterated_adjectives = proper_adjective_forms(adjective, question_subject_object[:english]).map { |obj| obj[:transliterated] }
+          transliterated_adjectives = proper_adjective_forms({ adjective: adjective, subject: question_subject_object[:english] }).map { |obj| obj[:transliterated] }
           result << {
             question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]}.",
             answers: subject_objects.map do |hash|
@@ -84,6 +84,15 @@ class Quiz < ActiveRecord::Base
         when 'Noun is Adjective'
           noun = @nouns.pop
           adjective = @adjectives.pop
+          single_question = "The #{noun[:english]} is #{adjective[:english]}."
+          plural_question = "The #{noun[:english_plural]} are #{adjective[:english]}."
+          single_answer = "#{noun[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} hai"
+          plural_answer = "#{noun[:transliterated_plural]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} hai"
+          use_plural = [true, false].sample
+          result << {
+            question: use_plural ? plural_question : single_question,
+            answers: [use_plural ? plural_answer : single_answer]
+          }
         when 'Card'
           # tagged_cards = @cards.select { |card| card.tags.map(&:id).include?(quiz_question.tag_id) }
           card = @cards.pop
@@ -119,16 +128,18 @@ class Quiz < ActiveRecord::Base
     input.starts_with?('a') ? 'an' : 'a'
   end
 
-  def proper_adjective_forms(adjective, subject)
-    case subject
-    when 'I', 'you', 'it', 'this', 'that'
-      result = [{ transliterated: adjective.transliterated_masculine }, { transliterated: adjective.transliterated_feminine }]
-    when 'he'
-      result = [{ transliterated: adjective.transliterated_masculine }]
-    when 'she'
-      result = [{ transliterated: adjective.transliterated_feminine }]
-    when 'we', 'they', 'these', 'those'
-      result = [{ transliterated: adjective.transliterated_masculine_plural }, { transliterated: adjective.transliterated_feminine }]
+  def proper_adjective_forms(args)
+    if args[:subject]
+      case args[:subject]
+      when 'I', 'you', 'it', 'this', 'that'
+        result = [{ transliterated: args[:adjective].transliterated_masculine }, { transliterated: args[:adjective].transliterated_feminine }]
+      when 'he'
+        result = [{ transliterated: args[:adjective].transliterated_masculine }]
+      when 'she'
+        result = [{ transliterated: args[:adjective].transliterated_feminine }]
+      when 'we', 'they', 'these', 'those'
+        result = [{ transliterated: args[:adjective].transliterated_masculine_plural }, { transliterated: args[:adjective].transliterated_feminine }]
+      end
     end
     result
   end

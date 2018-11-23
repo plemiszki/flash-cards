@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: 'nouns#index'
+  root to: 'quizzes#index'
   resources :nouns, only: [:index, :show]
   resources :verbs, only: [:index, :show]
   resources :adjectives, only: [:index, :show]
