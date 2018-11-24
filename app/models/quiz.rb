@@ -84,11 +84,19 @@ class Quiz < ActiveRecord::Base
         when 'Noun is Adjective'
           noun = @nouns.pop
           adjective = @adjectives.pop
-          single_question = "The #{noun[:english]} is #{adjective[:english]}."
-          plural_question = "The #{noun[:english_plural]} are #{adjective[:english]}."
-          single_answer = "#{noun[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} hai"
-          plural_answer = "#{noun[:transliterated_plural]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} hai"
           use_plural = [true, false].sample
+          if use_plural
+            english_subject = ['The', 'These', 'Those'].sample
+          else
+            english_subject = ['The', 'This', 'That'].sample
+          end
+          subject_object = english_subject == 'The' ? nil : get_subject_object(english_subject).first
+          english_subject = english_subject == 'The' ? 'The' : subject_object[:english]
+          hindi_subject = english_subject == 'The' ? '' : subject_object[:transliterated] + ' '
+          single_question = "#{english_subject.capitalize} #{noun[:english]} is #{adjective[:english]}."
+          plural_question = "#{english_subject.capitalize} #{noun[:english_plural]} are #{adjective[:english]}."
+          single_answer = "#{hindi_subject}#{noun[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} hai"
+          plural_answer = "#{hindi_subject}#{noun[:transliterated_plural]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} hai"
           result << {
             question: use_plural ? plural_question : single_question,
             answers: [use_plural ? plural_answer : single_answer]
