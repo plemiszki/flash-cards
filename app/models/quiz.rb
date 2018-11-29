@@ -78,9 +78,29 @@ class Quiz < ActiveRecord::Base
               end
             end.flatten.uniq
           }
-        when 'Subject is Adjective Noun'
+        when 'Subject is a Adjective Noun'
           noun = @nouns.pop
           adjective = @adjectives.pop
+          subject_objects = get_subject_object(get_random_single_english_subject)
+          question_subject_object = subject_objects.sample
+          result << {
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(adjective[:english])} #{adjective[:english]} #{noun[:english]}.",
+            answers: subject_objects.map do |hash|
+              ["#{hash[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{noun[:transliterated]} #{hash[:transliterated_be]}",
+              "#{hash[:transliterated]} ek #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{noun[:transliterated]} #{hash[:transliterated_be]}"]
+            end.flatten.uniq
+          }
+        when 'Subject are Adjective Nouns'
+          noun = @nouns.pop
+          adjective = @adjectives.pop
+          subject_objects = get_subject_object(get_random_plural_english_subject)
+          question_subject_object = subject_objects.sample
+          result << {
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]} #{noun[:english_plural]}.",
+            answers: subject_objects.map do |hash|
+              ["#{hash[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{noun[:transliterated_plural]} #{hash[:transliterated_be]}"]
+            end.flatten.uniq
+          }
         when 'Noun is Adjective'
           noun = @nouns.pop
           adjective = @adjectives.pop
@@ -124,6 +144,10 @@ class Quiz < ActiveRecord::Base
     @cards = Card.all.to_a.shuffle if @cards.empty?
   end
 
+  def get_random_single_english_subject
+    ['I', 'You', 'He', 'She', 'It', 'This', 'That'][rand(7)]
+  end
+
   def get_random_plural_english_subject
     get_random_english_subject(true)
   end
@@ -133,7 +157,7 @@ class Quiz < ActiveRecord::Base
   end
 
   def a_or_an(input)
-    input.starts_with?('a') ? 'an' : 'a'
+    input.starts_with?('a', 'e', 'i', 'o', 'u') ? 'an' : 'a'
   end
 
   def proper_adjective_forms(args)

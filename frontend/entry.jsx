@@ -102,7 +102,7 @@ $(document).ready(function() {
         <StandardIndex
           entityName='card'
           entityNamePlural='cards'
-          columns={ ['question', 'answer'] }
+          columns={ ['question', 'tags'] }
           initialNewEntity={ { question: '', answer: '' } }
           modalDimensions={ { width: 900, height: 432 } }
         />
