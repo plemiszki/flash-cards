@@ -122,8 +122,19 @@ class Quiz < ActiveRecord::Base
             answers: [use_plural ? plural_answer : single_answer]
           }
         when 'Card'
-          # tagged_cards = @cards.select { |card| card.tags.map(&:id).include?(quiz_question.tag_id) }
-          card = @cards.pop
+          if quiz_question.tag_id
+            tagged_cards = []
+            until !tagged_cards.empty? do
+              tagged_cards = @cards.select { |card| card.tags.map(&:id).include?(quiz_question.tag_id) }
+              if tagged_cards.empty?
+                @cards += Card.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+              end
+            end
+            card = tagged_cards.sample
+            @cards.reject! { |c| c == card }
+          else
+            card = @cards.pop
+          end
           result << {
             question: card.question,
             answers: [card.answer],
