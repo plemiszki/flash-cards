@@ -53,7 +53,7 @@ $(document).ready(function() {
           entityNamePlural='verbs'
           columns={ ['infinitive', 'transliteratedInfinitive', 'english'] }
           columnHeaders={ ['', 'Transliterated', ''] }
-          initialNewEntity={ { english: '', transliteratedInfinitive: '', infinitive: '' } }
+          initialNewEntity={ { english: '', infinitive: '', transliteratedInfinitive: '' } }
           modalDimensions={ { width: 900 } }
         />
       </Provider>,

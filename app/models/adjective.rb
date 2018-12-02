@@ -1,5 +1,6 @@
 class Adjective < ActiveRecord::Base
 
-  validates :english, :masculine, :feminine, :masculine_plural, presence: true
+  validates_presence_of :english, :masculine, :feminine, :masculine_plural
+  validates_uniqueness_of :english, scope: :masculine, message: '/ Hindi combo already used'
 
 end

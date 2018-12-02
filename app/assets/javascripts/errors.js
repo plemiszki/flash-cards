@@ -1,14 +1,15 @@
 Errors = {
 
   amount: [
-    "Amount is not a number",
-    "Amount must be greater than or equal to 1"
+    'Amount is not a number',
+    'Amount must be greater than or equal to 1'
   ],
   answer: [
     "Answer can't be blank"
   ],
   english: [
-    "English can't be blank"
+    "English can't be blank",
+    'English / Hindi combo already used'
   ],
   englishPlural: [
     "English plural can't be blank"
@@ -17,16 +18,19 @@ Errors = {
     "Feminine can't be blank"
   ],
   foreign: [
-    "Foreign can't be blank"
+    "Foreign can't be blank",
+    'English / Hindi combo already used'
   ],
   foreignPlural: [
     "Foreign plural can't be blank"
   ],
   infinitive: [
-    "Infinitive can't be blank"
+    "Infinitive can't be blank",
+    'English / Hindi combo already used'
   ],
   masculine: [
-    "Masculine can't be blank"
+    "Masculine can't be blank",
+    'English / Hindi combo already used'
   ],
   masculinePlural: [
     "Masculine plural can't be blank"

@@ -93,8 +93,8 @@ class NewEntity extends React.Component {
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
           </div>
         ]);
       case 'adjective':
