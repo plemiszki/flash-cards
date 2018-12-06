@@ -121,6 +121,14 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq
           }
+        when 'Noun Gender'
+          noun = @nouns.pop
+          result << {
+            question: noun.foreign,
+            answers: [
+              noun.gender == 1 ? 'm' : 'f'
+            ]
+          }
         when 'Noun is Adjective'
           noun = @nouns.pop
           adjective = @adjectives.pop
