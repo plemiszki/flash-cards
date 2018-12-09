@@ -1,5 +1,12 @@
 #quiz-run {
 
+  p.wrong-count {
+    margin-top: 10px;
+    display: inline-block;
+    float: right;
+    color: red;
+  }
+
   p.question {
     font-family: 'TeachableSans-ExtraBold';
     font-size: 30px;

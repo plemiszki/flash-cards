@@ -15,7 +15,8 @@ class QuizRun extends React.Component {
       questionNumber: 0,
       answer: '',
       status: 'question',
-      showAnswers: false
+      showAnswers: false,
+      wrongAnswerLog: {}
     };
   }
 
@@ -58,8 +59,11 @@ class QuizRun extends React.Component {
           status: 'correct'
         });
       } else {
+        let wrongAnswerLog = this.state.wrongAnswerLog;
+        wrongAnswerLog[this.state.questionNumber] = 'wrong';
         this.setState({
-          status: 'wrong'
+          status: 'wrong',
+          wrongAnswerLog
         });
       }
     }
@@ -71,10 +75,15 @@ class QuizRun extends React.Component {
     });
   }
 
+  totalWrongAnswers() {
+    return Object.keys(this.state.wrongAnswerLog).length;
+  }
+
   render() {
     return (
       <div id="quiz-run" className="component">
         <h1>{ this.renderHeader() }</h1>
+        { this.renderWrongAnswers() }
         <div className="white-box">
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
@@ -88,6 +97,15 @@ class QuizRun extends React.Component {
         </div>
       </div>
     );
+  }
+
+  renderWrongAnswers() {
+    let count = this.totalWrongAnswers();
+    if (count > 0) {
+      return (
+        <p class="wrong-count">Wrong: { count }</p>
+      );
+    }
   }
 
   buttonClass() {
