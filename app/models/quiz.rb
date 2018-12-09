@@ -17,14 +17,14 @@ class Quiz < ActiveRecord::Base
         check_if_anything_empty
         case question.name
         when 'Single Noun'
-          noun = @nouns.pop
+          @noun = @nouns.pop
           plural = (rand(2) == 1)
           result << {
-            question: (plural ? noun.english_plural.capitalize : noun.english.capitalize),
-            answers: [
-              (plural ? noun.transliterated_plural : noun.transliterated),
-              (plural ? noun.foreign_plural : noun.foreign)
-            ]
+            question: (plural ? @noun.english_plural.capitalize : @noun.english.capitalize),
+            answers: all_synonyms([
+              (plural ? @noun.transliterated_plural : @noun.transliterated),
+              (plural ? @noun.foreign_plural : @noun.foreign)
+            ])
           }
         when 'Single Verb'
           verb = @verbs.pop
@@ -45,32 +45,32 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Subject is a Noun'
-          noun = @nouns.pop
+          @noun = @nouns.pop
           subject_objects = get_subject_object(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(noun[:english])} #{noun[:english]}.",
-            answers: subject_objects.map do |hash|
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(@noun[:english])} #{@noun[:english]}.",
+            answers: all_synonyms(subject_objects.map do |hash|
               [
-                "#{hash[:transliterated]} #{noun[:transliterated]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{noun[:foreign]} #{hash[:hindi_be]}",
-                "#{hash[:transliterated]} ek #{noun[:transliterated]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} एक #{noun[:foreign]} #{hash[:hindi_be]}"
+                "#{hash[:transliterated]} #{@noun[:transliterated]} #{hash[:transliterated_be]}",
+                "#{hash[:hindi]} #{@noun[:foreign]} #{hash[:hindi_be]}",
+                "#{hash[:transliterated]} ek #{@noun[:transliterated]} #{hash[:transliterated_be]}",
+                "#{hash[:hindi]} एक #{@noun[:foreign]} #{hash[:hindi_be]}"
               ]
-            end.flatten.uniq
+            end.flatten.uniq)
           }
         when 'Subject are Nouns'
-          noun = @nouns.pop
+          @noun = @nouns.pop
           subject_objects = get_subject_object(get_random_plural_english_subject)
           question_subject_object = subject_objects.sample
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{noun[:english_plural]}.",
-            answers: subject_objects.map do |hash|
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{@noun[:english_plural]}.",
+            answers: all_synonyms(subject_objects.map do |hash|
               [
-                "#{hash[:transliterated]} #{noun[:transliterated_plural]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{noun[:foreign_plural]} #{hash[:hindi_be]}"
+                "#{hash[:transliterated]} #{@noun[:transliterated_plural]} #{hash[:transliterated_be]}",
+                "#{hash[:hindi]} #{@noun[:foreign_plural]} #{hash[:hindi_be]}"
               ]
-            end.flatten.uniq
+            end.flatten.uniq)
           }
         when 'Subject is Adjective'
           adjective = @adjectives.pop
@@ -92,34 +92,34 @@ class Quiz < ActiveRecord::Base
             answers: hindi_answers + transliterated_answers
           }
         when 'Subject is a Adjective Noun'
-          noun = @nouns.pop
+          @noun = @nouns.pop
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(adjective[:english])} #{adjective[:english]} #{noun[:english]}.",
-            answers: subject_objects.map do |hash|
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(adjective[:english])} #{adjective[:english]} #{@noun[:english]}.",
+            answers: all_synonyms(subject_objects.map do |hash|
               [
-                "#{hash[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{noun[:transliterated]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{noun[:gender] == 1 ? adjective[:masculine] : adjective[:feminine]} #{noun[:foreign]} #{hash[:hindi_be]}",
-                "#{hash[:transliterated]} ek #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{noun[:transliterated]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} एक #{noun[:gender] == 1 ? adjective[:masculine] : adjective[:feminine]} #{noun[:foreign]} #{hash[:hindi_be]}"
+                "#{hash[:transliterated]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{@noun[:transliterated]} #{hash[:transliterated_be]}",
+                "#{hash[:hindi]} #{@noun[:gender] == 1 ? adjective[:masculine] : adjective[:feminine]} #{@noun[:foreign]} #{hash[:hindi_be]}",
+                "#{hash[:transliterated]} ek #{@noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{@noun[:transliterated]} #{hash[:transliterated_be]}",
+                "#{hash[:hindi]} एक #{@noun[:gender] == 1 ? adjective[:masculine] : adjective[:feminine]} #{@noun[:foreign]} #{hash[:hindi_be]}"
               ]
-            end.flatten.uniq
+            end.flatten.uniq)
           }
         when 'Subject are Adjective Nouns'
-          noun = @nouns.pop
+          @noun = @nouns.pop
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_plural_english_subject)
           question_subject_object = subject_objects.sample
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]} #{noun[:english_plural]}.",
-            answers: subject_objects.map do |hash|
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]} #{@noun[:english_plural]}.",
+            answers: all_synonyms(subject_objects.map do |hash|
               [
-                "#{hash[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{noun[:transliterated_plural]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{noun[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} #{noun[:foreign_plural]} #{hash[:hindi_be]}"
+                "#{hash[:transliterated]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{@noun[:transliterated_plural]} #{hash[:transliterated_be]}",
+                "#{hash[:hindi]} #{@noun[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} #{@noun[:foreign_plural]} #{hash[:hindi_be]}"
               ]
-            end.flatten.uniq
+            end.flatten.uniq)
           }
         when 'Noun Gender'
           noun = @nouns.pop
@@ -130,7 +130,7 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Noun is Adjective'
-          noun = @nouns.pop
+          @noun = @nouns.pop
           adjective = @adjectives.pop
           use_plural = [true, false].sample
           if use_plural
@@ -142,21 +142,21 @@ class Quiz < ActiveRecord::Base
           english_subject = english_subject == 'The' ? 'The' : subject_object[:english]
           transliterated_subject = english_subject == 'The' ? '' : subject_object[:transliterated] + ' '
           hindi_subject = english_subject == 'The' ? '' : subject_object[:hindi] + ' '
-          single_question = "#{english_subject.capitalize} #{noun[:english]} is #{adjective[:english]}."
-          plural_question = "#{english_subject.capitalize} #{noun[:english_plural]} are #{adjective[:english]}."
+          single_question = "#{english_subject.capitalize} #{@noun[:english]} is #{adjective[:english]}."
+          plural_question = "#{english_subject.capitalize} #{@noun[:english_plural]} are #{adjective[:english]}."
           single_answers = [
-            "#{transliterated_subject}#{noun[:transliterated]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} hai",
-            "#{hindi_subject}#{noun[:foreign]} #{noun[:gender] == 1 ? adjective[:masculine] : adjective[:feminine]} है"
+            "#{transliterated_subject}#{@noun[:transliterated]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} hai",
+            "#{hindi_subject}#{@noun[:foreign]} #{@noun[:gender] == 1 ? adjective[:masculine] : adjective[:feminine]} है"
           ]
           plural_answers = [
-            "#{transliterated_subject}#{noun[:transliterated_plural]} #{noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} hai",
-            "#{hindi_subject}#{noun[:foreign_plural]} #{noun[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} हैं"
+            "#{transliterated_subject}#{@noun[:transliterated_plural]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} hai",
+            "#{hindi_subject}#{@noun[:foreign_plural]} #{@noun[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} हैं"
           ]
           result << {
             question: use_plural ? plural_question : single_question,
-            answers: [
+            answers: all_synonyms([
               use_plural ? plural_answers : single_answers
-            ].flatten
+            ].flatten)
           }
         when 'Card'
           if quiz_question.tag_id
@@ -184,6 +184,16 @@ class Quiz < ActiveRecord::Base
   end
 
   private
+
+  def all_synonyms(answers)
+    synonyms = @noun.synonyms
+    result = answers.map do |answer|
+      synonyms.map do |synonym|
+        answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated)
+      end
+    end
+    result.flatten.uniq
+  end
 
   def check_if_anything_empty
     @nouns = Noun.all.to_a.shuffle if @nouns.empty?
