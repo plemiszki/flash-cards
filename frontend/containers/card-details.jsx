@@ -1,12 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
 import Details from './modules/details.jsx';
 import NewEntity from './new-entity.jsx';
+import ModalSelect from './modal-select.jsx';
 import Common from './modules/common.js';
+
+const selectModalStyles = {
+  overlay: {
+    background: 'rgba(0, 0, 0, 0.50)'
+  },
+  content: {
+    background: '#FFFFFF',
+    margin: 'auto',
+    maxWidth: 540,
+    height: '90%',
+    border: 'solid 1px #5F5F5F',
+    borderRadius: '6px',
+    textAlign: 'center',
+    color: '#5F5F5F'
+  }
+}
 
 class CardDetails extends React.Component {
   constructor(props) {
@@ -86,14 +103,28 @@ class CardDetails extends React.Component {
 
   updateCardTags(response) {
     this.setState({
-      newCardTagModalOpen: false,
-      cardTags: response.entities || response
+      fetching: false,
+      cardTags: response.entities
     });
   }
 
   deleteCardTag(e) {
     let id = e.target.dataset.id;
     this.props.deleteEntity('card_tags', id, this.updateCardTags.bind(this));
+  }
+
+  clickTag(e) {
+    e.persist();
+    this.setState({
+      newCardTagModalOpen: false,
+      fetching: true
+    }, () => {
+      this.props.createEntity({
+        directory: 'card_tags',
+        entityName: 'cardTag',
+        entity: { tagId: e.target.dataset.id, cardId: this.state.card.id }
+      }).then(this.updateCardTags.bind(this));
+    });
   }
 
   render() {
@@ -142,15 +173,8 @@ class CardDetails extends React.Component {
           </table>
           <a className="gray-outline-button small-width small-padding" onClick={ HandyTools.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
         </div>
-        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
-          <NewEntity
-            entityName="cardTag"
-            entityNamePlural="cardTags"
-            initialEntity={ { cardId: this.state.card.id, tagId: Common.firstElementPropertyOrBlank(this.state.tags, 'id') } }
-            callback={ this.updateCardTags.bind(this) }
-            buttonText="Add Tag"
-            array1={ this.state.tags }
-          />
+        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ selectModalStyles }>
+          <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />
         </Modal>
       </div>
     );
@@ -171,7 +195,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity, updateEntity, deleteEntity }, dispatch);
+  return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardDetails);

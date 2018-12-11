@@ -14,7 +14,6 @@
  *= require_self
  */
 
-
  @import 'bootstrap-sprockets';
  @import 'bootstrap';
  @import 'library/nice-select';
@@ -25,5 +24,6 @@
  @import 'handy-tools/styles/admin-layout';
  @import 'handy-tools/styles/admin-table';
  @import 'handy-tools/styles/sign-in';
+ @import 'handy-tools/styles/modal-select';
 
  @import 'quiz-run';
