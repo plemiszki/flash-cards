@@ -20,7 +20,7 @@ class Api::CardTagsController < AdminController
   private
 
   def card_tag_params
-    params[:card_tag].permit(:card_id, :tag_id)
+    params[:card_tag].permit(:card_id, :tag_id, :card_type)
   end
 
 end

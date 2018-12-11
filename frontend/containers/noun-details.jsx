@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index';
+import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
 import Details from './modules/details.jsx';
+import ModalSelect from './modal-select.jsx';
+import Common from './modules/common.js';
 
 class NounDetails extends React.Component {
   constructor(props) {
@@ -22,7 +25,10 @@ class NounDetails extends React.Component {
       fetching: true,
       noun: emptyNoun,
       nounSaved: emptyNoun,
-      errors: []
+      errors: [],
+      nounTags: [],
+      tags: [],
+      newCardTagModalOpen: false
     };
   }
 
@@ -36,6 +42,8 @@ class NounDetails extends React.Component {
         fetching: false,
         noun: this.props.noun,
         nounSaved: HandyTools.deepCopy(this.props.noun),
+        tags: this.props.tags,
+        nounTags: this.props.nounTags,
         changesToSave: false
       }, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
@@ -81,6 +89,32 @@ class NounDetails extends React.Component {
     });
   }
 
+  updateNounTags(response) {
+    this.setState({
+      fetching: false,
+      nounTags: response.entities
+    });
+  }
+
+  deleteNounTag(e) {
+    let id = e.target.dataset.id;
+    this.props.deleteEntity('card_tags', id, this.updateNounTags.bind(this));
+  }
+
+  clickTag(e) {
+    e.persist();
+    this.setState({
+      newCardTagModalOpen: false,
+      fetching: true
+    }, () => {
+      this.props.createEntity({
+        directory: 'card_tags',
+        entityName: 'cardTag',
+        entity: { tagId: e.target.dataset.id, cardId: this.state.noun.id, cardType: 'Noun' }
+      }).then(this.updateNounTags.bind(this));
+    });
+  }
+
   render() {
     return (
       <div id="noun-details" className="component details-component">
@@ -109,28 +143,61 @@ class NounDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliteratedPlural' }) }
           </div>
           <div>
-            <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            <a className={ "btn blue-button standard-width m-bottom" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
             <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
+          <hr className="divider" />
+          <table className="admin-table no-links m-bottom">
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              { HandyTools.alphabetizeArrayOfObjects(this.state.nounTags, 'tagName').map((nounTag, index) => {
+                return(
+                  <tr key={ index }>
+                    <td>{ nounTag.tagName }</td>
+                    <td className="x-column" onClick={ this.deleteNounTag.bind(this) } data-id={ nounTag.id }></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <a className="gray-outline-button small-width small-padding" onClick={ HandyTools.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
         </div>
+        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ HandyTools.modalSelectStyles() }>
+          <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />
+        </Modal>
       </div>
     );
+  }
+
+  componentDidUpdate() {
+    Common.matchColumnHeight();
   }
 }
 
 const mapStateToProps = (reducers) => {
   return {
     noun: reducers.standardReducer.entity,
+    nounTags: reducers.standardReducer.array1,
+    tags: reducers.standardReducer.array2,
     errors: reducers.standardReducer.errors
   };
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity, updateEntity, deleteEntity }, dispatch);
+  return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NounDetails);

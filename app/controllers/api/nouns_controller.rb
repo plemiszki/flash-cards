@@ -17,6 +17,8 @@ class Api::NounsController < AdminController
 
   def show
     @noun = Noun.find(params[:id])
+    @noun_tags = CardTag.where(card_id: @noun.id, card_type: 'Noun')
+    @tags = Tag.all.order(:name)
     render 'show.json.jbuilder'
   end
 
