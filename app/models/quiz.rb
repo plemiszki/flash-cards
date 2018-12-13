@@ -17,7 +17,7 @@ class Quiz < ActiveRecord::Base
         check_if_anything_empty
         case question.name
         when 'Single Noun'
-          @noun = @nouns.pop
+          @noun = get_noun(quiz_question)
           plural = (rand(2) == 1)
           result << {
             question: (plural ? @noun.english_plural.capitalize : @noun.english.capitalize),
@@ -45,7 +45,7 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Subject is a Noun'
-          @noun = @nouns.pop
+          @noun = get_noun(quiz_question)
           subject_objects = get_subject_object(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
           result << {
@@ -60,7 +60,7 @@ class Quiz < ActiveRecord::Base
             end.flatten.uniq)
           }
         when 'Subject are Nouns'
-          @noun = @nouns.pop
+          @noun = get_noun(quiz_question)
           subject_objects = get_subject_object(get_random_plural_english_subject)
           question_subject_object = subject_objects.sample
           result << {
@@ -92,7 +92,7 @@ class Quiz < ActiveRecord::Base
             answers: hindi_answers + transliterated_answers
           }
         when 'Subject is a Adjective Noun'
-          @noun = @nouns.pop
+          @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
@@ -108,7 +108,7 @@ class Quiz < ActiveRecord::Base
             end.flatten.uniq)
           }
         when 'Subject are Adjective Nouns'
-          @noun = @nouns.pop
+          @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_plural_english_subject)
           question_subject_object = subject_objects.sample
@@ -122,7 +122,7 @@ class Quiz < ActiveRecord::Base
             end.flatten.uniq)
           }
         when 'Noun Gender'
-          noun = @nouns.pop
+          noun = get_noun(quiz_question)
           result << {
             question: noun.foreign,
             answers: [
@@ -130,7 +130,7 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Noun is Adjective'
-          @noun = @nouns.pop
+          @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           use_plural = [true, false].sample
           if use_plural
@@ -200,6 +200,23 @@ class Quiz < ActiveRecord::Base
     @verbs = Verb.all.to_a.shuffle if @verbs.empty?
     @adjectives = Adjective.all.to_a.shuffle if @adjectives.empty?
     @cards = Card.all.to_a.shuffle if @cards.empty?
+  end
+
+  def get_noun(quiz_question)
+    if quiz_question.tag_id
+      tagged_nouns = []
+      until !tagged_nouns.empty? do
+        tagged_nouns = @nouns.select { |noun| noun.tags.map(&:id).include?(quiz_question.tag_id) }
+        if tagged_nouns.empty?
+          @nouns += Noun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+        end
+      end
+      noun = tagged_nouns.sample
+      @nouns.reject! { |n| n == noun }
+    else
+      noun = @nouns.pop
+    end
+    noun
   end
 
   def get_random_single_english_subject
