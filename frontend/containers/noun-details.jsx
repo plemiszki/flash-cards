@@ -110,7 +110,7 @@ class NounDetails extends React.Component {
       this.props.createEntity({
         directory: 'card_tags',
         entityName: 'cardTag',
-        entity: { tagId: e.target.dataset.id, cardId: this.state.noun.id, cardType: 'Noun' }
+        entity: { tagId: e.target.dataset.id, cardtagableId: this.state.noun.id, cardtagableType: 'Noun' }
       }).then(this.updateNounTags.bind(this));
     });
   }

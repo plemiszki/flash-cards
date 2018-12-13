@@ -122,7 +122,11 @@ class CardDetails extends React.Component {
       this.props.createEntity({
         directory: 'card_tags',
         entityName: 'cardTag',
-        entity: { tagId: e.target.dataset.id, cardId: this.state.card.id }
+        entity: {
+          tagId: e.target.dataset.id,
+          cardtagableId: this.state.card.id,
+          cardtagableType: 'Card'
+        }
       }).then(this.updateCardTags.bind(this));
     });
   }

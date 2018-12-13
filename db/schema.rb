@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181020033422) do
+ActiveRecord::Schema.define(version: 20181212225207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,9 +26,9 @@ ActiveRecord::Schema.define(version: 20181020033422) do
   end
 
   create_table "card_tags", force: :cascade do |t|
-    t.integer "tag_id",                     null: false
-    t.integer "card_id",                    null: false
-    t.string  "card_type", default: "card"
+    t.integer "tag_id",                            null: false
+    t.integer "cardtagable_id",                    null: false
+    t.string  "cardtagable_type", default: "card"
   end
 
   create_table "cards", force: :cascade do |t|

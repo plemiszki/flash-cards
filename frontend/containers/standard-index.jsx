@@ -79,7 +79,7 @@ class StandardIndex extends React.Component {
                       return(
                         <td key={ index } className={ this.props.columnClasses ? this.props.columnClasses[index] : '' }>
                           <a href={ `${directory}/${entity.id}${this.props.columnLinks && this.props.columnLinks[index] ? this.props.columnLinks[index] : ''}` }>
-                            { entity[column] }
+                            { this.renderValue(entity[column], index) }
                           </a>
                         </td>
                       );
@@ -95,6 +95,14 @@ class StandardIndex extends React.Component {
         </Modal>
       </div>
     );
+  }
+
+  renderValue(value, index) {
+    if (this.props.ellipses && this.props.ellipses[index]) {
+      return HandyTools.ellipsis(value, this.props.ellipses[index]);
+    } else {
+      return value;
+    }
   }
 
   componentDidUpdate() {

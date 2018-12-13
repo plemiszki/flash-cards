@@ -1,8 +1,8 @@
 class CardTag < ActiveRecord::Base
 
-  validates :card_id, :tag_id, presence: true
+  validates :cardtagable_id, :tag_id, presence: true
 
-  belongs_to :card, polymorphic: true
-  belongs_to :tag, optional: true
+  belongs_to :tag
+  belongs_to :cardtagable, polymorphic: true
 
 end
