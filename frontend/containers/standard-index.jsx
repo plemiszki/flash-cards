@@ -8,6 +8,7 @@ import _ from 'lodash';
 import Index from './modules/index.js';
 import Common from './modules/common.js';
 import NewEntity from './new-entity.jsx';
+import Message from './message.jsx';
 
 const directory = window.location.pathname.split('/')[1] || 'quizzes';
 
@@ -25,6 +26,7 @@ class StandardIndex extends React.Component {
   }
 
   componentDidMount() {
+    Common.checkForMessage.call(this);
     this.props.fetchEntities(directory).then(() => {
       this.setState({
         fetching: false,
@@ -44,6 +46,7 @@ class StandardIndex extends React.Component {
     let filteredEntities = HandyTools.filterSearchText(this.state.entities, this.state.searchText, this.state.searchProperty);
     return(
       <div className="component">
+        { this.renderMessage() }
         <h1>{ HandyTools.capitalize(this.props.entityNamePlural) }</h1>
         <a className={ "blue-button btn float-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { HandyTools.capitalize(this.props.entityName) }</a>
         <input className="search-box margin" onChange={ HandyTools.changeStateToTarget.bind(this, 'searchText') } value={ this.state.searchText } />
@@ -102,6 +105,14 @@ class StandardIndex extends React.Component {
       return HandyTools.ellipsis(value, this.props.ellipses[index]);
     } else {
       return value;
+    }
+  }
+
+  renderMessage() {
+    if (this.state.message) {
+      return (
+        <Message color={ this.state.messageColor } text={ this.state.message } clickClose={ () => { HandyTools.changeState.call(this, 'message', '') } } />
+      );
     }
   }
 

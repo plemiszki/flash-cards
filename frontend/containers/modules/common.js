@@ -1,5 +1,18 @@
 export default {
 
+  checkForMessage() {
+    let message = localStorage.getItem('message');
+    if (message) {
+      this.setState({
+        message,
+        messageColor: localStorage.getItem('message-color')
+      }, () => {
+        localStorage.removeItem('message');
+        localStorage.removeItem('message-color');
+      });
+    }
+  },
+
   closeModals() {
     let keys = Object.keys(this.state).filter((key) => {
       return key.slice(-9) === 'ModalOpen';

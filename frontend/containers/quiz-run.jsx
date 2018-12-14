@@ -43,6 +43,16 @@ class QuizRun extends React.Component {
     }
     if (this.state.status === 'correct') {
       if (this.state.questionNumber + 1 === this.state.quiz.questions.length) {
+        if (this.totalWrongAnswers() > 0) {
+          let total = this.state.quiz.questions.length;
+          let correct = total - this.totalWrongAnswers();
+          let percentage = Math.floor((correct / total) * 100);
+          localStorage.setItem('message', `${this.totalWrongAnswers()} wrong answers - ${percentage}% correct`);
+          localStorage.setItem('message-color', 'red');
+        } else {
+          localStorage.setItem('message', 'Great job. You aced the quiz!');
+          localStorage.setItem('message-color', 'green');
+        }
         window.location.pathname = '/quizzes';
       } else {
         this.setState({

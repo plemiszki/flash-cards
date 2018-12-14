@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+ruby "2.5.0"
+
 gem 'bootstrap-sass'
 gem 'clearance', '~> 1.11'
 gem 'jbuilder', '~> 2.5'
