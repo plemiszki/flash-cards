@@ -1,7 +1,7 @@
 class Api::CardsController < AdminController
 
   def index
-    @cards = Card.all
+    @cards = Card.all.includes(:tags)
     render 'index.json.jbuilder'
   end
 
