@@ -137,6 +137,24 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq)
           }
+        when 'Subject has an Adjective Noun'
+          subject_objects = get_subject_object(get_random_english_subject)
+          subject_has_objects = get_subject_has_objects(subject_objects)
+          @noun = get_noun(quiz_question)
+          use_plural = [true, false].sample
+          adjective = @adjectives.pop
+          transliterated_adjectives, hindi_adjectives = proper_adjective_forms({ adjective: adjective, noun: @noun, plural: use_plural })
+          result << {
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(@noun.english)} #{adjective.english} #{use_plural ? @noun[:english_plural] : @noun[:english]}.",
+            answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
+              [
+                "#{subject_has_object[:transliterated]} #{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} #{subject_objects[index][:transliterated_be]}",
+                "#{subject_has_object[:transliterated]} #{use_plural ? '' : 'ek '}#{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} #{subject_objects[index][:transliterated_be]}",
+                "#{subject_has_object[:hindi]} #{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{subject_objects[index][:hindi_be]}",
+                "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{subject_objects[index][:hindi_be]}"
+              ]
+            end.flatten.uniq)
+          }
         when 'Noun Gender'
           noun = get_noun(quiz_question)
           result << {
@@ -355,6 +373,15 @@ class Quiz < ActiveRecord::Base
             args[:adjective].feminine
           ]
         ]
+      end
+    elsif args[:noun]
+      raise 'plural argument missing' unless (args[:plural] || args[:plural] == false)
+      if args[:noun].gender == 1 && args[:plural] == false
+        result = [[args[:adjective].transliterated_masculine], [args[:adjective].masculine]]
+      elsif args[:noun].gender == 1 && args[:plural]
+        result = [[args[:adjective].transliterated_masculine_plural], [args[:adjective].masculine_plural]]
+      elsif args[:noun].gender == 2
+        result = [[args[:adjective].transliterated_feminine], [args[:adjective].feminine]]
       end
     end
     result
