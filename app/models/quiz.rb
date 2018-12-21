@@ -121,6 +121,22 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq)
           }
+        when 'Subject has a Noun'
+          subject_objects = get_subject_object(get_random_english_subject)
+          subject_has_objects = get_subject_has_objects(subject_objects)
+          @noun = get_noun(quiz_question)
+          use_plural = [true, false].sample
+          result << {
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(@noun.english)} #{use_plural ? @noun[:english_plural] : @noun[:english]}.",
+            answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
+              [
+                "#{subject_has_object[:transliterated]} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} #{subject_objects[index][:transliterated_be]}",
+                "#{subject_has_object[:transliterated]} #{use_plural ? '' : 'ek '}#{use_plural ? @noun.transliterated_plural : @noun.transliterated} #{subject_objects[index][:transliterated_be]}",
+                "#{subject_has_object[:hindi]} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{subject_objects[index][:hindi_be]}",
+                "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{use_plural ? @noun.foreign_plural : @noun.foreign} #{subject_objects[index][:hindi_be]}"
+              ]
+            end.flatten.uniq)
+          }
         when 'Noun Gender'
           noun = get_noun(quiz_question)
           result << {
@@ -229,6 +245,67 @@ class Quiz < ActiveRecord::Base
 
   def get_random_english_subject(plural = false)
     ['We', 'They', 'These', 'Those', 'I', 'You', 'He', 'She', 'It', 'This', 'That'][plural ? rand(4) : rand(11)]
+  end
+
+  def get_subject_has_objects(subject_objects)
+    subject_objects.map do |subject_object|
+      case subject_object[:english]
+      when 'I'
+        {
+          english: 'I have',
+          transliterated: 'mere pas',
+          hindi: 'मेरे पास'
+        }
+      when 'you'
+        {
+          english: 'you have',
+          transliterated: (subject_object[:hindi] == 'तुम' ? 'tumhare pas' : 'apke pas'),
+          hindi: (subject_object[:hindi] == 'तुम' ? 'तुम्हारे पास' : 'आपके पास')
+        }
+      when 'he', 'she', 'it'
+        {
+          english: 'he has',
+          transliterated: (subject_object[:hindi] == 'यह' ? 'uske pas' : 'iske pas'),
+          hindi: (subject_object[:hindi] == 'यह' ? 'उसके पास' : 'इसके पस')
+        }
+      when 'this'
+        {
+          english: 'this has',
+          transliterated: 'uske pas',
+          hindi: 'उसके पास'
+        }
+      when 'that'
+        {
+          english: 'that has',
+          transliterated: 'iske pas',
+          hindi: 'इसके पास'
+        }
+      when 'we'
+        {
+          english: 'we have',
+          transliterated: 'hamare pas',
+          hindi: 'हमारे पास'
+        }
+      when 'they'
+        {
+          english: 'they have',
+          transliterated: (subject_object[:hindi] == 'यह' ? 'unke pas' : 'inke pas'),
+          hindi: (subject_object[:hindi] == 'यह' ? 'उनके पास' : 'इनके पास')
+        }
+      when 'these'
+        {
+          english: 'these have',
+          transliterated: 'unke pas',
+          hindi: 'उनके पास'
+        }
+      when 'those'
+        {
+          english: 'those have',
+          transliterated: 'inke pas',
+          hindi: 'इनके पास'
+        }
+      end
+    end
   end
 
   def a_or_an(input)
