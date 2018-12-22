@@ -47,7 +47,12 @@ class QuizRun extends React.Component {
           let total = this.state.quiz.questions.length;
           let correct = total - this.totalWrongAnswers();
           let percentage = Math.floor((correct / total) * 100);
-          localStorage.setItem('message', `${this.totalWrongAnswers()} wrong answers - ${percentage}% correct`);
+          let firstLine = `${this.totalWrongAnswers()} wrong answers - ${percentage}% correct`;
+          let messageLines = [firstLine];
+          Object.keys(this.state.wrongAnswerLog).forEach((key) => {
+            messageLines.push(this.state.quiz.questions[key].question);
+          });
+          localStorage.setItem('message', messageLines.join("\n"));
           localStorage.setItem('message-color', 'red');
         } else {
           localStorage.setItem('message', 'Great job. You aced the quiz!');
@@ -113,7 +118,7 @@ class QuizRun extends React.Component {
     let count = this.totalWrongAnswers();
     if (count > 0) {
       return (
-        <p class="wrong-count">Wrong: { count }</p>
+        <p className="wrong-count">Wrong: { count }</p>
       );
     }
   }
