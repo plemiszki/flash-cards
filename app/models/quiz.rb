@@ -44,6 +44,21 @@ class Quiz < ActiveRecord::Base
               adjective.masculine
             ]
           }
+        when 'Where is Subject\'s Noun?'
+          use_plural = [true, false].sample
+          @noun = get_noun(quiz_question)
+          english_subject = get_random_possession_english_subject
+          possession_objects = get_possession_objects(english_subject)
+          result << {
+            question: "Where #{use_plural ? 'are' : 'is'} #{english_subject} #{use_plural ? @noun[:english_plural] : @noun[:english]}?",
+            answers: all_synonyms(possession_objects.map do |possession_object|
+              proper_possession_object = proper_possession({ possession_object: possession_object, noun: @noun, noun_plural: use_plural })
+              [
+                "#{proper_possession_object[:transliterated]} #{use_plural ? @noun[:transliterated_plural] : @noun[:transliterated]} kaha hai?",
+                "#{proper_possession_object[:hindi]} #{use_plural ? @noun[:foreign_plural] : @noun[:foreign]} कहाँ है?"
+              ]
+            end.flatten.uniq)
+          }
         when 'Subject is a Noun'
           @noun = get_noun(quiz_question)
           subject_objects = get_subject_object(get_random_single_english_subject)
@@ -253,6 +268,10 @@ class Quiz < ActiveRecord::Base
     noun
   end
 
+  def get_random_possession_english_subject
+    ['my', 'your', 'our', 'his', 'her', 'its', 'their'][rand(7)]
+  end
+
   def get_random_single_english_subject
     ['I', 'You', 'He', 'She', 'It', 'This', 'That'][rand(7)]
   end
@@ -330,6 +349,21 @@ class Quiz < ActiveRecord::Base
     input.starts_with?('a', 'e', 'i', 'o', 'u') ? 'an' : 'a'
   end
 
+  def proper_possession(args)
+    case args[:noun][:gender]
+    when 1
+      {
+        hindi: (args[:noun_plural] ? args[:possession_object][:hindi_masculine_plural] : args[:possession_object][:hindi_masculine_singular]),
+        transliterated: (args[:noun_plural] ? args[:possession_object][:transliterated_masculine_plural] : args[:possession_object][:transliterated_masculine_singular])
+      }
+    when 2
+      {
+        hindi: args[:possession_object][:hindi_feminine],
+        transliterated: args[:possession_object][:transliterated_feminine]
+      }
+    end
+  end
+
   def proper_adjective_forms(args)
     if args[:subject]
       case args[:subject]
@@ -385,6 +419,94 @@ class Quiz < ActiveRecord::Base
       end
     end
     result
+  end
+
+  def get_possession_objects(english_subject)
+    case english_subject
+    when 'my'
+      [{
+        hindi_masculine_singular: 'मेरा',
+        hindi_masculine_plural: 'मेरे',
+        hindi_feminine: 'मेरी',
+        transliterated_masculine_singular: 'mera',
+        transliterated_masculine_plural: 'mere',
+        transliterated_feminine: 'meri'
+      }]
+    when 'your'
+      [
+        {
+          hindi_masculine_singular: 'तुम्हारा',
+          hindi_masculine_plural: 'तुम्हारे',
+          hindi_feminine: 'तुम्हारी',
+          transliterated_masculine_singular: 'tumhara',
+          transliterated_masculine_plural: 'tumhare',
+          transliterated_feminine: 'tumhari'
+        },
+        {
+          hindi_masculine_singular: 'आपका',
+          hindi_masculine_plural: 'आपके',
+          hindi_feminine: 'आपकी',
+          transliterated_masculine_singular: 'apka',
+          transliterated_masculine_plural: 'apke',
+          transliterated_feminine: 'apki'
+        }
+      ]
+    when 'our'
+      [{
+        hindi_masculine_singular: 'हमारा',
+        hindi_masculine_plural: 'हमारे',
+        hindi_feminine: 'हमारी',
+        transliterated_masculine_singular: 'hamara',
+        transliterated_masculine_plural: 'hamare',
+        transliterated_feminine: 'hamari'
+      }]
+    when 'his', 'her', 'its'
+      [
+        {
+          hindi_masculine_singular: 'उसका',
+          hindi_masculine_plural: 'उसके',
+          hindi_feminine: 'उसकी',
+          transliterated_masculine_singular: 'uska',
+          transliterated_masculine_plural: 'uske',
+          transliterated_feminine: 'uski'
+        },
+        {
+          hindi_masculine_singular: 'इसका',
+          hindi_masculine_plural: 'इसके',
+          hindi_feminine: 'इसकी',
+          transliterated_masculine_singular: 'iska',
+          transliterated_masculine_plural: 'iske',
+          transliterated_feminine: 'iski'
+        }
+      ]
+    when 'their'
+      [
+        {
+          hindi_masculine_singular: 'उनका',
+          hindi_masculine_plural: 'उनके',
+          hindi_feminine: 'उनकी',
+          transliterated_masculine_singular: 'unka',
+          transliterated_masculine_plural: 'unke',
+          transliterated_feminine: 'unki'
+        },
+        {
+          hindi_masculine_singular: 'इसका',
+          hindi_masculine_plural: 'इसके',
+          hindi_feminine: 'इसकी',
+          transliterated_masculine_singular: 'iska',
+          transliterated_masculine_plural: 'iske',
+          transliterated_feminine: 'iski'
+        },
+        {
+          hindi_masculine_singular: 'इनका',
+          hindi_masculine_plural: 'इनके',
+          hindi_feminine: 'इनकी',
+          transliterated_masculine_singular: 'inka',
+          transliterated_masculine_plural: 'inke',
+          transliterated_feminine: 'inki'
+        }
+      ]
+    end
   end
 
   def get_subject_object(english_subject)
