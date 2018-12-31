@@ -165,8 +165,8 @@ class Quiz < ActiveRecord::Base
               [
                 "#{subject_has_object[:transliterated]} #{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
                 "#{subject_has_object[:transliterated]} #{use_plural ? '' : 'ek '}#{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
-                "#{subject_has_object[:hindi]} #{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? हैं : है}",
-                "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? हैं : है}"
+                "#{subject_has_object[:hindi]} #{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}",
+                "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
               ]
             end.flatten.uniq)
           }
