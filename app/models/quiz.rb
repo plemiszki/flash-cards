@@ -64,7 +64,7 @@ class Quiz < ActiveRecord::Base
           @noun2 = get_noun(quiz_question)
           @adjective = @adjectives.pop
           result << {
-            question: "The #{@noun.english.capitalize} is #{'on'} the #{@adjective.english} #{@noun2.english}",
+            question: "The #{@noun.english} is #{'on'} the #{@adjective.english} #{@noun2.english}.",
             answers: [
               "",
               ""
@@ -305,11 +305,11 @@ class Quiz < ActiveRecord::Base
           hindi: 'मेरे पास'
         }
       when 'you'
-				{
-					english: 'you have',
-					transliterated: (subject_object[:hindi] == 'तुम' ? 'tumhare pas' : 'apke pas'),
-					hindi: (subject_object[:hindi] == 'तुम' ? 'तुम्हारे पास' : 'आपके पास')
-				}
+        {
+          english: 'you have',
+          transliterated: (subject_object[:hindi] == 'तुम' ? 'tumhare pas' : 'apke pas'),
+          hindi: (subject_object[:hindi] == 'तुम' ? 'तुम्हारे पास' : 'आपके पास')
+        }
       when 'he', 'she', 'it'
         {
           english: 'he has',
@@ -353,7 +353,7 @@ class Quiz < ActiveRecord::Base
           hindi: 'इनके पास'
         }
       end
-		end
+    end
   end
 
   def a_or_an(input)
