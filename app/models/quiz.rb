@@ -57,7 +57,7 @@ class Quiz < ActiveRecord::Base
                 "#{proper_possession_object[:transliterated]} #{use_plural ? @noun[:transliterated_plural] : @noun[:transliterated]} kaha hai?",
                 "#{proper_possession_object[:hindi]} #{use_plural ? @noun[:foreign_plural] : @noun[:foreign]} कहाँ है?"
               ]
-            end.flatten.uniq)
+            end.flatten.uniq, use_plural)
           }
         when 'Noun is Preposition Adjective Noun'
           @noun = get_noun(quiz_question)
@@ -96,7 +96,7 @@ class Quiz < ActiveRecord::Base
                 "#{hash[:transliterated]} #{@noun[:transliterated_plural]} #{hash[:transliterated_be]}",
                 "#{hash[:hindi]} #{@noun[:foreign_plural]} #{hash[:hindi_be]}"
               ]
-            end.flatten.uniq)
+            end.flatten.uniq, true)
           }
         when 'Subject is Adjective'
           adjective = @adjectives.pop
@@ -145,7 +145,7 @@ class Quiz < ActiveRecord::Base
                 "#{hash[:transliterated]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{@noun[:transliterated_plural]} #{hash[:transliterated_be]}",
                 "#{hash[:hindi]} #{@noun[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} #{@noun[:foreign_plural]} #{hash[:hindi_be]}"
               ]
-            end.flatten.uniq)
+            end.flatten.uniq, true)
           }
         when 'Subject has a Noun'
           subject_objects = get_subject_object(get_random_english_subject)
@@ -161,7 +161,7 @@ class Quiz < ActiveRecord::Base
                 "#{subject_has_object[:hindi]} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}",
                 "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
               ]
-            end.flatten.uniq)
+            end.flatten.uniq, use_plural)
           }
         when 'Subject has an Adjective Noun'
           subject_objects = get_subject_object(get_random_english_subject)
@@ -179,7 +179,7 @@ class Quiz < ActiveRecord::Base
                 "#{subject_has_object[:hindi]} #{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}",
                 "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
               ]
-            end.flatten.uniq)
+            end.flatten.uniq, use_plural)
           }
         when 'Noun Gender'
           noun = get_noun(quiz_question)
@@ -216,7 +216,7 @@ class Quiz < ActiveRecord::Base
             question: use_plural ? plural_question : single_question,
             answers: all_synonyms([
               use_plural ? plural_answers : single_answers
-            ].flatten)
+            ].flatten, use_plural)
           }
         when 'Card'
           if quiz_question.tag_id
@@ -245,11 +245,15 @@ class Quiz < ActiveRecord::Base
 
   private
 
-  def all_synonyms(answers)
+  def all_synonyms(answers, use_plural = false)
     synonyms = @noun.synonyms
     result = answers.map do |answer|
       synonyms.map do |synonym|
-        answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated)
+        if use_plural
+          answer.gsub(@noun.foreign_plural, synonym.foreign_plural).gsub(@noun.transliterated_plural, synonym.transliterated_plural)
+        else
+          answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated)
+        end
       end
     end
     result.flatten.uniq
