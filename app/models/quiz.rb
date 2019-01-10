@@ -7,10 +7,10 @@ class Quiz < ActiveRecord::Base
 
   def run
     result = []
-    @nouns = Noun.all.to_a.shuffle
-    @verbs = Verb.all.to_a.shuffle
-    @adjectives = Adjective.all.to_a.shuffle
-    @cards = Card.all.to_a.shuffle
+    @nouns = []
+    @verbs = []
+    @adjectives = []
+    @cards = []
     quiz_questions.each do |quiz_question|
       question = quiz_question.question
       quiz_question.amount.times do
@@ -224,7 +224,7 @@ class Quiz < ActiveRecord::Base
             until !tagged_cards.empty? do
               tagged_cards = @cards.select { |card| card.tags.map(&:id).include?(quiz_question.tag_id) }
               if tagged_cards.empty?
-                @cards += Card.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+                @cards += (Card.includes(:tags).where(tags: { id: quiz_question.tag_id }) - Card.includes(:tags).where(tags: { name: 'Archived' }))
               end
             end
             card = tagged_cards.sample
@@ -263,7 +263,7 @@ class Quiz < ActiveRecord::Base
     @nouns = Noun.all.to_a.shuffle if @nouns.empty?
     @verbs = Verb.all.to_a.shuffle if @verbs.empty?
     @adjectives = Adjective.all.to_a.shuffle if @adjectives.empty?
-    @cards = Card.all.to_a.shuffle if @cards.empty?
+    @cards = (Card.all - Card.includes(:tags).where(tags: { name: 'Archived' })).to_a.shuffle if @cards.empty?
   end
 
   def get_noun(quiz_question)
