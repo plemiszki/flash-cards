@@ -171,7 +171,7 @@ class Quiz < ActiveRecord::Base
           adjective = @adjectives.pop
           transliterated_adjectives, hindi_adjectives = proper_adjective_forms({ adjective: adjective, noun: @noun, plural: use_plural })
           result << {
-            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(@noun.english)} #{adjective.english} #{use_plural ? @noun[:english_plural] : @noun[:english]}.",
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(adjective.english)} #{adjective.english} #{use_plural ? @noun[:english_plural] : @noun[:english]}.",
             answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
               [
                 "#{subject_has_object[:transliterated]} #{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
