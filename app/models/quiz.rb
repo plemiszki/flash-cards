@@ -19,8 +19,9 @@ class Quiz < ActiveRecord::Base
         when 'Single Noun'
           @noun = get_noun(quiz_question)
           plural = (rand(2) == 1)
+          single_plural_same = @noun.english == @noun.english_plural
           result << {
-            question: (plural ? @noun.english_plural.capitalize : @noun.english.capitalize),
+            question: (plural ? "#{@noun.english_plural.capitalize}#{single_plural_same ? ' (plural)' : ''}" : @noun.english.capitalize),
             answers: all_synonyms([
               (plural ? @noun.transliterated_plural : @noun.transliterated),
               (plural ? @noun.foreign_plural : @noun.foreign)
