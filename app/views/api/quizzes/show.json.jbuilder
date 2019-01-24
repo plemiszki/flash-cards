@@ -1,6 +1,7 @@
 json.entity do
   json.id @quiz.id
   json.name @quiz.name
+  json.includeArchived @quiz.include_archived
 end
 json.array1 @quiz_questions do |quiz_question|
   json.id quiz_question.id

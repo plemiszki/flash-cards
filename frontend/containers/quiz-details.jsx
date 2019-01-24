@@ -80,6 +80,7 @@ class QuizDetails extends React.Component {
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quiz', property: 'name' }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 3, entity: 'quiz', property: 'includeArchived', columnHeader: 'Include Archived Questions?', boolean: true, maxOptions: 2 }) }
           </div>
           <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
             { Details.saveButtonText.call(this) }

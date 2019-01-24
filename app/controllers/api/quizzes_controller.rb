@@ -46,7 +46,7 @@ class Api::QuizzesController < AdminController
   private
 
   def quiz_params
-    params[:quiz].permit(:name)
+    params[:quiz].permit(:name, :include_archived)
   end
 
 end
