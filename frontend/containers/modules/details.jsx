@@ -61,7 +61,7 @@ let Details = {
           <option key={ 1 } value={ "f" }>No</option>
         ]);
       } else {
-        { HandyTools.alphabetizeArrayOfObjects(args.options, 'name').map((option, index) => {
+        { return HandyTools.alphabetizeArrayOfObjects(args.options, args.optionDisplayProperty).map((option, index) => {
           return(
             <option key={ index } value={ args.optionValueProperty || option.id }>
               { option[args.optionDisplayProperty] }

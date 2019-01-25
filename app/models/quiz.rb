@@ -225,7 +225,13 @@ class Quiz < ActiveRecord::Base
             until !tagged_cards.empty? do
               tagged_cards = @cards.select { |card| card.tags.map(&:id).include?(quiz_question.tag_id) }
               if tagged_cards.empty?
-                @cards += (Card.includes(:tags).where(tags: { id: quiz_question.tag_id }) - Card.includes(:tags).where(tags: { name: 'Archived' }))
+                archived_cards = Card.includes(:tags).where(tags: { name: 'Archived' })
+                all_tagged_cards = Card.includes(:tags).where(tags: { id: quiz_question.tag_id })
+                if self.include_archived
+                  @cards += (all_tagged_cards & archived_cards)
+                else
+                  @cards += (all_tagged_cards - archived_cards)
+                end
               end
             end
             card = tagged_cards.sample
@@ -264,7 +270,18 @@ class Quiz < ActiveRecord::Base
     @nouns = Noun.all.to_a.shuffle if @nouns.empty?
     @verbs = Verb.all.to_a.shuffle if @verbs.empty?
     @adjectives = Adjective.all.to_a.shuffle if @adjectives.empty?
-    @cards = (Card.all - Card.includes(:tags).where(tags: { name: 'Archived' })).to_a.shuffle if @cards.empty?
+    if @cards.empty?
+      if self.include_archived
+        archived_cards = Card.joins(:tags).where(tags: { name: 'Archived' })
+        raise 'No Archived Cards' if archived_cards.empty?
+        @cards = archived_cards.to_a.shuffle
+        puts archived_cards.pluck(:question)
+      else
+        unarchived_cards = Card.all - Card.joins(:tags).where(tags: { name: 'Archived' })
+        raise 'No Unarchived Cards' if unarchived_cards.empty?
+        @cards = unarchived_cards.to_a.shuffle
+      end
+    end
   end
 
   def get_noun(quiz_question)

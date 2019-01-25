@@ -18,7 +18,7 @@ class NewEntity extends React.Component {
   }
 
   componentDidMount() {
-    HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+    HandyTools.setUpNiceSelect({ selector: '.admin-modal select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
   }
 
   clickAdd(e) {
