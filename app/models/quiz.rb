@@ -227,7 +227,7 @@ class Quiz < ActiveRecord::Base
               if tagged_cards.empty?
                 archived_cards = Card.includes(:tags).where(tags: { name: 'Archived' })
                 all_tagged_cards = Card.includes(:tags).where(tags: { id: quiz_question.tag_id })
-                if self.include_archived
+                if self.use_archived
                   @cards += (all_tagged_cards & archived_cards)
                 else
                   @cards += (all_tagged_cards - archived_cards)
@@ -271,7 +271,7 @@ class Quiz < ActiveRecord::Base
     @verbs = Verb.all.to_a.shuffle if @verbs.empty?
     @adjectives = Adjective.all.to_a.shuffle if @adjectives.empty?
     if @cards.empty?
-      if self.include_archived
+      if self.use_archived
         archived_cards = Card.joins(:tags).where(tags: { name: 'Archived' })
         raise 'No Archived Cards' if archived_cards.empty?
         @cards = archived_cards.to_a.shuffle
