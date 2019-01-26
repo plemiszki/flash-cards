@@ -1,7 +1,12 @@
 class Api::CardsController < AdminController
 
   def index
-    @cards = Card.all.includes(:tags)
+    @cards = Card.all - Card.joins(:tags).where(tags: { name: 'Archived' })
+    render 'index.json.jbuilder'
+  end
+
+  def index_archived
+    @cards = Card.joins(:tags).where(tags: { name: 'Archived' })
     render 'index.json.jbuilder'
   end
 

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :verbs, only: [:index, :show, :create, :update, :destroy]
     resources :adjectives, only: [:index, :show, :create, :update, :destroy]
     resources :cards, only: [:index, :show, :create, :update, :destroy]
+    get '/cards_archived' => 'cards#index_archived'
     resources :tags, only: [:index, :show, :create, :update, :destroy]
     resources :card_tags, only: [:create, :destroy]
     resources :quizzes, only: [:index, :show, :create, :update, :destroy]

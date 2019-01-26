@@ -106,6 +106,7 @@ $(document).ready(function() {
           initialNewEntity={ { question: '', answer: '' } }
           modalDimensions={ { width: 900, height: 432 } }
           ellipses={ [80, null] }
+          tabs={ ['current', 'archived'] }
         />
       </Provider>,
       document.querySelector('#cards-index')

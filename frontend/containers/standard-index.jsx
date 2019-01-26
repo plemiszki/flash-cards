@@ -7,6 +7,7 @@ import HandyTools from 'handy-tools';
 import _ from 'lodash';
 import Index from './modules/index.js';
 import Common from './modules/common.js';
+import TabActions from './modules/tab-actions.js';
 import NewEntity from './new-entity.jsx';
 import Message from './message.jsx';
 
@@ -16,21 +17,36 @@ class StandardIndex extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    let initialState = {
       fetching: true,
       entities: [],
       searchProperty: this.props.columns[0],
       searchText: '',
       newEntityModalOpen: false
-    };
+    }
+
+    if (this.props.tabs) {
+      initialState.tab = this.props.tabs[0];
+      this.props.tabs.forEach((tab) => {
+        initialState[`entities${HandyTools.capitalize(tab)}`] = [];
+      })
+    }
+
+    this.state = initialState;
   }
 
   componentDidMount() {
     Common.checkForMessage.call(this);
     this.props.fetchEntities(directory).then(() => {
+      let entityArray;
+      if (this.props.tabs) {
+        entityArray = `entities${HandyTools.capitalize(this.state.tab)}`;
+      } else {
+        entityArray = 'entities';
+      }
       this.setState({
         fetching: false,
-        entities: this.props.entities
+        [entityArray]: this.props.entities
       });
     });
   }
@@ -43,13 +59,15 @@ class StandardIndex extends React.Component {
   }
 
   render() {
-    let filteredEntities = HandyTools.filterSearchText(this.state.entities, this.state.searchText, this.state.searchProperty);
+    let entities = this.props.tabs ? this.state[`entities${HandyTools.capitalize(this.state.tab)}`] : this.state.entities;
+    let filteredEntities = HandyTools.filterSearchText(entities, this.state.searchText, this.state.searchProperty);
     return(
       <div className="component">
         { this.renderMessage() }
         <h1>{ HandyTools.capitalize(this.props.entityNamePlural) }</h1>
         <a className={ "blue-button btn float-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { HandyTools.capitalize(this.props.entityName) }</a>
         <input className="search-box margin" onChange={ HandyTools.changeStateToTarget.bind(this, 'searchText') } value={ this.state.searchText } />
+        { this.renderTopTabs() }
         <div className="white-box">
           { HandyTools.renderSpinner(this.state.fetching) }
           { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
@@ -98,6 +116,26 @@ class StandardIndex extends React.Component {
         </Modal>
       </div>
     );
+  }
+
+  renderTopTabs() {
+    if (this.props.tabs && !this.state.fetching) {
+      return(
+        <div className="tabs-row">
+          { this.props.tabs.map((label, index) => {
+            return(
+              <div key={ index } className={ "tab" + (this.state.tab === label ? " selected" : "") } onClick={ this.clickTab.bind(this, label) }>{ HandyTools.capitalize(label) }</div>
+            );
+          })}
+        </div>
+      );
+    }
+  }
+
+  clickTab(label) {
+    if (this.state.tab !== label) {
+      TabActions[`${HandyTools.capitalize(this.props.entityNamePlural)}${HandyTools.capitalize(label)}`].call(this)
+    }
   }
 
   renderValue(value, index) {
