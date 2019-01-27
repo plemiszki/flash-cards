@@ -79,6 +79,25 @@ class Quiz < ActiveRecord::Base
             question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{noun2_english}.",
             answers: hindi_answers + transliterated_answers
           }
+        when 'There is a Noun Preposition the Adjective Noun'
+          @noun = get_noun(quiz_question)
+          use_noun_plural = [true, false].sample
+          noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
+          preposition = get_preposition
+          @noun2 = get_noun(quiz_question)
+          use_noun2_plural = [true, false].sample
+          noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
+          @adjective = @adjectives.pop
+          hindi_answers = [
+            "#{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2 })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
+          ]
+          transliterated_answers = [
+            "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
+          ]
+          result << {
+            question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{noun2_english}.",
+            answers: hindi_answers + transliterated_answers
+          }
         when 'Subject is a Noun'
           @noun = get_noun(quiz_question)
           subject_objects = get_subject_object(get_random_single_english_subject)
