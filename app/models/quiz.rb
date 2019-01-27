@@ -62,16 +62,21 @@ class Quiz < ActiveRecord::Base
           }
         when 'The Noun is Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
+          use_noun_plural = [true, false].sample
+          noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
+          preposition = get_preposition
           @noun2 = get_noun(quiz_question)
+          use_noun2_plural = [true, false].sample
+          noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{@noun.foreign} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2 })} #{obliqify({ noun_hindi: @noun2 })} #{'पर'} है"
+            "#{noun_hindi} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2 })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} है"
           ]
           transliterated_answers = [
-            "#{@noun.transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2 })} #{'par'} hai"
+            "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
           ]
           result << {
-            question: "The #{@noun.english} is #{'on'} the #{@adjective.english} #{@noun2.english}.",
+            question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{noun2_english}.",
             answers: hindi_answers + transliterated_answers
           }
         when 'Subject is a Noun'
@@ -255,6 +260,32 @@ class Quiz < ActiveRecord::Base
 
   private
 
+  def get_preposition
+    [
+      { english: 'on',
+        transliterated: 'par',
+        hindi: 'पर'
+      },
+      { english: 'in',
+        transliterated: 'me',
+        hindi: 'में'
+      },
+      { english: 'near',
+        transliterated: 'ke pas',
+        hindi: 'के पास'
+      }
+    ].sample
+  end
+
+  def get_proper_words_from_plural(args)
+    noun = args[:noun]
+    if args[:plural]
+      [noun.english_plural, noun.transliterated_plural, noun.foreign_plural]
+    else
+      [noun.english, noun.transliterated, noun.foreign]
+    end
+  end
+
   def all_synonyms(answers, use_plural = false)
     synonyms = @noun.synonyms
     result = answers.map do |answer|
@@ -318,19 +349,47 @@ class Quiz < ActiveRecord::Base
       else
         args[:noun_hindi].gender == 1 ? args[:adjective_hindi].masculine : args[:adjective_hindi].feminine
       end
-    # singluar nouns with masculine -a endings change to -e
-    elsif args[:noun_transliterated]
-      if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
-        "#{args[:noun_transliterated].transliterated[0...-1]}e"
+    else
+      if args[:plural]
+        # nouns ending in -i change to -iyo
+        # all other nouns change to -o in the oblique plural
+        if args[:noun_transliterated]
+          if args[:noun_transliterated].transliterated[-1] == 'i'
+            "#{args[:noun_transliterated].transliterated[0...-1]}iyo"
+          else
+            if args[:noun_transliterated].transliterated[-1] == 'a'
+              "#{args[:noun_transliterated].transliterated[0...-1]}o"
+            else
+              "#{args[:noun_transliterated].transliterated}o"
+            end
+          end
+        elsif args[:noun_hindi]
+          if args[:noun_hindi].foreign[-1] == 'ी'
+            "#{args[:noun_hindi].foreign[0...-1]}ियों"
+          else
+            if args[:noun_hindi].foreign[-1] == 'ा'
+              "#{args[:noun_hindi].foreign[0...-1]}ों"
+            else
+              "#{args[:noun_hindi].foreign}ों"
+            end
+          end
+        end
       else
-        args[:noun_transliterated].transliterated
-      end
-    elsif args[:noun_hindi]
-      args[:noun_hindi]
-      if args[:noun_hindi].gender == 1 && args[:noun_hindi].foreign[-1] == 'ा'
-        "#{args[:noun_hindi].foreign[0...-1]}े"
-      else
-        args[:noun_hindi].foreign
+        # singluar nouns with masculine -a endings change to -e
+        if args[:noun_transliterated]
+          if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
+            "#{args[:noun_transliterated].transliterated[0...-1]}e"
+          else
+            args[:noun_transliterated].transliterated
+          end
+        elsif args[:noun_hindi]
+          args[:noun_hindi]
+          if args[:noun_hindi].gender == 1 && args[:noun_hindi].foreign[-1] == 'ा'
+            "#{args[:noun_hindi].foreign[0...-1]}े"
+          else
+            args[:noun_hindi].foreign
+          end
+        end
       end
     end
   end
