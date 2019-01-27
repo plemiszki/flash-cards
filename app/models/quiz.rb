@@ -60,16 +60,19 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq, use_plural)
           }
-        when 'Noun is Preposition Adjective Noun'
+        when 'The Noun is Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
           @noun2 = get_noun(quiz_question)
           @adjective = @adjectives.pop
+          hindi_answers = [
+            "#{@noun.foreign} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2 })} #{obliqify({ noun_hindi: @noun2 })} #{'पर'} है"
+          ]
+          transliterated_answers = [
+            "#{@noun.transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2 })} #{'par'} hai"
+          ]
           result << {
             question: "The #{@noun.english} is #{'on'} the #{@adjective.english} #{@noun2.english}.",
-            answers: [
-              "",
-              ""
-            ]
+            answers: hindi_answers + transliterated_answers
           }
         when 'Subject is a Noun'
           @noun = get_noun(quiz_question)
@@ -299,6 +302,37 @@ class Quiz < ActiveRecord::Base
       noun = @nouns.pop
     end
     noun
+  end
+
+  def obliqify(args)
+    # adjectives with masculine -a endings describing oblique nouns change to -e (even if noun does not end in -a)
+    if args[:adjective_transliterated]
+      if args[:noun_transliterated].gender == 1 && args[:adjective_transliterated].transliterated_masculine[-1] == 'a'
+        "#{args[:adjective_transliterated].transliterated_masculine[0...-1]}e"
+      else
+        args[:noun_transliterated].gender == 1 ? args[:adjective_transliterated].transliterated_masculine : args[:adjective_transliterated].transliterated_feminine
+      end
+    elsif args[:adjective_hindi]
+      if args[:noun_hindi].gender == 1 && args[:adjective_hindi].masculine[-1] == 'ा'
+        "#{args[:adjective_hindi].masculine[0...-1]}े"
+      else
+        args[:noun_hindi].gender == 1 ? args[:adjective_hindi].masculine : args[:adjective_hindi].feminine
+      end
+    # singluar nouns with masculine -a endings change to -e
+    elsif args[:noun_transliterated]
+      if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
+        "#{args[:noun_transliterated].transliterated[0...-1]}e"
+      else
+        args[:noun_transliterated].transliterated
+      end
+    elsif args[:noun_hindi]
+      args[:noun_hindi]
+      if args[:noun_hindi].gender == 1 && args[:noun_hindi].foreign[-1] == 'ा'
+        "#{args[:noun_hindi].foreign[0...-1]}े"
+      else
+        args[:noun_hindi].foreign
+      end
+    end
   end
 
   def get_random_possession_english_subject
