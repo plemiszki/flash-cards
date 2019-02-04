@@ -19,9 +19,8 @@ class Quiz < ActiveRecord::Base
         when 'Single Noun'
           @noun = get_noun(quiz_question)
           plural = (rand(2) == 1)
-          single_plural_same = @noun.english == @noun.english_plural
           result << {
-            question: (plural ? "#{@noun.english_plural.capitalize}#{single_plural_same ? ' (plural)' : ''}" : @noun.english.capitalize),
+            question: (plural ? "#{plural_notification(@noun.english_plural.capitalize, @noun)}" : @noun.english.capitalize),
             answers: all_synonyms([
               (plural ? @noun.transliterated_plural : @noun.transliterated),
               (plural ? @noun.foreign_plural : @noun.foreign)
@@ -76,7 +75,7 @@ class Quiz < ActiveRecord::Base
             "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
           ]
           result << {
-            question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{noun2_english}.",
+            question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{plural_notification(noun2_english, @noun2)}.",
             answers: hindi_answers + transliterated_answers
           }
         when 'There is a Noun Preposition the Adjective Noun'
@@ -95,7 +94,7 @@ class Quiz < ActiveRecord::Base
             "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
           ]
           result << {
-            question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{noun2_english}.",
+            question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{plural_notification(noun2_english, @noun2)}.",
             answers: hindi_answers + transliterated_answers
           }
         when 'Subject is a Noun'
@@ -151,7 +150,7 @@ class Quiz < ActiveRecord::Base
           subject_objects = get_subject_object(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(adjective[:english])} #{adjective[:english]} #{@noun[:english]}.",
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(adjective[:english])} #{adjective[:english]} #{plural_notification(@noun[:english], @noun)}.",
             answers: all_synonyms(subject_objects.map do |hash|
               [
                 "#{hash[:transliterated]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine] : adjective[:transliterated_feminine]} #{@noun[:transliterated]} #{hash[:transliterated_be]}",
@@ -809,6 +808,16 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
+    end
+  end
+
+  def plural_notification(input, noun)
+    english_single_plural_same = (noun.english == noun.english_plural)
+    hindi_single_plural_same = (noun.foreign == noun.foreign_plural)
+    if english_single_plural_same && !hindi_single_plural_same
+      "#{input} (plural)"
+    else
+      input
     end
   end
 
