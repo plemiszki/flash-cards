@@ -76,7 +76,7 @@ class Quiz < ActiveRecord::Base
           ]
           result << {
             question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{plural_notification(noun2_english, @noun2)}.",
-            answers: hindi_answers + transliterated_answers
+            answers: all_synonyms(hindi_answers, use_noun_plural, use_noun2_plural) + all_synonyms(transliterated_answers, use_noun_plural, use_noun2_plural)
           }
         when 'There is a Noun Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
@@ -95,7 +95,7 @@ class Quiz < ActiveRecord::Base
           ]
           result << {
             question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{plural_notification(noun2_english, @noun2)}.",
-            answers: hindi_answers + transliterated_answers
+            answers: all_synonyms(hindi_answers) + all_synonyms(transliterated_answers)
           }
         when 'Subject is a Noun'
           @noun = get_noun(quiz_question)
@@ -304,14 +304,34 @@ class Quiz < ActiveRecord::Base
     end
   end
 
-  def all_synonyms(answers, use_plural = false)
+  def all_synonyms(answers, use_plural = false, use_plural_2 = false)
     synonyms = @noun.synonyms
-    result = answers.map do |answer|
-      synonyms.map do |synonym|
-        if use_plural
-          answer.gsub(@noun.foreign_plural, synonym.foreign_plural).gsub(@noun.transliterated_plural, synonym.transliterated_plural)
-        else
-          answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated)
+    if @noun2
+      synonyms2 = @noun2.synonyms
+      result = []
+      answers.each do |answer|
+        synonyms.each do |synonym|
+          synonyms2.each do |synonym2|
+            if !use_plural && !use_plural_2
+              result << answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated).gsub(@noun2.foreign, synonym2.foreign).gsub(@noun2.transliterated, synonym2.transliterated)
+            elsif use_plural && !use_plural_2
+              result << answer.gsub(@noun.foreign_plural, synonym.foreign_plural).gsub(@noun.transliterated_plural, synonym.transliterated_plural).gsub(@noun2.foreign, synonym2.foreign).gsub(@noun2.transliterated, synonym2.transliterated)
+            elsif !use_plural && use_plural_2
+              result << answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated).gsub(@noun2.foreign_plural, synonym2.foreign_plural).gsub(@noun2.transliterated_plural, synonym2.transliterated_plural)
+            elsif use_plural && use_plural_2
+              result << answer.gsub(@noun.foreign_plural, synonym.foreign_plural).gsub(@noun.transliterated_plural, synonym.transliterated_plural).gsub(@noun2.foreign_plural, synonym2.foreign_plural).gsub(@noun2.transliterated_plural, synonym2.transliterated_plural)
+            end
+          end
+        end
+      end
+    else
+      result = answers.map do |answer|
+        synonyms.map do |synonym|
+          if use_plural
+            answer.gsub(@noun.foreign_plural, synonym.foreign_plural).gsub(@noun.transliterated_plural, synonym.transliterated_plural)
+          else
+            answer.gsub(@noun.foreign, synonym.foreign).gsub(@noun.transliterated, synonym.transliterated)
+          end
         end
       end
     end
