@@ -395,7 +395,7 @@ class Quiz < ActiveRecord::Base
           if args[:noun_transliterated].transliterated[-1] == 'i'
             "#{args[:noun_transliterated].transliterated[0...-1]}iyo"
           else
-            if args[:noun_transliterated].transliterated[-1] == 'a'
+            if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
               "#{args[:noun_transliterated].transliterated[0...-1]}o"
             else
               "#{args[:noun_transliterated].transliterated}o"
@@ -406,7 +406,11 @@ class Quiz < ActiveRecord::Base
             "#{args[:noun_hindi].foreign[0...-1]}ियों"
           else
             if args[:noun_hindi].foreign[-1] == 'ा'
-              "#{args[:noun_hindi].foreign[0...-1]}ों"
+              if args[:noun_hindi].gender == 1
+                "#{args[:noun_hindi].foreign[0...-1]}ों"
+              else
+                "#{args[:noun_hindi].foreign}ओंं"
+              end
             else
               "#{args[:noun_hindi].foreign}ों"
             end
