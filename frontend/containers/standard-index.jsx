@@ -52,10 +52,17 @@ class StandardIndex extends React.Component {
   }
 
   updateIndex(entities) {
-    this.setState({
-      newEntityModalOpen: false,
-      entities: entities
-    })
+    if (this.props.tabs) {
+      this.setState({
+        newEntityModalOpen: false,
+        [`entities${HandyTools.capitalize(this.props.newEntityTab)}`]: entities
+      });
+    } else {
+      this.setState({
+        newEntityModalOpen: false,
+        entities: entities
+      });
+    }
   }
 
   render() {

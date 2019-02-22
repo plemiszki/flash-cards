@@ -107,6 +107,7 @@ $(document).ready(function() {
           modalDimensions={ { width: 900, height: 432 } }
           ellipses={ [80, null] }
           tabs={ ['current', 'archived'] }
+          newEntityTab='current'
         />
       </Provider>,
       document.querySelector('#cards-index')
