@@ -20,7 +20,7 @@ class Quiz < ActiveRecord::Base
           @noun = get_noun(quiz_question)
           plural = (rand(2) == 1)
           result << {
-            question: (plural ? "#{plural_notification(true, @noun.english_plural.capitalize, @noun)}" : @noun.english.capitalize),
+            question: get_plural(plural, @noun).capitalize,
             answers: all_synonyms([
               (plural ? @noun.transliterated_plural : @noun.transliterated),
               (plural ? @noun.foreign_plural : @noun.foreign)
@@ -180,7 +180,7 @@ class Quiz < ActiveRecord::Base
           @noun = get_noun(quiz_question)
           use_plural = [true, false].sample
           result << {
-            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(@noun.english)} #{use_plural ? @noun[:english_plural] : @noun[:english]}.",
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(@noun.english)} #{get_plural(use_plural, @noun)}.",
             answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
               [
                 "#{subject_has_object[:transliterated]} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
@@ -195,10 +195,11 @@ class Quiz < ActiveRecord::Base
           subject_has_objects = get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
           use_plural = [true, false].sample
+          use_plural = true
           adjective = @adjectives.pop
           transliterated_adjectives, hindi_adjectives = proper_adjective_forms({ adjective: adjective, noun: @noun, plural: use_plural })
           result << {
-            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(adjective.english)} #{adjective.english} #{use_plural ? @noun[:english_plural] : @noun[:english]}.",
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(adjective.english)} #{adjective.english} #{get_plural(use_plural, @noun)}.",
             answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
               [
                 "#{subject_has_object[:transliterated]} #{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
@@ -835,7 +836,19 @@ class Quiz < ActiveRecord::Base
     end
   end
 
-  def plural_notification(use_plural, input, noun)
+  def get_plural(use_plural, noun)
+    english_single_plural_same = (noun.english == noun.english_plural)
+    hindi_single_plural_same = (noun.foreign == noun.foreign_plural)
+    if use_plural && english_single_plural_same && !hindi_single_plural_same
+      "#{noun[:english_plural]} (plural)"
+    elsif use_plural
+      noun[:english_plural]
+    else
+      noun[:english]
+    end
+  end
+
+  def plural_notification(use_plural, input, noun) # deprecate if possible
     english_single_plural_same = (noun.english == noun.english_plural)
     hindi_single_plural_same = (noun.foreign == noun.foreign_plural)
     if use_plural && english_single_plural_same && !hindi_single_plural_same
