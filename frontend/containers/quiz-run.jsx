@@ -52,8 +52,16 @@ class QuizRun extends React.Component {
           Object.keys(this.state.wrongAnswerLog).forEach((key) => {
             messageLines.push(this.state.quiz.questions[key].question);
           });
+          let color;
+          if (percentage >= 80) {
+            color = 'light-green';
+          } else if (percentage >= 70) {
+            color = 'yellow';
+          } else {
+            color = 'red';
+          }
           localStorage.setItem('message', messageLines.join("\n"));
-          localStorage.setItem('message-color', 'red');
+          localStorage.setItem('message-color', color);
         } else {
           localStorage.setItem('message', 'Great job. You aced the quiz!');
           localStorage.setItem('message-color', 'green');

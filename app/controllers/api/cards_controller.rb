@@ -1,19 +1,19 @@
 class Api::CardsController < AdminController
 
   def index
-    @cards = Card.all - Card.joins(:tags).where(tags: { name: 'Archived' })
+    @cards = Card.unarchived
     render 'index.json.jbuilder'
   end
 
   def index_archived
-    @cards = Card.joins(:tags).where(tags: { name: 'Archived' })
+    @cards = Card.archived
     render 'index.json.jbuilder'
   end
 
   def create
     @card = Card.new(card_params)
     if @card.save
-      @cards = Card.all
+      @cards = Card.unarchived
       render 'index.json.jbuilder'
     else
       render json: @card.errors.full_messages, status: 422
