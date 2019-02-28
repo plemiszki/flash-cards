@@ -217,6 +217,15 @@ class Quiz < ActiveRecord::Base
               noun.gender == 1 ? 'm' : 'f'
             ]
           }
+        when 'Noun Plural'
+          noun = get_noun(quiz_question)
+          result << {
+            question: noun[:foreign],
+            answers: [
+              noun[:transliterated_plural],
+              noun[:foreign_plural]
+            ]
+          }
         when 'Noun is Adjective'
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
