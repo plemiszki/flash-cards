@@ -280,6 +280,33 @@ class Quiz < ActiveRecord::Base
             answers: [card.answer],
             textbox: card.answer.include?("\n")
           }
+        when 'Imperative Familiar'
+          verb = @verbs.pop
+          result << {
+            question: "#{verb.english.capitalize} (familiar)",
+            answers: [
+              verb.transliterated_stem,
+              verb.hindi_stem
+            ]
+          }
+        when 'Imperative Informal'
+          verb = @verbs.pop
+          result << {
+            question: "#{verb.english.capitalize} (informal)",
+            answers: [
+              "#{verb.transliterated_informal}",
+              "#{verb.hindi_informal}"
+            ]
+          }
+        when 'Imperative Formal'
+          verb = @verbs.pop
+          result << {
+            question: "#{verb.english.capitalize} (formal)",
+            answers: [
+              "#{verb.transliterated_formal}",
+              "#{verb.hindi_formal}"
+            ]
+          }
         end
       end
     end
