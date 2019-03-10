@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190125163301) do
+ActiveRecord::Schema.define(version: 20190310190654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,9 +83,13 @@ ActiveRecord::Schema.define(version: 20190125163301) do
   end
 
   create_table "verbs", force: :cascade do |t|
-    t.string "english",                   null: false
-    t.string "infinitive",                null: false
+    t.string "english",                                                   null: false
+    t.string "infinitive",                                                null: false
     t.string "transliterated_infinitive"
+    t.string "irregular_imperative_informal",                default: ""
+    t.string "irregular_imperative_formal",                  default: ""
+    t.string "irregular_imperative_informal_transliterated", default: ""
+    t.string "irregular_imperative_formal_transliterated",   default: ""
   end
 
 end

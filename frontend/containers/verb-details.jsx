@@ -91,6 +91,16 @@ class VerbDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
           </div>
+          <div className="row">
+            <div className="col-xs-4"></div>
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformal', columnHeader: 'Irregular Imperative - Informal' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Informal' }) }
+          </div>
+          <div className="row">
+            <div className="col-xs-4"></div>
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormal', columnHeader: 'Irregular Imperative - Formal' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Formal' }) }
+          </div>
           <div>
             <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }

@@ -38,7 +38,7 @@ class Api::VerbsController < AdminController
   private
 
   def verb_params
-    params[:verb].permit(:english, :infinitive, :transliterated_infinitive)
+    params[:verb].permit(:english, :infinitive, :transliterated_infinitive, :irregular_imperative_formal, :irregular_imperative_informal, :irregular_imperative_formal_transliterated, :irregular_imperative_informal_transliterated)
   end
 
 end
