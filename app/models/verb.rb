@@ -8,11 +8,19 @@ class Verb < ActiveRecord::Base
   end
 
   def hindi_informal
-    ["ा", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}ओ" : "#{hindi_stem}ो"
+    if irregular_imperative_informal.empty?
+      ["ा", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}ओ" : "#{hindi_stem}ो"
+    else
+      irregular_imperative_informal
+    end
   end
 
   def hindi_formal
-    ["ा", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}इए" : "#{hindi_stem}िए"
+    if irregular_imperative_formal.empty?
+      ["ा", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}इए" : "#{hindi_stem}िए"
+    else
+      irregular_imperative_formal
+    end
   end
 
   def transliterated_stem
@@ -20,11 +28,19 @@ class Verb < ActiveRecord::Base
   end
 
   def transliterated_informal
-    "#{transliterated_stem}o"
+    if irregular_imperative_informal_transliterated.empty?
+      "#{transliterated_stem}o"
+    else
+      irregular_imperative_informal_transliterated
+    end
   end
 
   def transliterated_formal
-    "#{transliterated_stem}ie"
+    if irregular_imperative_formal_transliterated.empty?
+      "#{transliterated_stem}ie"
+    else
+      irregular_imperative_formal_transliterated
+    end
   end
 
 end
