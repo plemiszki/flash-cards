@@ -10,6 +10,7 @@ import StandardIndex from './containers/standard-index';
 import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
+import AdverbDetails from './containers/adverb-details';
 import CardDetails from './containers/card-details';
 import QuizDetails from './containers/quiz-details';
 import QuizRun from './containers/quiz-run';
@@ -109,6 +110,15 @@ $(document).ready(function() {
         />
       </Provider>,
       document.querySelector('#adverbs-index')
+    );
+  }
+
+  if (document.querySelector('#adverb-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <AdverbDetails entityName='adverb' />
+      </Provider>,
+      document.querySelector('#adverb-details')
     );
   }
 
