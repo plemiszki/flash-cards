@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190310190654) do
+ActiveRecord::Schema.define(version: 20190312230555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,13 @@ ActiveRecord::Schema.define(version: 20190310190654) do
     t.string "transliterated_feminine"
     t.string "masculine_plural"
     t.string "transliterated_masculine_plural"
+  end
+
+  create_table "adverbs", force: :cascade do |t|
+    t.string "foreign",        null: false
+    t.string "transliterated", null: false
+    t.string "english",        null: false
+    t.index ["foreign", "english"], name: "index_adverbs_on_foreign_and_english", unique: true, using: :btree
   end
 
   create_table "card_tags", force: :cascade do |t|

@@ -113,6 +113,14 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
           </div>
         ]);
+      case 'adverb':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'foreign' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'transliterated' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'english' }) }
+          </div>
+        ]);
       case 'card':
         return([
           <div key="1" className="row">

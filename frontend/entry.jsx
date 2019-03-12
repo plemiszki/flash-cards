@@ -96,6 +96,22 @@ $(document).ready(function() {
     );
   }
 
+  if (document.querySelector('#adverbs-index')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <StandardIndex
+          entityName='adverb'
+          entityNamePlural='adverbs'
+          columns={ ['foreign', 'transliterated', 'english'] }
+          initialNewEntity={ { foreign: '', transliterated: '', english: '' } }
+          modalRows={ 1 }
+          modalDimensions={ { width: 900 } }
+        />
+      </Provider>,
+      document.querySelector('#adverbs-index')
+    );
+  }
+
   if (document.querySelector('#cards-index')) {
     ReactDOM.render(
       <Provider store={ store }>
