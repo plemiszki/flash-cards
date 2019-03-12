@@ -280,31 +280,28 @@ class Quiz < ActiveRecord::Base
             answers: [card.answer],
             textbox: card.answer.include?("\n")
           }
-        when 'Imperative Familiar'
+        when 'Imperative'
           verb = @verbs.pop
+          tense = ['familiar', 'informal', 'formal'].sample
+          negate = [true, false].sample
+          negate_hindi = negate ? "मत " : ""
+          negate_trans = negate ? "mat " : ""
+          case tense
+          when 'familiar'
+            hindi_answer = verb.hindi_stem
+            transliterated_answer = verb.transliterated_stem
+          when 'informal'
+            hindi_answer = verb.hindi_informal
+            transliterated_answer = verb.transliterated_informal
+          when 'formal'
+            hindi_answer = verb.hindi_formal
+            transliterated_answer = verb.transliterated_formal
+          end
           result << {
-            question: "#{verb.english.capitalize} (familiar)",
+            question: "#{tense == "formal" ? "Please " : ""}#{negate ? "don't " : ""}#{verb.english} #{tense == "familiar" ? "(familiar)" : ""}".capitalize,
             answers: [
-              verb.transliterated_stem,
-              verb.hindi_stem
-            ]
-          }
-        when 'Imperative Informal'
-          verb = @verbs.pop
-          result << {
-            question: "#{verb.english.capitalize} (informal)",
-            answers: [
-              "#{verb.transliterated_informal}",
-              "#{verb.hindi_informal}"
-            ]
-          }
-        when 'Imperative Formal'
-          verb = @verbs.pop
-          result << {
-            question: "#{verb.english.capitalize} (formal)",
-            answers: [
-              "#{verb.transliterated_formal}",
-              "#{verb.hindi_formal}"
+              "#{negate_hindi}#{hindi_answer}",
+              "#{negate_trans}#{transliterated_answer}"
             ]
           }
         end
