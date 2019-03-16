@@ -14,14 +14,14 @@ gem 'jquery-rails'
 gem 'pg', '~> 0.18'
 gem 'pry-rails'
 gem 'puma', '~> 3.0'
-gem 'rails', '~> 5.0.6'
+gem 'rails', '5.2.2.1'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'better_errors'
-  gem 'dotenv-rails' # load environment variables from .env file
+  gem 'dotenv-rails'
 end
 
 group :development do
