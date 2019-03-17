@@ -7,4 +7,5 @@ json.entity do
   json.irregularImperativeFormal @verb.irregular_imperative_formal
   json.irregularImperativeInformalTransliterated @verb.irregular_imperative_informal_transliterated
   json.irregularImperativeFormalTransliterated @verb.irregular_imperative_formal_transliterated
+  json.postposition @verb.postposition
 end
