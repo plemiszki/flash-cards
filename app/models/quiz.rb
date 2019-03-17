@@ -10,6 +10,7 @@ class Quiz < ActiveRecord::Base
     @nouns = []
     @verbs = []
     @adjectives = []
+    @adverbs = []
     @cards = []
     quiz_questions.each do |quiz_question|
       question = quiz_question.question
@@ -283,9 +284,14 @@ class Quiz < ActiveRecord::Base
         when 'Imperative'
           verb = @verbs.pop
           tense = ['familiar', 'informal', 'formal'].sample
+          use_adverb = (rand(3) > 0)
+          adverb = @adverbs.pop if use_adverb
+          adverb_hindi = use_adverb ? "#{adverb.foreign} " : ''
+          adverb_transliterated = use_adverb ? "#{adverb.transliterated} " : ''
+          adverb_english = use_adverb ? " #{adverb.english}" : ''
           negate = [true, false].sample
-          negate_hindi = negate ? "मत " : ""
-          negate_trans = negate ? "mat " : ""
+          negate_hindi = negate ? 'मत ' : ''
+          negate_trans = negate ? 'mat ' : ''
           case tense
           when 'familiar'
             hindi_answer = verb.hindi_stem
@@ -298,10 +304,10 @@ class Quiz < ActiveRecord::Base
             transliterated_answer = verb.transliterated_formal
           end
           result << {
-            question: "#{tense == "formal" ? "Please " : ""}#{negate ? "don't " : ""}#{verb.english} #{tense == "familiar" ? "(familiar)" : ""}".capitalize,
+            question: "#{tense == 'formal' ? 'Please ' : ''}#{negate ? "don't " : ''}#{verb.english}#{tense == 'familiar' ? ' (familiar)' : ''}#{adverb_english}.".capitalize,
             answers: [
-              "#{negate_hindi}#{hindi_answer}",
-              "#{negate_trans}#{transliterated_answer}"
+              "#{adverb_hindi}#{negate_hindi}#{hindi_answer}",
+              "#{adverb_transliterated}#{negate_trans}#{transliterated_answer}"
             ]
           }
         end
@@ -376,6 +382,7 @@ class Quiz < ActiveRecord::Base
     @nouns = Noun.all.to_a.shuffle if @nouns.empty?
     @verbs = Verb.all.to_a.shuffle if @verbs.empty?
     @adjectives = Adjective.all.to_a.shuffle if @adjectives.empty?
+    @adverbs = Adverb.all.to_a.shuffle if @adverbs.empty?
     if @cards.empty?
       if self.use_archived
         archived_cards = Card.joins(:tags).where(tags: { name: 'Archived' })

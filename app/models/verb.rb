@@ -9,7 +9,7 @@ class Verb < ActiveRecord::Base
 
   def hindi_informal
     if irregular_imperative_informal.empty?
-      ["ा", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}ओ" : "#{hindi_stem}ो"
+      ["ा", "ो", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}ओ" : "#{hindi_stem}ो"
     else
       irregular_imperative_informal
     end
@@ -17,7 +17,7 @@ class Verb < ActiveRecord::Base
 
   def hindi_formal
     if irregular_imperative_formal.empty?
-      ["ा", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}इए" : "#{hindi_stem}िए"
+      ["ा", "ो", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}इए" : "#{hindi_stem}िए"
     else
       irregular_imperative_formal
     end
