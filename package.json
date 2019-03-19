@@ -12,10 +12,9 @@
     "heroku-postbuild": "webpack --mode production"
   },
   "dependencies": {
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
-    "babel-preset-es2015-without-strict": "0.0.4",
-    "babel-preset-react": "6.24.1",
+    "@babel/core": "7.4.0",
+    "@babel/preset-react": "7.0.0",
+    "babel-loader": "8.0.5",
     "change-case": "3.1.0",
     "handy-tools": "1.26.0",
     "jquery": "3.3.1",
