@@ -290,8 +290,6 @@ class Quiz < ActiveRecord::Base
           adverb_transliterated = use_adverb ? "#{adverb.transliterated} " : ''
           adverb_english = use_adverb ? " #{adverb.english}" : ''
           negate = [true, false].sample
-          negate_hindi = negate ? 'मत ' : ''
-          negate_trans = negate ? 'mat ' : ''
           case tense
           when 'familiar'
             hindi_answer = verb.hindi_stem
@@ -303,12 +301,29 @@ class Quiz < ActiveRecord::Base
             hindi_answer = verb.hindi_formal
             transliterated_answer = verb.transliterated_formal
           end
+          hindi_answer = "#{adverb_hindi}#{hindi_answer}"
+          transliterated_answer = "#{adverb_transliterated}#{transliterated_answer}"
+          if negate
+            hindi_words = hindi_answer.split(' ')
+            hindi_answers = [
+              hindi_words.dup.insert(-2, 'मत').join(' '),
+              hindi_words.insert(-2, 'ना').join(' ')
+            ]
+            trans_words = transliterated_answer.split(' ')
+            transliterated_answers = [
+              trans_words.dup.insert(-2, 'mat').join(' '),
+              trans_words.insert(-2, 'na').join(' ')
+            ]
+          else
+            hindi_answers = [hindi_answer]
+            transliterated_answers = [transliterated_answer]
+          end
           result << {
             question: "#{tense == 'formal' ? 'Please ' : ''}#{negate ? "don't " : ''}#{verb.english}#{tense == 'familiar' ? ' (familiar)' : ''}#{adverb_english}.".capitalize,
             answers: [
-              "#{adverb_hindi}#{negate_hindi}#{hindi_answer}",
-              "#{adverb_transliterated}#{negate_trans}#{transliterated_answer}"
-            ]
+              hindi_answers,
+              transliterated_answers
+            ].flatten
           }
         end
       end
