@@ -7,14 +7,15 @@ end
 
 ruby '2.5.0'
 
+gem 'rails', '5.2.2.1'
+gem 'pg', '~> 0.18'
+
 gem 'bootstrap-sass'
 gem 'clearance', '~> 1.11'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
-gem 'pg', '~> 0.18'
 gem 'pry-rails'
 gem 'puma', '~> 3.0'
-gem 'rails', '5.2.2.1'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 
