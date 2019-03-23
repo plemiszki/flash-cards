@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "webpack --mode development --watch",
-    "heroku-postbuild": "webpack --config webpack.config.prod.js"
+    "heroku-postbuild": "webpack --mode production"
   },
   "dependencies": {
     "@babel/core": "7.4.0",
