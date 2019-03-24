@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ReactModal from 'react-modal';
-import { StandardIndex } from 'handy-components';
+import { StandardIndex, Message } from 'handy-components';
 
 import TabbedIndex from './containers/tabbed-index';
 import NewEntity from './containers/new-entity';
@@ -23,6 +23,13 @@ $(document).ready(function() {
 
   ReactModal.setAppElement(document.body);
   const MyContext = React.createContext();
+
+  if (document.querySelector('#message')) {
+    ReactDOM.render(
+      <Message />,
+      document.querySelector('#message')
+    );
+  }
 
   if (document.querySelector('#nouns-index')) {
     ReactDOM.render(
