@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
 import HandyTools from 'handy-tools';
-import Details from './modules/details.jsx';
+import { Common, Details } from 'handy-components';
+import FlashCardsDetails from './modules/details.jsx';
 
 class TagDetails extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class TagDetails extends React.Component {
         tagSaved: HandyTools.deepCopy(this.props.tag),
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   }
@@ -81,16 +82,16 @@ class TagDetails extends React.Component {
       <div id="tag-details" className="component details-component">
         <h1>Tag Details</h1>
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'tag', property: 'name' }) }
           </div>
           <div>
-            <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>

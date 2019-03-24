@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
 import HandyTools from 'handy-tools';
-import Details from './modules/details.jsx';
+import { Common, Details } from 'handy-components';
+import FlashCardsDetails from './modules/details.jsx';
 
 class VerbDetails extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class VerbDetails extends React.Component {
         verbSaved: HandyTools.deepCopy(this.props.verb),
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   }
@@ -84,8 +85,8 @@ class VerbDetails extends React.Component {
       <div id="verb-details" className="component details-component">
         <h1>Verb Details</h1>
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
@@ -94,12 +95,12 @@ class VerbDetails extends React.Component {
           <div className="row">
             <div className="col-xs-2">
               <h2>Postposition</h2>
-              <select onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.verb.postposition } data-entity="verb" data-field="postposition">
+              <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.verb.postposition } data-entity="verb" data-field="postposition">
                 <option value={ "" }>(None)</option>
                 <option value={ "से" }>से</option>
                 <option value={ "को" }>को</option>
               </select>
-              { HandyTools.renderFieldError([], []) }
+              { Details.renderFieldError([], []) }
             </div>
             <div className="col-xs-2"></div>
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformal', columnHeader: 'Irregular Imperative - Informal' }) }
@@ -111,10 +112,10 @@ class VerbDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Formal' }) }
           </div>
           <div>
-            <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>

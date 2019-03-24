@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import HandyTools from 'handy-tools';
+import { Common } from 'handy-components';
 import { runQuiz } from '../actions/index';
-import Common from './modules/common.js';
+import FlashCardsCommon from './modules/common.js';
 
 class QuizRun extends React.Component {
   constructor(props) {
@@ -108,13 +109,13 @@ class QuizRun extends React.Component {
         <h1>{ this.renderHeader() }</h1>
         { this.renderWrongAnswers() }
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <p className="question m-bottom">{ this.renderQuestion() }</p>
           <form>
             { this.renderInput() }
             { this.renderAnswers() }
-            <input type="submit" className={ this.buttonClass() + " standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
+            <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
             <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
           </form>
         </div>

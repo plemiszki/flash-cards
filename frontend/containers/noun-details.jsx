@@ -4,9 +4,10 @@ import { bindActionCreators } from 'redux';
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
-import Details from './modules/details.jsx';
+import { Common, Details } from 'handy-components';
+import FlashCardsDetails from './modules/details.jsx';
 import ModalSelect from './modal-select.jsx';
-import Common from './modules/common.js';
+import FlashCardsCommon from './modules/common.js';
 
 class NounDetails extends React.Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class NounDetails extends React.Component {
         nounTags: this.props.nounTags,
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   }
@@ -120,18 +121,18 @@ class NounDetails extends React.Component {
       <div id="noun-details" className="component details-component">
         <h1>Noun Details</h1>
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural' }) }
             <div className="col-xs-2">
               <h2>Gender</h2>
-              <select onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.gender } data-entity="noun" data-field="gender">
+              <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.gender } data-entity="noun" data-field="gender">
                 <option value={ "1" }>Male</option>
                 <option value={ "2" }>Female</option>
               </select>
-              { HandyTools.renderFieldError([], []) }
+              { Details.renderFieldError([], []) }
             </div>
           </div>
           <div className="row">
@@ -143,10 +144,10 @@ class NounDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'transliteratedPlural' }) }
           </div>
           <div>
-            <a className={ "btn blue-button standard-width m-bottom" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
@@ -173,7 +174,7 @@ class NounDetails extends React.Component {
               })}
             </tbody>
           </table>
-          <a className="gray-outline-button small-width small-padding" onClick={ HandyTools.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
+          <a className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
         </div>
         <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ HandyTools.modalSelectStyles() }>
           <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />

@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
+import { Common, Details } from 'handy-components';
 import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
 import NewEntity from './new-entity.jsx';
-import Common from './modules/common.js';
-import Details from './modules/details.jsx';
+import FlashCardsCommon from './modules/common.js';
+import FlashCardsDetails from './modules/details.jsx';
 
 class QuizDetails extends React.Component {
   constructor(props) {
@@ -76,16 +77,16 @@ class QuizDetails extends React.Component {
       <div id="quiz-details" className="component details-component">
         <h1>Quiz Details</h1>
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quiz', property: 'name' }) }
             { Details.renderDropDown.bind(this)({ columnWidth: 3, entity: 'quiz', property: 'useArchived', columnHeader: 'Use Archived Questions?', boolean: true, maxOptions: 2 }) }
           </div>
-          <a className={ "btn blue-button standard-width" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+          <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
             { Details.saveButtonText.call(this) }
           </a>
-          <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+          <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
             Delete
           </a>
           <hr className="divider m-top" />

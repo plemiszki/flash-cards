@@ -4,10 +4,11 @@ import { bindActionCreators } from 'redux';
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
-import Details from './modules/details.jsx';
+import { Common, Details } from 'handy-components';
+import FlashCardsDetails from './modules/details.jsx';
 import NewEntity from './new-entity.jsx';
 import ModalSelect from './modal-select.jsx';
-import Common from './modules/common.js';
+import FlashCardsCommon from './modules/common.js';
 
 const selectModalStyles = {
   overlay: {
@@ -58,7 +59,7 @@ class CardDetails extends React.Component {
         tags: this.props.tags,
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   }
@@ -136,8 +137,8 @@ class CardDetails extends React.Component {
       <div id="card-details" className="component details-component">
         <h1>Card Details</h1>
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
           </div>
@@ -145,10 +146,10 @@ class CardDetails extends React.Component {
             { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
           </div>
           <div>
-            <a className={ "btn blue-button standard-width m-bottom" + HandyTools.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
@@ -175,7 +176,7 @@ class CardDetails extends React.Component {
               })}
             </tbody>
           </table>
-          <a className="gray-outline-button small-width small-padding" onClick={ HandyTools.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
+          <a className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
         </div>
         <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ selectModalStyles }>
           <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />

@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux';
 import { fetchEntities } from '../actions/index';
 import Modal from 'react-modal';
 import HandyTools from 'handy-tools';
+import { Common, Index } from 'handy-components';
 import _ from 'lodash';
-import Index from './modules/index.js';
-import Common from './modules/common.js';
+import FlashCardsCommon from './modules/common.js';
 import TabActions from './modules/tab-actions.js';
 import NewEntity from './new-entity.jsx';
 import Message from './message.jsx';
@@ -36,7 +36,7 @@ class TabbedIndex extends React.Component {
   }
 
   componentDidMount() {
-    Common.checkForMessage.call(this);
+    FlashCardsCommon.checkForMessage.call(this);
     this.props.fetchEntities(directory).then(() => {
       let entityArray;
       if (this.props.tabs) {
@@ -72,19 +72,19 @@ class TabbedIndex extends React.Component {
       <div className="component">
         { this.renderMessage() }
         <h1>{ HandyTools.capitalize(this.props.entityNamePlural) }</h1>
-        <a className={ "blue-button btn float-button" + HandyTools.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { HandyTools.capitalize(this.props.entityName) }</a>
-        <input className="search-box margin" onChange={ HandyTools.changeStateToTarget.bind(this, 'searchText') } value={ this.state.searchText } />
+        <a className={ "blue-button btn float-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Index.clickNew.bind(this) }>Add { HandyTools.capitalize(this.props.entityName) }</a>
+        <input className="search-box margin" onChange={ Common.changeStateToTarget.bind(this, 'searchText') } value={ this.state.searchText } />
         { this.renderTopTabs() }
         <div className="white-box">
-          { HandyTools.renderSpinner(this.state.fetching) }
-          { HandyTools.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <table className="admin-table sortable blue-headers">
             <thead>
               <tr>
                 { this.props.columns.map((column, index) => {
                   return(
                     <th key={ index }>
-                      <div className={ HandyTools.sortClass.bind(this)(column) } onClick={ HandyTools.changeState.bind(this, 'searchProperty', column) }>
+                      <div className={ Index.sortClass.bind(this)(column) } onClick={ Common.changeState.bind(this, 'searchProperty', column) }>
                         { this.props.columnHeaders && this.props.columnHeaders[index] ? this.props.columnHeaders[index] : HandyTools.capitalize(column) }
                       </div>
                     </th>
@@ -156,7 +156,7 @@ class TabbedIndex extends React.Component {
   renderMessage() {
     if (this.state.message) {
       return (
-        <Message color={ this.state.messageColor } text={ this.state.message } clickClose={ () => { HandyTools.changeState.call(this, 'message', '') } } />
+        <Message color={ this.state.messageColor } text={ this.state.message } clickClose={ () => { Common.changeState.call(this, 'message', '') } } />
       );
     }
   }

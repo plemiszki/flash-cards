@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import HandyTools from 'handy-tools';
+import { Details } from 'handy-components'
 import MatchHeight from 'jquery-match-height';
 import ChangeCase from 'change-case';
 
-let Details = {
+let FlashCardsDetails = {
 
   clickDelete() {
     this.setState({
@@ -35,7 +36,7 @@ let Details = {
         Object.assign(newState, { [this.props.array3Name]: this.props[this.props.array3Name] });
       }
       this.setState(newState, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: HandyTools.changeField.bind(this, this.changeFieldArgs()) });
+        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   },
@@ -75,11 +76,11 @@ let Details = {
     return(
       <div className={ `col-xs-${args.columnWidth} ` + (args.maxOptions ? `select-scroll-${args.maxOptions}` : 'select-scroll-6') }>
         <h2>{ columnHeader }</h2>
-        <select className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ HandyTools.convertBooleanToTFString(this.state[args.entity][args.property]) || "" } data-entity={ args.entity } data-field={ args.property }>
+        <select className={ Details.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ HandyTools.convertBooleanToTFString(this.state[args.entity][args.property]) || "" } data-entity={ args.entity } data-field={ args.property }>
           { renderNoneOption(args) }
           { renderOptions(args) }
         </select>
-        { HandyTools.renderDropdownFieldError(this.state.errors, Errors[args.property] || []) }
+        { Details.renderDropdownFieldError(this.state.errors, Errors[args.property] || []) }
       </div>
     );
   },
@@ -89,8 +90,8 @@ let Details = {
     return(
       <div className={ `col-xs-${args.columnWidth}` }>
         <h2>{ columnHeader }</h2>
-        <input className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property } />
-        { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
+        <input className={ Details.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property } />
+        { Details.renderFieldError(this.state.errors, Errors[args.property] || []) }
       </div>
     );
   },
@@ -100,8 +101,8 @@ let Details = {
     return(
       <div className={ `col-xs-${args.columnWidth}` }>
         <h2>{ columnHeader }</h2>
-        <textarea rows={ args.rows } className={ HandyTools.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ HandyTools.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property }></textarea>
-        { HandyTools.renderFieldError(this.state.errors, Errors[args.property] || []) }
+        <textarea rows={ args.rows } className={ Details.errorClass(this.state.errors, Errors[args.property] || []) } onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state[args.entity][args.property] || "" } data-entity={ args.entity } data-field={ args.property }></textarea>
+        { Details.renderFieldError(this.state.errors, Errors[args.property] || []) }
       </div>
     );
   },
@@ -134,4 +135,4 @@ let Details = {
   }
 }
 
-export default Details;
+export default FlashCardsDetails;
