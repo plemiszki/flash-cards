@@ -281,6 +281,19 @@ class Quiz < ActiveRecord::Base
             answers: [card.answer],
             textbox: card.answer.include?("\n")
           }
+        when 'Imperfective Present'
+          english_subject = get_random_single_english_subject
+          subject_objects = get_subject_object(english_subject)
+          verb = @verbs.pop
+          result << {
+            question: "#{subject_objects.first[:english].capitalize} #{verb.english_imperfective(english_subject)}.",
+            answers: subject_objects.map do |subject_object|
+              [
+                "#{subject_object[:transliterated]} #{verb.transliterated_stem}",
+                "#{subject_object[:hindi]} #{verb.hindi_stem}",
+              ]
+            end.flatten.uniq
+          }
         when 'Imperative'
           verb = @verbs.pop
           tense = ['familiar', 'informal', 'formal'].sample

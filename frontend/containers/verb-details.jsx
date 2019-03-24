@@ -93,6 +93,11 @@ class VerbDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
           </div>
           <div className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'englishIrregularImperfective', columnHeader: 'English Irregular Imperfective' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformal', columnHeader: 'Irregular Imperative - Informal' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Informal' }) }
+          </div>
+          <div className="row">
             <div className="col-xs-2">
               <h2>Postposition</h2>
               <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.verb.postposition } data-entity="verb" data-field="postposition">
@@ -103,11 +108,6 @@ class VerbDetails extends React.Component {
               { Details.renderFieldError([], []) }
             </div>
             <div className="col-xs-2"></div>
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformal', columnHeader: 'Irregular Imperative - Informal' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeInformalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Informal' }) }
-          </div>
-          <div className="row">
-            <div className="col-xs-4"></div>
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormal', columnHeader: 'Irregular Imperative - Formal' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Formal' }) }
           </div>

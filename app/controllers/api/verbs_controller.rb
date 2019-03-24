@@ -40,6 +40,7 @@ class Api::VerbsController < AdminController
   def verb_params
     params[:verb].permit(
       :english,
+      :english_irregular_imperfective,
       :infinitive,
       :transliterated_infinitive,
       :irregular_imperative_formal,

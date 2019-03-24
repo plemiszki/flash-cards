@@ -3,6 +3,14 @@ class Verb < ActiveRecord::Base
   validates_presence_of :english, :infinitive
   validates_uniqueness_of :english, scope: :infinitive, message: '/ Hindi combo already used'
 
+  def english_imperfective(subject)
+    if ["I", "You"].include?(subject)
+      english
+    else
+      "#{english}s"
+    end
+  end
+
   def hindi_stem
     infinitive[0...-2]
   end
