@@ -13,7 +13,7 @@ import Message from './message.jsx';
 
 const directory = window.location.pathname.split('/')[1] || 'quizzes';
 
-class StandardIndex extends React.Component {
+class TabbedIndex extends React.Component {
   constructor(props) {
     super(props);
 
@@ -176,4 +176,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchEntities }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StandardIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(TabbedIndex);

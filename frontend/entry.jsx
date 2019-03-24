@@ -2,11 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ReactModal from 'react-modal';
+import { StandardIndex } from 'handy-components';
 
-import configureStore from './store/store';
-let store = configureStore();
-
-import StandardIndex from './containers/standard-index';
+import TabbedIndex from './containers/tabbed-index';
+import NewEntity from './containers/new-entity';
 import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
@@ -17,21 +16,29 @@ import QuizRun from './containers/quiz-run';
 import QuestionDetails from './containers/question-details';
 import TagDetails from './containers/tag-details';
 
+import configureStore from './store/store';
+let store = configureStore();
+
 $(document).ready(function() {
 
   ReactModal.setAppElement(document.body);
+  const MyContext = React.createContext();
 
   if (document.querySelector('#nouns-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='noun'
-          entityNamePlural='nouns'
           columns={ ['foreign', 'transliterated', 'english'] }
-          initialNewEntity={ { english: '', englishPlural: '', foreign: '', foreignPlural: '', gender: 1 } }
           modalRows={ 3 }
           modalDimensions={ { width: 900 } }
-        />
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', englishPlural: '', foreign: '', foreignPlural: '', gender: 1 } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#nouns-index')
     );
@@ -48,15 +55,19 @@ $(document).ready(function() {
 
   if (document.querySelector('#verbs-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='verb'
-          entityNamePlural='verbs'
           columns={ ['infinitive', 'transliteratedInfinitive', 'english'] }
           columnHeaders={ ['', 'Transliterated', ''] }
-          initialNewEntity={ { english: '', infinitive: '', transliteratedInfinitive: '' } }
           modalDimensions={ { width: 900 } }
-        />
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', infinitive: '', transliteratedInfinitive: '' } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#verbs-index')
     );
@@ -73,16 +84,20 @@ $(document).ready(function() {
 
   if (document.querySelector('#adjectives-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='adjective'
-          entityNamePlural='adjectives'
           columns={ ['masculine', 'transliteratedMasculine', 'english'] }
           columnHeaders={ ['', 'Transliterated', ''] }
-          initialNewEntity={ { english: '', masculine: '', feminine: '' } }
-          modalRows={ 3 }
           modalDimensions={ { width: 900 } }
-        />
+          modalRows={ 3 }
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', masculine: '', feminine: '' } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#adjectives-index')
     );
@@ -99,15 +114,18 @@ $(document).ready(function() {
 
   if (document.querySelector('#adverbs-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='adverb'
-          entityNamePlural='adverbs'
           columns={ ['foreign', 'transliterated', 'english'] }
-          initialNewEntity={ { foreign: '', transliterated: '', english: '' } }
-          modalRows={ 1 }
           modalDimensions={ { width: 900 } }
-        />
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { foreign: '', transliterated: '', english: '' } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#adverbs-index')
     );
@@ -125,7 +143,7 @@ $(document).ready(function() {
   if (document.querySelector('#cards-index')) {
     ReactDOM.render(
       <Provider store={ store }>
-        <StandardIndex
+        <TabbedIndex
           entityName='card'
           entityNamePlural='cards'
           columns={ ['question', 'tags'] }
@@ -151,16 +169,21 @@ $(document).ready(function() {
 
   if (document.querySelector('#quizzes-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='quiz'
           entityNamePlural='quizzes'
           columns={ ['name', ''] }
           columnClasses={ ['', 'play-column'] }
           columnLinks={ ['', '/run'] }
-          initialNewEntity={ { name: '' } }
           modalDimensions={ { width: 700 } }
-        />
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { name: '' } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#quizzes-index')
     );
@@ -186,14 +209,18 @@ $(document).ready(function() {
 
   if (document.querySelector('#questions-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='question'
-          entityNamePlural='questions'
           columns={ ['name'] }
-          initialNewEntity={ { name: '' } }
           modalDimensions={ { width: 700 } }
-        />
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { name: '' } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#questions-index')
     );
@@ -210,14 +237,18 @@ $(document).ready(function() {
 
   if (document.querySelector('#tags-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <StandardIndex
+          context={ MyContext }
           entityName='tag'
-          entityNamePlural='tags'
           columns={ ['name'] }
-          initialNewEntity={ { name: '' } }
           modalDimensions={ { width: 500 } }
-        />
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { name: '' } }
+          />
+        </StandardIndex>
       </Provider>,
       document.querySelector('#tags-index')
     );

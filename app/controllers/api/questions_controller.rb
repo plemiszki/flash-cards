@@ -11,7 +11,7 @@ class Api::QuestionsController < AdminController
       @questions = Question.all
       render 'index.json.jbuilder'
     else
-      render json: @questions.errors.full_messages, status: 422
+      render json: @question.errors.full_messages, status: 422
     end
   end
 
