@@ -289,8 +289,8 @@ class Quiz < ActiveRecord::Base
             question: "#{subject_objects.first[:english].capitalize} #{verb.english_imperfective(english_subject)}.",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{verb.transliterated_stem}",
-                "#{subject_object[:hindi]} #{verb.hindi_stem}",
+                "#{subject_object[:transliterated]} #{verb.transliterated_imperfective} #{subject_object[:transliterated_be]}",
+                "#{subject_object[:hindi]} #{verb.hindi_imperfective} #{subject_object[:hindi_be]}",
               ]
             end.flatten.uniq
           }
