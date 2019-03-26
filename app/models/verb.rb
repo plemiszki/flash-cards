@@ -3,11 +3,13 @@ class Verb < ActiveRecord::Base
   validates_presence_of :english, :infinitive
   validates_uniqueness_of :english, scope: :infinitive, message: '/ Hindi combo already used'
 
-  def english_imperfective(subject)
+  def english_imperfective(subject, use_negative)
     if ["I", "You"].include?(subject)
       english
+    elsif ["This", "That", "He", "She", "It"].include?(subject)
+      use_negative ? english : (english_irregular_imperfective.present? ? english_irregular_imperfective : "#{english}s")
     else
-      "#{english}s"
+      raise "unknown subject"
     end
   end
 

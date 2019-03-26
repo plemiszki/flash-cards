@@ -285,13 +285,18 @@ class Quiz < ActiveRecord::Base
           english_subject = get_random_single_english_subject
           subject_objects = get_subject_object(english_subject)
           verb = @verbs.pop
+          use_negative = (rand(3) == 0)
+          negative_hindi = use_negative ? 'नहीं ' : ''
+          negative_trans = use_negative ? 'nahi ' : ''
           result << {
-            question: "#{subject_objects.first[:english].capitalize} #{verb.english_imperfective(english_subject)}.",
+            question: "#{subject_objects.first[:english].capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}.",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{verb.transliterated_imperfective} #{subject_object[:transliterated_be]}",
-                "#{subject_object[:hindi]} #{verb.hindi_imperfective} #{subject_object[:hindi_be]}",
-              ]
+                "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective} #{subject_object[:transliterated_be]}",
+                "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective} #{subject_object[:hindi_be]}",
+                (use_negative ? "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective}" : nil),
+                (use_negative ? "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective}" : nil)
+              ].compact
             end.flatten.uniq
           }
         when 'Imperative'
@@ -922,6 +927,15 @@ class Quiz < ActiveRecord::Base
       "#{input} (plural)"
     else
       input
+    end
+  end
+
+  def english_negative_verb(use_negative, subject)
+    return "" unless use_negative
+    if ["I", "You", "They", "We"].include?(subject)
+      "don't "
+    else
+      "doesn't "
     end
   end
 
