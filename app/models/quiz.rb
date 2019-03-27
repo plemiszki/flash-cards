@@ -282,21 +282,30 @@ class Quiz < ActiveRecord::Base
             textbox: card.answer.include?("\n")
           }
         when 'Imperfective Present'
-          english_subject = get_random_single_english_subject
+          english_subject = get_random_english_subject
+          use_plural = ['You', 'These', 'Those', 'They'].include?(english_subject)
           gender, gender_notification = get_gender_from_subject(english_subject)
           subject_objects = get_subject_object(english_subject)
           verb = @verbs.pop
+          if verb.english == 'live'
+            place_eng, place_trans, place_hindi = get_place
+            extra_eng = " in #{place_eng}"
+            extra_trans = "#{place_trans} me "
+            extra_hindi = "#{place_hindi} में "
+          else
+            extra_eng, extra_trans, extra_hindi = ''
+          end
           use_negative = (rand(3) == 0)
           negative_hindi = use_negative ? 'नहीं ' : ''
           negative_trans = use_negative ? 'nahi ' : ''
           result << {
-            question: "#{english_subject.capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}.#{gender_notification}",
+            question: "#{english_subject.capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}#{extra_eng}.#{gender_notification}",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender)} #{subject_object[:transliterated_be]}",
-                "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender)} #{subject_object[:hindi_be]}",
-                (use_negative ? "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender)}" : nil),
-                (use_negative ? "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender)}" : nil)
+                "#{subject_object[:transliterated]} #{extra_trans}#{negative_trans}#{verb.transliterated_imperfective(gender, use_plural)} #{subject_object[:transliterated_be]}",
+                "#{subject_object[:hindi]} #{extra_hindi}#{negative_hindi}#{verb.hindi_imperfective(gender, use_plural)} #{subject_object[:hindi_be]}",
+                (use_negative ? "#{subject_object[:transliterated]} #{extra_trans}#{negative_trans}#{verb.transliterated_imperfective(gender, use_plural)}" : nil),
+                (use_negative ? "#{subject_object[:hindi]} #{extra_hindi}#{negative_hindi}#{verb.hindi_imperfective(gender, use_plural)}" : nil)
               ].compact
             end.flatten.uniq
           }
@@ -910,6 +919,13 @@ class Quiz < ActiveRecord::Base
     end
   end
 
+  def get_place
+    [
+      ["New York", "New York", "न्यू यॉर्क"],
+      ["Delhi", "dilli", "दिल्ली"]
+    ].sample
+  end
+
   def get_english_plural(use_plural, noun)
     english_single_plural_same = (noun.english == noun.english_plural)
     hindi_single_plural_same = (noun.foreign == noun.foreign_plural)
@@ -932,8 +948,8 @@ class Quiz < ActiveRecord::Base
   end
 
   def english_negative_verb(use_negative, subject)
-    return "" unless use_negative
-    if ["I", "You", "They", "We"].include?(subject)
+    return '' unless use_negative
+    if ['I', 'You', 'They', 'We', 'These', 'Those', 'They'].include?(subject)
       "don't "
     else
       "doesn't "
