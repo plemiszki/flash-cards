@@ -282,7 +282,8 @@ class Quiz < ActiveRecord::Base
             textbox: card.answer.include?("\n")
           }
         when 'Imperfective Present'
-          english_subject = get_random_single_english_subject
+          english_subject = get_random_english_subject
+          use_plural = ['You', 'These', 'Those', 'They'].include?(english_subject)
           gender, gender_notification = get_gender_from_subject(english_subject)
           subject_objects = get_subject_object(english_subject)
           verb = @verbs.pop
@@ -293,10 +294,10 @@ class Quiz < ActiveRecord::Base
             question: "#{english_subject.capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}.#{gender_notification}",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender)} #{subject_object[:transliterated_be]}",
-                "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender)} #{subject_object[:hindi_be]}",
-                (use_negative ? "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender)}" : nil),
-                (use_negative ? "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender)}" : nil)
+                "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender, use_plural)} #{subject_object[:transliterated_be]}",
+                "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender, use_plural)} #{subject_object[:hindi_be]}",
+                (use_negative ? "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender, use_plural)}" : nil),
+                (use_negative ? "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender, use_plural)}" : nil)
               ].compact
             end.flatten.uniq
           }
@@ -932,8 +933,8 @@ class Quiz < ActiveRecord::Base
   end
 
   def english_negative_verb(use_negative, subject)
-    return "" unless use_negative
-    if ["I", "You", "They", "We"].include?(subject)
+    return '' unless use_negative
+    if ['I', 'You', 'They', 'We', 'These', 'Those', 'They'].include?(subject)
       "don't "
     else
       "doesn't "
