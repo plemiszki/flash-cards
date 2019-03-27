@@ -283,19 +283,20 @@ class Quiz < ActiveRecord::Base
           }
         when 'Imperfective Present'
           english_subject = get_random_single_english_subject
+          gender, gender_notification = get_gender_from_subject(english_subject)
           subject_objects = get_subject_object(english_subject)
           verb = @verbs.pop
           use_negative = (rand(3) == 0)
           negative_hindi = use_negative ? 'नहीं ' : ''
           negative_trans = use_negative ? 'nahi ' : ''
           result << {
-            question: "#{subject_objects.first[:english].capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}.",
+            question: "#{english_subject.capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}.#{gender_notification}",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective} #{subject_object[:transliterated_be]}",
-                "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective} #{subject_object[:hindi_be]}",
-                (use_negative ? "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective}" : nil),
-                (use_negative ? "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective}" : nil)
+                "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender)} #{subject_object[:transliterated_be]}",
+                "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender)} #{subject_object[:hindi_be]}",
+                (use_negative ? "#{subject_object[:transliterated]} #{negative_trans}#{verb.transliterated_imperfective(gender)}" : nil),
+                (use_negative ? "#{subject_object[:hindi]} #{negative_hindi}#{verb.hindi_imperfective(gender)}" : nil)
               ].compact
             end.flatten.uniq
           }
@@ -937,6 +938,18 @@ class Quiz < ActiveRecord::Base
     else
       "doesn't "
     end
+  end
+
+  def get_gender_from_subject(subject)
+    if ['I', 'He'].include?(subject)
+      gender = 'M'
+    elsif ['She'].include?(subject)
+      gender = 'F'
+    else
+      gender = ['M', 'F'].sample
+    end
+    gender_notification = ['I', 'He', 'She'].include?(subject) ? '' : " (#{gender})"
+    [gender, gender_notification]
   end
 
 end

@@ -4,30 +4,30 @@ class Verb < ActiveRecord::Base
   validates_uniqueness_of :english, scope: :infinitive, message: '/ Hindi combo already used'
 
   def english_imperfective(subject, use_negative)
-    if ["I", "You"].include?(subject)
+    if ['I', 'You'].include?(subject)
       english
-    elsif ["This", "That", "He", "She", "It"].include?(subject)
+    elsif ['This', 'That', 'He', 'She', 'It'].include?(subject)
       use_negative ? english : (english_irregular_imperfective.present? ? english_irregular_imperfective : "#{english}s")
     else
-      raise "unknown subject"
+      raise 'unknown subject'
     end
   end
 
   def hindi_formal
     if irregular_imperative_formal.empty?
-      ["ा", "ो", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}इए" : "#{hindi_stem}िए"
+      ['ा', 'ो', 'आ'].include?(hindi_stem[-1]) ? "#{hindi_stem}इए" : "#{hindi_stem}िए"
     else
       irregular_imperative_formal
     end
   end
 
-  def hindi_imperfective
-    "#{hindi_stem}ता"
+  def hindi_imperfective(gender)
+    gender == 'M' ? "#{hindi_stem}ता" : "#{hindi_stem}ती"
   end
 
   def hindi_informal
     if irregular_imperative_informal.empty?
-      ["ा", "ो", "आ"].include?(hindi_stem[-1]) ? "#{hindi_stem}ओ" : "#{hindi_stem}ो"
+      ['ा', 'ो', 'आ'].include?(hindi_stem[-1]) ? "#{hindi_stem}ओ" : "#{hindi_stem}ो"
     else
       irregular_imperative_informal
     end
@@ -45,8 +45,8 @@ class Verb < ActiveRecord::Base
     end
   end
 
-  def transliterated_imperfective
-    "#{transliterated_stem}ta"
+  def transliterated_imperfective(gender)
+    gender == 'M' ? "#{transliterated_stem}ta" : "#{transliterated_stem}ti"
   end
 
   def transliterated_informal
