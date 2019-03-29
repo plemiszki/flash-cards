@@ -281,6 +281,22 @@ class Quiz < ActiveRecord::Base
             answers: [card.answer],
             textbox: card.answer.include?("\n")
           }
+        when 'Imperfective Present Question'
+          question_word = get_question_word
+          english_subject = get_random_english_subject
+          gender, gender_notification = get_gender_from_subject(english_subject)
+          subject_objects = get_subject_object(english_subject)
+          verb = @verbs.pop
+          do_verb = Verb.find_by_english('do')
+          result << {
+            question: "#{question_word[:english].capitalize} #{do_verb.english_imperfective(english_subject, false)} #{english_subject == 'I' ? 'I' : english_subject.downcase} #{verb.english}?#{gender_notification}",
+            answers: subject_objects.map do |subject_object|
+              [
+                "#{subject_object[:transliterated]} #{question_word[:transliterated]} #{verb.transliterated_imperfective(gender, false)} #{subject_object[:transliterated_be]}?",
+                "#{subject_object[:hindi]} #{question_word[:hindi]} #{verb.hindi_imperfective(gender, false)} #{subject_object[:hindi_be]}?"
+              ]
+            end.flatten.uniq
+          }
         when 'Imperfective Present'
           english_subject = get_random_english_subject
           use_plural = ['You', 'These', 'Those', 'They'].include?(english_subject)
@@ -371,6 +387,23 @@ class Quiz < ActiveRecord::Base
   end
 
   private
+
+  def get_question_word
+    [
+      { english: 'where',
+        transliterated: 'kaha',
+        hindi: 'कहाँ'
+      },
+      { english: 'why',
+        transliterated: 'kyo',
+        hindi: 'क्यों'
+      },
+      { english: 'when',
+        transliterated: 'kab',
+        hindi: 'कब'
+      }
+    ].sample
+  end
 
   def get_preposition
     [
