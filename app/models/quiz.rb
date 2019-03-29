@@ -356,9 +356,9 @@ class Quiz < ActiveRecord::Base
             hindi_answers = [hindi_answer]
             transliterated_answers = [transliterated_answer]
           end
-          question = "#{tense == 'formal' ? 'Please ' : ''}#{negate ? "don't " : ''}#{verb.english}#{tense == 'familiar' ? ' (familiar)' : ''}#{extra_eng}#{adverb_english}."
+          question_text = "#{tense == 'formal' ? 'Please ' : ''}#{negate ? "don't " : ''}#{verb.english}#{tense == 'familiar' ? ' (familiar)' : ''}#{extra_eng}#{adverb_english}."
           result << {
-            question: question.slice(0, 1).capitalize + question.slice(1..-1),
+            question: question_text.slice(0, 1).capitalize + question_text.slice(1..-1),
             answers: [
               hindi_answers,
               transliterated_answers
