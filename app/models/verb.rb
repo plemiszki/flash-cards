@@ -41,6 +41,13 @@ class Verb < ActiveRecord::Base
     infinitive[0...-2]
   end
 
+  def postposition_trans
+    {
+      से: 'se',
+      को: 'ko'
+    }[postposition.to_sym]
+  end
+
   def transliterated_formal
     if irregular_imperative_formal_transliterated.empty?
       "#{transliterated_stem}ie"

@@ -14,7 +14,8 @@ class VerbDetails extends React.Component {
       english: '',
       englishSaved: '',
       infinite: '',
-      infiniteSaved: ''
+      infiniteSaved: '',
+      postposition: ''
     };
 
     this.state = {
@@ -107,7 +108,7 @@ class VerbDetails extends React.Component {
               </select>
               { Details.renderFieldError([], []) }
             </div>
-            <div className="col-xs-2"></div>
+            { Details.renderField.bind(this)({ columnWidth: 2, entity: 'verb', property: 'englishPreposition', hidden: this.state.verb.postposition === "" }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormal', columnHeader: 'Irregular Imperative - Formal' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Formal' }) }
           </div>

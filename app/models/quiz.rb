@@ -329,8 +329,18 @@ class Quiz < ActiveRecord::Base
             hindi_answer = verb.hindi_formal
             transliterated_answer = verb.transliterated_formal
           end
-          hindi_answer = "#{adverb_hindi}#{hindi_answer}"
-          transliterated_answer = "#{adverb_transliterated}#{transliterated_answer}"
+          if verb.postposition.present?
+            name_eng, name_hindi = get_name
+            extra_eng = " #{verb.english_preposition}#{verb.english_preposition.present? ? ' ' : ''}#{name_eng}"
+            extra_trans = "#{name_eng} #{verb.postposition_trans} "
+            extra_hindi = "#{name_hindi} #{verb.postposition} "
+          else
+            extra_eng = ''
+            extra_trans = ''
+            extra_hindi = ''
+          end
+          hindi_answer = "#{adverb_hindi}#{extra_hindi}#{hindi_answer}"
+          transliterated_answer = "#{adverb_transliterated}#{extra_trans}#{transliterated_answer}"
           if negate
             hindi_words = hindi_answer.split(' ')
             hindi_answers = [
@@ -346,8 +356,9 @@ class Quiz < ActiveRecord::Base
             hindi_answers = [hindi_answer]
             transliterated_answers = [transliterated_answer]
           end
+          question = "#{tense == 'formal' ? 'Please ' : ''}#{negate ? "don't " : ''}#{verb.english}#{tense == 'familiar' ? ' (familiar)' : ''}#{extra_eng}#{adverb_english}."
           result << {
-            question: "#{tense == 'formal' ? 'Please ' : ''}#{negate ? "don't " : ''}#{verb.english}#{tense == 'familiar' ? ' (familiar)' : ''}#{adverb_english}.".capitalize,
+            question: question.slice(0, 1).capitalize + question.slice(1..-1),
             answers: [
               hindi_answers,
               transliterated_answers
@@ -919,10 +930,17 @@ class Quiz < ActiveRecord::Base
     end
   end
 
+  def get_name
+    [
+      ['Ram', 'राम'],
+      ['Manoj', 'मनोज']
+    ].sample
+  end
+
   def get_place
     [
-      ["New York", "New York", "न्यू यॉर्क"],
-      ["Delhi", "dilli", "दिल्ली"]
+      ['New York', 'New York', 'न्यू यॉर्क'],
+      ['Delhi', 'dilli', 'दिल्ली']
     ].sample
   end
 

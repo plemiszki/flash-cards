@@ -9,4 +9,5 @@ json.entity do
   json.irregularImperativeInformalTransliterated @verb.irregular_imperative_informal_transliterated
   json.irregularImperativeFormalTransliterated @verb.irregular_imperative_formal_transliterated
   json.postposition @verb.postposition
+  json.englishPreposition @verb.english_preposition
 end

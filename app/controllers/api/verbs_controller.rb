@@ -47,7 +47,8 @@ class Api::VerbsController < AdminController
       :irregular_imperative_informal,
       :irregular_imperative_formal_transliterated,
       :irregular_imperative_informal_transliterated,
-      :postposition
+      :postposition,
+      :english_preposition
     )
   end
 
