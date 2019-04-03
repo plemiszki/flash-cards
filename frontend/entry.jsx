@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ReactModal from 'react-modal';
-import { StandardIndex, Message } from 'handy-components';
+import { StandardIndex, TabbedIndex, Message } from 'handy-components';
 
-import TabbedIndex from './containers/tabbed-index';
 import NewEntity from './containers/new-entity';
 import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
@@ -15,6 +14,8 @@ import QuizDetails from './containers/quiz-details';
 import QuizRun from './containers/quiz-run';
 import QuestionDetails from './containers/question-details';
 import TagDetails from './containers/tag-details';
+
+import TabActions from './containers/modules/tab-actions.js';
 
 import configureStore from './store/store';
 let store = configureStore();
@@ -149,17 +150,22 @@ $(document).ready(function() {
 
   if (document.querySelector('#cards-index')) {
     ReactDOM.render(
-      <Provider store={ store }>
+      <Provider context={ MyContext } store={ store }>
         <TabbedIndex
+          context={ MyContext }
           entityName='card'
-          entityNamePlural='cards'
           columns={ ['question', 'tags'] }
-          initialNewEntity={ { question: '', answer: '' } }
           modalDimensions={ { width: 900, height: 432 } }
           ellipses={ [80, null] }
           tabs={ ['current', 'archived'] }
           newEntityTab='current'
-        />
+          tabActions={ TabActions }
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { question: '', answer: '' } }
+          />
+        </TabbedIndex>
       </Provider>,
       document.querySelector('#cards-index')
     );
