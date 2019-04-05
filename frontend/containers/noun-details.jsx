@@ -1,13 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index';
-import Modal from 'react-modal';
-import HandyTools from 'handy-tools';
-import { Common, Details } from 'handy-components';
-import FlashCardsDetails from './modules/details.jsx';
-import ModalSelect from './modal-select.jsx';
-import FlashCardsCommon from './modules/common.js';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import Modal from 'react-modal'
+import HandyTools from 'handy-tools'
+import { Common, Details, ModalSelect, ModalSelectStyles } from 'handy-components'
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
 
 class NounDetails extends React.Component {
   constructor(props) {
@@ -35,8 +32,8 @@ class NounDetails extends React.Component {
 
   componentDidMount() {
     this.props.fetchEntity({
-      id: window.location.pathname.split("/")[2],
-      directory: window.location.pathname.split("/")[1],
+      id: window.location.pathname.split('/')[2],
+      directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
     }).then(() => {
       this.setState({
@@ -176,7 +173,7 @@ class NounDetails extends React.Component {
           </table>
           <a className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
         </div>
-        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ HandyTools.modalSelectStyles() }>
+        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ ModalSelectStyles }>
           <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />
         </Modal>
       </div>

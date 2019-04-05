@@ -1,30 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index';
-import Modal from 'react-modal';
-import HandyTools from 'handy-tools';
-import { Common, Details } from 'handy-components';
-import FlashCardsDetails from './modules/details.jsx';
-import NewEntity from './new-entity.jsx';
-import ModalSelect from './modal-select.jsx';
-import FlashCardsCommon from './modules/common.js';
-
-const selectModalStyles = {
-  overlay: {
-    background: 'rgba(0, 0, 0, 0.50)'
-  },
-  content: {
-    background: '#FFFFFF',
-    margin: 'auto',
-    maxWidth: 540,
-    height: '90%',
-    border: 'solid 1px #5F5F5F',
-    borderRadius: '6px',
-    textAlign: 'center',
-    color: '#5F5F5F'
-  }
-}
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import Modal from 'react-modal'
+import HandyTools from 'handy-tools'
+import { Common, Details, ModalSelect, ModalSelectStyles } from 'handy-components'
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
 
 class CardDetails extends React.Component {
   constructor(props) {
@@ -47,8 +27,8 @@ class CardDetails extends React.Component {
 
   componentDidMount() {
     this.props.fetchEntity({
-      id: window.location.pathname.split("/")[2],
-      directory: window.location.pathname.split("/")[1],
+      id: window.location.pathname.split('/')[2],
+      directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
     }).then(() => {
       this.setState({
@@ -178,7 +158,7 @@ class CardDetails extends React.Component {
           </table>
           <a className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
         </div>
-        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ selectModalStyles }>
+        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ ModalSelectStyles }>
           <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />
         </Modal>
       </div>
