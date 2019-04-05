@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
-import HandyTools from 'handy-tools';
-import { Common, Details } from 'handy-components';
-import FlashCardsDetails from './modules/details.jsx';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetchEntity, updateEntity, deleteEntity } from '../actions/index'
+import { Common, Details } from 'handy-components'
+import HandyTools from 'handy-tools'
 
 class QuestionDetails extends React.Component {
   constructor(props) {

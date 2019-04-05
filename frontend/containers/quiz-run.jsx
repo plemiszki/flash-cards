@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import HandyTools from 'handy-tools';
-import { Common } from 'handy-components';
-import { runQuiz } from '../actions/index';
-import FlashCardsCommon from './modules/common.js';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Common } from 'handy-components'
+import HandyTools from 'handy-tools'
+import { runQuiz } from '../actions/index'
 
 class QuizRun extends React.Component {
   constructor(props) {

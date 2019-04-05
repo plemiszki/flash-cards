@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { createEntity } from '../actions/index';
-import Modal from 'react-modal';
-import { Common, Details } from 'handy-components';
-import HandyTools from 'handy-tools';
-import FlashCardsDetails from './modules/details.jsx';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import Modal from 'react-modal'
+import { Common, Details } from 'handy-components'
+import HandyTools from 'handy-tools'
+import { createEntity } from '../actions/index'
 
 class NewEntity extends React.Component {
   constructor(props) {
@@ -70,8 +69,8 @@ class NewEntity extends React.Component {
       case 'noun':
         return([
           <div key="1" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural' }) }
             <div className="col-xs-2">
               <h2>Gender</h2>
               <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.noun.gender } data-entity="noun" data-field="gender">
@@ -82,53 +81,53 @@ class NewEntity extends React.Component {
             </div>
           </div>,
           <div key="2" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'foreign', columnHeader: 'Hindi' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'foreignPlural', columnHeader: 'Hindi Plural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'foreign', columnHeader: 'Hindi' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'foreignPlural', columnHeader: 'Hindi Plural' }) }
           </div>,
           <div key="3" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliterated' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliteratedPlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliterated' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'transliteratedPlural' }) }
           </div>
         ]);
       case 'verb':
         return([
           <div key="1" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
           </div>
         ]);
       case 'adjective':
         return([
           <div key="1" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
           </div>,
           <div key="2" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
           </div>,
           <div key="3" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
           </div>
         ]);
       case 'adverb':
         return([
           <div key="1" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'foreign' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'transliterated' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'foreign' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'transliterated' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adverb', property: 'english' }) }
           </div>
         ]);
       case 'card':
         return([
           <div key="1" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
           </div>,
           <div key="2" className="row">
-            { FlashCardsDetails.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
+            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
           </div>
         ]);
       case 'tag':
@@ -136,21 +135,21 @@ class NewEntity extends React.Component {
       case 'question':
         return([
           <div key="1" className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 12, entity: this.props.entityName, property: 'name' }) }
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: this.props.entityName, property: 'name' }) }
           </div>
         ]);
       case 'quizQuestion':
         return(
           <div className="row">
-            { FlashCardsDetails.renderDropDown.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
-            { FlashCardsDetails.renderDropDown.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', options: this.props.array2, optionDisplayProperty: 'name', maxOptions: 2, optional: true }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 2, entity: 'quizQuestion', property: 'amount' }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', options: this.props.array2, optionDisplayProperty: 'name', maxOptions: 2, optional: true }) }
+            { Details.renderField.bind(this)({ columnWidth: 2, entity: 'quizQuestion', property: 'amount' }) }
           </div>
         );
       case 'cardTag':
         return(
           <div className="row">
-            { FlashCardsDetails.renderDropDown.bind(this)({ columnWidth: 12, entity: 'cardTag', property: 'tagId', columnHeader: 'Tag', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
+            { Details.renderDropDown.bind(this)({ columnWidth: 12, entity: 'cardTag', property: 'tagId', columnHeader: 'Tag', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
           </div>
         );
     }

@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import Modal from 'react-modal';
-import HandyTools from 'handy-tools';
-import { Common, Details } from 'handy-components';
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
-import NewEntity from './new-entity.jsx';
-import FlashCardsCommon from './modules/common.js';
-import FlashCardsDetails from './modules/details.jsx';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import Modal from 'react-modal'
+import { Common, Details } from 'handy-components'
+import HandyTools from 'handy-tools'
+import { fetchEntity, updateEntity, deleteEntity } from '../actions/index'
+import NewEntity from './new-entity.jsx'
 
 class QuizDetails extends React.Component {
   constructor(props) {

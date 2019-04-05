@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index';
-import HandyTools from 'handy-tools';
-import { Common, Details } from 'handy-components';
-import FlashCardsDetails from './modules/details.jsx';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Common, Details } from 'handy-components'
+import HandyTools from 'handy-tools'
+import { fetchEntity, updateEntity, deleteEntity } from '../actions/index'
 
 class AdjectiveDetails extends React.Component {
   constructor(props) {
@@ -90,23 +89,23 @@ class AdjectiveDetails extends React.Component {
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
           </div>
           <div className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
           </div>
           <div className="row">
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
-            { FlashCardsDetails.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { FlashCardsDetails.saveButtonText.call(this) }
+              { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ FlashCardsDetails.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
