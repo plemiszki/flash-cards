@@ -2,18 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ReactModal from 'react-modal';
-import { StandardIndex, TabbedIndex, Message } from 'handy-components';
+import { SimpleDetails, StandardIndex, TabbedIndex, Message } from 'handy-components';
 
 import NewEntity from './containers/new-entity';
 import NounDetails from './containers/noun-details';
 import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
-import AdverbDetails from './containers/adverb-details';
 import CardDetails from './containers/card-details';
 import QuizDetails from './containers/quiz-details';
 import QuizRun from './containers/quiz-run';
-import QuestionDetails from './containers/question-details';
-import TagDetails from './containers/tag-details';
 
 import TabActions from './containers/modules/tab-actions.js';
 
@@ -141,8 +138,17 @@ $(document).ready(function() {
 
   if (document.querySelector('#adverb-details')) {
     ReactDOM.render(
-      <Provider store={ store }>
-        <AdverbDetails entityName='adverb' />
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='adverb'
+          initialEntity={ { name: '' } }
+          fields={ [[
+            { columnWidth: 4, entity: 'adverb', property: 'foreign' },
+            { columnWidth: 4, entity: 'adverb', property: 'transliterated' },
+            { columnWidth: 4, entity: 'adverb', property: 'english' }
+          ]] }
+        />
       </Provider>,
       document.querySelector('#adverb-details')
     );
@@ -241,8 +247,13 @@ $(document).ready(function() {
 
   if (document.querySelector('#question-details')) {
     ReactDOM.render(
-      <Provider store={ store }>
-        <QuestionDetails entityName='question' />
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='question'
+          initialEntity={ { name: '' } }
+          fields={ [[{ columnWidth: 6, entity: 'question', property: 'name' }]] }
+        />
       </Provider>,
       document.querySelector('#question-details')
     );
@@ -269,8 +280,13 @@ $(document).ready(function() {
 
   if (document.querySelector('#tag-details')) {
     ReactDOM.render(
-      <Provider store={ store }>
-        <TagDetails entityName='tag' />
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='tag'
+          initialEntity={ { name: '' } }
+          fields={ [[{ columnWidth: 6, entity: 'tag', property: 'name' }]] }
+        />
       </Provider>,
       document.querySelector('#tag-details')
     );
