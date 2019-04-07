@@ -281,6 +281,22 @@ class Quiz < ActiveRecord::Base
             answers: [card.answer],
             textbox: card.answer.include?("\n")
           }
+        when 'Imperfective Present Yes/No Question'
+          english_subject = get_random_english_subject
+          gender, gender_notification = get_gender_from_subject(english_subject)
+          plural = get_plural_from_subject(english_subject)
+          subject_objects = get_subject_object(english_subject)
+          verb = @verbs.pop
+          do_verb = Verb.find_by_english('do')
+          result << {
+            question: "#{do_verb.english_imperfective(english_subject, plural).capitalize} #{english_subject == 'I' ? 'I' : english_subject.downcase} #{verb.english}?#{gender_notification}",
+            answers: subject_objects.map do |subject_object|
+              [
+                "kya #{subject_object[:transliterated]} #{verb.transliterated_imperfective(gender, plural)} #{subject_object[:transliterated_be]}?",
+                "क्या #{subject_object[:hindi]} #{verb.hindi_imperfective(gender, plural)} #{subject_object[:hindi_be]}?"
+              ]
+            end.flatten.uniq
+          }
         when 'Imperfective Present Question'
           question_word = get_question_word
           english_subject = get_random_english_subject
