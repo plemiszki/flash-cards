@@ -13,3 +13,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+$(document).ready(function() {
+  $('#admin-sidebar ul a').each(function() {
+    if (this.getAttribute("href") == window.location.pathname) {
+      this.classList.add("highlight");
+    };
+  })
+});
