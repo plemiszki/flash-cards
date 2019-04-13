@@ -30,7 +30,7 @@ class CardDetails extends React.Component {
       id: window.location.pathname.split('/')[2],
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
-    }).then(() => {
+    }, 'card').then(() => {
       this.setState({
         fetching: false,
         card: this.props.card,
@@ -108,7 +108,7 @@ class CardDetails extends React.Component {
           cardtagableId: this.state.card.id,
           cardtagableType: 'Card'
         }
-      }).then(this.updateCardTags.bind(this));
+      }, 'cardTags').then(this.updateCardTags.bind(this));
     });
   }
 

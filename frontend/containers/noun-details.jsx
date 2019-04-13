@@ -35,7 +35,7 @@ class NounDetails extends React.Component {
       id: window.location.pathname.split('/')[2],
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
-    }).then(() => {
+    }, 'noun').then(() => {
       this.setState({
         fetching: false,
         noun: this.props.noun,
@@ -109,7 +109,7 @@ class NounDetails extends React.Component {
         directory: 'card_tags',
         entityName: 'cardTag',
         entity: { tagId: e.target.dataset.id, cardtagableId: this.state.noun.id, cardtagableType: 'Noun' }
-      }).then(this.updateNounTags.bind(this));
+      }, 'cardTags').then(this.updateNounTags.bind(this));
     });
   }
 

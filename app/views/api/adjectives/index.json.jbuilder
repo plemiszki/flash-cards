@@ -1,4 +1,4 @@
-json.entities @adjectives do |adjective|
+json.adjectives @adjectives do |adjective|
   json.id adjective.id
   json.english adjective.english
   json.masculine adjective.masculine

@@ -1,4 +1,4 @@
-json.entities @adverbs do |adverb|
+json.adverbs @adverbs do |adverb|
   json.id adverb.id
   json.english adverb.english
   json.foreign adverb.foreign

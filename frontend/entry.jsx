@@ -291,4 +291,47 @@ $(document).ready(function() {
       document.querySelector('#tag-details')
     );
   }
+
+  if (document.querySelector('#spanish-nouns-index')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <StandardIndex
+          context={ MyContext }
+          entityName='spanishNoun'
+          columns={ ['spanish', 'english'] }
+          modalRows={ 2 }
+          modalDimensions={ { width: 900 } }
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1 } }
+          />
+        </StandardIndex>
+      </Provider>,
+      document.querySelector('#spanish-nouns-index')
+    );
+  }
+
+  if (document.querySelector('#spanish-noun-details')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='spanishNoun'
+          initialEntity={ { english: '', spanish: '', englishPlural: '', spanishPlural: '', gender: 1 } }
+          fields={
+            [
+              [
+                { columnWidth: 3, entity: 'spanishNoun', property: 'english' },
+                { columnWidth: 3, entity: 'spanishNoun', property: 'englishPlural' },
+                { columnWidth: 3, entity: 'spanishNoun', property: 'spanish' },
+                { columnWidth: 3, entity: 'spanishNoun', property: 'spanishPlural' }
+              ]
+            ]
+          }
+        />
+      </Provider>,
+      document.querySelector('#spanish-noun-details')
+    );
+  }
 });

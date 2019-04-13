@@ -1,4 +1,4 @@
-json.entity do
+json.tag do
   json.id @tag.id
   json.name @tag.name
 end

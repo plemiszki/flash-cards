@@ -6,7 +6,7 @@ let TabActions = {
         tab: 'archived',
         fetching: true
       }, () => {
-        this.props.fetchEntities('cards_archived').then(() => {
+        this.props.fetchEntities('cards_archived', 'cards').then(() => {
           this.setState({
             fetching: false,
             entitiesArchived: this.props.entities

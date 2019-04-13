@@ -30,7 +30,7 @@ class VerbDetails extends React.Component {
       id: window.location.pathname.split("/")[2],
       directory: window.location.pathname.split("/")[1],
       entityName: this.props.entityName
-    }).then(() => {
+    }, 'verb').then(() => {
       this.setState({
         fetching: false,
         verb: this.props.verb,

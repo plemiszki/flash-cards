@@ -1,13 +1,6 @@
 {
   "name": "flash-cards",
-  "version": "1.0.0",
-  "description": "increase your knowledge!",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/plemiszki/flash-cards.git"
-  },
   "scripts": {
-    "build": "webpack --mode development --watch",
     "heroku-postbuild": "webpack --mode production"
   },
   "dependencies": {
@@ -15,7 +8,7 @@
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.5",
     "change-case": "3.1.0",
-    "handy-components": "1.9.1",
+    "handy-components": "1.10.0",
     "handy-tools": "2.1.4",
     "jquery": "3.3.1",
     "jquery-match-height": "0.7.2",

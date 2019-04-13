@@ -1,20 +1,6 @@
 import HandyTools from 'handy-tools';
 
-export function fetchEntities(directory) {
-  return (dispatch) => {
-    return $.ajax({
-      method: 'GET',
-      url: `/api/${directory}`
-    }).then(
-      (response) => dispatch({
-        type: 'FETCH_ENTITIES',
-        entities: response.entities
-      })
-    );
-  }
-}
-
-export function createEntity(args) {
+export function createEntity(args, arrayName) {
   return (dispatch) => {
     return $.ajax({
       method: 'POST',
@@ -25,7 +11,7 @@ export function createEntity(args) {
     }).then(
       (response) => dispatch({
         type: 'CREATE_ENTITY',
-        entities: response.entities
+        entities: response[arrayName]
       }),
       (response) => dispatch({
         type: 'ERRORS',
@@ -35,7 +21,7 @@ export function createEntity(args) {
   }
 }
 
-export function fetchEntity(args) {
+export function fetchEntity(args, entityName) {
   return (dispatch) => {
     return $.ajax({
       method: 'GET',
@@ -43,7 +29,7 @@ export function fetchEntity(args) {
     }).then(
       (response) => dispatch({
         type: `FETCH_ENTITY`,
-        entity: response.entity,
+        entity: response[entityName],
         array1: response.array1,
         array2: response.array2,
         array3: response.array3

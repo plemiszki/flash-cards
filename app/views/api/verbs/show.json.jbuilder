@@ -1,4 +1,4 @@
-json.entity do
+json.verb do
   json.id @verb.id
   json.english @verb.english
   json.englishIrregularImperfective @verb.english_irregular_imperfective

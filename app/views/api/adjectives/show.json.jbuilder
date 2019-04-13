@@ -1,4 +1,4 @@
-json.entity do
+json.adjective do
   json.id @adjective.id
   json.english @adjective.english
   json.masculine @adjective.masculine

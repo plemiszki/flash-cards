@@ -46,5 +46,12 @@ Errors = {
   ],
   question: [
     "Question can't be blank"
+  ],
+  spanish: [
+    "Spanish can't be blank",
+    'English / Spanish combo already used'
+  ],
+  spanishPlural: [
+    "Spanish plural can't be blank"
   ]
 }

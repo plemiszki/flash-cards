@@ -1,4 +1,4 @@
-json.entity do
+json.quiz do
   json.id @quiz.id
   json.name @quiz.name
   json.useArchived @quiz.use_archived

@@ -31,7 +31,7 @@ class AdjectiveDetails extends React.Component {
       id: window.location.pathname.split('/')[2],
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
-    }).then(() => {
+    }, 'adjective').then(() => {
       this.setState({
         fetching: false,
         adjective: this.props.adjective,

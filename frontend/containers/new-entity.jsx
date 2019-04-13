@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Modal from 'react-modal'
+import ChangeCase from 'change-case'
 import { Common, Details } from 'handy-components'
 import HandyTools from 'handy-tools'
 import { createEntity } from '../actions/index'
@@ -30,7 +31,7 @@ class NewEntity extends React.Component {
       directory: HandyTools.convertToUnderscore(this.props.entityNamePlural),
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
-    }).then(() => {
+    }, this.props.entityNamePlural).then(() => {
       this.setState({
         fetching: false,
         [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity)
@@ -58,7 +59,7 @@ class NewEntity extends React.Component {
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           { this.renderFields() }
-          <input type="submit" className={ "blue-button" + Common.renderDisabledButtonClass(this.state.fetching) } value={ this.props.buttonText || `Add ${HandyTools.capitalize(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
+          <input type="submit" className={ "blue-button" + Common.renderDisabledButtonClass(this.state.fetching) } value={ this.props.buttonText || `Add ${ChangeCase.titleCase(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
         </form>
       </div>
     );
@@ -152,6 +153,25 @@ class NewEntity extends React.Component {
             { Details.renderDropDown.bind(this)({ columnWidth: 12, entity: 'cardTag', property: 'tagId', columnHeader: 'Tag', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
           </div>
         );
+      case 'spanishNoun':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'englishPlural' }) }
+            <div className="col-xs-2">
+              <h2>Gender</h2>
+              <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.spanishNoun.gender } data-entity="spanishNoun" data-field="gender">
+                <option value={ "1" }>Male</option>
+                <option value={ "2" }>Female</option>
+              </select>
+              { Details.renderDropdownFieldError([], []) }
+            </div>
+          </div>,
+          <div key="2" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishNoun', property: 'spanish' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishNoun', property: 'spanishPlural' }) }
+          </div>
+        ]);
     }
   }
 }
