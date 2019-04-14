@@ -61,13 +61,21 @@ class QuizDetails extends React.Component {
   updateQuizQuestions(response) {
     this.setState({
       newQuizQuestionModalOpen: false,
-      quizQuestions: response.entities || response
+      quizQuestions: response.quizQuestions || response
     });
   }
 
   deleteQuizQuestion(e) {
     let id = e.target.dataset.id;
     this.props.deleteEntity('quiz_questions', id, this.updateQuizQuestions.bind(this));
+  }
+
+  totalQuestions() {
+    let result = 0;
+    this.state.quizQuestions.forEach((quizQuestion) => {
+      result += quizQuestion.amount;
+    })
+    return result;
   }
 
   render() {
@@ -88,7 +96,7 @@ class QuizDetails extends React.Component {
             Delete
           </a>
           <hr className="divider m-top" />
-          <table className="admin-table no-links m-bottom">
+          <table className={ `admin-table no-links${this.totalQuestions() ? '' : ' m-bottom'}` }>
             <thead>
               <tr>
                 <th>Question</th>
@@ -114,6 +122,7 @@ class QuizDetails extends React.Component {
                   </tr>
                 );
               })}
+              { this.renderTotalRow() }
             </tbody>
           </table>
           <a className="gray-outline-button small-width small-padding" onClick={ this.clickNewQuizQuestion.bind(this) }>Add New</a>
@@ -131,6 +140,20 @@ class QuizDetails extends React.Component {
         </Modal>
       </div>
     );
+  }
+
+  renderTotalRow() {
+    let totalQuestions = this.totalQuestions();
+    if (totalQuestions) {
+      return(
+        <tr className="no-hover">
+          <td></td>
+          <td></td>
+          <td>{ totalQuestions }</td>
+          <td></td>
+        </tr>
+      );
+    }
   }
 
   componentDidUpdate() {

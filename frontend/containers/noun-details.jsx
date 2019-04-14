@@ -90,7 +90,7 @@ class NounDetails extends React.Component {
   updateNounTags(response) {
     this.setState({
       fetching: false,
-      nounTags: response.entities
+      nounTags: response.cardTags
     });
   }
 

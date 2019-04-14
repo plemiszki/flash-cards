@@ -14,20 +14,30 @@
  *= require_self
  */
 
- $highlight-color: #013ADF;
+$highlight-color: #013ADF;
 
- @import 'bootstrap-sprockets';
- @import 'bootstrap';
- @import 'library/nice-select';
+@import 'bootstrap-sprockets';
+@import 'bootstrap';
+@import 'library/nice-select';
 
- @import 'handy-tools/styles/reset';
- @import 'handy-tools/styles/fonts';
- @import 'handy-tools/styles/general';
- @import 'handy-tools/styles/buttons';
- @import 'handy-tools/styles/sign-in';
+@import 'handy-tools/styles/reset';
+@import 'handy-tools/styles/fonts';
+@import 'handy-tools/styles/general';
+@import 'handy-tools/styles/buttons';
+@import 'handy-tools/styles/sign-in';
 
- @import 'handy-components/styles/admin-layout';
- @import 'handy-components/styles/admin-table';
- @import 'handy-components/styles/modal-select';
+@import 'handy-components/styles/admin-layout';
+@import 'handy-components/styles/admin-table';
+@import 'handy-components/styles/modal-select';
 
- @import 'quiz-run';
+@import 'quiz-details';
+@import 'quiz-run';
+
+#admin-sidebar-body ul {
+  position: relative;
+  img {
+    position: absolute;
+    width: 30px;
+    right: 0;
+  }
+}
