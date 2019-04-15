@@ -279,7 +279,8 @@ class Quiz < ActiveRecord::Base
           result << {
             question: card.question,
             answers: [card.answer],
-            textbox: card.answer.include?("\n")
+            textbox: card.answer.include?("\n"),
+            imageUrl: card.image_url
           }
         when 'Imperfective Present Yes/No Question'
           english_subject = get_random_english_subject

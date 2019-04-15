@@ -49,7 +49,7 @@ export function updateEntity(args) {
     }).then(
       (response) => dispatch({
         type: 'UPDATE_ENTITY',
-        entity: response.entity
+        entity: response[args.entityName]
       }),
       (response) => dispatch({
         type: 'ERRORS',

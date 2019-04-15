@@ -2,6 +2,7 @@ json.card do
   json.id @card.id
   json.question @card.question
   json.answer @card.answer
+  json.imageUrl @card.image_url
 end
 json.array1 @card_tags do |card_tag|
   json.id card_tag.id

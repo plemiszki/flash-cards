@@ -111,6 +111,7 @@ class QuizRun extends React.Component {
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <p className="question m-bottom">{ this.renderQuestion() }</p>
+          { this.renderImage() }
           <form>
             { this.renderInput() }
             { this.renderAnswers() }
@@ -120,6 +121,14 @@ class QuizRun extends React.Component {
         </div>
       </div>
     );
+  }
+
+  renderImage() {
+    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].imageUrl) {
+      return(
+        <img src={ this.state.quiz.questions[this.state.questionNumber].imageUrl } />
+      );
+    }
   }
 
   renderWrongAnswers() {

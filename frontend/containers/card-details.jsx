@@ -60,7 +60,7 @@ class CardDetails extends React.Component {
     this.setState({
       fetching: true,
       justSaved: true
-    }, function() {
+    }, () => {
       this.props.updateEntity({
         id: window.location.pathname.split('/')[2],
         directory: window.location.pathname.split('/')[1],
@@ -85,7 +85,7 @@ class CardDetails extends React.Component {
   updateCardTags(response) {
     this.setState({
       fetching: false,
-      cardTags: response.entities
+      cardTags: response.entities || response.cardTags
     });
   }
 
@@ -121,6 +121,9 @@ class CardDetails extends React.Component {
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
+          </div>
+          <div className="row">
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'imageUrl' }) }
           </div>
           <div className="row">
             { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
