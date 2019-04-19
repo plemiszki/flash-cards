@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Modal from 'react-modal'
 import ChangeCase from 'change-case'
 import { Common, Details } from 'handy-components'
 import HandyTools from 'handy-tools'

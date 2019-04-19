@@ -12,6 +12,8 @@ gem 'pg', '~> 0.18'
 
 gem 'bootstrap-sass'
 gem 'clearance', '~> 1.11'
+gem 'dotenv'
+gem 'filestack-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
 gem 'pry-rails'

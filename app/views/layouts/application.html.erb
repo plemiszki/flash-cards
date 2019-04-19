@@ -3,8 +3,11 @@
   <head>
     <title>Flash Cards</title>
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <% unless controller_name == "sessions" %>
+      <%= filestack_js_include_tag %>
+      <%= javascript_include_tag 'application' %>
+    <% end %>
   </head>
   <body class="admin">
     <% if controller_name == "sessions" %>

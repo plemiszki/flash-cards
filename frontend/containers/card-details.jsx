@@ -112,8 +112,28 @@ class CardDetails extends React.Component {
     });
   }
 
+  clickUploadImage() {
+    const client = filestack.init(document.getElementById('filestack-api-key').innerHTML);
+    const options = {
+      onUploadDone: (response) => {
+        let url = response.filesUploaded[0].url;
+        let card = this.state.card;
+        card.imageUrl = url;
+        this.setState({
+          card
+        }, () => {
+          this.setState({
+            changesToSave: this.checkForChanges()
+          });
+        });
+      },
+      fromSources: ['local_file_system']
+    };
+    client.picker(options).open();
+  }
+
   render() {
-    return (
+    return(
       <div id="card-details" className="component details-component">
         <h1>Card Details</h1>
         <div className="white-box">
@@ -123,7 +143,10 @@ class CardDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
           </div>
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'imageUrl' }) }
+            { Details.renderField.bind(this)({ columnWidth: 9, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }
+            <div className="col-xs-3">
+              <img src={ this.state.card.imageUrl } />
+            </div>
           </div>
           <div className="row">
             { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
@@ -156,7 +179,7 @@ class CardDetails extends React.Component {
                     <td className="x-column" onClick={ this.deleteCardTag.bind(this) } data-id={ cardTag.id }></td>
                   </tr>
                 );
-              })}
+              }) }
             </tbody>
           </table>
           <a className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
