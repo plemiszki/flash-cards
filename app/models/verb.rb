@@ -3,6 +3,9 @@ class Verb < ActiveRecord::Base
   validates_presence_of :english, :infinitive
   validates_uniqueness_of :english, scope: :infinitive, message: '/ Hindi combo already used'
 
+  has_many :card_tags, as: :cardtagable, dependent: :destroy
+  has_many :tags, through: :card_tags
+
   def english_imperfective(subject, use_negative)
     if ['I', 'You', 'We', 'Those', 'They', 'These'].include?(subject.capitalize)
       english

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Modal from 'react-modal'
 import HandyTools from 'handy-tools'
-import { Common, Details, ModalSelect, ModalSelectStyles } from 'handy-components'
+import { Common, Details } from 'handy-components'
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
+import EntityTags from './modules/entity-tags.jsx'
 
 class CardDetails extends React.Component {
   constructor(props) {
@@ -160,33 +160,8 @@ class CardDetails extends React.Component {
             </a>
           </div>
           <hr className="divider" />
-          <table className="admin-table no-links m-bottom">
-            <thead>
-              <tr>
-                <th>Tag</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-              </tr>
-              { HandyTools.alphabetizeArrayOfObjects(this.state.cardTags, 'tagName').map((cardTag, index) => {
-                return(
-                  <tr key={ index }>
-                    <td>{ cardTag.tagName }</td>
-                    <td className="x-column" onClick={ this.deleteCardTag.bind(this) } data-id={ cardTag.id }></td>
-                  </tr>
-                );
-              }) }
-            </tbody>
-          </table>
-          <a className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>
+          { EntityTags.renderTags.call(this, 'card') }
         </div>
-        <Modal isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ ModalSelectStyles }>
-          <ModalSelect options={ this.state.tags } property={ 'name' } func={ this.clickTag.bind(this) } />
-        </Modal>
       </div>
     );
   }
@@ -197,12 +172,7 @@ class CardDetails extends React.Component {
 }
 
 const mapStateToProps = (reducers) => {
-  return {
-    card: reducers.standardReducer.entity,
-    cardTags: reducers.standardReducer.array1,
-    tags: reducers.standardReducer.array2,
-    errors: reducers.standardReducer.errors
-  };
+  return reducers.standardReducer;
 };
 
 function mapDispatchToProps(dispatch) {

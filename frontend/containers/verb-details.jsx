@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Common, Details } from 'handy-components'
 import HandyTools from 'handy-tools'
-import { fetchEntity, updateEntity, deleteEntity } from '../actions/index'
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
+import EntityTags from './modules/entity-tags.jsx'
 
 class VerbDetails extends React.Component {
   constructor(props) {
@@ -21,20 +22,25 @@ class VerbDetails extends React.Component {
       fetching: true,
       verb: emptyVerb,
       verbSaved: emptyVerb,
-      errors: []
+      errors: [],
+      verbTags: [],
+      tags: [],
+      newCardTagModalOpen: false
     };
   }
 
   componentDidMount() {
     this.props.fetchEntity({
-      id: window.location.pathname.split("/")[2],
-      directory: window.location.pathname.split("/")[1],
+      id: window.location.pathname.split('/')[2],
+      directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
     }, 'verb').then(() => {
       this.setState({
         fetching: false,
         verb: this.props.verb,
         verbSaved: HandyTools.deepCopy(this.props.verb),
+        tags: this.props.tags,
+        verbTags: this.props.verbTags,
         changesToSave: false
       }, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
@@ -112,13 +118,15 @@ class VerbDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'irregularImperativeFormalTransliterated', columnHeader: 'Transliterated Irregular Imperative - Formal' }) }
           </div>
           <div>
-            <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
+            <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
             <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
               Delete
             </a>
           </div>
+          <hr className="divider" />
+          { EntityTags.renderTags.call(this, 'verb') }
         </div>
       </div>
     );
@@ -126,14 +134,11 @@ class VerbDetails extends React.Component {
 }
 
 const mapStateToProps = (reducers) => {
-  return {
-    verb: reducers.standardReducer.entity,
-    errors: reducers.standardReducer.errors
-  };
+  return reducers.standardReducer;
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity, updateEntity, deleteEntity }, dispatch);
+  return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VerbDetails);

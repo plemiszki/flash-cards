@@ -197,9 +197,7 @@ class QuizRun extends React.Component {
 }
 
 const mapStateToProps = (reducers) => {
-  return {
-    quiz: reducers.standardReducer.entity
-  };
+  return reducers.standardReducer;
 };
 
 function mapDispatchToProps(dispatch) {

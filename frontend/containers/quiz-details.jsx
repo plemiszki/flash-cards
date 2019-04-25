@@ -61,7 +61,7 @@ class QuizDetails extends React.Component {
   updateQuizQuestions(response) {
     this.setState({
       newQuizQuestionModalOpen: false,
-      quizQuestions: response.quizQuestions || response
+      quizQuestions: response.quizQuestions
     });
   }
 
@@ -162,13 +162,7 @@ class QuizDetails extends React.Component {
 }
 
 const mapStateToProps = (reducers) => {
-  return {
-    quiz: reducers.standardReducer.entity,
-    quizQuestions: reducers.standardReducer.array1,
-    questions: reducers.standardReducer.array2,
-    tags: reducers.standardReducer.array3,
-    errors: reducers.standardReducer.errors
-  };
+  return reducers.standardReducer;
 };
 
 function mapDispatchToProps(dispatch) {

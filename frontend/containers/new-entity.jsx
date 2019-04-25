@@ -31,11 +31,9 @@ class NewEntity extends React.Component {
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
     }, this.props.entityNamePlural).then(() => {
-      this.setState({
-        fetching: false,
-        [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity)
-      });
-      this.props.callback(this.props.entities);
+      console.log('we are here');
+      console.log(this.props);
+      this.props.callback(this.props[this.props.entityNamePlural]);
     }, () => {
       this.setState({
         fetching: false,
@@ -176,10 +174,7 @@ class NewEntity extends React.Component {
 }
 
 const mapStateToProps = (reducers) => {
-  return {
-    entities: reducers.standardReducer.entities,
-    errors: reducers.standardReducer.errors
-  };
+  return reducers.standardReducer;
 };
 
 function mapDispatchToProps(dispatch) {

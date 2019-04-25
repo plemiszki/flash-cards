@@ -17,6 +17,8 @@ class Api::VerbsController < AdminController
 
   def show
     @verb = Verb.find(params[:id])
+    @verb_tags = @verb.card_tags
+    @tags = Tag.all.order(:name)
     render 'show.json.jbuilder'
   end
 

@@ -9,7 +9,7 @@ let TabActions = {
         this.props.fetchEntities('cards_archived', 'cards').then(() => {
           this.setState({
             fetching: false,
-            entitiesArchived: this.props.entities
+            entitiesArchived: this.props.cards
           });
         });
       });

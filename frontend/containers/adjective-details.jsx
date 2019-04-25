@@ -116,10 +116,7 @@ class AdjectiveDetails extends React.Component {
 }
 
 const mapStateToProps = (reducers) => {
-  return {
-    adjective: reducers.standardReducer.entity,
-    errors: reducers.standardReducer.errors
-  };
+  return reducers.standardReducer;
 };
 
 function mapDispatchToProps(dispatch) {
