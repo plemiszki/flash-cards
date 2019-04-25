@@ -31,8 +31,6 @@ class NewEntity extends React.Component {
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
     }, this.props.entityNamePlural).then(() => {
-      console.log('we are here');
-      console.log(this.props);
       this.props.callback(this.props[this.props.entityNamePlural]);
     }, () => {
       this.setState({

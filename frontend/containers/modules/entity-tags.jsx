@@ -27,7 +27,6 @@ let EntityTags = {
   },
 
   clickTag(entityName, e) {
-    console.log(this);
     e.persist();
     this.setState({
       newCardTagModalOpen: false,
@@ -44,7 +43,6 @@ let EntityTags = {
   },
 
   renderTags(entityName) {
-    console.log(this);
     return([
       <table key="1" className="admin-table no-links m-bottom">
         <thead>

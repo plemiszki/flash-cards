@@ -28,7 +28,7 @@ class Quiz < ActiveRecord::Base
             ])
           }
         when 'Single Verb'
-          verb = @verbs.pop
+          verb = get_verb(quiz_question)
           result << {
             question: verb.english.capitalize,
             answers: [
@@ -517,6 +517,23 @@ class Quiz < ActiveRecord::Base
       noun = @nouns.pop
     end
     noun
+  end
+
+  def get_verb(quiz_question)
+    if quiz_question.tag_id
+      tagged_verbs = []
+      until !tagged_verbs.empty? do
+        tagged_verbs = @verbs.select { |verb| verb.tags.map(&:id).include?(quiz_question.tag_id) }
+        if tagged_verbs.empty?
+          @verbs += Verb.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+        end
+      end
+      verb = tagged_verbs.sample
+      @verbs.reject! { |v| v == verb }
+    else
+      verb = @verbs.pop
+    end
+    verb
   end
 
   def obliqify(args)

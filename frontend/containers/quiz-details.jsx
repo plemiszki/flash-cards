@@ -58,16 +58,24 @@ class QuizDetails extends React.Component {
     });
   }
 
-  updateQuizQuestions(response) {
+  updateQuizQuestions(quizQuestions) {
     this.setState({
       newQuizQuestionModalOpen: false,
-      quizQuestions: response.quizQuestions
+      quizQuestions: quizQuestions
     });
   }
 
   deleteQuizQuestion(e) {
+    this.setState({
+      fetching: true
+    });
     let id = e.target.dataset.id;
-    this.props.deleteEntity('quiz_questions', id, this.updateQuizQuestions.bind(this));
+    this.props.deleteEntity('quiz_questions', id, (response) => {
+      this.setState({
+        fetching: false,
+        quizQuestions: response.quizQuestions
+      });
+    });
   }
 
   totalQuestions() {
