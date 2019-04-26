@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   resources :questions, only: [:index, :show]
   get '/quizzes/:id/run' => 'quizzes#run'
   resources :spanish_nouns, only: [:index, :show]
+  resources :spanish_verbs, only: [:index, :show]
+  resources :spanish_adjectives, only: [:index, :show]
 
   namespace :api do
     resources :cards, only: [:index, :show, :create, :update, :destroy]
@@ -25,5 +27,7 @@ Rails.application.routes.draw do
     resources :quiz_questions, only: [:create, :destroy]
     get '/quizzes/:id/run' => 'quizzes#run'
     resources :spanish_nouns, only: [:index, :show, :create, :update, :destroy]
+    resources :spanish_verbs, only: [:index, :show, :create, :update, :destroy]
+    resources :spanish_adjectives, only: [:index, :show, :create, :update, :destroy]
   end
 end

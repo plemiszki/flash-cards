@@ -334,4 +334,89 @@ $(document).ready(function() {
       document.querySelector('#spanish-noun-details')
     );
   }
+
+  if (document.querySelector('#spanish-verbs-index')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <StandardIndex
+          context={ MyContext }
+          entityName='spanishVerb'
+          columns={ ['spanish', 'english'] }
+          modalRows={ 1 }
+          modalDimensions={ { width: 900 } }
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', spanish: '' } }
+          />
+        </StandardIndex>
+      </Provider>,
+      document.querySelector('#spanish-verbs-index')
+    );
+  }
+
+  if (document.querySelector('#spanish-verb-details')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='spanishVerb'
+          initialEntity={ { english: '', spanish: '' } }
+          fields={
+            [
+              [
+                { columnWidth: 6, entity: 'spanishVerb', property: 'english' },
+                { columnWidth: 6, entity: 'spanishVerb', property: 'spanish' }
+              ]
+            ]
+          }
+        />
+      </Provider>,
+      document.querySelector('#spanish-verb-details')
+    );
+  }
+
+  if (document.querySelector('#spanish-adjectives-index')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <StandardIndex
+          context={ MyContext }
+          entityName='spanishAdjective'
+          columns={ ['masculine', 'english'] }
+          modalRows={ 2 }
+          modalDimensions={ { width: 900 } }
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '' } }
+          />
+        </StandardIndex>
+      </Provider>,
+      document.querySelector('#spanish-adjectives-index')
+    );
+  }
+
+  if (document.querySelector('#spanish-adjective-details')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='spanishAdjective'
+          initialEntity={ { english: '', masculine: '', feminine: '', masculinePlural: '', femininePlural: '' } }
+          fields={
+            [
+              [
+                { columnWidth: 6, entity: 'spanishAdjective', property: 'english' },
+                { columnWidth: 6, entity: 'spanishAdjective', property: 'masculine' },
+                { columnWidth: 6, entity: 'spanishAdjective', property: 'feminine' },
+                { columnWidth: 6, entity: 'spanishAdjective', property: 'masculinePlural' },
+                { columnWidth: 6, entity: 'spanishAdjective', property: 'femininePlural' }
+              ]
+            ]
+          }
+        />
+      </Provider>,
+      document.querySelector('#spanish-adjective-details')
+    );
+  }
 });

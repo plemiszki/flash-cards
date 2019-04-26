@@ -35,6 +35,9 @@ Errors = {
   masculinePlural: [
     "Masculine plural can't be blank"
   ],
+  femininePlural: [
+    "Feminine plural can't be blank"
+  ],
   name: [
     "Name can't be blank"
   ],

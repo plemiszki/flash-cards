@@ -167,6 +167,26 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishNoun', property: 'spanishPlural' }) }
           </div>
         ]);
+      case 'spanishVerb':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'spanishVerb', property: 'spanish' }) }
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'spanishVerb', property: 'english' }) }
+          </div>
+        ]);
+      case 'spanishAdjective':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'masculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'masculinePlural' }) }
+          </div>,
+          <div key="2" className="row">
+            <div className="col-xs-4"></div>
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'feminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'femininePlural' }) }
+          </div>
+        ]);
     }
   }
 }

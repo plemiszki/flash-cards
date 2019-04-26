@@ -17,7 +17,7 @@ class Quiz < ActiveRecord::Base
       quiz_question.amount.times do
         check_if_anything_empty
         case question.name
-        when 'Single Noun'
+        when 'Hindi - Single Noun'
           @noun = get_noun(quiz_question)
           plural = (rand(2) == 1)
           result << {
@@ -27,7 +27,7 @@ class Quiz < ActiveRecord::Base
               (plural ? @noun.foreign_plural : @noun.foreign)
             ])
           }
-        when 'Single Verb'
+        when 'Hindi - Single Verb'
           verb = get_verb(quiz_question)
           result << {
             question: verb.english.capitalize,
@@ -36,7 +36,7 @@ class Quiz < ActiveRecord::Base
               verb.infinitive
             ]
           }
-        when 'Single Adjective'
+        when 'Hindi - Single Adjective'
           adjective = @adjectives.pop
           result << {
             question: adjective.english.capitalize,
@@ -45,7 +45,7 @@ class Quiz < ActiveRecord::Base
               adjective.masculine
             ]
           }
-        when 'Where is Subject\'s Noun?'
+        when 'Hindi - Where is Subject\'s Noun?'
           use_plural = [true, false].sample
           @noun = get_noun(quiz_question)
           english_subject = get_random_possession_english_subject
@@ -60,7 +60,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq, use_plural)
           }
-        when 'The Noun is Preposition the Adjective Noun'
+        when 'Hindi - The Noun is Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
           use_noun_plural = [true, false].sample
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
@@ -79,7 +79,7 @@ class Quiz < ActiveRecord::Base
             question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
             answers: all_synonyms(hindi_answers, use_noun_plural, use_noun2_plural) + all_synonyms(transliterated_answers, use_noun_plural, use_noun2_plural)
           }
-        when 'There is a Noun Preposition the Adjective Noun'
+        when 'Hindi - There is a Noun Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
           use_noun_plural = [true, false].sample
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
@@ -98,7 +98,7 @@ class Quiz < ActiveRecord::Base
             question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
             answers: all_synonyms(hindi_answers) + all_synonyms(transliterated_answers)
           }
-        when 'Subject is a Noun'
+        when 'Hindi - Subject is a Noun'
           @noun = get_noun(quiz_question)
           subject_objects = get_subject_object(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
@@ -113,7 +113,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq)
           }
-        when 'Subject are Nouns'
+        when 'Hindi - Subject are Nouns'
           @noun = get_noun(quiz_question)
           subject_objects = get_subject_object(get_random_plural_english_subject)
           question_subject_object = subject_objects.sample
@@ -126,7 +126,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq, true)
           }
-        when 'Subject is Adjective'
+        when 'Hindi - Subject is Adjective'
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_english_subject)
           question_subject_object = subject_objects.sample
@@ -145,7 +145,7 @@ class Quiz < ActiveRecord::Base
             question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]}.",
             answers: hindi_answers + transliterated_answers
           }
-        when 'Subject is a Adjective Noun'
+        when 'Hindi - Subject is a Adjective Noun'
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_single_english_subject)
@@ -161,7 +161,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq)
           }
-        when 'Subject are Adjective Nouns'
+        when 'Hindi - Subject are Adjective Nouns'
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_plural_english_subject)
@@ -175,7 +175,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq, true)
           }
-        when 'Subject has a Noun'
+        when 'Hindi - Subject has a Noun'
           subject_objects = get_subject_object(get_random_english_subject)
           subject_has_objects = get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
@@ -191,7 +191,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq, use_plural)
           }
-        when 'Subject has an Adjective Noun'
+        when 'Hindi - Subject has an Adjective Noun'
           subject_objects = get_subject_object(get_random_english_subject)
           subject_has_objects = get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
@@ -210,7 +210,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq, use_plural)
           }
-        when 'Noun Gender'
+        when 'Hindi - Noun Gender'
           noun = get_noun(quiz_question)
           result << {
             question: noun.foreign,
@@ -218,7 +218,7 @@ class Quiz < ActiveRecord::Base
               noun.gender == 1 ? 'm' : 'f'
             ]
           }
-        when 'Noun Plural'
+        when 'Hindi - Noun Plural'
           noun = get_noun(quiz_question)
           result << {
             question: noun[:foreign],
@@ -227,7 +227,7 @@ class Quiz < ActiveRecord::Base
               noun[:foreign_plural]
             ]
           }
-        when 'Noun is Adjective'
+        when 'Hindi - Noun is Adjective'
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           use_plural = [true, false].sample
@@ -282,7 +282,7 @@ class Quiz < ActiveRecord::Base
             textbox: card.answer.include?("\n"),
             imageUrl: card.image_url
           }
-        when 'Imperfective Present Yes/No Question'
+        when 'Hindi - Imperfective Present Yes/No Question'
           english_subject = get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)
           plural = get_plural_from_subject(english_subject)
@@ -298,7 +298,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq
           }
-        when 'Imperfective Present Question'
+        when 'Hindi - Imperfective Present Question'
           question_word = get_question_word
           english_subject = get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)
@@ -315,7 +315,7 @@ class Quiz < ActiveRecord::Base
               ]
             end.flatten.uniq
           }
-        when 'Imperfective Present'
+        when 'Hindi - Imperfective Present'
           english_subject = get_random_english_subject
           use_plural = ['You', 'These', 'Those', 'They'].include?(english_subject)
           gender, gender_notification = get_gender_from_subject(english_subject)
@@ -343,7 +343,7 @@ class Quiz < ActiveRecord::Base
               ].compact
             end.flatten.uniq
           }
-        when 'Imperative'
+        when 'Hindi - Imperative'
           verb = @verbs.pop
           tense = ['familiar', 'informal', 'formal'].sample
           use_adverb = (rand(3) > 0)

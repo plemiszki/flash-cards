@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_14_231800) do
+ActiveRecord::Schema.define(version: 2019_04_26_211235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,12 +75,25 @@ ActiveRecord::Schema.define(version: 2019_04_14_231800) do
     t.boolean "use_archived", default: false
   end
 
+  create_table "spanish_adjectives", force: :cascade do |t|
+    t.string "english", null: false
+    t.string "masculine", null: false
+    t.string "feminine", null: false
+    t.string "masculine_plural", null: false
+    t.string "feminine_plural", null: false
+  end
+
   create_table "spanish_nouns", force: :cascade do |t|
     t.string "english", null: false
     t.string "english_plural", null: false
     t.string "spanish", null: false
     t.string "spanish_plural", null: false
     t.integer "gender", null: false
+  end
+
+  create_table "spanish_verbs", force: :cascade do |t|
+    t.string "english", null: false
+    t.string "spanish", null: false
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
