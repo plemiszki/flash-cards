@@ -32,12 +32,13 @@ class Quiz < ActiveRecord::Base
           }
         when 'Spanish - Single Noun'
           @spanish_noun = get_spanish_noun(quiz_question)
+          synonyms = @spanish_noun.synonyms
           plural = (rand(2) == 1)
           result << {
-            question: (plural ? @spanish_noun.english_plural.capitalize : @spanish_noun.english.capitalize),
-            answers: [
-              (plural ? @spanish_noun.spanish_plural : @spanish_noun.spanish)
-            ]
+            question: plural_notification_spanish({ noun: @spanish_noun, use_plural: plural }).capitalize,
+            answers: synonyms.map do |spanish_noun|
+              (plural ? spanish_noun.spanish_plural : spanish_noun.spanish)
+            end
           }
         when 'Hindi - Single Verb'
           verb = get_verb(quiz_question)
@@ -1086,6 +1087,21 @@ class Quiz < ActiveRecord::Base
     end
     gender_notification = ['I', 'He', 'She'].include?(subject) ? '' : " (#{gender})"
     [gender, gender_notification]
+  end
+
+  # SPANISH HELPER METHODS
+
+  def plural_notification_spanish(args)
+    english_single_plural_same = (args[:noun].english == args[:noun].english_plural)
+    if args[:use_plural]
+      if english_single_plural_same
+        "#{args[:noun].english_plural} (plural)"
+      else
+        "#{args[:noun].english_plural}"
+      end
+    else
+      args[:noun].english
+    end
   end
 
 end
