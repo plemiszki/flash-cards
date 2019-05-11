@@ -158,7 +158,7 @@ class Quiz < ActiveRecord::Base
             question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]}.",
             answers: hindi_answers + transliterated_answers
           }
-        when 'Hindi - Subject is a Adjective Noun'
+        when 'Hindi - Subject is an Adjective Noun'
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_single_english_subject)
@@ -245,14 +245,14 @@ class Quiz < ActiveRecord::Base
           adjective = @adjectives.pop
           use_plural = [true, false].sample
           if use_plural
-            english_subject = ['The', 'These', 'Those'].sample
+            english_subject = ['the', 'these', 'those'].sample
           else
-            english_subject = ['The', 'This', 'That'].sample
+            english_subject = ['the', 'this', 'that'].sample
           end
-          subject_object = english_subject == 'The' ? nil : get_subject_object(english_subject).first
-          english_subject = english_subject == 'The' ? 'The' : subject_object[:english]
-          transliterated_subject = english_subject == 'The' ? '' : subject_object[:transliterated] + ' '
-          hindi_subject = english_subject == 'The' ? '' : subject_object[:hindi] + ' '
+          subject_object = english_subject == 'the' ? nil : get_subject_object(english_subject).first
+          english_subject = english_subject == 'the' ? 'the' : subject_object[:english]
+          transliterated_subject = english_subject == 'the' ? '' : subject_object[:transliterated] + ' '
+          hindi_subject = english_subject == 'the' ? '' : subject_object[:hindi] + ' '
           single_question = "#{english_subject.capitalize} #{@noun[:english]} is #{adjective[:english]}."
           plural_question = "#{english_subject.capitalize} #{@noun[:english_plural]} are #{adjective[:english]}."
           single_answers = [
@@ -330,7 +330,7 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Imperfective Present'
           english_subject = get_random_english_subject
-          use_plural = ['You', 'These', 'Those', 'They'].include?(english_subject)
+          use_plural = ['you', 'these', 'those', 'they'].include?(english_subject)
           gender, gender_notification = get_gender_from_subject(english_subject)
           subject_objects = get_subject_object(english_subject)
           verb = @verbs.pop
@@ -413,7 +413,7 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Subject likes Noun'
           english_subject = get_random_english_subject
-          use_plural = ['You', 'These', 'Those', 'They', 'We', 'I'].include?(english_subject)
+          use_plural = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
           subject_objects = get_subject_object(english_subject)
           @noun = get_noun(quiz_question)
           synonyms = @noun.synonyms
@@ -427,6 +427,24 @@ class Quiz < ActiveRecord::Base
           end
           result << {
             question: "#{english_subject.capitalize} like#{use_plural ? '' : 's'} #{@noun.english_plural}.",
+            answers: answers.uniq
+          }
+        when 'Hindi - Does Subject like Noun?'
+          english_subject = get_random_english_subject
+          use_plural = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
+          subject_objects = get_subject_object(english_subject)
+          @noun = get_noun(quiz_question)
+          synonyms = @noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            subject_objects.each do |subject_object|
+              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              answers << "kya #{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai?"
+              answers << "क्या #{oblique_subject[:hindi][0]} #{synonym.foreign_plural} पसंद हैं?"
+            end
+          end
+          result << {
+            question: "#{use_plural ? 'Do' : 'Does'} #{english_subject} like #{@noun.english_plural}?",
             answers: answers.uniq
           }
         end
@@ -674,7 +692,7 @@ class Quiz < ActiveRecord::Base
   end
 
   def get_random_single_english_subject
-    ['I', 'You', 'He', 'She', 'It', 'This', 'That'][rand(7)]
+    ['I', 'you', 'he', 'she', 'it', 'this', 'that'][rand(7)]
   end
 
   def get_random_plural_english_subject
@@ -682,7 +700,7 @@ class Quiz < ActiveRecord::Base
   end
 
   def get_random_english_subject(plural = false)
-    ['We', 'They', 'These', 'Those', 'I', 'You', 'He', 'She', 'It', 'This', 'That'][plural ? rand(4) : rand(11)]
+    ['we', 'they', 'these', 'those', 'I', 'you', 'he', 'she', 'it', 'this', 'that'][plural ? rand(4) : rand(11)]
   end
 
   def get_subject_has_objects(subject_objects)
@@ -921,7 +939,7 @@ class Quiz < ActiveRecord::Base
         transliterated: 'mai',
         transliterated_be: 'hu'
       }]
-    when 'You'
+    when 'you'
       [
         {
           english: 'you',
@@ -940,7 +958,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'He', 'She', 'It'
+    when 'he', 'she', 'it'
       [
         {
           english: 'he',
@@ -991,7 +1009,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'We'
+    when 'we'
       [
         {
           english: 'we',
@@ -1002,7 +1020,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'This'
+    when 'this'
       [
         {
           english: 'this',
@@ -1013,7 +1031,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'That'
+    when 'that'
       [
         {
           english: 'that',
@@ -1024,7 +1042,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'They'
+    when 'they'
       [
         {
           english: 'they',
@@ -1043,7 +1061,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'These'
+    when 'these'
       [
         {
           english: 'these',
@@ -1054,7 +1072,7 @@ class Quiz < ActiveRecord::Base
           transliterated_be: 'hai'
         }
       ]
-    when 'Those'
+    when 'those'
       [
         {
           english: 'those',
