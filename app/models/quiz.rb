@@ -411,6 +411,24 @@ class Quiz < ActiveRecord::Base
               transliterated_answers
             ].flatten
           }
+        when 'Hindi - Subject likes Noun'
+          english_subject = get_random_english_subject
+          use_plural = ['You', 'These', 'Those', 'They', 'We', 'I'].include?(english_subject)
+          subject_objects = get_subject_object(english_subject)
+          @noun = get_noun(quiz_question)
+          synonyms = @noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            subject_objects.each do |subject_object|
+              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              answers << "#{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai"
+              answers << "#{oblique_subject[:hindi][0]} #{synonym.foreign_plural} पसंद हैं"
+            end
+          end
+          result << {
+            question: "#{english_subject.capitalize} like#{use_plural ? '' : 's'} #{@noun.english_plural}.",
+            answers: answers.uniq
+          }
         end
       end
     end
@@ -567,6 +585,27 @@ class Quiz < ActiveRecord::Base
     verb
   end
 
+  def obliqify_subject(subject)
+    case subject
+    when 'mai'
+      { hindi: ['मुझको'], transliterated: ['mujhko'] }
+    when 'tum'
+      { hindi: ['तुझको'], transliterated: ['tumko'] }
+    when 'ap'
+      { hindi: ['आपको'], transliterated: ['apko'] }
+    when 'ham'
+      { hindi: ['हमको'], transliterated: ['hamko'] }
+    when 'yah'
+      { hindi: ['इसको'], transliterated: ['isko'] }
+    when 'ye'
+      { hindi: ['इनको'], transliterated: ['inko'] }
+    when 'vah'
+      { hindi: ['उसको'], transliterated: ['usko'] }
+    when 've'
+      { hindi: ['उनको'], transliterated: ['unko'] }
+    end
+  end
+
   def obliqify(args)
     # adjectives with masculine -a endings describing oblique nouns change to -e (even if noun does not end in -a)
     if args[:adjective_transliterated]
@@ -670,14 +709,14 @@ class Quiz < ActiveRecord::Base
       when 'this'
         {
           english: 'this has',
-          transliterated: 'uske pas',
-          hindi: 'उसके पास'
+          transliterated: 'iske pas',
+          hindi: 'इसके पास'
         }
       when 'that'
         {
           english: 'that has',
-          transliterated: 'iske pas',
-          hindi: 'इसके पास'
+          transliterated: 'uske pas',
+          hindi: 'उसके पास'
         }
       when 'we'
         {
@@ -688,20 +727,20 @@ class Quiz < ActiveRecord::Base
       when 'they'
         {
           english: 'they have',
-          transliterated: (subject_object[:hindi] == 'ये' ? 'unke pas' : 'inke pas'),
-          hindi: (subject_object[:hindi] == 'ये' ? 'उनके पास' : 'इनके पास')
+          transliterated: (subject_object[:hindi] == 'ये' ? 'inke pas' : 'unke pas'),
+          hindi: (subject_object[:hindi] == 'ये' ? 'इनके पास' : 'उनके पास')
         }
       when 'these'
         {
           english: 'these have',
-          transliterated: 'unke pas',
-          hindi: 'उनके पास'
+          transliterated: 'inke pas',
+          hindi: 'इनके पास'
         }
       when 'those'
         {
           english: 'those have',
-          transliterated: 'inke pas',
-          hindi: 'इनके पास'
+          transliterated: 'unke pas',
+          hindi: 'उनके पास'
         }
       end
     end
@@ -825,6 +864,33 @@ class Quiz < ActiveRecord::Base
     when 'his', 'her', 'its'
       [
         {
+          hindi_masculine_singular: 'इसका',
+          hindi_masculine_plural: 'इसके',
+          hindi_feminine: 'इसकी',
+          transliterated_masculine_singular: 'iska',
+          transliterated_masculine_plural: 'iske',
+          transliterated_feminine: 'iski'
+        },
+        {
+          hindi_masculine_singular: 'उसका',
+          hindi_masculine_plural: 'उसके',
+          hindi_feminine: 'उसकी',
+          transliterated_masculine_singular: 'uska',
+          transliterated_masculine_plural: 'uske',
+          transliterated_feminine: 'uski'
+        }
+      ]
+    when 'their'
+      [
+        {
+          hindi_masculine_singular: 'इनका',
+          hindi_masculine_plural: 'इनके',
+          hindi_feminine: 'इनकी',
+          transliterated_masculine_singular: 'inka',
+          transliterated_masculine_plural: 'inke',
+          transliterated_feminine: 'inki'
+        },
+        {
           hindi_masculine_singular: 'उसका',
           hindi_masculine_plural: 'उसके',
           hindi_feminine: 'उसकी',
@@ -833,39 +899,12 @@ class Quiz < ActiveRecord::Base
           transliterated_feminine: 'uski'
         },
         {
-          hindi_masculine_singular: 'इसका',
-          hindi_masculine_plural: 'इसके',
-          hindi_feminine: 'इसकी',
-          transliterated_masculine_singular: 'iska',
-          transliterated_masculine_plural: 'iske',
-          transliterated_feminine: 'iski'
-        }
-      ]
-    when 'their'
-      [
-        {
           hindi_masculine_singular: 'उनका',
           hindi_masculine_plural: 'उनके',
           hindi_feminine: 'उनकी',
           transliterated_masculine_singular: 'unka',
           transliterated_masculine_plural: 'unke',
           transliterated_feminine: 'unki'
-        },
-        {
-          hindi_masculine_singular: 'इसका',
-          hindi_masculine_plural: 'इसके',
-          hindi_feminine: 'इसकी',
-          transliterated_masculine_singular: 'iska',
-          transliterated_masculine_plural: 'iske',
-          transliterated_feminine: 'iski'
-        },
-        {
-          hindi_masculine_singular: 'इनका',
-          hindi_masculine_plural: 'इनके',
-          hindi_feminine: 'इनकी',
-          transliterated_masculine_singular: 'inka',
-          transliterated_masculine_plural: 'inke',
-          transliterated_feminine: 'inki'
         }
       ]
     end
