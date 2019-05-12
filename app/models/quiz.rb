@@ -1123,7 +1123,7 @@ class Quiz < ActiveRecord::Base
 
   def english_negative_verb(use_negative, subject)
     return '' unless use_negative
-    if ['I', 'You', 'They', 'We', 'These', 'Those', 'They'].include?(subject)
+    if ['I', 'you', 'they', 'we', 'these', 'those', 'they'].include?(subject)
       "don't "
     else
       "doesn't "
@@ -1131,18 +1131,18 @@ class Quiz < ActiveRecord::Base
   end
 
   def get_plural_from_subject(subject)
-    ['We', 'They', 'These', 'Those'].include?(subject)
+    ['we', 'they', 'these', 'those'].include?(subject)
   end
 
   def get_gender_from_subject(subject)
-    if ['I', 'He'].include?(subject)
+    if ['I', 'he'].include?(subject)
       gender = 'M'
-    elsif ['She'].include?(subject)
+    elsif ['she'].include?(subject)
       gender = 'F'
     else
       gender = ['M', 'F'].sample
     end
-    gender_notification = ['I', 'He', 'She'].include?(subject) ? '' : " (#{gender})"
+    gender_notification = ['I', 'he', 'she'].include?(subject) ? '' : " (#{gender})"
     [gender, gender_notification]
   end
 
