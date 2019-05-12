@@ -447,6 +447,48 @@ class Quiz < ActiveRecord::Base
             question: "#{use_plural ? 'Do' : 'Does'} #{english_subject} like #{@noun.english_plural}?",
             answers: answers.uniq
           }
+        when 'Hindi - Subject wants a Noun'
+          english_subject = get_random_english_subject
+          use_want = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
+          use_plural = [true, false].sample
+          subject_objects = get_subject_object(english_subject)
+          @noun = get_noun(quiz_question)
+          synonyms = @noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            subject_objects.each do |subject_object|
+              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              answers << "#{oblique_subject[:transliterated][0]} #{use_plural ? synonym.transliterated_plural : synonym.transliterated} chahie"
+              answers << "#{oblique_subject[:transliterated][0]} ek #{synonym.transliterated} chahie" unless use_plural
+              answers << "#{oblique_subject[:hindi][0]} #{use_plural ? synonym.foreign_plural : synonym.foreign} चाहिए"
+              answers << "#{oblique_subject[:hindi][0]} एक #{synonym.foreign} चाहिए" unless use_plural
+            end
+          end
+          result << {
+            question: "#{english_subject.capitalize} want#{use_want ? '' : 's'} #{use_plural ? '' : a_or_an(@noun.english) + ' '}#{use_plural ? @noun.english_plural : @noun.english}.",
+            answers: answers.uniq
+          }
+        when 'Hindi - Does Subject want a Noun?'
+          english_subject = get_random_english_subject
+          use_do = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
+          subject_objects = get_subject_object(english_subject)
+          use_plural = [true, false].sample
+          @noun = get_noun(quiz_question)
+          synonyms = @noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            subject_objects.each do |subject_object|
+              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              answers << "kya #{oblique_subject[:transliterated][0]} #{use_plural ? synonym.transliterated_plural : synonym.transliterated} chahie?"
+              answers << "kya #{oblique_subject[:transliterated][0]} ek #{synonym.transliterated} chahie?" unless use_plural
+              answers << "क्या #{oblique_subject[:hindi][0]} #{use_plural ? synonym.foreign_plural : synonym.foreign} चाहिए?"
+              answers << "क्या #{oblique_subject[:hindi][0]} एक #{synonym.foreign} चाहिए?" unless use_plural
+            end
+          end
+          result << {
+            question: "#{use_do ? 'Do' : 'Does'} #{english_subject} want #{use_plural ? '' : a_or_an(@noun.english) + ' '}#{use_plural ? @noun.english_plural : @noun.english}?",
+            answers: answers.uniq
+          }
         end
       end
     end
