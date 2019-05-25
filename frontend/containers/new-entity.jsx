@@ -9,12 +9,15 @@ import { createEntity } from '../actions/index'
 class NewEntity extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
+    let obj = {
       fetching: false,
       [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity),
       errors: []
     };
+    if (this.props.staticData) {
+      Object.assign(obj, this.props.staticData);
+    }
+    this.state = obj;
   }
 
   componentDidMount() {
@@ -137,8 +140,8 @@ class NewEntity extends React.Component {
       case 'quizQuestion':
         return(
           <div className="row">
-            { Details.renderDropDown.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', options: this.props.array1, optionDisplayProperty: 'name', maxOptions: 2 }) }
-            { Details.renderDropDown.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', options: this.props.array2, optionDisplayProperty: 'name', maxOptions: 2, optional: true }) }
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', customType: 'modal', modalDisplayProperty: 'name' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', customType: 'modal', modalDisplayProperty: 'name', noneOption: true }) }
             { Details.renderField.bind(this)({ columnWidth: 2, entity: 'quizQuestion', property: 'amount' }) }
           </div>
         );

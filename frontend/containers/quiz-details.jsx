@@ -142,8 +142,10 @@ class QuizDetails extends React.Component {
             initialEntity={ { quizId: this.state.quiz.id, questionId: Common.firstElementPropertyOrBlank(this.state.questions, 'id'), tagId: '', amount: '1' } }
             callback={ this.updateQuizQuestions.bind(this) }
             buttonText="Add Question"
-            array1={ this.state.questions }
-            array2={ this.state.tags }
+            staticData={{
+              questions: this.state.questions,
+              tags: this.state.tags
+            }}
           />
         </Modal>
       </div>
