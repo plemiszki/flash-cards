@@ -47,7 +47,7 @@ class QuizDetails extends React.Component {
     this.setState({
       fetching: true,
       justSaved: true
-    }, function() {
+    }, () => {
       Details.updateEntity.bind(this)();
     });
   }
@@ -69,7 +69,7 @@ class QuizDetails extends React.Component {
     this.setState({
       fetching: true
     });
-    let id = e.target.dataset.id;
+    let id = e.target.parentElement.dataset.id;
     this.props.deleteEntity('quiz_questions', id, (response) => {
       this.setState({
         fetching: false,
@@ -84,6 +84,33 @@ class QuizDetails extends React.Component {
       result += quizQuestion.amount;
     })
     return result;
+  }
+
+  updateQuizQuestion(dir, e) {
+    let id = e.target.parentElement.dataset.id;
+    let quizQuestion = HandyTools.deepCopy(HandyTools.findObjectInArrayById(this.state.quizQuestions, id));
+    let newAmount;
+    if (dir == 'left' && quizQuestion.amount > 1) {
+      newAmount = quizQuestion.amount -= 1;
+    } else if (dir == 'right') {
+      newAmount = quizQuestion.amount += 1;
+    } else {
+      return;
+    }
+    this.setState({
+      fetching: true
+    });
+    this.props.updateEntity({
+      id,
+      directory: 'quiz_questions',
+      entityName: 'quizQuestion',
+      entity: { amount: newAmount }
+    }).then(() => {
+      this.setState({
+        fetching: false,
+        quizQuestions: this.props.quizQuestions
+      });
+    })
   }
 
   render() {
@@ -104,12 +131,14 @@ class QuizDetails extends React.Component {
             Delete
           </a>
           <hr className="divider m-top" />
-          <table className={ `admin-table no-links${this.totalQuestions() ? '' : ' m-bottom'}` }>
+          <table className={ `admin-table no-cursor no-links${this.totalQuestions() ? '' : ' m-bottom'}` }>
             <thead>
               <tr>
                 <th>Question</th>
                 <th>Tag</th>
-                <th>Amount</th>
+                <th></th>
+                <th className="amount">Amount</th>
+                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -119,14 +148,18 @@ class QuizDetails extends React.Component {
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
               </tr>
               { HandyTools.alphabetizeArrayOfObjects(this.state.quizQuestions, 'questionName').map((quizQuestion, index) => {
                 return(
-                  <tr key={ index }>
+                  <tr key={ index } data-id={ quizQuestion.id }>
                     <td>{ quizQuestion.questionName }</td>
                     <td>{ quizQuestion.tagName }</td>
-                    <td>{ quizQuestion.amount }</td>
-                    <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) } data-id={ quizQuestion.id }></td>
+                    <td className="left-arrow" onClick={ this.updateQuizQuestion.bind(this, 'left') }></td>
+                    <td className="amount">{ quizQuestion.amount }</td>
+                    <td className="right-arrow" onClick={ this.updateQuizQuestion.bind(this, 'right') }></td>
+                    <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) }></td>
                   </tr>
                 );
               })}
@@ -159,7 +192,9 @@ class QuizDetails extends React.Component {
         <tr className="no-hover">
           <td></td>
           <td></td>
-          <td>{ totalQuestions }</td>
+          <td></td>
+          <td className="amount">{ totalQuestions }</td>
+          <td></td>
           <td></td>
         </tr>
       );

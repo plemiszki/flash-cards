@@ -2,7 +2,7 @@ class Quiz < ActiveRecord::Base
 
   validates :name, presence: true
 
-  has_many :quiz_questions
+  has_many :quiz_questions, -> { order(:id) }
   has_many :questions, through: :quiz_questions
 
   def run

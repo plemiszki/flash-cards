@@ -4,4 +4,34 @@
     font-family: 'TeachableSans-SemiBold';
     color: black;
   }
+
+  .admin-table tbody tr:hover {
+
+    td.right-arrow, td.left-arrow {
+      background-size: 10%;
+    }
+  }
+
+  .amount {
+    text-align: center;
+    width: 60px;
+  }
+
+  .right-arrow, .left-arrow {
+    width: 50px;
+    cursor: pointer;
+    background-size: 0;
+    background-position-y: 50%;
+    background-repeat: no-repeat;
+  }
+
+  .right-arrow {
+    background-image: image-url('right-arrow');
+    background-position-x: 0;
+  }
+
+  .left-arrow {
+    background-image: image-url('left-arrow');
+    background-position-x: 100%;
+  }
 }
