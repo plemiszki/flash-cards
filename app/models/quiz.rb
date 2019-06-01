@@ -58,6 +58,22 @@ class Quiz < ActiveRecord::Base
               adjective.masculine
             ]
           }
+        when 'Hindi - General Statement'
+          noun = get_noun(quiz_question)
+          english_single_plural_same = (noun.english == noun.english_plural)
+          adjective = @adjectives.pop
+          synonyms = noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            answers += [
+              "#{synonym.transliterated_plural} #{synonym.gender.odd? ? adjective.transliterated_masculine_plural : adjective.transliterated_feminine} #{synonym.gender.odd? ? 'hote' : 'hoti'} hai",
+              "#{synonym.foreign_plural} #{synonym.gender.odd? ? adjective.masculine_plural : adjective.feminine} #{synonym.gender.odd? ? 'होते' : 'होती'} हैं"
+            ]
+          end
+          result << {
+            question: "#{noun.english_plural.capitalize} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}.",
+            answers: answers
+          }
         when 'Hindi - Where is Subject\'s Noun?'
           use_plural = [true, false].sample
           @noun = get_noun(quiz_question)
@@ -687,6 +703,8 @@ class Quiz < ActiveRecord::Base
         if args[:noun_transliterated]
           if args[:noun_transliterated].transliterated[-1] == 'i'
             "#{args[:noun_transliterated].transliterated[0...-1]}iyo"
+          elsif args[:noun_transliterated].transliterated[-1] == 'o'
+            args[:noun_transliterated]
           else
             if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
               "#{args[:noun_transliterated].transliterated[0...-1]}o"
@@ -697,6 +715,8 @@ class Quiz < ActiveRecord::Base
         elsif args[:noun_hindi]
           if args[:noun_hindi].foreign[-1] == 'ी'
             "#{args[:noun_hindi].foreign[0...-1]}ियों"
+          elsif ['ू', 'ो'].include?(args[:noun_hindi].foreign[-1])
+            args[:noun_hindi].foreign
           else
             if args[:noun_hindi].foreign[-1] == 'ा'
               if args[:noun_hindi].gender == 1
