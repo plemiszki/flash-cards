@@ -66,12 +66,29 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             answers += [
-              "#{synonym.transliterated_plural} #{synonym.gender.odd? ? adjective.transliterated_masculine_plural : adjective.transliterated_feminine} #{synonym.gender.odd? ? 'hote' : 'hoti'} hai",
-              "#{synonym.foreign_plural} #{synonym.gender.odd? ? adjective.masculine_plural : adjective.feminine} #{synonym.gender.odd? ? 'होते' : 'होती'} हैं"
+              "#{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'hota' : 'hote') : 'hoti'} hai",
+              "#{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'होता' : 'होते') : 'होती'} हैं"
             ]
           end
           result << {
             question: "#{noun.english_plural.capitalize} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}.",
+            answers: answers
+          }
+        when 'Hindi - Availability'
+          noun = get_noun(quiz_question)
+          english_single_plural_same = (noun.english == noun.english_plural)
+          adjective = @adjectives.pop
+          synonyms = noun.synonyms
+          answers = []
+          location = get_location
+          synonyms.each do |synonym|
+            answers += [
+              "#{location[:transliterated]} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? 'milta' : 'milte') : 'milti'} hai",
+              "#{location[:hindi]} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? 'मिलता' : 'मिलते') : 'मिलती'} हैं"
+            ]
+          end
+          result << {
+            question: "#{adjective.english.capitalize} #{noun.english_plural} #{english_single_plural_same ? 'is' : 'are'} available #{location[:english]}.",
             answers: answers
           }
         when 'Hindi - Where is Subject\'s Noun?'
@@ -1206,6 +1223,26 @@ class Quiz < ActiveRecord::Base
     end
     gender_notification = ['I', 'he', 'she'].include?(subject) ? '' : " (#{gender})"
     [gender, gender_notification]
+  end
+
+  def get_location
+    [
+      {
+        english: 'in this shop',
+        transliterated: 'is dukan me',
+        hindi: 'इस दुकान में'
+      },
+      {
+        english: 'in that shop',
+        transliterated: 'us dukan me',
+        hindi: 'उस दुकान में'
+      },
+      {
+        english: 'in Delhi',
+        transliterated: 'dilli me',
+        hindi: 'दिल्ली में'
+      }
+    ].sample
   end
 
   # SPANISH HELPER METHODS
