@@ -74,6 +74,22 @@ class Quiz < ActiveRecord::Base
             question: "#{noun.english_plural.capitalize} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}.",
             answers: answers
           }
+        when 'Hindi - Where can you get Adjective Nouns?'
+          noun = get_noun(quiz_question)
+          english_single_plural_same = (noun.english == noun.english_plural)
+          adjective = @adjectives.pop
+          synonyms = noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            answers += [
+              "#{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.transliterated_plural} kaha #{synonym.gender.odd? ? (english_single_plural_same ? 'milta' : 'milte') : 'milti'} hai?",
+              "#{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.foreign_plural} कहाँ #{synonym.gender.odd? ? (english_single_plural_same ? 'मिलता' : 'मिलते') : 'मिलती'} हैं?"
+            ]
+          end
+          result << {
+            question: "Where can you get #{adjective.english} #{noun.english_plural}?",
+            answers: answers
+          }
         when 'Hindi - Availability'
           noun = get_noun(quiz_question)
           english_single_plural_same = (noun.english == noun.english_plural)
