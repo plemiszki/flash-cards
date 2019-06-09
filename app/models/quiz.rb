@@ -58,6 +58,48 @@ class Quiz < ActiveRecord::Base
               adjective.masculine
             ]
           }
+        when 'Hindi - Does Subject know that...?'
+          english_subject = get_random_single_english_subject
+          subject_objects = get_subject_object(english_subject)
+          noun = get_noun(quiz_question)
+          english_single_plural_same = (noun.english == noun.english_plural)
+          adjective = @adjectives.pop
+          synonyms = noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            subject_objects.each do |subject_object|
+              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              answers += [
+                "kya #{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'hota' : 'hote') : 'hoti'} hai?",
+                "क्या #{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'होता' : 'होते') : 'होती'} हैं?"
+              ]
+            end
+          end
+          result << {
+            question: "#{['he', 'she', 'it', 'this', 'that'].include?(english_subject) ? 'Does' : 'Do'} #{english_subject} know that #{noun.english_plural} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}?",
+            answers: answers.uniq
+          }
+        when 'Hindi - Subject knows that...'
+          english_subject = get_random_single_english_subject
+          subject_objects = get_subject_object(english_subject)
+          noun = get_noun(quiz_question)
+          english_single_plural_same = (noun.english == noun.english_plural)
+          adjective = @adjectives.pop
+          synonyms = noun.synonyms
+          answers = []
+          synonyms.each do |synonym|
+            subject_objects.each do |subject_object|
+              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              answers += [
+                "#{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'hota' : 'hote') : 'hoti'} hai",
+                "#{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'होता' : 'होते') : 'होती'} हैं"
+              ]
+            end
+          end
+          result << {
+            question: "#{english_subject.capitalize} know#{['he', 'she', 'it', 'this', 'that'].include?(english_subject) ? 's' : ''} that #{noun.english_plural} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}.",
+            answers: answers.uniq
+          }
         when 'Hindi - General Statement'
           noun = get_noun(quiz_question)
           english_single_plural_same = (noun.english == noun.english_plural)
