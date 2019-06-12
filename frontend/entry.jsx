@@ -6,6 +6,7 @@ import { SimpleDetails, StandardIndex, TabbedIndex, Message } from 'handy-compon
 
 import NewEntity from './containers/new-entity';
 import NounDetails from './containers/noun-details';
+import SpanishNounDetails from './containers/spanish-noun-details';
 import VerbDetails from './containers/verb-details';
 import AdjectiveDetails from './containers/adjective-details';
 import CardDetails from './containers/card-details';
@@ -314,22 +315,8 @@ $(document).ready(function() {
 
   if (document.querySelector('#spanish-noun-details')) {
     ReactDOM.render(
-      <Provider context={ MyContext } store={ store }>
-        <SimpleDetails
-          context={ MyContext }
-          entityName='spanishNoun'
-          initialEntity={ { english: '', spanish: '', englishPlural: '', spanishPlural: '', gender: 1 } }
-          fields={
-            [
-              [
-                { columnWidth: 3, entity: 'spanishNoun', property: 'english' },
-                { columnWidth: 3, entity: 'spanishNoun', property: 'englishPlural' },
-                { columnWidth: 3, entity: 'spanishNoun', property: 'spanish' },
-                { columnWidth: 3, entity: 'spanishNoun', property: 'spanishPlural' }
-              ]
-            ]
-          }
-        />
+      <Provider store={ store }>
+        <SpanishNounDetails />
       </Provider>,
       document.querySelector('#spanish-noun-details')
     );

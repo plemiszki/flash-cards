@@ -35,7 +35,7 @@ let EntityTags = {
       this.props.createEntity({
         directory: 'card_tags',
         entityName: 'cardTag',
-        entity: { tagId: e.target.dataset.id, cardtagableId: this.state[entityName].id, cardtagableType: ChangeCase.titleCase(entityName) }
+        entity: { tagId: e.target.dataset.id, cardtagableId: this.state[entityName].id, cardtagableType: ChangeCase.pascalCase(entityName) }
       }, 'cardTags').then(() => {
         EntityTags.updateEntityTags.call(this, entityName, this.props.cardTags);
       });
