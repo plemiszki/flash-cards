@@ -149,7 +149,8 @@ class CardDetails extends React.Component {
             </div>
           </div>
           <div className="row">
-            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
+            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 10, entity: 'card', property: 'answer' }) }
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>

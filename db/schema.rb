@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_26_211235) do
+ActiveRecord::Schema.define(version: 2019_06_13_205318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2019_04_26_211235) do
     t.string "question", null: false
     t.string "answer", null: false
     t.string "image_url", default: ""
+    t.boolean "multiple_choice", default: false
   end
 
   create_table "nouns", id: :serial, force: :cascade do |t|

@@ -3,6 +3,7 @@ json.card do
   json.question @card.question
   json.answer @card.answer
   json.imageUrl @card.image_url
+  json.multipleChoice @card.multiple_choice
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id

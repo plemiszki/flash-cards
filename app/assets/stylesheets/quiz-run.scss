@@ -30,4 +30,14 @@
       margin-bottom: 15px;
     }
   }
+
+  input[type="radio"] {
+    display: inline-block;
+    width: inherit;
+    margin-right: 10px;
+  }
+
+  label {
+    font-size: 14px;
+  }
 }

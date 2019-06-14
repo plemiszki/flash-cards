@@ -45,7 +45,7 @@ class Api::CardsController < AdminController
   private
 
   def card_params
-    params[:card].permit(:question, :answer, :image_url)
+    params[:card].permit(:question, :answer, :image_url, :multiple_choice)
   end
 
 end

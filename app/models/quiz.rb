@@ -380,12 +380,17 @@ class Quiz < ActiveRecord::Base
           else
             card = @cards.pop
           end
-          result << {
+          obj = {
             question: card.question,
             answers: [card.answer],
             textbox: card.answer.include?("\n"),
             imageUrl: card.image_url
           }
+          if card.multiple_choice
+            other_cards = CardTag.where(tag_id: card.tags.first.id, cardtagable_type: "Card").map(&:cardtagable) - [card]
+            obj["choices"] = ([card.answer] + other_cards.take(3).map(&:answer))
+          end
+          result << obj
         when 'Hindi - Imperfective Present Yes/No Question'
           english_subject = get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)

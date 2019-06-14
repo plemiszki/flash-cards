@@ -102,6 +102,13 @@ class QuizRun extends React.Component {
     return Object.keys(this.state.wrongAnswerLog).length;
   }
 
+  selectOption(e) {
+    this.setState({
+      status: 'question',
+      answer: e.target.value
+    });
+  }
+
   render() {
     return (
       <div id="quiz-run" className="component">
@@ -168,7 +175,19 @@ class QuizRun extends React.Component {
   }
 
   renderInput() {
-    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].textbox) {
+    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].choices) {
+      return(
+        <div className="m-bottom">
+          { this.state.quiz.questions[this.state.questionNumber].choices.sort().map((choice, index) => {
+            return(
+              <div key={ index }>
+                <input id={`option-${index}`} onChange={ this.selectOption.bind(this) } type="radio" name="choice" value={ choice } /><label htmlFor={`option-${index}`}>{ choice }</label>
+              </div>
+            );
+          })}
+        </div>
+      );
+    } else if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].textbox) {
       return(
         <textarea rows="5" columns="12" className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
       );
@@ -181,7 +200,7 @@ class QuizRun extends React.Component {
 
   renderAnswers() {
     if (this.state.quiz.questions && this.state.showAnswers) {
-      return this.state.quiz.questions[this.state.questionNumber].answers.map(function(answer, index) {
+      return this.state.quiz.questions[this.state.questionNumber].answers.map((answer, index) => {
         return(
           <p key={ index } className="answer">{ answer }</p>
         );
