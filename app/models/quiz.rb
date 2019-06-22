@@ -784,7 +784,7 @@ class Quiz < ActiveRecord::Base
           if args[:noun_transliterated].transliterated[-1] == 'i'
             "#{args[:noun_transliterated].transliterated[0...-1]}iyo"
           elsif args[:noun_transliterated].transliterated[-1] == 'o'
-            args[:noun_transliterated]
+            "#{args[:noun_transliterated]}"
           else
             if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
               "#{args[:noun_transliterated].transliterated[0...-1]}o"
