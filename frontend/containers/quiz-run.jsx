@@ -110,7 +110,7 @@ class QuizRun extends React.Component {
   }
 
   render() {
-    return (
+    return(
       <div id="quiz-run" className="component">
         <h1>{ this.renderHeader() }</h1>
         { this.renderWrongAnswers() }
@@ -181,7 +181,7 @@ class QuizRun extends React.Component {
           { this.state.quiz.questions[this.state.questionNumber].choices.sort().map((choice, index) => {
             return(
               <div key={ index }>
-                <input id={`option-${index}`} onChange={ this.selectOption.bind(this) } type="radio" name="choice" value={ choice } /><label htmlFor={`option-${index}`}>{ choice }</label>
+                <input id={`option-${index}`} onChange={ this.selectOption.bind(this) } checked={ this.state.answer === choice } type="radio" name="choice" value={ choice } /><label htmlFor={`option-${index}`}>{ choice }</label>
               </div>
             );
           })}
