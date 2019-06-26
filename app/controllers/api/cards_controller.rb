@@ -24,6 +24,7 @@ class Api::CardsController < AdminController
     @card = Card.find(params[:id])
     @card_tags = @card.card_tags
     @tags = Tag.all.order(:name)
+    @match_bins = @card.match_bins.includes(:match_items)
     render 'show.json.jbuilder'
   end
 
