@@ -139,21 +139,77 @@ class CardDetails extends React.Component {
   updateMatchBins(response) {
     this.setState({
       newMatchBinModalOpen: false,
+      newMatchItemModalOpen: false,
       matchBins: response
     });
   }
 
-  deleteMatchBin(e) {
+  clickPlus(binId, e) {
+    this.setState({
+      newMatchItemModalOpen: true,
+      selectedMatchBinId: binId
+    });
+  }
+
+  delete(type, e) {
     let id = e.target.dataset.id;
     this.setState({
       fetching: true
     });
-    this.props.deleteEntity('match_bins', id, (response) => {
-      this.setState({
-        fetching: false,
-        matchBins: response.matchBins
+    if (type === 'bin') {
+      this.props.deleteEntity('match_bins', id, (response) => {
+        this.setState({
+          fetching: false,
+          matchBins: response.matchBins
+        });
       });
-    });
+    } else {
+      this.props.deleteEntity('match_items', id, (response) => {
+        this.setState({
+          fetching: false,
+          matchBins: response.matchBins
+        });
+      });
+    }
+  }
+
+  renderMatchTable() {
+    let result = [];
+    HandyTools.alphabetizeArrayOfObjects(this.state.matchBins, 'name').forEach((matchBin) => {
+      result.push({
+        text: matchBin.name,
+        type: 'bin',
+        id: matchBin.id
+      });
+      matchBin.matchItems.forEach((matchItem) => {
+        result.push({
+          text: matchItem.name,
+          type: 'item',
+          id: matchItem.id
+        })
+      })
+    })
+    return result.map((obj, index) => {
+      return(
+        <tr key={ index } className={ `${obj.type}-row` }>
+          <td>{ obj.text }</td>
+          { this.renderPlus(obj) }
+          <td className="x-column" onClick={ this.delete.bind(this, obj.type) } data-id={ obj.id }></td>
+        </tr>
+      );
+    })
+  }
+
+  renderPlus(obj) {
+    if (obj.type === 'bin') {
+      return(
+        <td className="x-column plus-column" onClick={ this.clickPlus.bind(this, obj.id) } data-id={ obj.id }></td>
+      );
+    } else {
+      return(
+        <td></td>
+      );
+    }
   }
 
   render() {
@@ -190,21 +246,16 @@ class CardDetails extends React.Component {
               <tr>
                 <th>Match Bins</th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td></td>
                 <td></td>
+                <td></td>
               </tr>
-              { HandyTools.alphabetizeArrayOfObjects(this.state.matchBins, "name").map((matchBin, index) => {
-                return(
-                  <tr key={ index }>
-                    <td>{ matchBin.name }</td>
-                    <td className="x-column" onClick={ this.deleteMatchBin.bind(this) } data-id={ matchBin.id }></td>
-                  </tr>
-                );
-              }) }
+              { this.renderMatchTable() }
             </tbody>
           </table>
           <a className="gray-outline-button small-width small-padding m-bottom" onClick={ Common.changeState.bind(this, 'newMatchBinModalOpen', true) }>Add Bin</a>
@@ -215,6 +266,14 @@ class CardDetails extends React.Component {
               entityName="matchBin"
               initialEntity={ { cardId: this.state.card.id, name: '' } }
               callback={ this.updateMatchBins.bind(this) }
+            />
+          </Modal>
+          <Modal isOpen={ this.state.newMatchItemModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
+            <NewEntity
+              entityName="matchItem"
+              initialEntity={ { matchBinId: this.state.selectedMatchBinId, name: '' } }
+              callback={ this.updateMatchBins.bind(this) }
+              responseKey="matchBins"
             />
           </Modal>
         </div>

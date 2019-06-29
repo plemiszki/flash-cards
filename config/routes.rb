@@ -30,5 +30,6 @@ Rails.application.routes.draw do
     resources :spanish_verbs, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_adjectives, only: [:index, :show, :create, :update, :destroy]
     resources :match_bins, only: [:create, :destroy]
+    resources :match_items, only: [:create, :destroy]
   end
 end

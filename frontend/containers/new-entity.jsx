@@ -35,7 +35,7 @@ class NewEntity extends React.Component {
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
     }, entityNamePlural).then(() => {
-      this.props.callback(this.props[entityNamePlural]);
+      this.props.callback(this.props[this.props.responseKey || entityNamePlural]);
     }, () => {
       this.setState({
         fetching: false,
@@ -195,6 +195,12 @@ class NewEntity extends React.Component {
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'matchBin', property: 'name' }) }
+          </div>
+        ]);
+      case 'matchItem':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'matchItem', property: 'name' }) }
           </div>
         ]);
     }

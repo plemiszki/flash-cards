@@ -3,4 +3,20 @@
   img {
     width: 100%;
   }
+
+  tr.item-row {
+
+    > td {
+      padding-left: 30px;
+    }
+
+    .x-column {
+      background-size: 15px;
+    }
+  }
+
+  .plus-column {
+    background-image: image-url("plus.svg");
+    background-size: 20px;
+  }
 }
