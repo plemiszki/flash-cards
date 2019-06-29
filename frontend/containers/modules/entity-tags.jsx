@@ -44,7 +44,7 @@ let EntityTags = {
 
   renderTags(entityName) {
     return([
-      <table key="1" className="admin-table no-links m-bottom">
+      <table key="1" className="admin-table no-links no-hover no-padding m-bottom">
         <thead>
           <tr>
             <th>Tag</th>
@@ -66,9 +66,9 @@ let EntityTags = {
           })}
         </tbody>
       </table>,
-      <a key="2" className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add New</a>,
+      <a key="2" className="gray-outline-button small-width small-padding" onClick={ Common.changeState.bind(this, 'newCardTagModalOpen', true) }>Add Tag</a>,
       <Modal key="3" isOpen={ this.state.newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ ModalSelectStyles }>
-        <ModalSelect options={ this.state.tags } property={ 'name' } func={ EntityTags.clickTag.bind(this, entityName) } />
+        <ModalSelect options={ this.state.tags } property="name" func={ EntityTags.clickTag.bind(this, entityName) } />
       </Modal>
     ]);
   }

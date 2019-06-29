@@ -25,16 +25,17 @@ class NewEntity extends React.Component {
   }
 
   clickAdd(e) {
+    let entityNamePlural = this.props.entityNamePlural || `${this.props.entityName}s`;
     e.preventDefault();
     this.setState({
       fetching: true
     });
     this.props.createEntity({
-      directory: HandyTools.convertToUnderscore(this.props.entityNamePlural),
+      directory: HandyTools.convertToUnderscore(entityNamePlural),
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
-    }, this.props.entityNamePlural).then(() => {
-      this.props.callback(this.props[this.props.entityNamePlural]);
+    }, entityNamePlural).then(() => {
+      this.props.callback(this.props[entityNamePlural]);
     }, () => {
       this.setState({
         fetching: false,
@@ -188,6 +189,12 @@ class NewEntity extends React.Component {
             <div className="col-xs-4"></div>
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'feminine' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'femininePlural' }) }
+          </div>
+        ]);
+      case 'matchBin':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'matchBin', property: 'name' }) }
           </div>
         ]);
     }

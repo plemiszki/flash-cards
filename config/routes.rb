@@ -29,5 +29,6 @@ Rails.application.routes.draw do
     resources :spanish_nouns, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_verbs, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_adjectives, only: [:index, :show, :create, :update, :destroy]
+    resources :match_bins, only: [:create, :destroy]
   end
 end

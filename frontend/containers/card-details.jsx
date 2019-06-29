@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import Modal from 'react-modal'
 import HandyTools from 'handy-tools'
-import { Common, Details } from 'handy-components'
+import { Common, Details, ModalSelectStyles } from 'handy-components'
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
 import EntityTags from './modules/entity-tags.jsx'
+import NewEntity from './new-entity.jsx'
 
 class CardDetails extends React.Component {
   constructor(props) {
@@ -21,6 +23,7 @@ class CardDetails extends React.Component {
       cardSaved: emptyCard,
       cardTags: [],
       errors: [],
+      matchBins: [],
       newCardTagModalOpen: false
     };
   }
@@ -37,6 +40,7 @@ class CardDetails extends React.Component {
         cardSaved: HandyTools.deepCopy(this.props.card),
         cardTags: this.props.cardTags,
         tags: this.props.tags,
+        matchBins: this.props.matchBins,
         changesToSave: false
       }, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
@@ -132,6 +136,26 @@ class CardDetails extends React.Component {
     client.picker(options).open();
   }
 
+  updateMatchBins(response) {
+    this.setState({
+      newMatchBinModalOpen: false,
+      matchBins: response
+    });
+  }
+
+  deleteMatchBin(e) {
+    let id = e.target.dataset.id;
+    this.setState({
+      fetching: true
+    });
+    this.props.deleteEntity('match_bins', id, (response) => {
+      this.setState({
+        fetching: false,
+        matchBins: response.matchBins
+      });
+    });
+  }
+
   render() {
     return(
       <div id="card-details" className="component details-component">
@@ -161,7 +185,38 @@ class CardDetails extends React.Component {
             </a>
           </div>
           <hr className="divider" />
+          <table className="admin-table no-links no-hover no-padding m-bottom">
+            <thead>
+              <tr>
+                <th>Match Bins</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              { HandyTools.alphabetizeArrayOfObjects(this.state.matchBins, "name").map((matchBin, index) => {
+                return(
+                  <tr key={ index }>
+                    <td>{ matchBin.name }</td>
+                    <td className="x-column" onClick={ this.deleteMatchBin.bind(this) } data-id={ matchBin.id }></td>
+                  </tr>
+                );
+              }) }
+            </tbody>
+          </table>
+          <a className="gray-outline-button small-width small-padding m-bottom" onClick={ Common.changeState.bind(this, 'newMatchBinModalOpen', true) }>Add Bin</a>
+          <hr className="divider" />
           { EntityTags.renderTags.call(this, 'card') }
+          <Modal isOpen={ this.state.newMatchBinModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
+            <NewEntity
+              entityName="matchBin"
+              initialEntity={ { cardId: this.state.card.id, name: '' } }
+              callback={ this.updateMatchBins.bind(this) }
+            />
+          </Modal>
         </div>
       </div>
     );
