@@ -9,7 +9,7 @@
     "babel-loader": "8.0.5",
     "change-case": "3.1.0",
     "handy-components": "1.22.1",
-    "handy-tools": "2.5.0",
+    "handy-tools": "2.6.0",
     "jquery": "3.4.0",
     "jquery-match-height": "0.7.2",
     "lodash": "4.17.11",

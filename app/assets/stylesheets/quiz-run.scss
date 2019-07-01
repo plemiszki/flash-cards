@@ -1,5 +1,11 @@
 #quiz-run {
 
+  .grabbing {
+    cursor: grabbing !important;
+    cursor: -webkit-grabbing !important;
+    cursor: -moz-grabbing !important;
+  }
+
   p.wrong-count {
     margin-top: 10px;
     display: inline-block;
@@ -39,5 +45,57 @@
 
   label {
     font-size: 14px;
+  }
+
+  .bins-container {
+
+    .bin {
+      display: inline-block;
+      border: solid 1px gray;
+      border-radius: 3px;
+      padding: 20px 30px;
+      font-size: 14px;
+      user-select: none;
+      vertical-align: top;
+      text-align: center;
+
+      &.selected {
+        background-color: #CEECF5;
+      }
+
+      &:not(:last-of-type) {
+        margin-right: 30px;
+      }
+
+      .bin-item {
+        margin-top: 10px;
+        border: solid 1px gray;
+        border-radius: 3px;
+        padding: 8px 10px;
+        font-size: 12px;
+        text-align: center;
+      }
+    }
+  }
+
+  .unmatched-items-container {
+
+    .unmatched-item {
+      display: inline-block;
+      border: solid 1px gray;
+      border-radius: 3px;
+      padding: 8px 10px;
+      cursor: grab;
+      user-select: none;
+
+      &.selected {
+        background-color: #CEECF5;
+      }
+
+      &:not(:last-of-type) {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+    }
   }
 }

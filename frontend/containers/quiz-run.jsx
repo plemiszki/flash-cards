@@ -14,6 +14,8 @@ class QuizRun extends React.Component {
       quiz: {},
       questionNumber: 0,
       answer: '',
+      matchedItems: {},
+      unmatchedItems: [],
       status: 'question',
       showAnswers: false,
       wrongAnswerLog: {}
@@ -22,10 +24,11 @@ class QuizRun extends React.Component {
 
   componentDidMount() {
     this.props.runQuiz(window.location.pathname.split('/')[2]).then((response) => {
+      let matchItems = {};
       this.setState({
         fetching: false,
         quiz: response.quiz
-      });
+      }, this.setUpMatching.bind(this));
     });
   }
 
@@ -38,7 +41,7 @@ class QuizRun extends React.Component {
 
   checkAnswer(e) {
     e.preventDefault();
-    if (this.state.answer === '') {
+    if (this.state.matchedItems === {} && this.state.answer === '') {
       return;
     }
     if (this.state.status === 'correct') {
@@ -73,11 +76,11 @@ class QuizRun extends React.Component {
           answer: '',
           status: 'question',
           showAnswers: false
-        });
+        }, this.setUpMatching.bind(this));
       }
     } else {
       let quizQuestion = this.state.quiz.questions[this.state.questionNumber];
-      if (quizQuestion.answers.indexOf(this.state.answer) > -1) {
+      if (quizQuestion.answers.indexOf(this.state.answer) > -1 || this.objectsAreEqual(this.state.matchedItems, quizQuestion.matchBins)) {
         this.setState({
           status: 'correct'
         });
@@ -90,6 +93,45 @@ class QuizRun extends React.Component {
         });
       }
     }
+  }
+
+  objectsAreEqual(obj1, obj2) {
+    let result = true;
+    Object.keys(obj1).forEach((binName) => {
+      let items1 = obj1[binName].sort();
+      let items2 = obj2[binName].sort();
+      if (JSON.stringify(items1) !== JSON.stringify(items2)) {
+        result = false;
+      }
+    })
+    return result;
+  }
+
+  setUpMatching() {
+    let question = this.state.quiz.questions[this.state.questionNumber];
+    let matchBinNames = Object.keys(question.matchBinsShuffled);
+    let matchedItems = {};
+    let unmatchedItems = [];
+    matchBinNames.forEach((binName) => {
+      matchedItems[binName] = [];
+      unmatchedItems = unmatchedItems.concat(this.state.quiz.questions[this.state.questionNumber].matchBinsShuffled[binName]);
+    })
+    this.setState({
+      matchedItems,
+      unmatchedItems: HandyTools.shuffleArray(unmatchedItems)
+    }, () => {
+      $('.unmatched-items-container li').draggable({
+        cursor: '-webkit-grabbing',
+        helper: () => { return '<div></div>'; },
+        stop: this.dragEndHandler
+      });
+      $('.bins-container li').droppable({
+        tolerance: 'pointer',
+        over: this.dragOverHandler,
+        out: this.dragOutHandler,
+        drop: this.dropHandler.bind(this)
+      });
+    });
   }
 
   toggleAnswers() {
@@ -106,6 +148,46 @@ class QuizRun extends React.Component {
     this.setState({
       status: 'question',
       answer: e.target.value
+    });
+  }
+
+  mouseDownHandler(e) {
+    $('input, a, ul, li, .white-box').addClass('grabbing');
+    e.target.classList.add('selected');
+  }
+
+  mouseUpHandler(e) {
+    $('input, a, ul, li, .white-box').removeClass('grabbing');
+    e.target.classList.remove('selected');
+  }
+
+  dragOverHandler(e) {
+    e.target.classList.add('selected');
+  }
+
+  dragOutHandler(e) {
+    e.target.classList.remove('selected');
+  }
+
+  dragEndHandler() {
+    $('input, a, ul, li, .white-box').removeClass('grabbing');
+    $('li.selected').removeClass('selected');
+  }
+
+  dropHandler(e, ui) {
+    let binName = e.target.dataset.name;
+    let itemName = ui.draggable.attr('data-name');
+    let unmatchedItems = this.state.unmatchedItems;
+    unmatchedItems = HandyTools.removeFromArray(unmatchedItems, itemName);
+    let matchedItems = this.state.matchedItems;
+    let bin = matchedItems[binName];
+    bin.push(itemName);
+    let sortedBin = bin.sort();
+    matchedItems[binName] = sortedBin;
+    this.setState({
+      matchedItems,
+      unmatchedItems,
+      status: 'question'
     });
   }
 
@@ -175,13 +257,37 @@ class QuizRun extends React.Component {
   }
 
   renderInput() {
-    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].choices) {
+    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].matchBins) {
+      let question = this.state.quiz.questions[this.state.questionNumber];
+      let unmatchedItems = [];
+      return([
+        <ul key="1" className="bins-container m-bottom">
+          { Object.keys(question.matchBinsShuffled).map((binName, index) => {
+            return(
+              <li key={ index } className="bin" data-name={ binName }>
+                { binName }
+                { this.renderMatchedItems(binName) }
+              </li>
+            );
+          }) }
+        </ul>,
+        <ul key="2" className="unmatched-items-container m-bottom">
+          { this.state.unmatchedItems.map((itemName, index) => {
+            return(
+              <li key={ index } className="unmatched-item" onMouseDown={ this.mouseDownHandler } onMouseUp={ this.mouseUpHandler } data-name={ itemName } >
+                { itemName }
+              </li>
+            );
+          }) }
+        </ul>
+      ]);
+    } else if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].choices) {
       return(
         <div className="m-bottom">
           { this.state.quiz.questions[this.state.questionNumber].choices.sort().map((choice, index) => {
             return(
               <div key={ index }>
-                <input id={`option-${index}`} onChange={ this.selectOption.bind(this) } checked={ this.state.answer === choice } type="radio" name="choice" value={ choice } /><label htmlFor={`option-${index}`}>{ choice }</label>
+                <input id={ `option-${index}` } onChange={ this.selectOption.bind(this) } checked={ this.state.answer === choice } type="radio" name="choice" value={ choice } /><label htmlFor={`option-${index}`}>{ choice }</label>
               </div>
             );
           })}
@@ -194,6 +300,21 @@ class QuizRun extends React.Component {
     } else {
       return(
         <input className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+      );
+    }
+  }
+
+  renderMatchedItems(binName) {
+    let matchedItems = this.state.matchedItems[binName];
+    if (matchedItems && matchedItems.length > 0) {
+      return(
+        <ul className="bin-items-container">
+          { matchedItems.map((itemName, index) => {
+            return(
+              <li key={ index } className="bin-item">{ itemName }</li>
+            );
+          }) }
+        </ul>
       );
     }
   }
