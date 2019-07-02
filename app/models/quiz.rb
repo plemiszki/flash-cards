@@ -382,7 +382,7 @@ class Quiz < ActiveRecord::Base
           end
           obj = {
             question: card.question,
-            answers: [card.answer],
+            answers: (card.match_bins.present? ? [card.match_answer] : [card.answer]),
             textbox: card.answer.include?("\n"),
             imageUrl: card.image_url,
             matchBins: card.match_bins_and_items,

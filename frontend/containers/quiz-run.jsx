@@ -327,10 +327,17 @@ class QuizRun extends React.Component {
 
   renderAnswers() {
     if (this.state.quiz.questions && this.state.showAnswers) {
-      return this.state.quiz.questions[this.state.questionNumber].answers.map((answer, index) => {
-        return(
-          <p key={ index } className="answer">{ answer }</p>
-        );
+      let question = this.state.quiz.questions[this.state.questionNumber];
+      return question.answers.map((answer, index) => {
+        if (question.matchBins && Object.keys(question.matchBins).length > 0) {
+          return(
+            <pre key={ index } className="answer">{ answer }</pre>
+          );
+        } else {
+          return(
+            <p key={ index } className="answer">{ answer }</p>
+          );
+        }
       });
     } else {
       return '';
