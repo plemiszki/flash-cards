@@ -110,29 +110,31 @@ class QuizRun extends React.Component {
 
   setUpMatching() {
     let question = this.state.quiz.questions[this.state.questionNumber];
-    let matchBinNames = Object.keys(question.matchBinsShuffled);
-    let matchedItems = {};
-    let unmatchedItems = [];
-    matchBinNames.forEach((binName) => {
-      matchedItems[binName] = [];
-      unmatchedItems = unmatchedItems.concat(this.state.quiz.questions[this.state.questionNumber].matchBinsShuffled[binName]);
-    })
-    this.setState({
-      matchedItems,
-      unmatchedItems: HandyTools.shuffleArray(unmatchedItems)
-    }, () => {
-      $('.unmatched-items-container li').draggable({
-        cursor: '-webkit-grabbing',
-        helper: () => { return '<div></div>'; },
-        stop: this.dragEndHandler
+    if (question.matchBins) {
+      let matchBinNames = Object.keys(question.matchBinsShuffled);
+      let matchedItems = {};
+      let unmatchedItems = [];
+      matchBinNames.forEach((binName) => {
+        matchedItems[binName] = [];
+        unmatchedItems = unmatchedItems.concat(this.state.quiz.questions[this.state.questionNumber].matchBinsShuffled[binName]);
+      })
+      this.setState({
+        matchedItems,
+        unmatchedItems: HandyTools.shuffleArray(unmatchedItems)
+      }, () => {
+        $('.unmatched-items-container li').draggable({
+          cursor: '-webkit-grabbing',
+          helper: () => { return '<div></div>'; },
+          stop: this.dragEndHandler
+        });
+        $('.bins-container li').droppable({
+          tolerance: 'pointer',
+          over: this.dragOverHandler,
+          out: this.dragOutHandler,
+          drop: this.dropHandler.bind(this)
+        });
       });
-      $('.bins-container li').droppable({
-        tolerance: 'pointer',
-        over: this.dragOverHandler,
-        out: this.dragOutHandler,
-        drop: this.dropHandler.bind(this)
-      });
-    });
+    }
   }
 
   toggleAnswers() {
@@ -258,8 +260,11 @@ class QuizRun extends React.Component {
   }
 
   renderInput() {
-    if (this.state.quiz.questions && Object.keys(this.state.quiz.questions[this.state.questionNumber].matchBins).length > 0) {
-      let question = this.state.quiz.questions[this.state.questionNumber];
+    let question;
+    if (this.state.quiz.questions) {
+      question = this.state.quiz.questions[this.state.questionNumber];
+    }
+    if (question && question.matchBins && Object.keys(question.matchBins).length > 0) {
       let unmatchedItems = [];
       return([
         <ul key="1" className="bins-container m-bottom">
@@ -282,7 +287,7 @@ class QuizRun extends React.Component {
           }) }
         </ul>
       ]);
-    } else if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].choices) {
+    } else if (question && question.choices) {
       return(
         <div className="m-bottom">
           { this.state.quiz.questions[this.state.questionNumber].choices.sort().map((choice, index) => {
@@ -294,7 +299,7 @@ class QuizRun extends React.Component {
           })}
         </div>
       );
-    } else if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].textbox) {
+    } else if (question && question.textbox) {
       return(
         <textarea rows="5" columns="12" className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
       );
