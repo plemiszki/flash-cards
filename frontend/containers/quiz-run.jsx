@@ -41,7 +41,8 @@ class QuizRun extends React.Component {
 
   checkAnswer(e) {
     e.preventDefault();
-    if (this.state.matchedItems === {} && this.state.answer === '') {
+    let matchingQuestion = Object.keys(this.state.matchedItems).length > 0;
+    if (!matchingQuestion && this.state.answer === '') {
       return;
     }
     if (this.state.status === 'correct') {
@@ -80,7 +81,7 @@ class QuizRun extends React.Component {
       }
     } else {
       let quizQuestion = this.state.quiz.questions[this.state.questionNumber];
-      if (quizQuestion.answers.indexOf(this.state.answer) > -1 || this.objectsAreEqual(this.state.matchedItems, quizQuestion.matchBins)) {
+      if (quizQuestion.answers.indexOf(this.state.answer) > -1 || (matchingQuestion && this.objectsAreEqual(this.state.matchedItems, quizQuestion.matchBins))) {
         this.setState({
           status: 'correct'
         });
@@ -257,7 +258,7 @@ class QuizRun extends React.Component {
   }
 
   renderInput() {
-    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].matchBins) {
+    if (this.state.quiz.questions && Object.keys(this.state.quiz.questions[this.state.questionNumber].matchBins).length > 0) {
       let question = this.state.quiz.questions[this.state.questionNumber];
       let unmatchedItems = [];
       return([
