@@ -121,20 +121,22 @@ class QuizRun extends React.Component {
       this.setState({
         matchedItems,
         unmatchedItems: HandyTools.shuffleArray(unmatchedItems)
-      }, () => {
-        $('.unmatched-items-container li').draggable({
-          cursor: '-webkit-grabbing',
-          helper: () => { return '<div></div>'; },
-          stop: this.dragEndHandler
-        });
-        $('.bins-container li').droppable({
-          tolerance: 'pointer',
-          over: this.dragOverHandler,
-          out: this.dragOutHandler,
-          drop: this.dropHandler.bind(this)
-        });
-      });
+      }, this.setUpDragAndDrop.bind(this));
     }
+  }
+
+  setUpDragAndDrop() {
+    $('.unmatched-items-container li').draggable({
+      cursor: '-webkit-grabbing',
+      helper: () => { return '<div></div>'; },
+      stop: this.dragEndHandler
+    });
+    $('.bins-container li').droppable({
+      tolerance: 'pointer',
+      over: this.dragOverHandler,
+      out: this.dragOutHandler,
+      drop: this.dropHandler.bind(this)
+    });
   }
 
   toggleAnswers() {
@@ -178,7 +180,12 @@ class QuizRun extends React.Component {
   }
 
   dropHandler(e, ui) {
-    let binName = e.target.dataset.name;
+    let binName;
+    if (e.target.dataset.name) {
+      binName = e.target.dataset.name;
+    } else {
+      binName = e.target.parentElement.parentElement.dataset.name;
+    }
     let itemName = ui.draggable.attr('data-name');
     let unmatchedItems = this.state.unmatchedItems;
     unmatchedItems = HandyTools.removeFromArray(unmatchedItems, itemName);
@@ -192,6 +199,20 @@ class QuizRun extends React.Component {
       unmatchedItems,
       status: 'question'
     });
+  }
+
+  removeMatchItem(e) {
+    let itemName = e.target.innerHTML;
+    let binName = e.target.parentElement.parentElement.dataset.name;
+    let unmatchedItems = this.state.unmatchedItems;
+    let matchedItems = this.state.matchedItems;
+    HandyTools.removeFromArray(matchedItems[binName], itemName);
+    unmatchedItems.push(itemName);
+    this.setState({
+      status: 'question',
+      unmatchedItems,
+      matchedItems
+    }, this.setUpDragAndDrop.bind(this));
   }
 
   render() {
@@ -317,7 +338,7 @@ class QuizRun extends React.Component {
         <ul className="bin-items-container">
           { matchedItems.map((itemName, index) => {
             return(
-              <li key={ index } className="bin-item">{ itemName }</li>
+              <li key={ index } className="bin-item" onClick={ this.removeMatchItem.bind(this) }>{ itemName }</li>
             );
           }) }
         </ul>
