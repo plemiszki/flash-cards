@@ -26,12 +26,13 @@ class NewEntity extends React.Component {
 
   clickAdd(e) {
     let entityNamePlural = this.props.entityNamePlural || `${this.props.entityName}s`;
+    let directory = HandyTools.convertToUnderscore(entityNamePlural);
     e.preventDefault();
     this.setState({
       fetching: true
     });
     this.props.createEntity({
-      directory: HandyTools.convertToUnderscore(entityNamePlural),
+      directory,
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
     }, entityNamePlural).then(() => {
