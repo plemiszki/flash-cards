@@ -35,7 +35,11 @@ class NewEntity extends React.Component {
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
     }, entityNamePlural).then(() => {
-      this.props.callback(this.props[this.props.responseKey || entityNamePlural]);
+      if (this.props.redirect) {
+        window.location.pathname = `/${directory}/${this.props[this.props.entityName].id}`;
+      } else {
+        this.props.callback(this.props[this.props.responseKey || entityNamePlural]);
+      }
     }, () => {
       this.setState({
         fetching: false,

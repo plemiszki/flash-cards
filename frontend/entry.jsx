@@ -171,6 +171,7 @@ $(document).ready(function() {
           <NewEntity
             context={ MyContext }
             initialEntity={ { question: '', answer: '' } }
+            redirect={ true }
           />
         </TabbedIndex>
       </Provider>,
