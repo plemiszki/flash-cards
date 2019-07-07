@@ -13,8 +13,7 @@ class Api::CardsController < AdminController
   def create
     @card = Card.new(card_params)
     if @card.save
-      @cards = Card.unarchived
-      render 'index.json.jbuilder'
+      render 'create.json.jbuilder'
     else
       render json: @card.errors.full_messages, status: 422
     end
