@@ -30,16 +30,6 @@ class Quiz < ActiveRecord::Base
               (plural ? @noun.foreign_plural : @noun.foreign)
             ])
           }
-        when 'Spanish - Single Noun'
-          @spanish_noun = get_spanish_noun(quiz_question)
-          synonyms = @spanish_noun.synonyms
-          plural = (rand(2) == 1)
-          result << {
-            question: plural_notification_spanish({ noun: @spanish_noun, use_plural: plural }).capitalize,
-            answers: synonyms.map do |spanish_noun|
-              (plural ? spanish_noun.spanish_plural : spanish_noun.spanish)
-            end
-          }
         when 'Hindi - Single Verb'
           verb = get_verb(quiz_question)
           result << {
@@ -587,6 +577,25 @@ class Quiz < ActiveRecord::Base
             question: "#{use_do ? 'Do' : 'Does'} #{english_subject} want #{use_plural ? '' : a_or_an(@noun.english) + ' '}#{use_plural ? @noun.english_plural : @noun.english}?",
             answers: answers.uniq
           }
+        when 'Spanish - Single Noun'
+          noun = Spanish::get_noun(quiz_question, @spanish_nouns)
+          synonyms = noun.synonyms
+          plural = (rand(2) == 1)
+          result << {
+            question: Spanish::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
+            answers: synonyms.map do |noun|
+              (plural ? noun.spanish_plural : noun.spanish)
+            end
+          }
+        when 'Spanish - Single Verb'
+          verb = Spanish::get_verb(quiz_question, @spanish_verbs)
+          synonyms = verb.synonyms
+          result << {
+            question: verb.english.capitalize,
+            answers: synonyms.map do |verb|
+              verb.spanish
+            end
+          }
         end
       end
     end
@@ -678,6 +687,7 @@ class Quiz < ActiveRecord::Base
     @adjectives = Adjective.all.to_a.shuffle if @adjectives.empty?
     @adverbs = Adverb.all.to_a.shuffle if @adverbs.empty?
     @spanish_nouns = SpanishNoun.all.to_a.shuffle if @spanish_nouns.empty?
+    @spanish_verbs = SpanishVerb.all.to_a.shuffle if @spanish_verbs.empty?
     if @cards.empty?
       if self.use_archived
         archived_cards = Card.joins(:tags).where(tags: { name: 'Archived' })
@@ -705,23 +715,6 @@ class Quiz < ActiveRecord::Base
       @nouns.reject! { |n| n == noun }
     else
       noun = @nouns.pop
-    end
-    noun
-  end
-
-  def get_spanish_noun(quiz_question)
-    if quiz_question.tag_id
-      tagged_nouns = []
-      until !tagged_nouns.empty? do
-        tagged_nouns = @spanish_nouns.select { |noun| noun.tags.map(&:id).include?(quiz_question.tag_id) }
-        if tagged_nouns.empty?
-          @spanish_nouns += SpanishNoun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
-        end
-      end
-      noun = tagged_nouns.sample
-      @spanish_nouns.reject! { |n| n == noun }
-    else
-      noun = @spanish_nouns.pop
     end
     noun
   end
@@ -1308,21 +1301,6 @@ class Quiz < ActiveRecord::Base
         hindi: 'दिल्ली में'
       }
     ].sample
-  end
-
-  # SPANISH HELPER METHODS
-
-  def plural_notification_spanish(args)
-    english_single_plural_same = (args[:noun].english == args[:noun].english_plural)
-    if args[:use_plural]
-      if english_single_plural_same
-        "#{args[:noun].english_plural} (plural)"
-      else
-        "#{args[:noun].english_plural}"
-      end
-    else
-      args[:noun].english
-    end
   end
 
 end

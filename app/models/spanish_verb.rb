@@ -6,4 +6,8 @@ class SpanishVerb < ActiveRecord::Base
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags
 
+  def synonyms
+    SpanishVerb.where(english: self.english)
+  end
+
 end
