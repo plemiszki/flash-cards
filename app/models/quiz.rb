@@ -290,7 +290,6 @@ class Quiz < ActiveRecord::Base
           subject_has_objects = get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
           use_plural = [true, false].sample
-          use_plural = true
           adjective = @adjectives.pop
           transliterated_adjectives, hindi_adjectives = proper_adjective_forms({ adjective: adjective, noun: @noun, plural: use_plural })
           result << {
@@ -595,6 +594,23 @@ class Quiz < ActiveRecord::Base
             answers: synonyms.map do |verb|
               verb.spanish
             end
+          }
+        when "Hindi - Noun's Noun"
+          use_plural = [true, false].sample
+          noun_1 = get_noun(quiz_question)
+          noun_1_synonyms = noun_1.synonyms
+          noun_2 = get_noun(quiz_question)
+          noun_2_synonyms = noun_2.synonyms
+          answers = []
+          noun_1_synonyms.each do |noun_1_synonym|
+            noun_2_synonyms.each do |noun_2_synonym|
+              answers << "#{use_plural ? 'ye' : 'yah'} #{obliqify({ noun_transliterated: noun_1_synonym })} #{Hindi::conjugate_ka(transliterated: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:transliterated_plural] : noun_2_synonym[:transliterated]} hai"
+              answers << "#{use_plural ? 'ये' : 'यह'} #{obliqify({ noun_hindi: noun_1_synonym })} #{Hindi::conjugate_ka(hindi: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:foreign_plural] : noun_2_synonym[:foreign]} #{use_plural ? 'हैं' : 'है'}"
+            end
+          end
+          result << {
+            question: "#{use_plural ? 'These are' : 'This is'} the #{English::possession(noun_1[:english])} #{use_plural ? noun_2[:english_plural] : noun_2[:english]}.",
+            answers: answers
           }
         end
       end
