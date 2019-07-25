@@ -131,8 +131,8 @@ class Quiz < ActiveRecord::Base
           location = get_location
           synonyms.each do |synonym|
             answers += [
-              "#{location[:transliterated]} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? 'milta' : 'milte') : 'milti'} hai",
-              "#{location[:hindi]} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? 'मिलता' : 'मिलते') : 'मिलती'} हैं"
+              "#{location[:transliterated]} #{synonym.gender.odd? ? (hindi_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{hindi_single_plural_same ? synonym.transliterated : synonym.transliterated_plural} #{synonym.gender.odd? ? (hindi_single_plural_same ? 'milta' : 'milte') : 'milti'} hai",
+              "#{location[:hindi]} #{synonym.gender.odd? ? (hindi_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{hindi_single_plural_same ? synonym.foreign : synonym.foreign_plural} #{synonym.gender.odd? ? (hindi_single_plural_same ? 'मिलता' : 'मिलते') : 'मिलती'} हैं"
             ]
           end
           result << {
