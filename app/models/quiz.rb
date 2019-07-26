@@ -125,6 +125,7 @@ class Quiz < ActiveRecord::Base
         when 'Hindi - Availability'
           noun = get_noun(quiz_question)
           english_single_plural_same = (noun.english == noun.english_plural)
+          hindi_single_plural_same = (noun.foreign == noun.foreign_plural)
           adjective = @adjectives.pop
           synonyms = noun.synonyms
           answers = []
