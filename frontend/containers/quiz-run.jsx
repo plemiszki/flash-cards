@@ -184,7 +184,7 @@ class QuizRun extends React.Component {
     if (e.target.dataset.name) {
       binName = e.target.dataset.name;
     } else {
-      binName = e.target.parentElement.parentElement.dataset.name;
+      return;
     }
     let itemName = ui.draggable.attr('data-name');
     let unmatchedItems = this.state.unmatchedItems;
@@ -338,7 +338,7 @@ class QuizRun extends React.Component {
         <ul className="bin-items-container">
           { matchedItems.map((itemName, index) => {
             return(
-              <li key={ index } className="bin-item" onClick={ this.removeMatchItem.bind(this) }>{ itemName }</li>
+              <li key={ itemName } className="bin-item" onClick={ this.removeMatchItem.bind(this) }>{ itemName }</li>
             );
           }) }
         </ul>
