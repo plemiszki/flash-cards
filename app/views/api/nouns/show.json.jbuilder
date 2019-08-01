@@ -7,6 +7,7 @@ json.noun do
   json.transliterated @noun.transliterated || ''
   json.transliteratedPlural @noun.transliterated_plural || ''
   json.gender @noun.gender.to_s
+  json.uncountable @noun.uncountable
 end
 json.nounTags @noun_tags do |noun_tag|
   json.id noun_tag.id

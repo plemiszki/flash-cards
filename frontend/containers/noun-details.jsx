@@ -105,6 +105,7 @@ class NounDetails extends React.Component {
               </select>
               { Details.renderFieldError([], []) }
             </div>
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'noun', property: 'uncountable' }) }
           </div>
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'foreign', columnHeader: 'Hindi' }) }

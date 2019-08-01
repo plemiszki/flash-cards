@@ -52,7 +52,6 @@ class Quiz < ActiveRecord::Base
           english_subject = get_random_single_english_subject
           subject_objects = get_subject_object(english_subject)
           noun = get_noun(quiz_question)
-          english_single_plural_same = (noun.english == noun.english_plural)
           adjective = @adjectives.pop
           synonyms = noun.synonyms
           answers = []
@@ -60,20 +59,19 @@ class Quiz < ActiveRecord::Base
             subject_objects.each do |subject_object|
               oblique_subject = obliqify_subject(subject_object[:transliterated])
               answers += [
-                "kya #{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'hota' : 'hote') : 'hoti'} hai?",
-                "क्या #{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'होता' : 'होते') : 'होती'} हैं?"
+                "kya #{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'hota' : 'hote') : 'hoti'} hai?",
+                "क्या #{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'होता' : 'होते') : 'होती'} हैं?"
               ]
             end
           end
           result << {
-            question: "#{['he', 'she', 'it', 'this', 'that'].include?(english_subject) ? 'Does' : 'Do'} #{english_subject} know that #{noun.english_plural} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}?",
+            question: "#{['he', 'she', 'it', 'this', 'that'].include?(english_subject) ? 'Does' : 'Do'} #{english_subject} know that #{noun.english_plural} #{noun.uncountable ? 'is' : 'are'} #{adjective.english}?",
             answers: answers.uniq
           }
         when 'Hindi - Subject knows that...'
           english_subject = get_random_single_english_subject
           subject_objects = get_subject_object(english_subject)
           noun = get_noun(quiz_question)
-          english_single_plural_same = (noun.english == noun.english_plural)
           adjective = @adjectives.pop
           synonyms = noun.synonyms
           answers = []
@@ -81,13 +79,13 @@ class Quiz < ActiveRecord::Base
             subject_objects.each do |subject_object|
               oblique_subject = obliqify_subject(subject_object[:transliterated])
               answers += [
-                "#{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'hota' : 'hote') : 'hoti'} hai",
-                "#{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (english_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (english_single_plural_same ? 'होता' : 'होते') : 'होती'} हैं"
+                "#{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'hota' : 'hote') : 'hoti'} hai",
+                "#{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'होता' : 'होते') : 'होती'} हैं"
               ]
             end
           end
           result << {
-            question: "#{english_subject.capitalize} know#{['he', 'she', 'it', 'this', 'that'].include?(english_subject) ? 's' : ''} that #{noun.english_plural} #{english_single_plural_same ? 'is' : 'are'} #{adjective.english}.",
+            question: "#{english_subject.capitalize} know#{['he', 'she', 'it', 'this', 'that'].include?(english_subject) ? 's' : ''} that #{noun.english_plural} #{noun.uncountable ? 'is' : 'are'} #{adjective.english}.",
             answers: answers.uniq
           }
         when 'Hindi - General Statement'
@@ -125,19 +123,18 @@ class Quiz < ActiveRecord::Base
         when 'Hindi - Availability'
           noun = get_noun(quiz_question)
           english_single_plural_same = (noun.english == noun.english_plural)
-          hindi_single_plural_same = (noun.foreign == noun.foreign_plural)
           adjective = @adjectives.pop
           synonyms = noun.synonyms
           answers = []
           location = get_location
           synonyms.each do |synonym|
             answers += [
-              "#{location[:transliterated]} #{synonym.gender.odd? ? (hindi_single_plural_same ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{hindi_single_plural_same ? synonym.transliterated : synonym.transliterated_plural} #{synonym.gender.odd? ? (hindi_single_plural_same ? 'milta' : 'milte') : 'milti'} hai",
-              "#{location[:hindi]} #{synonym.gender.odd? ? (hindi_single_plural_same ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{hindi_single_plural_same ? synonym.foreign : synonym.foreign_plural} #{synonym.gender.odd? ? (hindi_single_plural_same ? 'मिलता' : 'मिलते') : 'मिलती'} हैं"
+              "#{location[:transliterated]} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.uncountable ? synonym.transliterated : synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? 'milta' : 'milte') : 'milti'} hai",
+              "#{location[:hindi]} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.uncountable ? synonym.foreign : synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? 'मिलता' : 'मिलते') : 'मिलती'} हैं"
             ]
           end
           result << {
-            question: "#{adjective.english.capitalize} #{noun.english_plural} #{english_single_plural_same ? 'is' : 'are'} available #{location[:english]}.",
+            question: "#{adjective.english.capitalize} #{noun.english_plural} #{noun.uncountable ? 'is' : 'are'} available #{location[:english]}.",
             answers: answers
           }
         when 'Hindi - Where is Subject\'s Noun?'

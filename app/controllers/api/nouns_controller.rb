@@ -40,7 +40,7 @@ class Api::NounsController < AdminController
   private
 
   def noun_params
-    params[:noun].permit(:english, :english_plural, :foreign, :foreign_plural, :gender, :transliterated, :transliterated_plural)
+    params[:noun].permit(:english, :english_plural, :foreign, :foreign_plural, :gender, :transliterated, :transliterated_plural, :uncountable)
   end
 
 end
