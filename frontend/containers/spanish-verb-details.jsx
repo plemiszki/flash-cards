@@ -1,30 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Common, Details } from 'handy-components'
 import HandyTools from 'handy-tools'
+import { Common, Details } from 'handy-components'
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
 import EntityTags from './modules/entity-tags.jsx'
 
-class AdjectiveDetails extends React.Component {
+class SpanishVerbDetails extends React.Component {
   constructor(props) {
     super(props);
 
-    let emptyAdjective = {
+    let emptySpanishVerb = {
       english: '',
       englishSaved: '',
-      masculine: '',
-      masculineSaved: '',
-      feminine: '',
-      feminineSaved: ''
+      spanish: '',
+      spanishSaved: ''
     };
 
     this.state = {
       fetching: true,
-      adjective: emptyAdjective,
-      adjectiveSaved: emptyAdjective,
+      spanishVerb: emptySpanishVerb,
+      spanishVerbSaved: emptySpanishVerb,
       errors: [],
-      adjectiveTags: [],
+      spanishVerbTags: [],
       tags: [],
       newCardTagModalOpen: false
     };
@@ -35,13 +33,13 @@ class AdjectiveDetails extends React.Component {
       id: window.location.pathname.split('/')[2],
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
-    }, 'adjective').then(() => {
+    }, 'spanishVerb').then(() => {
       this.setState({
         fetching: false,
-        adjective: this.props.adjective,
-        adjectiveSaved: HandyTools.deepCopy(this.props.adjective),
+        spanishVerb: this.props.spanishVerb,
+        spanishVerbSaved: HandyTools.deepCopy(this.props.spanishVerb),
         tags: this.props.tags,
-        adjectiveTags: this.props.adjectiveTags,
+        spanishVerbTags: this.props.spanishVerbTags,
         changesToSave: false
       }, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
@@ -58,24 +56,24 @@ class AdjectiveDetails extends React.Component {
   }
 
   checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.adjective, this.state.adjectiveSaved);
+    return !HandyTools.objectsAreEqual(this.state.spanishVerb, this.state.spanishVerbSaved);
   }
 
   clickSave() {
     this.setState({
       fetching: true,
       justSaved: true
-    }, function() {
+    }, () => {
       this.props.updateEntity({
         id: window.location.pathname.split('/')[2],
         directory: window.location.pathname.split('/')[1],
-        entityName: 'adjective',
-        entity: this.state.adjective
+        entity: this.state.spanishVerb,
+        entityName: 'spanishVerb'
       }).then(() => {
         this.setState({
           fetching: false,
-          adjective: this.props.adjective,
-          adjectiveSaved: HandyTools.deepCopy(this.props.adjective),
+          spanishVerb: this.props.spanishVerb,
+          spanishVerbSaved: HandyTools.deepCopy(this.props.spanishVerb),
           changesToSave: false
         });
       }, () => {
@@ -89,23 +87,14 @@ class AdjectiveDetails extends React.Component {
 
   render() {
     return (
-      <div id="adjective-details" className="component details-component">
-        <h1>Adjective Details</h1>
+      <div id="spanish-verb-details" className="component details-component">
+        <h1>Spanish Verb Details</h1>
         <div className="white-box">
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
-          </div>
-          <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
-          </div>
-          <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'spanish' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
@@ -116,10 +105,14 @@ class AdjectiveDetails extends React.Component {
             </a>
           </div>
           <hr className="divider" />
-          { EntityTags.renderTags.call(this, 'adjective') }
+          { EntityTags.renderTags.call(this, 'spanishVerb') }
         </div>
       </div>
     );
+  }
+
+  componentDidUpdate() {
+    Common.matchColumnHeight();
   }
 }
 
@@ -131,4 +124,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdjectiveDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SpanishVerbDetails);

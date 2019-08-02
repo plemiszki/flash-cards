@@ -6,3 +6,11 @@ json.spanishAdjective do
   json.masculinePlural @spanish_adjective.masculine_plural
   json.femininePlural @spanish_adjective.feminine_plural
 end
+json.spanishAdjectiveTags @spanish_adjective_tags do |spanish_adjective_tag|
+  json.id spanish_adjective_tag.id
+  json.tagName spanish_adjective_tag.tag.name
+end
+json.tags @tags do |tag|
+  json.id tag.id
+  json.name tag.name
+end

@@ -1,21 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import ReactModal from 'react-modal';
-import { SimpleDetails, StandardIndex, TabbedIndex, Message } from 'handy-components';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import ReactModal from 'react-modal'
+import { SimpleDetails, StandardIndex, TabbedIndex, Message } from 'handy-components'
 
-import NewEntity from './containers/new-entity';
-import NounDetails from './containers/noun-details';
-import SpanishNounDetails from './containers/spanish-noun-details';
-import VerbDetails from './containers/verb-details';
-import AdjectiveDetails from './containers/adjective-details';
-import CardDetails from './containers/card-details';
-import QuizDetails from './containers/quiz-details';
-import QuizRun from './containers/quiz-run';
+import NewEntity from './containers/new-entity'
+import NounDetails from './containers/noun-details'
+import VerbDetails from './containers/verb-details'
+import AdjectiveDetails from './containers/adjective-details'
+import SpanishNounDetails from './containers/spanish-noun-details'
+import SpanishVerbDetails from './containers/spanish-verb-details'
+import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
+import CardDetails from './containers/card-details'
+import QuizDetails from './containers/quiz-details'
+import QuizRun from './containers/quiz-run'
 
-import TabActions from './containers/modules/tab-actions.js';
+import TabActions from './containers/modules/tab-actions.js'
 
-import configureStore from './store/store';
+import configureStore from './store/store'
 let store = configureStore();
 
 $(document).ready(function() {
@@ -345,20 +347,8 @@ $(document).ready(function() {
 
   if (document.querySelector('#spanish-verb-details')) {
     ReactDOM.render(
-      <Provider context={ MyContext } store={ store }>
-        <SimpleDetails
-          context={ MyContext }
-          entityName='spanishVerb'
-          initialEntity={ { english: '', spanish: '' } }
-          fields={
-            [
-              [
-                { columnWidth: 6, entity: 'spanishVerb', property: 'english' },
-                { columnWidth: 6, entity: 'spanishVerb', property: 'spanish' }
-              ]
-            ]
-          }
-        />
+      <Provider store={ store }>
+        <SpanishVerbDetails />
       </Provider>,
       document.querySelector('#spanish-verb-details')
     );
@@ -386,23 +376,8 @@ $(document).ready(function() {
 
   if (document.querySelector('#spanish-adjective-details')) {
     ReactDOM.render(
-      <Provider context={ MyContext } store={ store }>
-        <SimpleDetails
-          context={ MyContext }
-          entityName='spanishAdjective'
-          initialEntity={ { english: '', masculine: '', feminine: '', masculinePlural: '', femininePlural: '' } }
-          fields={
-            [
-              [
-                { columnWidth: 6, entity: 'spanishAdjective', property: 'english' },
-                { columnWidth: 6, entity: 'spanishAdjective', property: 'masculine' },
-                { columnWidth: 6, entity: 'spanishAdjective', property: 'feminine' },
-                { columnWidth: 6, entity: 'spanishAdjective', property: 'masculinePlural' },
-                { columnWidth: 6, entity: 'spanishAdjective', property: 'femininePlural' }
-              ]
-            ]
-          }
-        />
+      <Provider store={ store }>
+        <SpanishAdjectiveDetails />
       </Provider>,
       document.querySelector('#spanish-adjective-details')
     );

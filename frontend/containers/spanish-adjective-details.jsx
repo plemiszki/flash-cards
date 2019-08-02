@@ -1,30 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Common, Details } from 'handy-components'
 import HandyTools from 'handy-tools'
+import { Common, Details } from 'handy-components'
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
 import EntityTags from './modules/entity-tags.jsx'
 
-class AdjectiveDetails extends React.Component {
+class SpanishAdjectiveDetails extends React.Component {
   constructor(props) {
     super(props);
 
-    let emptyAdjective = {
+    let emptySpanishAdjective = {
       english: '',
-      englishSaved: '',
       masculine: '',
-      masculineSaved: '',
+      masculinePlural: '',
       feminine: '',
-      feminineSaved: ''
+      femininePlural: ''
     };
 
     this.state = {
       fetching: true,
-      adjective: emptyAdjective,
-      adjectiveSaved: emptyAdjective,
+      spanishAdjective: emptySpanishAdjective,
+      spanishAdjectiveSaved: emptySpanishAdjective,
       errors: [],
-      adjectiveTags: [],
+      spanishAdjectiveTags: [],
       tags: [],
       newCardTagModalOpen: false
     };
@@ -35,13 +34,13 @@ class AdjectiveDetails extends React.Component {
       id: window.location.pathname.split('/')[2],
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
-    }, 'adjective').then(() => {
+    }, 'spanishAdjective').then(() => {
       this.setState({
         fetching: false,
-        adjective: this.props.adjective,
-        adjectiveSaved: HandyTools.deepCopy(this.props.adjective),
+        spanishAdjective: this.props.spanishAdjective,
+        spanishAdjectiveSaved: HandyTools.deepCopy(this.props.spanishAdjective),
         tags: this.props.tags,
-        adjectiveTags: this.props.adjectiveTags,
+        spanishAdjectiveTags: this.props.spanishAdjectiveTags,
         changesToSave: false
       }, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
@@ -58,24 +57,24 @@ class AdjectiveDetails extends React.Component {
   }
 
   checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.adjective, this.state.adjectiveSaved);
+    return !HandyTools.objectsAreEqual(this.state.spanishAdjective, this.state.spanishAdjectiveSaved);
   }
 
   clickSave() {
     this.setState({
       fetching: true,
       justSaved: true
-    }, function() {
+    }, () => {
       this.props.updateEntity({
         id: window.location.pathname.split('/')[2],
         directory: window.location.pathname.split('/')[1],
-        entityName: 'adjective',
-        entity: this.state.adjective
+        entity: this.state.spanishAdjective,
+        entityName: 'spanishAdjective'
       }).then(() => {
         this.setState({
           fetching: false,
-          adjective: this.props.adjective,
-          adjectiveSaved: HandyTools.deepCopy(this.props.adjective),
+          spanishAdjective: this.props.spanishAdjective,
+          spanishAdjectiveSaved: HandyTools.deepCopy(this.props.spanishAdjective),
           changesToSave: false
         });
       }, () => {
@@ -89,23 +88,21 @@ class AdjectiveDetails extends React.Component {
 
   render() {
     return (
-      <div id="adjective-details" className="component details-component">
-        <h1>Adjective Details</h1>
+      <div id="spanish-verb-details" className="component details-component">
+        <h1>Spanish Adjective Details</h1>
         <div className="white-box">
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'english' }) }
           </div>
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'feminine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'masculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'masculinePlural' }) }
           </div>
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedFeminine' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'transliteratedMasculinePlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'feminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'femininePlural' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
@@ -116,10 +113,14 @@ class AdjectiveDetails extends React.Component {
             </a>
           </div>
           <hr className="divider" />
-          { EntityTags.renderTags.call(this, 'adjective') }
+          { EntityTags.renderTags.call(this, 'spanishAdjective') }
         </div>
       </div>
     );
+  }
+
+  componentDidUpdate() {
+    Common.matchColumnHeight();
   }
 }
 
@@ -131,4 +132,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdjectiveDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SpanishAdjectiveDetails);

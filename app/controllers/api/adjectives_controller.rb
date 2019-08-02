@@ -17,6 +17,8 @@ class Api::AdjectivesController < AdminController
 
   def show
     @adjective = Adjective.find(params[:id])
+    @adjective_tags = @adjective.card_tags
+    @tags = Tag.all.order(:name)
     render 'show.json.jbuilder'
   end
 

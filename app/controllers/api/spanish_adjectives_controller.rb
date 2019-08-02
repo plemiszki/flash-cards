@@ -17,6 +17,8 @@ class Api::SpanishAdjectivesController < AdminController
 
   def show
     @spanish_adjective = SpanishAdjective.find(params[:id])
+    @spanish_adjective_tags = @spanish_adjective.card_tags
+    @tags = Tag.all.order(:name)
     render 'show.json.jbuilder'
   end
 
