@@ -40,7 +40,7 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Hindi - Single Adjective'
-          adjective = @adjectives.pop
+          adjective = Hindi::get_adjective(quiz_question)
           result << {
             question: adjective.english.capitalize,
             answers: [
@@ -162,10 +162,10 @@ class Quiz < ActiveRecord::Base
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{noun_hindi} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2 })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} है"
+            "#{noun_hindi} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} है"
           ]
           transliterated_answers = [
-            "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
+            "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
           ]
           result << {
             question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
@@ -181,10 +181,10 @@ class Quiz < ActiveRecord::Base
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2 })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
+            "#{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
           ]
           transliterated_answers = [
-            "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2 })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
+            "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
           ]
           result << {
             question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
@@ -772,9 +772,11 @@ class Quiz < ActiveRecord::Base
   end
 
   def obliqify(args)
-    # adjectives with masculine -a endings describing oblique nouns change to -e (even if noun does not end in -a)
     if args[:adjective_transliterated]
-      if args[:noun_transliterated].gender == 1 && args[:adjective_transliterated].transliterated_masculine[-1] == 'a'
+      if args[:noun_transliterated].gender == 1 && args[:use_plural]
+        "#{args[:adjective_transliterated].transliterated_masculine_plural}"
+      elsif args[:noun_transliterated].gender == 1 && args[:adjective_transliterated].transliterated_masculine[-1] == 'a'
+        # adjectives with masculine -a endings describing oblique nouns change to -e (even if noun does not end in -a)
         "#{args[:adjective_transliterated].transliterated_masculine[0...-1]}e"
       else
         args[:noun_transliterated].gender == 1 ? args[:adjective_transliterated].transliterated_masculine : args[:adjective_transliterated].transliterated_feminine
@@ -785,7 +787,7 @@ class Quiz < ActiveRecord::Base
       else
         args[:noun_hindi].gender == 1 ? args[:adjective_hindi].masculine : args[:adjective_hindi].feminine
       end
-    else
+    else # nouns
       if args[:plural]
         # nouns ending in -i change to -iyo
         # all other nouns change to -o in the oblique plural
