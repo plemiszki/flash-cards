@@ -40,7 +40,7 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Hindi - Single Adjective'
-          adjective = Hindi::get_adjective(quiz_question)
+          adjective = Hindi::get_adjective(quiz_question, @adjectives)
           result << {
             question: adjective.english.capitalize,
             answers: [
