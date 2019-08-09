@@ -162,10 +162,10 @@ class Quiz < ActiveRecord::Base
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{noun_hindi} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} है"
+            "#{noun_hindi} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, use_plural: use_noun2_plural })} #{preposition[:hindi]} है"
           ]
           transliterated_answers = [
-            "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
+            "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
           ]
           result << {
             question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
@@ -181,13 +181,13 @@ class Quiz < ActiveRecord::Base
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
+            "#{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, use_plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
           ]
           transliterated_answers = [
-            "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
+            "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
           ]
           result << {
-            question: "There #{use_noun_plural ? 'are' : "is #{a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
+            question: "There #{use_noun_plural && !@noun.uncountable ? 'are' : "is #{@noun.uncountable ? '' : a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
             answers: all_synonyms(hindi_answers) + all_synonyms(transliterated_answers)
           }
         when 'Hindi - Subject is a Noun'
@@ -773,7 +773,7 @@ class Quiz < ActiveRecord::Base
 
   def obliqify(args)
     if args[:adjective_transliterated]
-      if args[:noun_transliterated].gender == 1 && args[:use_plural]
+      if args[:noun_transliterated].gender == 1 && args[:use_plural] && !args[:noun_transliterated].uncountable
         "#{args[:adjective_transliterated].transliterated_masculine_plural}"
       elsif args[:noun_transliterated].gender == 1 && args[:adjective_transliterated].transliterated_masculine[-1] == 'a'
         # adjectives with masculine -a endings describing oblique nouns change to -e (even if noun does not end in -a)
@@ -782,13 +782,15 @@ class Quiz < ActiveRecord::Base
         args[:noun_transliterated].gender == 1 ? args[:adjective_transliterated].transliterated_masculine : args[:adjective_transliterated].transliterated_feminine
       end
     elsif args[:adjective_hindi]
-      if args[:noun_hindi].gender == 1 && args[:adjective_hindi].masculine[-1] == 'ा'
+      if args[:noun_hindi].gender == 1 && args[:use_plural] && !args[:noun_hindi].uncountable
+        "#{args[:adjective_hindi].masculine_plural}"
+      elsif args[:noun_hindi].gender == 1 && args[:adjective_hindi].masculine[-1] == 'ा'
         "#{args[:adjective_hindi].masculine[0...-1]}े"
       else
         args[:noun_hindi].gender == 1 ? args[:adjective_hindi].masculine : args[:adjective_hindi].feminine
       end
     else # nouns
-      if args[:plural]
+      if args[:use_plural] && (args[:noun_transliterated].try(:uncountable) == false || args[:noun_hindi].try(:uncountable) == false)
         # nouns ending in -i change to -iyo
         # all other nouns change to -o in the oblique plural
         if args[:noun_transliterated]
@@ -1267,7 +1269,7 @@ class Quiz < ActiveRecord::Base
 
   def oblique_plural_notification(use_plural, input, noun)
     english_single_plural_same = (noun.english == noun.english_plural)
-    if use_plural && english_single_plural_same
+    if use_plural && english_single_plural_same && !noun.uncountable
       "#{input} (plural)"
     else
       input
