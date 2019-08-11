@@ -9,6 +9,14 @@ module Hindi
     end
   end
 
+  def self.conjugate_sakna(args)
+    if args[:output] == 'transliterated'
+      args[:gender] == :male ? (args[:use_plural] ? 'sakte' : 'sakta') : 'sakti'
+    elsif args[:output] == 'hindi'
+      args[:gender] == :male ? (args[:use_plural] ? 'सकते' : 'सकता') : 'सकती'
+    end
+  end
+
   def self.convert_number(n)
     [
       { hindi: "शून्य", transliterated: "shuniye" },

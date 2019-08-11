@@ -20,12 +20,31 @@ class Quiz < ActiveRecord::Base
       quiz_question.amount.times do
         check_if_anything_empty
         case question.name
-        when 'Hindi - Age'
-          n = rand(10) + 1
+        when 'Hindi - Subject can Verb'
           english_subject = get_random_english_subject
           gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
           subject_objects = get_subject_object(english_subject, use_plural)
           question_subject_object = subject_objects.first
+          verb = get_verb(quiz_question)
+          phrase_as_question = [true, false].sample
+          answers = []
+          subject_objects.each do |subject_object|
+            if phrase_as_question
+              answers << "kya #{subject_object[:transliterated]} #{verb.transliterated_stem} #{Hindi::conjugate_sakna({ output: 'transliterated', gender: gender, use_plural: use_plural })} #{subject_object[:transliterated_be]}?"
+              answers << "क्या #{subject_object[:hindi]} #{verb.hindi_stem} #{Hindi::conjugate_sakna({ output: 'hindi', gender: gender, use_plural: use_plural })} #{subject_object[:hindi_be]}?"
+            else
+              answers << "#{subject_object[:transliterated]} #{verb.transliterated_stem} #{Hindi::conjugate_sakna({ output: 'transliterated', gender: gender, use_plural: use_plural })} #{subject_object[:transliterated_be]}"
+              answers << "#{subject_object[:hindi]} #{verb.hindi_stem} #{Hindi::conjugate_sakna({ output: 'hindi', gender: gender, use_plural: use_plural })} #{subject_object[:hindi_be]}"
+            end
+          end
+          result << {
+            question: "#{phrase_as_question ? "Can " : ""}#{phrase_as_question ? question_subject_object[:english] : question_subject_object[:english].capitalize}#{phrase_as_question ? "" : " can"}  #{verb.english}#{phrase_as_question ? "?" : "."}#{notification}",
+            answers: answers
+          }
+        when 'Hindi - Age'
+          n = rand(10) + 1
+          english_subject = get_random_english_subject
+          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
           answers = []
           case ['Subject is N years old', 'How old is Subject?', 'How old is that person?'].sample
           when 'Subject is N years old'
