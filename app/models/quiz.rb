@@ -48,6 +48,8 @@ class Quiz < ActiveRecord::Base
           answers = []
           case ['Subject is N years old', 'How old is Subject?', 'How old is that person?'].sample
           when 'Subject is N years old'
+            subject_objects = get_subject_object(english_subject, use_plural)
+            question_subject_object = subject_objects.first
             q = "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{n} year#{n == 1 ? '' : 's'} old.#{notification}"
             subject_objects.each do |subject_object|
               answers += [
@@ -56,6 +58,8 @@ class Quiz < ActiveRecord::Base
               ]
             end
           when 'How old is Subject?'
+            subject_objects = get_subject_object(english_subject, use_plural)
+            question_subject_object = subject_objects.first
             q = "How old #{question_subject_object[:english_be]} #{question_subject_object[:english]}?"
             possession_objects = Hindi::get_possession_objects(english_subject, use_plural)
             possession_objects.each do |possession_object|
