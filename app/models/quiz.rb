@@ -195,19 +195,21 @@ class Quiz < ActiveRecord::Base
             answers: answers
           }
         when 'Hindi - Where is Subject\'s Noun?'
-          use_plural = [true, false].sample
           @noun = get_noun(quiz_question)
           english_subject = get_random_english_subject
-          possession_objects = Hindi::get_possession_objects(english_subject, use_plural)
+          english_subject = English::convert_unusable_subjects_for_posession_conversion(english_subject)
+          subject_use_plural, notification = English::get_plural_from_subject(english_subject)
+          noun_use_plural = @noun.uncountable ? false : [true, false].sample
+          possession_objects = Hindi::get_possession_objects(english_subject, subject_use_plural)
           result << {
-            question: "Where #{use_plural ? 'are' : 'is'} #{english_subject} #{use_plural ? @noun[:english_plural] : @noun[:english]}?",
+            question: "Where #{noun_use_plural ? 'are' : 'is'} #{English::get_possessive_from_subject(english_subject)} #{noun_use_plural ? @noun[:english_plural] : @noun[:english]}?#{notification}",
             answers: all_synonyms(possession_objects.map do |possession_object|
-              proper_possession_object = proper_possession({ possession_object: possession_object, noun: @noun, noun_plural: use_plural })
+              proper_possession_object = proper_possession({ possession_object: possession_object, noun: @noun, noun_plural: noun_use_plural })
               [
-                "#{proper_possession_object[:transliterated]} #{use_plural ? @noun[:transliterated_plural] : @noun[:transliterated]} kaha hai?",
-                "#{proper_possession_object[:hindi]} #{use_plural ? @noun[:foreign_plural] : @noun[:foreign]} कहाँ है?"
+                "#{proper_possession_object[:transliterated]} #{noun_use_plural ? @noun[:transliterated_plural] : @noun[:transliterated]} kaha hai?",
+                "#{proper_possession_object[:hindi]} #{noun_use_plural ? @noun[:foreign_plural] : @noun[:foreign]} कहाँ है?"
               ]
-            end.flatten.uniq, use_plural)
+            end.flatten.uniq, noun_use_plural)
           }
         when 'Hindi - The Noun is Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
@@ -264,7 +266,7 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Subject are Nouns'
           @noun = get_noun(quiz_question)
-          subject_objects = get_subject_object(get_random_plural_english_subject)
+          subject_objects = get_subject_object(get_random_plural_english_subject, true)
           question_subject_object = subject_objects.sample
           result << {
             question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{@noun[:english_plural]}.",
