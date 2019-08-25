@@ -213,18 +213,18 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - The Noun is Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
-          use_noun_plural = [true, false].sample
+          use_noun_plural = @noun.uncountable ? false : [true, false].sample
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
           preposition = get_preposition
           @noun2 = get_noun(quiz_question)
-          use_noun2_plural = [true, false].sample
+          use_noun2_plural = @noun2.uncountable ? false : [true, false].sample
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{noun_hindi} #{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, use_plural: use_noun2_plural })} #{preposition[:hindi]} है"
+            "#{noun_hindi} #{Hindi::obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, use_plural: use_noun2_plural })} #{Hindi::obliqify({ noun_hindi: @noun2, use_plural: use_noun2_plural })} #{preposition[:hindi]} है"
           ]
           transliterated_answers = [
-            "#{noun_transliterated} #{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
+            "#{noun_transliterated} #{Hindi::obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{Hindi::obliqify({ noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{preposition[:transliterated]} hai"
           ]
           result << {
             question: "The #{noun_english} #{use_noun_plural ? 'are' : 'is'} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
@@ -232,18 +232,18 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - There is a Noun Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
-          use_noun_plural = [true, false].sample
+          use_noun_plural = @noun.uncountable ? false : [true, false].sample
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
           preposition = get_preposition
           @noun2 = get_noun(quiz_question)
-          use_noun2_plural = [true, false].sample
+          use_noun2_plural = @noun2.uncountable ? false : [true, false].sample
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
-            "#{obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_hindi: @noun2, use_plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
+            "#{Hindi::obliqify({ adjective_hindi: @adjective, noun_hindi: @noun2, use_plural: use_noun2_plural })} #{Hindi::obliqify({ noun_hindi: @noun2, use_plural: use_noun2_plural })} #{preposition[:hindi]} #{noun_hindi} है"
           ]
           transliterated_answers = [
-            "#{obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{obliqify({ noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
+            "#{Hindi::obliqify({ adjective_transliterated: @adjective, noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{Hindi::obliqify({ noun_transliterated: @noun2, use_plural: use_noun2_plural })} #{preposition[:transliterated]} #{noun_transliterated} hai"
           ]
           result << {
             question: "There #{use_noun_plural && !@noun.uncountable ? 'are' : "is #{@noun.uncountable ? '' : a_or_an(noun_english)}"} #{noun_english} #{preposition[:english]} the #{@adjective.english} #{oblique_plural_notification(use_noun2_plural, noun2_english, @noun2)}.",
@@ -314,31 +314,35 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Subject are Adjective Nouns'
           @noun = get_noun(quiz_question)
+          synonyms = @noun.synonyms
           adjective = @adjectives.pop
           subject_objects = get_subject_object(get_random_plural_english_subject)
           question_subject_object = subject_objects.sample
+          answers = []
+          subject_objects.each do |hash|
+            synonyms.each do |synonym|
+              answers << "#{hash[:transliterated]} #{synonym[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{synonym[:transliterated_plural]} #{hash[:transliterated_be]}"
+              answers << "#{hash[:hindi]} #{synonym[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} #{synonym[:foreign_plural]} #{hash[:hindi_be]}"
+            end
+          end
           result << {
             question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]} #{@noun[:english_plural]}.",
-            answers: all_synonyms(subject_objects.map do |hash|
-              [
-                "#{hash[:transliterated]} #{@noun[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{@noun[:transliterated_plural]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{@noun[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} #{@noun[:foreign_plural]} #{hash[:hindi_be]}"
-              ]
-            end.flatten.uniq, true)
+            answers: answers
           }
         when 'Hindi - Subject has a Noun'
           subject_objects = get_subject_object(get_random_english_subject)
           subject_has_objects = get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
-          use_plural = [true, false].sample
+          use_plural = @noun.uncountable ? false : [true, false].sample
+          use_article = !use_plural && @noun.countable?
           result << {
-            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(@noun.english)} #{get_english_plural(use_plural, @noun)}.",
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_article ? "#{a_or_an(adjective.english)} " : ''}#{get_english_plural(use_plural, @noun)}.",
             answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
               [
                 "#{subject_has_object[:transliterated]} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
-                "#{subject_has_object[:transliterated]} #{use_plural ? '' : 'ek '}#{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
+                "#{subject_has_object[:transliterated]} #{use_article ? '' : 'ek '}#{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
                 "#{subject_has_object[:hindi]} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}",
-                "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
+                "#{subject_has_object[:hindi]} #{use_article ? '' : 'एक '}#{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
               ]
             end.flatten.uniq, use_plural)
           }
@@ -346,17 +350,18 @@ class Quiz < ActiveRecord::Base
           subject_objects = get_subject_object(get_random_english_subject)
           subject_has_objects = get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
-          use_plural = [true, false].sample
+          use_plural = @noun.uncountable ? false : [true, false].sample
+          use_article = !use_plural && @noun.countable?
           adjective = @adjectives.pop
           transliterated_adjectives, hindi_adjectives = proper_adjective_forms({ adjective: adjective, noun: @noun, plural: use_plural })
           result << {
-            question: "#{subject_has_objects.first[:english].capitalize} #{use_plural ? '' : a_or_an(adjective.english)} #{adjective.english} #{get_english_plural(use_plural, @noun)}.",
+            question: "#{subject_has_objects.first[:english].capitalize} #{use_article ? "#{a_or_an(adjective.english)} " : ''}#{adjective.english} #{get_english_plural(use_plural, @noun)}.",
             answers: all_synonyms(subject_has_objects.map.with_index do |subject_has_object, index|
               [
                 "#{subject_has_object[:transliterated]} #{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
-                "#{subject_has_object[:transliterated]} #{use_plural ? '' : 'ek '}#{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
+                "#{subject_has_object[:transliterated]} #{use_article ? 'ek ' : ''}#{transliterated_adjectives.first} #{use_plural ? @noun.transliterated_plural : @noun.transliterated} hai",
                 "#{subject_has_object[:hindi]} #{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}",
-                "#{subject_has_object[:hindi]} #{use_plural ? '' : 'एक '}#{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
+                "#{subject_has_object[:hindi]} #{use_article ? 'एक ': ''}#{hindi_adjectives.first} #{use_plural ? @noun.foreign_plural : @noun.foreign} #{use_plural ? 'हैं' : 'है'}"
               ]
             end.flatten.uniq, use_plural)
           }
@@ -661,8 +666,8 @@ class Quiz < ActiveRecord::Base
           answers = []
           noun_1_synonyms.each do |noun_1_synonym|
             noun_2_synonyms.each do |noun_2_synonym|
-              answers << "#{use_plural ? 'ye' : 'yah'} #{obliqify({ noun_transliterated: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'transliterated', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:transliterated_plural] : noun_2_synonym[:transliterated]} hai"
-              answers << "#{use_plural ? 'ये' : 'यह'} #{obliqify({ noun_hindi: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'hindi', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:foreign_plural] : noun_2_synonym[:foreign]} #{use_plural ? 'हैं' : 'है'}"
+              answers << "#{use_plural ? 'ye' : 'yah'} #{Hindi::obliqify({ noun_transliterated: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'transliterated', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:transliterated_plural] : noun_2_synonym[:transliterated]} hai"
+              answers << "#{use_plural ? 'ये' : 'यह'} #{Hindi::obliqify({ noun_hindi: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'hindi', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:foreign_plural] : noun_2_synonym[:foreign]} #{use_plural ? 'हैं' : 'है'}"
             end
           end
           result << {
@@ -827,77 +832,6 @@ class Quiz < ActiveRecord::Base
       { hindi: ['उसको'], transliterated: ['usko'] }
     when 've'
       { hindi: ['उनको'], transliterated: ['unko'] }
-    end
-  end
-
-  def obliqify(args)
-    if args[:adjective_transliterated]
-      if args[:noun_transliterated].gender == 1 && args[:use_plural] && !args[:noun_transliterated].uncountable
-        "#{args[:adjective_transliterated].transliterated_masculine_plural}"
-      elsif args[:noun_transliterated].gender == 1 && args[:adjective_transliterated].transliterated_masculine[-1] == 'a'
-        # adjectives with masculine -a endings describing oblique nouns change to -e (even if noun does not end in -a)
-        "#{args[:adjective_transliterated].transliterated_masculine[0...-1]}e"
-      else
-        args[:noun_transliterated].gender == 1 ? args[:adjective_transliterated].transliterated_masculine : args[:adjective_transliterated].transliterated_feminine
-      end
-    elsif args[:adjective_hindi]
-      if args[:noun_hindi].gender == 1 && args[:use_plural] && !args[:noun_hindi].uncountable
-        "#{args[:adjective_hindi].masculine_plural}"
-      elsif args[:noun_hindi].gender == 1 && args[:adjective_hindi].masculine[-1] == 'ा'
-        "#{args[:adjective_hindi].masculine[0...-1]}े"
-      else
-        args[:noun_hindi].gender == 1 ? args[:adjective_hindi].masculine : args[:adjective_hindi].feminine
-      end
-    else # nouns
-      if args[:use_plural] && (args[:noun_transliterated].try(:uncountable) == false || args[:noun_hindi].try(:uncountable) == false)
-        # nouns ending in -i change to -iyo
-        # all other nouns change to -o in the oblique plural
-        if args[:noun_transliterated]
-          if args[:noun_transliterated].transliterated[-1] == 'i'
-            "#{args[:noun_transliterated].transliterated[0...-1]}iyo"
-          elsif args[:noun_transliterated].transliterated[-1] == 'o'
-            "#{args[:noun_transliterated].transliterated}"
-          else
-            if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
-              "#{args[:noun_transliterated].transliterated[0...-1]}o"
-            else
-              "#{args[:noun_transliterated].transliterated}o"
-            end
-          end
-        elsif args[:noun_hindi]
-          if args[:noun_hindi].foreign[-1] == 'ी'
-            "#{args[:noun_hindi].foreign[0...-1]}ियों"
-          elsif ['ू', 'ो'].include?(args[:noun_hindi].foreign[-1])
-            args[:noun_hindi].foreign
-          else
-            if args[:noun_hindi].foreign[-1] == 'ा'
-              if args[:noun_hindi].gender == 1
-                "#{args[:noun_hindi].foreign[0...-1]}ों"
-              else
-                "#{args[:noun_hindi].foreign}ओंं"
-              end
-            else
-              "#{args[:noun_hindi].foreign}ों"
-            end
-          end
-        end
-      else
-        # singluar nouns with masculine -a endings change to -e
-        if args[:noun_transliterated]
-          if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
-            "#{args[:noun_transliterated].transliterated[0...-1]}e"
-          else
-            args[:noun_transliterated].transliterated
-          end
-        elsif args[:noun_hindi]
-          args[:noun_hindi]
-          if args[:noun_hindi].gender == 1 && args[:noun_hindi].foreign[-1] == 'ा'
-            "#{args[:noun_hindi].foreign[0...-1]}े"
-          else
-            args[:noun_hindi].foreign
-          end
-        end
-      end
     end
   end
 

@@ -10,4 +10,16 @@ class Noun < ActiveRecord::Base
     Noun.where(english: self.english)
   end
 
+  def male?
+    gender == 1
+  end
+
+  def female?
+    gender == 2
+  end
+
+  def countable?
+    uncountable == false
+  end
+
 end

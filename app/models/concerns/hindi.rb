@@ -197,4 +197,88 @@ module Hindi
     end
   end
 
+  def self.obliqify(args)
+    if args[:adjective_transliterated]
+      # adjectives with masculine -a endings describing masculine singular oblique nouns change to -e (even if noun does not end in -a)
+      adjective = args[:adjective_transliterated]
+      noun = args[:noun_transliterated]
+      if noun.male?
+        if args[:use_plural] && noun.countable?
+          adjective.transliterated_masculine_plural
+        elsif adjective.transliterated_masculine[-1] == 'a'
+          adjective.transliterated_masculine_plural
+        else
+          adjective.transliterated_masculine
+        end
+      else
+        adjective.transliterated_feminine
+      end
+    elsif args[:adjective_hindi]
+      # same logic as above
+      adjective = args[:adjective_hindi]
+      noun = args[:noun_hindi]
+      if noun.male?
+        if args[:use_plural] && noun.countable?
+          adjective.masculine_plural
+        elsif adjective.masculine[-1] == 'ा'
+          adjective.masculine_plural
+        else
+          adjective.masculine
+        end
+      else
+        adjective.feminine
+      end
+    else # nouns
+      if args[:use_plural] && (args[:noun_transliterated].try(:uncountable) == false || args[:noun_hindi].try(:uncountable) == false)
+        # nouns ending in -i change to -iyo
+        # all other nouns change to -o in the oblique plural
+        if args[:noun_transliterated]
+          if args[:noun_transliterated].transliterated[-1] == 'i'
+            "#{args[:noun_transliterated].transliterated[0...-1]}iyo"
+          elsif args[:noun_transliterated].transliterated[-1] == 'o'
+            "#{args[:noun_transliterated].transliterated}"
+          else
+            if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
+              "#{args[:noun_transliterated].transliterated[0...-1]}o"
+            else
+              "#{args[:noun_transliterated].transliterated}o"
+            end
+          end
+        elsif args[:noun_hindi]
+          if args[:noun_hindi].foreign[-1] == 'ी'
+            "#{args[:noun_hindi].foreign[0...-1]}ियों"
+          elsif ['ू', 'ो'].include?(args[:noun_hindi].foreign[-1])
+            args[:noun_hindi].foreign
+          else
+            if args[:noun_hindi].foreign[-1] == 'ा'
+              if args[:noun_hindi].gender == 1
+                "#{args[:noun_hindi].foreign[0...-1]}ों"
+              else
+                "#{args[:noun_hindi].foreign}ओंं"
+              end
+            else
+              "#{args[:noun_hindi].foreign}ों"
+            end
+          end
+        end
+      else
+        # singluar nouns with masculine -a endings change to -e
+        if args[:noun_transliterated]
+          if args[:noun_transliterated].gender == 1 && args[:noun_transliterated].transliterated[-1] == 'a'
+            "#{args[:noun_transliterated].transliterated[0...-1]}e"
+          else
+            args[:noun_transliterated].transliterated
+          end
+        elsif args[:noun_hindi]
+          args[:noun_hindi]
+          if args[:noun_hindi].gender == 1 && args[:noun_hindi].foreign[-1] == 'ा'
+            "#{args[:noun_hindi].foreign[0...-1]}े"
+          else
+            args[:noun_hindi].foreign
+          end
+        end
+      end
+    end
+  end
+
 end
