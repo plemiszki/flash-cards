@@ -44,7 +44,7 @@ $(document).ready(function() {
         >
           <NewEntity
             context={ MyContext }
-            initialEntity={ { english: '', englishPlural: '', foreign: '', foreignPlural: '', gender: 1 } }
+            initialEntity={ { english: '', englishPlural: '', foreign: '', foreignPlural: '', gender: 1, needsAttention: true } }
           />
         </StandardIndex>
       </Provider>,
@@ -69,11 +69,11 @@ $(document).ready(function() {
           entityName='verb'
           columns={ ['infinitive', 'transliteratedInfinitive', 'english'] }
           columnHeaders={ ['', 'Transliterated', ''] }
-          modalDimensions={ { width: 900 } }
+          modalDimensions={ { width: 1100 } }
         >
           <NewEntity
             context={ MyContext }
-            initialEntity={ { english: '', infinitive: '', transliteratedInfinitive: '' } }
+            initialEntity={ { english: '', infinitive: '', transliteratedInfinitive: '', needsAttention: true } }
           />
         </StandardIndex>
       </Provider>,
@@ -103,7 +103,7 @@ $(document).ready(function() {
         >
           <NewEntity
             context={ MyContext }
-            initialEntity={ { english: '', masculine: '', feminine: '' } }
+            initialEntity={ { english: '', masculine: '', feminine: '', needsAttention: true } }
           />
         </StandardIndex>
       </Provider>,
@@ -308,7 +308,7 @@ $(document).ready(function() {
         >
           <NewEntity
             context={ MyContext }
-            initialEntity={ { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1 } }
+            initialEntity={ { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1, needsAttention: true } }
           />
         </StandardIndex>
       </Provider>,
@@ -337,7 +337,7 @@ $(document).ready(function() {
         >
           <NewEntity
             context={ MyContext }
-            initialEntity={ { english: '', spanish: '' } }
+            initialEntity={ { english: '', spanish: '', needsAttention: true } }
           />
         </StandardIndex>
       </Provider>,
@@ -366,7 +366,7 @@ $(document).ready(function() {
         >
           <NewEntity
             context={ MyContext }
-            initialEntity={ { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '' } }
+            initialEntity={ { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '', needsAttention: true } }
           />
         </StandardIndex>
       </Provider>,

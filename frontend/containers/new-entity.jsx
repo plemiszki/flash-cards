@@ -84,6 +84,7 @@ class NewEntity extends React.Component {
               </select>
               { Details.renderDropdownFieldError([], []) }
             </div>
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'noun', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
           </div>,
           <div key="2" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'foreign', columnHeader: 'Hindi' }) }
@@ -98,14 +99,16 @@ class NewEntity extends React.Component {
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'transliteratedInfinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'verb', property: 'infinitive' }) }
+            { Details.renderField.bind(this)({ columnWidth: 3, entity: 'verb', property: 'transliteratedInfinitive' }) }
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'verb', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
           </div>
         ]);
       case 'adjective':
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'adjective', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
           </div>,
           <div key="2" className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'masculine' }) }
@@ -170,6 +173,7 @@ class NewEntity extends React.Component {
               </select>
               { Details.renderDropdownFieldError([], []) }
             </div>
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'spanishNoun', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
           </div>,
           <div key="2" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishNoun', property: 'spanish' }) }
@@ -179,8 +183,9 @@ class NewEntity extends React.Component {
       case 'spanishVerb':
         return([
           <div key="1" className="row">
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'spanishVerb', property: 'spanish' }) }
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'spanishVerb', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishVerb', property: 'spanish' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishVerb', property: 'english' }) }
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'spanishVerb', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
           </div>
         ]);
       case 'spanishAdjective':
@@ -191,7 +196,7 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'masculinePlural' }) }
           </div>,
           <div key="2" className="row">
-            <div className="col-xs-4"></div>
+            { Details.renderCheckbox.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'feminine' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'femininePlural' }) }
           </div>

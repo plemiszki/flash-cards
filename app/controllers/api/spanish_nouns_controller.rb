@@ -8,6 +8,10 @@ class Api::SpanishNounsController < AdminController
   def create
     @spanish_noun = SpanishNoun.new(spanish_noun_params)
     if @spanish_noun.save
+      if params[:spanish_noun][:needs_attention]
+        tag_id = Tag.find_by_name('Needs Attention').id
+        CardTag.create(cardtagable_type: 'SpanishNoun', cardtagable_id: @spanish_noun.id, tag_id: tag_id)
+      end
       @spanish_nouns = SpanishNoun.all
       render 'index.json.jbuilder'
     else

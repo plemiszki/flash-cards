@@ -8,6 +8,10 @@ class Api::NounsController < AdminController
   def create
     @noun = Noun.new(noun_params)
     if @noun.save
+      if params[:noun][:needs_attention]
+        tag_id = Tag.find_by_name('Needs Attention').id
+        CardTag.create(cardtagable_type: 'Noun', cardtagable_id: @noun.id, tag_id: tag_id)
+      end
       @nouns = Noun.all
       render 'index.json.jbuilder'
     else
