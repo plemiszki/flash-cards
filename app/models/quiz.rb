@@ -230,11 +230,11 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - The Noun is Preposition the Adjective Noun'
           @noun = get_noun(quiz_question)
-          use_noun_plural = @noun.uncountable ? false : [true, false].sample
+          use_noun_plural = @noun.uncountable ? false : random_boolean
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
           preposition = get_preposition
           @noun2 = get_noun(quiz_question)
-          use_noun2_plural = @noun2.uncountable ? false : [true, false].sample
+          use_noun2_plural = @noun2.uncountable ? false : random_boolean
           noun2_english, noun2_transliterated, noun2_hindi = get_proper_words_from_plural({ noun: @noun2, plural: use_noun2_plural })
           @adjective = @adjectives.pop
           hindi_answers = [
@@ -473,12 +473,12 @@ class Quiz < ActiveRecord::Base
         when 'Hindi - Imperfective Present Yes/No Question'
           english_subject = get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)
-          plural = get_plural_from_subject(english_subject)
+          plural, subject_plural_notification = English::get_plural_from_subject(english_subject)
           subject_objects = Hindi::get_subject_objects(english_subject)
           verb = @verbs.pop
           do_verb = Verb.find_by_english('do')
           result << {
-            question: "#{do_verb.english_imperfective(english_subject, plural).capitalize} #{english_subject == 'I' ? 'I' : english_subject.downcase} #{verb.english}?#{gender_notification}",
+            question: "#{do_verb.english_imperfective(english_subject, plural).capitalize} #{english_subject == 'I' ? 'I' : english_subject.downcase}#{subject_plural_notification} #{verb.english}?#{gender_notification}",
             answers: subject_objects.map do |subject_object|
               [
                 "kya #{subject_object[:transliterated]} #{verb.transliterated_imperfective(gender, plural)} #{subject_object[:transliterated_be]}?",
@@ -490,12 +490,12 @@ class Quiz < ActiveRecord::Base
           question_word = get_question_word
           english_subject = get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)
-          plural = get_plural_from_subject(english_subject)
-          subject_objects = Hindi::get_subject_objects(english_subject)
+          plural, subject_plural_notification = English::get_plural_from_subject(english_subject)
+          subject_objects = Hindi::get_subject_objects(english_subject, plural)
           verb = @verbs.pop
           do_verb = Verb.find_by_english('do')
           result << {
-            question: "#{question_word[:english].capitalize} #{do_verb.english_imperfective(english_subject, plural)} #{english_subject == 'I' ? 'I' : english_subject.downcase} #{verb.english}?#{gender_notification}",
+            question: "#{question_word[:english].capitalize} #{do_verb.english_imperfective(english_subject, plural)} #{english_subject == 'I' ? 'I' : english_subject.downcase} #{verb.english}?#{gender_notification}#{subject_plural_notification}",
             answers: subject_objects.map do |subject_object|
               [
                 "#{subject_object[:transliterated]} #{question_word[:transliterated]} #{verb.transliterated_imperfective(gender, plural)} #{subject_object[:transliterated_be]}?",
@@ -995,10 +995,6 @@ class Quiz < ActiveRecord::Base
     else
       "doesn't "
     end
-  end
-
-  def get_plural_from_subject(subject)
-    ['we', 'they', 'these', 'those'].include?(subject)
   end
 
   def get_gender_from_subject(subject)
