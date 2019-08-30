@@ -60,6 +60,273 @@ module Hindi
     adjective
   end
 
+  def self.get_subject_has_objects(subject_objects)
+    subject_objects.map do |subject_object|
+      case subject_object[:english]
+      when 'I'
+        {
+          english: 'I have',
+          transliterated: 'mere pas',
+          hindi: 'मेरे पास'
+        }
+      when 'you'
+        {
+          english: 'you have',
+          transliterated: (subject_object[:hindi] == 'तुम' ? 'tumhare pas' : 'apke pas'),
+          hindi: (subject_object[:hindi] == 'तुम' ? 'तुम्हारे पास' : 'आपके पास')
+        }
+      when 'he', 'she', 'it'
+        {
+          english: 'he has',
+          transliterated: (subject_object[:hindi] == 'यह' ? 'uske pas' : 'iske pas'),
+          hindi: (subject_object[:hindi] == 'यह' ? 'उसके पास' : 'इसके पस')
+        }
+      when 'this'
+        {
+          english: 'this has',
+          transliterated: 'iske pas',
+          hindi: 'इसके पास'
+        }
+      when 'that'
+        {
+          english: 'that has',
+          transliterated: 'uske pas',
+          hindi: 'उसके पास'
+        }
+      when 'we'
+        {
+          english: 'we have',
+          transliterated: 'hamare pas',
+          hindi: 'हमारे पास'
+        }
+      when 'they'
+        case subject_object[:hindi]
+        when 'यह'
+          {
+            english: 'they have',
+            transliterated: 'iske pas',
+            hindi: 'इसके पास'
+          }
+        when 'ये'
+          {
+            english: 'they have',
+            transliterated: 'inke pas',
+            hindi: 'इनके पास'
+          }
+        when 'वह'
+          {
+            english: 'they have',
+            transliterated: 'uske pas',
+            hindi: 'उसके पास'
+          }
+        when 'वे'
+          {
+            english: 'they have',
+            transliterated: 'unke pas',
+            hindi: 'उनके पास'
+          }
+        end
+      when 'these'
+        {
+          english: 'these have',
+          transliterated: 'inke pas',
+          hindi: 'इनके पास'
+        }
+      when 'those'
+        {
+          english: 'those have',
+          transliterated: 'unke pas',
+          hindi: 'उनके पास'
+        }
+      end
+    end
+  end
+
+  def self.get_subject_objects(english_subject, use_plural = false)
+    case english_subject.downcase
+    when 'i'
+      [{
+        english: 'I',
+        english_be: 'am',
+        hindi: 'मैं',
+        hindi_be: 'हूँ',
+        transliterated: 'mai',
+        transliterated_be: 'hu'
+      }]
+    when 'you'
+      [
+        {
+          english: 'you',
+          english_be: 'are',
+          hindi: 'तुम',
+          hindi_be: 'हो',
+          transliterated: 'tum',
+          transliterated_be: 'ho'
+        },
+        {
+          english: 'you',
+          english_be: 'are',
+          hindi: 'आप',
+          hindi_be: 'हैं',
+          transliterated: 'ap',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'he'
+      [
+        {
+          english: 'he',
+          english_be: 'is',
+          hindi: 'यह',
+          hindi_be: 'है',
+          transliterated: 'yah',
+          transliterated_be: 'hai'
+        },
+        {
+          english: 'he',
+          english_be: 'is',
+          hindi: 'वह',
+          hindi_be: 'है',
+          transliterated: 'vah',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'she'
+      [
+        {
+          english: 'she',
+          english_be: 'is',
+          hindi: 'यह',
+          hindi_be: 'है',
+          transliterated: 'yah',
+          transliterated_be: 'hai'
+        },
+        {
+          english: 'she',
+          english_be: 'is',
+          hindi: 'वह',
+          hindi_be: 'है',
+          transliterated: 'vah',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'it'
+      [
+        {
+          english: 'it',
+          english_be: 'is',
+          hindi: 'यह',
+          hindi_be: 'है',
+          transliterated: 'yah',
+          transliterated_be: 'hai'
+        },
+        {
+          english: 'it',
+          english_be: 'is',
+          hindi: 'वह',
+          hindi_be: 'है',
+          transliterated: 'vah',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'we'
+      [
+        {
+          english: 'we',
+          english_be: 'are',
+          hindi: 'हम',
+          hindi_be: 'हैं',
+          transliterated: 'ham',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'this'
+      [
+        {
+          english: 'this',
+          english_be: 'is',
+          hindi: 'यह',
+          hindi_be: 'है',
+          transliterated: 'yah',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'that'
+      [
+        {
+          english: 'that',
+          english_be: 'is',
+          hindi: 'वह',
+          hindi_be: 'है',
+          transliterated: 'vah',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'they'
+      if use_plural
+        [
+          {
+            english: 'they',
+            english_be: 'are',
+            hindi: 'ये',
+            hindi_be: 'हैं',
+            transliterated: 'ye',
+            transliterated_be: 'hai'
+          },
+          {
+            english: 'they',
+            english_be: 'are',
+            hindi: 'वे',
+            hindi_be: 'हैं',
+            transliterated: 've',
+            transliterated_be: 'hai'
+          }
+        ]
+      else
+        [
+          {
+            english: 'they',
+            english_be: 'are',
+            hindi: 'यह',
+            hindi_be: 'है',
+            transliterated: 'yah',
+            transliterated_be: 'hai'
+          },
+          {
+            english: 'they',
+            english_be: 'are',
+            hindi: 'वह',
+            hindi_be: 'है',
+            transliterated: 'vah',
+            transliterated_be: 'hai'
+          }
+        ]
+      end
+    when 'these'
+      [
+        {
+          english: 'these',
+          english_be: 'are',
+          hindi: 'ये',
+          hindi_be: 'हैं',
+          transliterated: 'ye',
+          transliterated_be: 'hai'
+        }
+      ]
+    when 'those'
+      [
+        {
+          english: 'those',
+          english_be: 'are',
+          hindi: 'वे',
+          hindi_be: 'हैं',
+          transliterated: 've',
+          transliterated_be: 'hai'
+        }
+      ]
+    end
+  end
+
   def self.get_possession_objects(english_subject, use_plural)
     case english_subject.downcase
     when 'i'

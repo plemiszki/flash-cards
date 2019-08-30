@@ -44,6 +44,25 @@ module English
     return [gender, use_plural, notification || ""]
   end
 
+  def self.convert_subject_to_object(input)
+    obj = {
+      i: 'me',
+      you: 'you',
+      he: 'him',
+      she: 'her',
+      it: 'it',
+      we: 'us',
+      they: 'them',
+      this: 'this',
+      that: 'that',
+      these: 'them',
+      those: 'them'
+    }
+    subject = input.downcase.to_sym
+    raise "invalid english subject (#{input}) for conversion to object" unless obj.key?(subject)
+    obj[subject]
+  end
+
   def self.get_possessive_from_subject(input)
     obj = {
       i: 'my',
