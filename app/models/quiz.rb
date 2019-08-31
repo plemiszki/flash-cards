@@ -97,8 +97,8 @@ class Quiz < ActiveRecord::Base
           use_plural = random_boolean
           answers = []
           @noun.synonyms.each do |synonym|
-            answers << use_plural ? @noun.transliterated_plural : @noun.transliterated
-            answers << use_plural ? @noun.foreign_plural : @noun.foreign
+            answers << (use_plural ? synonym.transliterated_plural : synonym.transliterated)
+            answers << (use_plural ? synonym.foreign_plural : synonym.foreign)
           end
           result << {
             question: get_english_plural(use_plural, @noun).capitalize,
