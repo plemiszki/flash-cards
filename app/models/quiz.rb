@@ -26,7 +26,7 @@ class Quiz < ActiveRecord::Base
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           question_subject_object = subject_objects.first
           verb = get_verb(quiz_question)
-          phrase_as_question = [true, false].sample
+          phrase_as_question = random_boolean
           answers = []
           subject_objects.each do |subject_object|
             if phrase_as_question
@@ -331,11 +331,13 @@ class Quiz < ActiveRecord::Base
             end.flatten.uniq)
           }
         when 'Hindi - Subject are Adjective Nouns'
+          english_subject = get_random_plural_english_subject
+          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
+          subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
+          question_subject_object = subject_objects.first
           @noun = get_noun(quiz_question)
           synonyms = @noun.synonyms
           adjective = @adjectives.pop
-          subject_objects = Hindi::get_subject_objects(get_random_plural_english_subject)
-          question_subject_object = subject_objects.sample
           answers = []
           subject_objects.each do |hash|
             synonyms.each do |synonym|
@@ -344,7 +346,7 @@ class Quiz < ActiveRecord::Base
             end
           end
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]} #{@noun[:english_plural]}.",
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{adjective[:english]} #{@noun[:english_plural]}.#{notification}",
             answers: answers
           }
         when 'Hindi - Subject has a Noun'
@@ -588,8 +590,8 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Subject likes Noun'
           english_subject = get_random_english_subject
-          use_plural = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
-          subject_objects = Hindi::get_subject_objects(english_subject)
+          use_plural, notification = English::get_plural_from_subject(english_subject)
+          subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           @noun = get_noun(quiz_question)
           synonyms = @noun.synonyms
           answers = []
@@ -601,12 +603,12 @@ class Quiz < ActiveRecord::Base
             end
           end
           result << {
-            question: "#{english_subject.capitalize} like#{use_plural ? '' : 's'} #{@noun.english_plural}.",
+            question: "#{english_subject.capitalize} like#{use_plural ? '' : 's'} #{@noun.english_plural}.#{notification}",
             answers: answers.uniq
           }
         when 'Hindi - Does Subject like Noun?'
           english_subject = get_random_english_subject
-          use_plural = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
+          use_plural, notification = English::get_plural_from_subject(english_subject)
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           @noun = get_noun(quiz_question)
           synonyms = @noun.synonyms
@@ -614,7 +616,7 @@ class Quiz < ActiveRecord::Base
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
               oblique_subject = obliqify_subject(subject_object[:transliterated])
-              answers << "kya #{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai?"
+              answers << "kya #{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai?#{notification}"
               answers << "क्या #{oblique_subject[:hindi][0]} #{synonym.foreign_plural} पसंद हैं?"
             end
           end
