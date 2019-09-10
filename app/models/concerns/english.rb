@@ -1,5 +1,13 @@
 module English
 
+  def self.get_random_english_subject(plural_only: false)
+    ['we', 'they', 'these', 'those', 'I', 'you', 'he', 'she', 'it', 'this', 'that'][plural_only ? rand(4) : rand(11)]
+  end
+
+  def self.get_random_plural_english_subject
+    English::get_random_english_subject(plural_only: true)
+  end
+
   def self.convert_unusable_subjects_for_posession_conversion(input)
     subject = input.downcase
     case subject
