@@ -332,7 +332,8 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Subject are Adjective Nouns'
           english_subject = English::get_random_plural_english_subject
-          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
+          gender, notification = English::get_gender_from_subject(english_subject)
+          use_plural = true
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           question_subject_object = subject_objects.first
           @noun = get_noun(quiz_question)
@@ -609,6 +610,7 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Does Subject like Noun?'
           english_subject = English::get_random_english_subject
+          use_do = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
           use_plural, notification = English::get_plural_from_subject(english_subject)
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           @noun = get_noun(quiz_question)
@@ -622,7 +624,7 @@ class Quiz < ActiveRecord::Base
             end
           end
           result << {
-            question: "#{use_plural ? 'Do' : 'Does'} #{english_subject} like #{@noun.english_plural}?",
+            question: "#{use_do ? 'Do' : 'Does'} #{english_subject} like #{@noun.english_plural}?",
             answers: answers.uniq
           }
         when 'Hindi - Subject wants a Noun'
@@ -651,7 +653,7 @@ class Quiz < ActiveRecord::Base
         when 'Hindi - Does Subject want a Noun?'
           english_subject = English::get_random_english_subject
           use_do = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
-          use_plural = [true, false].sample
+          use_plural, notification = English::get_plural_from_subject(english_subject)
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           @noun = get_noun(quiz_question)
           synonyms = @noun.synonyms
@@ -666,7 +668,7 @@ class Quiz < ActiveRecord::Base
             end
           end
           result << {
-            question: "#{use_do ? 'Do' : 'Does'} #{english_subject} want #{use_plural ? '' : a_or_an(@noun.english) + ' '}#{use_plural ? @noun.english_plural : @noun.english}?",
+            question: "#{use_do ? 'Do' : 'Does'} #{english_subject} want #{use_plural ? '' : a_or_an(@noun.english) + ' '}#{use_plural ? @noun.english_plural : @noun.english}?#{notification}",
             answers: answers.uniq
           }
         when 'Spanish - Single Noun'

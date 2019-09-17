@@ -32,6 +32,18 @@ module English
     return [use_plural, notification || ""]
   end
 
+  def self.get_gender_from_subject(subject)
+    if subject.downcase.in?(['i', 'he'])
+      gender = :male
+    elsif subject.downcase == 'she'
+      gender = :female
+    else
+      gender = [:male, :female].sample
+      notification = " (#{gender.to_s.capitalize[0]})"
+    end
+    return [gender, notification || ""]
+  end
+
   def self.get_gender_and_plural_from_subject(subject)
     if subject.downcase.in?(['i', 'he'])
       gender = :male
