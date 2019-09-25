@@ -414,7 +414,11 @@ class Quiz < ActiveRecord::Base
         when 'Hindi - Noun is Adjective'
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
-          use_plural = [true, false].sample
+          if @noun.uncountable
+            use_plural = false
+          else
+            use_plural = [true, false].sample
+          end
           if use_plural
             english_subject = ['the', 'these', 'those'].sample
           else
@@ -477,7 +481,7 @@ class Quiz < ActiveRecord::Base
           english_subject = English::get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)
           plural, subject_plural_notification = English::get_plural_from_subject(english_subject)
-          subject_objects = Hindi::get_subject_objects(english_subject)
+          subject_objects = Hindi::get_subject_objects(english_subject, plural)
           verb = @verbs.pop
           do_verb = Verb.find_by_english('do')
           result << {
@@ -605,7 +609,7 @@ class Quiz < ActiveRecord::Base
             end
           end
           result << {
-            question: "#{english_subject.capitalize} like#{english_like_plural ? 's' : ''} #{@noun.english_plural}.#{notification}",
+            question: "#{english_subject.capitalize} like#{english_like_plural ? 's' : ''} #{@noun.english_plural}. #{notification}",
             answers: answers.uniq
           }
         when 'Hindi - Does Subject like Noun?'
@@ -619,12 +623,12 @@ class Quiz < ActiveRecord::Base
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
               oblique_subject = obliqify_subject(subject_object[:transliterated])
-              answers << "kya #{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai?#{notification}"
+              answers << "kya #{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai?"
               answers << "क्या #{oblique_subject[:hindi][0]} #{synonym.foreign_plural} पसंद हैं?"
             end
           end
           result << {
-            question: "#{use_do ? 'Do' : 'Does'} #{english_subject} like #{@noun.english_plural}?",
+            question: "#{use_do ? 'Do' : 'Does'} #{english_subject} like #{@noun.english_plural}? #{notification}",
             answers: answers.uniq
           }
         when 'Hindi - Subject wants a Noun'
