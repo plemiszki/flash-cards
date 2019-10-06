@@ -6,6 +6,7 @@ import HandyTools from 'handy-tools'
 import { runQuiz } from '../actions/index'
 
 class QuizRun extends React.Component {
+
   constructor(props) {
     super(props);
 
@@ -33,10 +34,20 @@ class QuizRun extends React.Component {
   }
 
   changeAnswer(e) {
+    let answer = e.target.value;
+    if (answer.charAt(answer.length - 1) === '`') {
+      answer = answer.slice(0, -1);
+    }
     this.setState({
-      answer: e.target.value,
+      answer,
       status: 'question'
     });
+  }
+
+  checkKey(e) {
+    if (e.charCode === 96) {
+      this.toggleAnswers.call(this);
+    }
   }
 
   checkAnswer(e) {
@@ -326,7 +337,7 @@ class QuizRun extends React.Component {
       );
     } else {
       return(
-        <input className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+        <input className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onKeyPress={ this.checkKey.bind(this) } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
       );
     }
   }
