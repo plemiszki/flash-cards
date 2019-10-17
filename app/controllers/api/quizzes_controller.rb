@@ -39,6 +39,7 @@ class Api::QuizzesController < AdminController
   end
 
   def run
+    @archived_tag_id = Tag.find_by_name('Archived').id
     @quiz = Quiz.find(params[:id])
     render 'run.json.jbuilder'
   end

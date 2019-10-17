@@ -81,7 +81,8 @@ export function runQuiz(id) {
     }).then(
       (response) => dispatch({
         type: 'RUN_QUIZ',
-        quiz: response.quiz
+        quiz: response.quiz,
+        archivedTagId: response.archivedTagId
       })
     );
   }

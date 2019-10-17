@@ -37,6 +37,16 @@
     }
   }
 
+  div.archive-button {
+    margin-top: 2px;
+    float: right;
+    background-image: image-url('archive.svg');
+    margin-right: 20px;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+  }
+
   input[type="radio"] {
     display: inline-block;
     width: inherit;

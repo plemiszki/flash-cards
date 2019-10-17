@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Common } from 'handy-components'
 import HandyTools from 'handy-tools'
-import { runQuiz } from '../actions/index'
+import { createEntity, runQuiz } from '../actions/index'
 
 class QuizRun extends React.Component {
 
@@ -24,11 +24,11 @@ class QuizRun extends React.Component {
   }
 
   componentDidMount() {
-    this.props.runQuiz(window.location.pathname.split('/')[2]).then((response) => {
+    this.props.runQuiz(window.location.pathname.split('/')[2]).then(() => {
       let matchItems = {};
       this.setState({
         fetching: false,
-        quiz: response.quiz
+        quiz: this.props.quiz
       }, this.setUpMatching.bind(this));
     });
   }
@@ -117,6 +117,21 @@ class QuizRun extends React.Component {
       }
     })
     return result;
+  }
+
+  clickArchive() {
+    this.setState({
+      fetching: true
+    });
+    this.props.createEntity({
+      directory: 'card_tags',
+      entityName: 'cardTag',
+      entity: { tagId: this.props.archivedTagId, cardtagableId: this.state.quiz.questions[this.state.questionNumber].cardId, cardtagableType: 'Card' }
+    }, 'cardTags').then(() => {
+      this.setState({
+        fetching: false
+      });
+    });
   }
 
   setUpMatching() {
@@ -241,10 +256,19 @@ class QuizRun extends React.Component {
             { this.renderAnswers() }
             <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
             <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
+            { this.renderArchiveButton() }
           </form>
         </div>
       </div>
     );
+  }
+
+  renderArchiveButton() {
+    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].archiveButton) {
+      return(
+        <div className="archive-button" onClick={ this.clickArchive.bind(this) }></div>
+      );
+    }
   }
 
   renderImage() {
@@ -386,7 +410,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ runQuiz }, dispatch);
+  return bindActionCreators({ createEntity, runQuiz }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizRun);

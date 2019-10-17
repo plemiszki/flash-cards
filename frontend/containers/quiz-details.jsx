@@ -114,7 +114,7 @@ class QuizDetails extends React.Component {
   }
 
   render() {
-    return (
+    return(
       <div id="quiz-details" className="component details-component">
         <h1>Quiz Details</h1>
         <div className="white-box">

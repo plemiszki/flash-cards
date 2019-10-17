@@ -16,6 +16,9 @@ export default function(state = {}, action) {
     return Object.assign({}, state, {
       errors: action.errors.responseJSON
     });
+  case 'RUN_QUIZ':
+    delete action["type"]
+    return Object.assign({}, state, action);
   default:
     return state;
   }
