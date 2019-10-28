@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_01_224747) do
+ActiveRecord::Schema.define(version: 2019_10_27_212816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_224747) do
     t.string "transliterated_feminine"
     t.string "masculine_plural"
     t.string "transliterated_masculine_plural"
+    t.integer "streak", default: 0
   end
 
   create_table "adverbs", id: :serial, force: :cascade do |t|
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_224747) do
     t.string "answer", null: false
     t.string "image_url", default: ""
     t.boolean "multiple_choice", default: false
+    t.integer "streak", default: 0
   end
 
   create_table "match_bins", force: :cascade do |t|
@@ -66,6 +68,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_224747) do
     t.string "transliterated"
     t.string "transliterated_plural"
     t.boolean "uncountable", default: false
+    t.integer "streak", default: 0
   end
 
   create_table "questions", id: :serial, force: :cascade do |t|
@@ -93,6 +96,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_224747) do
     t.string "feminine", null: false
     t.string "masculine_plural", null: false
     t.string "feminine_plural", null: false
+    t.integer "streak", default: 0
   end
 
   create_table "spanish_nouns", force: :cascade do |t|
@@ -101,11 +105,13 @@ ActiveRecord::Schema.define(version: 2019_08_01_224747) do
     t.string "spanish", null: false
     t.string "spanish_plural", null: false
     t.integer "gender", null: false
+    t.integer "streak", default: 0
   end
 
   create_table "spanish_verbs", force: :cascade do |t|
     t.string "english", null: false
     t.string "spanish", null: false
+    t.integer "streak", default: 0
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
@@ -134,6 +140,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_224747) do
     t.string "postposition", default: ""
     t.string "english_irregular_imperfective", default: ""
     t.string "english_preposition", default: ""
+    t.integer "streak", default: 0
   end
 
 end

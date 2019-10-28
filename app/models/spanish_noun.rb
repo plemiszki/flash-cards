@@ -10,4 +10,23 @@ class SpanishNoun < ActiveRecord::Base
     SpanishNoun.where(english: self.english)
   end
 
+  def male?
+    gender == 1
+  end
+
+  def female?
+    gender == 2
+  end
+
+  def with_article(article:, use_plural: false)
+    if article == 'indefinite'
+    elsif article == 'definite'
+      if male?
+        use_plural ? "los #{spanish_plural}" : "el #{spanish}"
+      elsif female?
+        use_plural ? "las #{spanish_plural}" : "la #{spanish}"
+      end
+    end
+  end
+
 end

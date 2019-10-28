@@ -677,6 +677,23 @@ class Quiz < ActiveRecord::Base
             question: "#{use_do ? 'Do' : 'Does'} #{english_subject} want #{use_plural ? '' : a_or_an(@noun.english) + ' '}#{use_plural ? @noun.english_plural : @noun.english}?#{notification}",
             answers: answers.uniq
           }
+        when "Hindi - Noun's Noun"
+          use_plural = [true, false].sample
+          noun_1 = get_noun(quiz_question)
+          noun_1_synonyms = noun_1.synonyms
+          noun_2 = get_noun(quiz_question)
+          noun_2_synonyms = noun_2.synonyms
+          answers = []
+          noun_1_synonyms.each do |noun_1_synonym|
+            noun_2_synonyms.each do |noun_2_synonym|
+              answers << "#{use_plural ? 'ye' : 'yah'} #{Hindi::obliqify({ noun_transliterated: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'transliterated', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:transliterated_plural] : noun_2_synonym[:transliterated]} hai"
+              answers << "#{use_plural ? 'ये' : 'यह'} #{Hindi::obliqify({ noun_hindi: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'hindi', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:foreign_plural] : noun_2_synonym[:foreign]} #{use_plural ? 'हैं' : 'है'}"
+            end
+          end
+          result << {
+            question: "#{use_plural ? 'These are' : 'This is'} the #{English::possession(noun_1[:english])} #{use_plural ? noun_2[:english_plural] : noun_2[:english]}.",
+            answers: answers
+          }
         when 'Spanish - Single Noun'
           noun = Spanish::get_noun(quiz_question, @spanish_nouns)
           synonyms = noun.synonyms
@@ -696,22 +713,37 @@ class Quiz < ActiveRecord::Base
               verb.spanish
             end
           }
-        when "Hindi - Noun's Noun"
-          use_plural = [true, false].sample
-          noun_1 = get_noun(quiz_question)
-          noun_1_synonyms = noun_1.synonyms
-          noun_2 = get_noun(quiz_question)
-          noun_2_synonyms = noun_2.synonyms
+        when 'Spanish - Single Adjective'
+          adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
+          synonyms = adjective.synonyms
+          result << {
+            question: adjective.english.capitalize,
+            answers: synonyms.map do |adjective|
+              adjective.masculine
+            end
+          }
+        when 'Spanish - Noun is Adjective'
+          noun = Spanish::get_noun(quiz_question, @spanish_nouns)
+          noun_synonyms = noun.synonyms
+          adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
+          adjective_synonyms = adjective.synonyms
           answers = []
-          noun_1_synonyms.each do |noun_1_synonym|
-            noun_2_synonyms.each do |noun_2_synonym|
-              answers << "#{use_plural ? 'ye' : 'yah'} #{Hindi::obliqify({ noun_transliterated: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'transliterated', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:transliterated_plural] : noun_2_synonym[:transliterated]} hai"
-              answers << "#{use_plural ? 'ये' : 'यह'} #{Hindi::obliqify({ noun_hindi: noun_1_synonym })} #{Hindi::conjugate_ka(output: 'hindi', noun: noun_2_synonym, use_plural: use_plural)} #{use_plural ? noun_2_synonym[:foreign_plural] : noun_2_synonym[:foreign]} #{use_plural ? 'हैं' : 'है'}"
+          noun_synonyms.each do |noun_synonym|
+            adjective_synonyms.each do |adjective_synonym|
+              answers << "#{noun_synonym.with_article(article: 'definite')} es #{adjective_synonym.conjugate(gender: noun_synonym.gender)}"
             end
           end
           result << {
-            question: "#{use_plural ? 'These are' : 'This is'} the #{English::possession(noun_1[:english])} #{use_plural ? noun_2[:english_plural] : noun_2[:english]}.",
+            question: "The #{noun.english} is #{adjective.english}.",
             answers: answers
+          }
+        when 'Spanish - Subject is Adjective'
+          adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
+          result << {
+            question: "#{adjective.english}",
+            answers: [
+              "#{adjective.masculine}"
+            ]
           }
         end
       end
@@ -805,6 +837,7 @@ class Quiz < ActiveRecord::Base
     @adverbs = Adverb.all.to_a.shuffle if @adverbs.empty?
     @spanish_nouns = SpanishNoun.all.to_a.shuffle if @spanish_nouns.empty?
     @spanish_verbs = SpanishVerb.all.to_a.shuffle if @spanish_verbs.empty?
+    @spanish_adjectives = SpanishAdjective.all.to_a.shuffle if @spanish_adjectives.empty?
     if @cards.empty?
       if self.use_archived
         archived_cards = Card.joins(:tags).where(tags: { name: 'Archived' })
