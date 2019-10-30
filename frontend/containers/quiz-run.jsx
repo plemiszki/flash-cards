@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Common } from 'handy-components'
 import HandyTools from 'handy-tools'
-import { createEntity, runQuiz } from '../actions/index'
+import { createEntity, updateEntity, runQuiz } from '../actions/index'
 
 class QuizRun extends React.Component {
 
@@ -47,6 +47,20 @@ class QuizRun extends React.Component {
   checkKey(e) {
     if (e.charCode === 96) {
       this.toggleAnswers.call(this);
+    }
+  }
+
+  updateStreak(status) {
+    let question = this.state.quiz.questions[this.state.questionNumber];
+    if (question.cardId) {
+      this.props.updateEntity({
+        directory: 'cards',
+        id: question.cardId,
+        entityName: 'card',
+        entity: {
+          streak: (status === 'correct' ? (+question.streak + 1) : 0)
+        }
+      });
     }
   }
 
@@ -95,14 +109,22 @@ class QuizRun extends React.Component {
       if (quizQuestion.answers.indexOf(this.state.answer) > -1 || (matchingQuestion && this.objectsAreEqual(this.state.matchedItems, quizQuestion.matchBins))) {
         this.setState({
           status: 'correct'
+        }, () => {
+          if (!this.state.wrongAnswerLog[this.state.questionNumber]) {
+            this.updateStreak.call(this, this.state.status);
+          }
         });
       } else {
-        let wrongAnswerLog = this.state.wrongAnswerLog;
-        wrongAnswerLog[this.state.questionNumber] = 'wrong';
-        this.setState({
-          status: 'wrong',
-          wrongAnswerLog
-        });
+        let { wrongAnswerLog } = this.state;
+        if (!wrongAnswerLog[this.state.questionNumber]) {
+          wrongAnswerLog[this.state.questionNumber] = 'wrong';
+          this.setState({
+            status: 'wrong',
+            wrongAnswerLog
+          }, () => {
+            this.updateStreak.call(this, this.state.status);
+          });
+        }
       }
     }
   }
@@ -410,7 +432,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ createEntity, runQuiz }, dispatch);
+  return bindActionCreators({ createEntity, updateEntity, runQuiz }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizRun);

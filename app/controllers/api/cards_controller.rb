@@ -1,5 +1,7 @@
 class Api::CardsController < AdminController
 
+  after_action :archive, only: [:update]
+
   def index
     @cards = Card.unarchived
     render 'index.json.jbuilder'
@@ -45,7 +47,15 @@ class Api::CardsController < AdminController
   private
 
   def card_params
-    params[:card].permit(:question, :answer, :image_url, :multiple_choice)
+    params[:card].permit(:question, :answer, :image_url, :multiple_choice, :streak)
+  end
+
+  def archive
+    if @card.streak >= 5
+      unless @card.tags.pluck(:name).include?('Archived')
+        CardTag.create(card_id: @card.id, tag_id: Tag.find_by_name('Archived').id)
+      end
+    end
   end
 
 end

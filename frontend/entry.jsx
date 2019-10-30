@@ -163,7 +163,7 @@ $(document).ready(function() {
         <TabbedIndex
           context={ MyContext }
           entityName='card'
-          columns={ ['question', 'tags'] }
+          columns={ ['question', 'tags', 'streak'] }
           modalDimensions={ { width: 900, height: 432 } }
           ellipses={ [80, null] }
           tabs={ ['current', 'archived'] }

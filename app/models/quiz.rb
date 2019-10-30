@@ -472,7 +472,8 @@ class Quiz < ActiveRecord::Base
             matchBins: card.match_bins_and_items,
             matchBinsShuffled: card.match_bins_and_items_shuffled,
             archiveButton: true,
-            cardId: card.id
+            cardId: card.id,
+            streak: card.streak
           }
           if card.multiple_choice
             other_cards = CardTag.where(tag_id: card.tags.first.id, cardtagable_type: "Card").map(&:cardtagable) - [card]
