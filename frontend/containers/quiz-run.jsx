@@ -116,15 +116,13 @@ class QuizRun extends React.Component {
         });
       } else {
         let { wrongAnswerLog } = this.state;
-        if (!wrongAnswerLog[this.state.questionNumber]) {
-          wrongAnswerLog[this.state.questionNumber] = 'wrong';
-          this.setState({
-            status: 'wrong',
-            wrongAnswerLog
-          }, () => {
-            this.updateStreak.call(this, this.state.status);
-          });
-        }
+        wrongAnswerLog[this.state.questionNumber] = 'wrong';
+        this.setState({
+          status: 'wrong',
+          wrongAnswerLog
+        }, () => {
+          this.updateStreak.call(this, this.state.status);
+        });
       }
     }
   }
