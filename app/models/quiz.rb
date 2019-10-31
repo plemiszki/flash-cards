@@ -477,7 +477,7 @@ class Quiz < ActiveRecord::Base
           }
           if card.multiple_choice
             other_cards = CardTag.where(tag_id: card.tags.first.id, cardtagable_type: "Card").map(&:cardtagable) - [card]
-            obj["choices"] = ([card.answer] + other_cards.shuffle.take(3).map(&:answer))
+            obj["choices"] = ([card.answer] + other_cards.shuffle.take(7).map(&:answer))
           end
           result << obj
         when 'Hindi - Imperfective Present Yes/No Question'
