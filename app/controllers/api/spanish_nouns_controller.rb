@@ -1,5 +1,9 @@
 class Api::SpanishNounsController < AdminController
 
+  include Wordable
+
+  after_action :remove_needs_attention, only: [:update]
+
   def index
     @spanish_nouns = SpanishNoun.all
     render 'index.json.jbuilder'
@@ -44,7 +48,7 @@ class Api::SpanishNounsController < AdminController
   private
 
   def spanish_noun_params
-    params[:spanish_noun].permit(:english, :english_plural, :spanish, :spanish_plural, :gender)
+    params[:spanish_noun].permit(:english, :english_plural, :spanish, :spanish_plural, :gender, :streak)
   end
 
 end

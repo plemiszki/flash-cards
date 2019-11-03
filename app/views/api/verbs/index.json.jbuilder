@@ -3,4 +3,5 @@ json.verbs @verbs do |verb|
   json.english verb.english
   json.infinitive verb.infinitive
   json.transliteratedInfinitive verb.transliterated_infinitive
+  json.streak verb.streak
 end

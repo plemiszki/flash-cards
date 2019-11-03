@@ -3,4 +3,5 @@ json.adjectives @adjectives do |adjective|
   json.english adjective.english
   json.masculine adjective.masculine
   json.transliteratedMasculine adjective.transliterated_masculine
+  json.streak adjective.streak
 end

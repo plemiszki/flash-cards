@@ -101,12 +101,18 @@ class Quiz < ActiveRecord::Base
             answers << (use_plural ? synonym.foreign_plural : synonym.foreign)
           end
           result << {
+            wordId: noun.id,
+            entity: 'noun',
+            streak: noun.streak,
             question: get_english_plural(use_plural, @noun).capitalize,
             answers: answers.uniq
           }
         when 'Hindi - Single Verb'
           verb = get_verb(quiz_question)
           result << {
+            wordId: verb.id,
+            entity: 'verb',
+            streak: verb.streak,
             question: verb.english.capitalize,
             answers: [
               verb.transliterated_infinitive,
@@ -116,6 +122,9 @@ class Quiz < ActiveRecord::Base
         when 'Hindi - Single Adjective'
           adjective = Hindi::get_adjective(quiz_question, @adjectives)
           result << {
+            wordId: adjective.id,
+            entity: 'adjective',
+            streak: adjective.streak,
             question: adjective.english.capitalize,
             answers: [
               adjective.transliterated_masculine,
@@ -700,6 +709,9 @@ class Quiz < ActiveRecord::Base
           synonyms = noun.synonyms
           plural = (rand(2) == 1)
           result << {
+            wordId: noun.id,
+            entity: 'spanishNoun',
+            streak: noun.streak,
             question: Spanish::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
             answers: synonyms.map do |noun|
               (plural ? noun.spanish_plural : noun.spanish)
@@ -709,6 +721,9 @@ class Quiz < ActiveRecord::Base
           verb = Spanish::get_verb(quiz_question, @spanish_verbs)
           synonyms = verb.synonyms
           result << {
+            wordId: verb.id,
+            entity: 'spanishVerb',
+            streak: verb.streak,
             question: verb.english.capitalize,
             answers: synonyms.map do |verb|
               verb.spanish
@@ -718,6 +733,9 @@ class Quiz < ActiveRecord::Base
           adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
           synonyms = adjective.synonyms
           result << {
+            wordId: adjective.id,
+            entity: 'spanishAdjective',
+            streak: adjective.streak,
             question: adjective.english.capitalize,
             answers: synonyms.map do |adjective|
               adjective.masculine

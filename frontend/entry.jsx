@@ -38,7 +38,7 @@ $(document).ready(function() {
         <StandardIndex
           context={ MyContext }
           entityName='noun'
-          columns={ ['foreign', 'transliterated', 'english'] }
+          columns={ ['foreign', 'transliterated', 'english', 'streak'] }
           modalRows={ 3 }
           modalDimensions={ { width: 900 } }
         >
@@ -67,7 +67,7 @@ $(document).ready(function() {
         <StandardIndex
           context={ MyContext }
           entityName='verb'
-          columns={ ['infinitive', 'transliteratedInfinitive', 'english'] }
+          columns={ ['infinitive', 'transliteratedInfinitive', 'english', 'streak'] }
           columnHeaders={ ['', 'Transliterated', ''] }
           modalDimensions={ { width: 1100 } }
         >
@@ -96,7 +96,7 @@ $(document).ready(function() {
         <StandardIndex
           context={ MyContext }
           entityName='adjective'
-          columns={ ['masculine', 'transliteratedMasculine', 'english'] }
+          columns={ ['masculine', 'transliteratedMasculine', 'english', 'streak'] }
           columnHeaders={ ['', 'Transliterated', ''] }
           modalDimensions={ { width: 900 } }
           modalRows={ 3 }
@@ -302,7 +302,7 @@ $(document).ready(function() {
         <StandardIndex
           context={ MyContext }
           entityName='spanishNoun'
-          columns={ ['spanish', 'english'] }
+          columns={ ['spanish', 'english', 'streak'] }
           modalRows={ 2 }
           modalDimensions={ { width: 900 } }
         >
@@ -331,7 +331,7 @@ $(document).ready(function() {
         <StandardIndex
           context={ MyContext }
           entityName='spanishVerb'
-          columns={ ['spanish', 'english'] }
+          columns={ ['spanish', 'english', 'streak'] }
           modalRows={ 1 }
           modalDimensions={ { width: 900 } }
         >
@@ -360,7 +360,7 @@ $(document).ready(function() {
         <StandardIndex
           context={ MyContext }
           entityName='spanishAdjective'
-          columns={ ['masculine', 'english'] }
+          columns={ ['masculine', 'english', 'streak'] }
           modalRows={ 2 }
           modalDimensions={ { width: 900 } }
         >

@@ -1,5 +1,9 @@
 class Api::NounsController < AdminController
 
+  include Wordable
+
+  after_action :remove_needs_attention, only: [:update]
+
   def index
     @nouns = Noun.all
     render 'index.json.jbuilder'
@@ -44,7 +48,7 @@ class Api::NounsController < AdminController
   private
 
   def noun_params
-    params[:noun].permit(:english, :english_plural, :foreign, :foreign_plural, :gender, :transliterated, :transliterated_plural, :uncountable)
+    params[:noun].permit(:english, :english_plural, :foreign, :foreign_plural, :gender, :transliterated, :transliterated_plural, :uncountable, :streak)
   end
 
 end

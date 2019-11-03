@@ -1,5 +1,9 @@
 class Api::AdjectivesController < AdminController
 
+  include Wordable
+
+  after_action :remove_needs_attention, only: [:update]
+
   def index
     @adjectives = Adjective.all
     render 'index.json.jbuilder'
@@ -44,7 +48,7 @@ class Api::AdjectivesController < AdminController
   private
 
   def adjective_params
-    params[:adjective].permit(:english, :masculine, :feminine, :masculine_plural, :transliterated_masculine, :transliterated_feminine, :transliterated_masculine_plural)
+    params[:adjective].permit(:english, :masculine, :feminine, :masculine_plural, :transliterated_masculine, :transliterated_feminine, :transliterated_masculine_plural, :streak)
   end
 
 end

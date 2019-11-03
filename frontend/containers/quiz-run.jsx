@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { Common } from 'handy-components'
 import HandyTools from 'handy-tools'
 import { createEntity, updateEntity, runQuiz } from '../actions/index'
+import ChangeCase from 'change-case'
 
 class QuizRun extends React.Component {
 
@@ -57,6 +58,15 @@ class QuizRun extends React.Component {
         directory: 'cards',
         id: question.cardId,
         entityName: 'card',
+        entity: {
+          streak: (status === 'correct' ? (+question.streak + 1) : 0)
+        }
+      });
+    } else if (question.wordId) {
+      this.props.updateEntity({
+        directory: `${ChangeCase.snakeCase(question.entity)}s`,
+        id: question.wordId,
+        entityName: question.entity,
         entity: {
           streak: (status === 'correct' ? (+question.streak + 1) : 0)
         }

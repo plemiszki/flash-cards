@@ -3,4 +3,5 @@ json.nouns @nouns do |noun|
   json.english noun.english
   json.foreign noun.foreign
   json.transliterated noun.transliterated
+  json.streak noun.streak
 end

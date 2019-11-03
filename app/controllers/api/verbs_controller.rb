@@ -1,5 +1,9 @@
 class Api::VerbsController < AdminController
 
+  include Wordable
+
+  after_action :remove_needs_attention, only: [:update]
+
   def index
     @verbs = Verb.all
     render 'index.json.jbuilder'
@@ -54,7 +58,8 @@ class Api::VerbsController < AdminController
       :irregular_imperative_formal_transliterated,
       :irregular_imperative_informal_transliterated,
       :postposition,
-      :english_preposition
+      :english_preposition,
+      :streak
     )
   end
 
