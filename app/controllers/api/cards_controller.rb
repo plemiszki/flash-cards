@@ -53,7 +53,7 @@ class Api::CardsController < AdminController
   def archive
     if @card.streak >= 5
       unless @card.tags.pluck(:name).include?('Archived')
-        CardTag.create(card_id: @card.id, tag_id: Tag.find_by_name('Archived').id)
+        CardTag.create(cardtagable_id: @card.id, tag_id: Tag.find_by_name('Archived').id, cardtagable_type: 'Card')
       end
     end
   end
