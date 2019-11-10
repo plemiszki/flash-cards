@@ -105,7 +105,8 @@ class Quiz < ActiveRecord::Base
             entity: 'noun',
             streak: noun.streak,
             question: get_english_plural(use_plural, @noun).capitalize,
-            answers: answers.uniq
+            answers: answers.uniq,
+            description: 'noun'
           }
         when 'Hindi - Single Verb'
           verb = get_verb(quiz_question)
@@ -117,7 +118,8 @@ class Quiz < ActiveRecord::Base
             answers: [
               verb.transliterated_infinitive,
               verb.infinitive
-            ]
+            ],
+            description: 'verb'
           }
         when 'Hindi - Single Adjective'
           adjective = Hindi::get_adjective(quiz_question, @adjectives)
@@ -129,7 +131,8 @@ class Quiz < ActiveRecord::Base
             answers: [
               adjective.transliterated_masculine,
               adjective.masculine
-            ]
+            ],
+            description: 'adjective'
           }
         when 'Hindi - Does Subject know that...?'
           english_subject = get_random_single_english_subject
@@ -715,7 +718,8 @@ class Quiz < ActiveRecord::Base
             question: Spanish::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
             answers: synonyms.map do |noun|
               (plural ? noun.spanish_plural : noun.spanish)
-            end
+            end,
+            description: 'noun'
           }
         when 'Spanish - Single Verb'
           verb = Spanish::get_verb(quiz_question, @spanish_verbs)
@@ -727,7 +731,8 @@ class Quiz < ActiveRecord::Base
             question: verb.english.capitalize,
             answers: synonyms.map do |verb|
               verb.spanish
-            end
+            end,
+            description: 'verb'
           }
         when 'Spanish - Single Adjective'
           adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
@@ -739,7 +744,8 @@ class Quiz < ActiveRecord::Base
             question: adjective.english.capitalize,
             answers: synonyms.map do |adjective|
               adjective.masculine
-            end
+            end,
+            description: 'adjective'
           }
         when 'Spanish - Noun is Adjective'
           noun = Spanish::get_noun(quiz_question, @spanish_nouns)

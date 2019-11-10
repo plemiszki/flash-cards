@@ -280,6 +280,7 @@ class QuizRun extends React.Component {
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <p className="question m-bottom">{ this.renderQuestion() }</p>
+          { this.renderDescription() }
           { this.renderImage() }
           <form>
             { this.renderInput() }
@@ -291,6 +292,17 @@ class QuizRun extends React.Component {
         </div>
       </div>
     );
+  }
+
+  renderDescription() {
+    if (this.state.quiz.questions) {
+      let description = this.state.quiz.questions[this.state.questionNumber].description;
+      if (description) {
+        return(
+          <p className="description">{ ChangeCase.titleCase(description) }</p>
+        );
+      }
+    }
   }
 
   renderArchiveButton() {
