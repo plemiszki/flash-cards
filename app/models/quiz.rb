@@ -467,7 +467,9 @@ class Quiz < ActiveRecord::Base
                 if self.use_archived
                   @cards += (all_tagged_cards & archived_cards)
                 else
-                  @cards += (all_tagged_cards - archived_cards)
+                  cards_to_use = all_tagged_cards - archived_cards
+                  raise "No Unarchived Cards: #{Tag.find(id).name}" if cards_to_use.empty?
+                  @cards += cards_to_use
                 end
               end
             end

@@ -1,5 +1,18 @@
 #quiz-run {
 
+  .error {
+    padding: 10px;
+    background-color: #fbe2e2;
+    color: #c74a47;
+    font-size: 14px;
+    font-family: 'TeachableSans-SemiBold';
+    margin-bottom: 20px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
   .grabbing {
     cursor: grabbing !important;
     cursor: -webkit-grabbing !important;

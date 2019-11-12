@@ -83,6 +83,10 @@ export function runQuiz(id) {
         type: 'RUN_QUIZ',
         quiz: response.quiz,
         archivedTagId: response.archivedTagId
+      }),
+      (response) => dispatch({
+        type: 'ERRORS',
+        errors: response
       })
     );
   }

@@ -13,6 +13,7 @@ class QuizRun extends React.Component {
 
     this.state = {
       fetching: true,
+      errors: [],
       quiz: {},
       questionNumber: 0,
       answer: '',
@@ -31,6 +32,10 @@ class QuizRun extends React.Component {
         fetching: false,
         quiz: this.props.quiz
       }, this.setUpMatching.bind(this));
+    }, () => {
+      this.setState({
+        errors: this.props.errors
+      })
     });
   }
 
@@ -272,26 +277,43 @@ class QuizRun extends React.Component {
   }
 
   render() {
-    return(
-      <div id="quiz-run" className="component">
-        <h1>{ this.renderHeader() }</h1>
-        { this.renderWrongAnswers() }
-        <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
-          <p className="question m-bottom">{ this.renderQuestion() }</p>
-          { this.renderDescription() }
-          { this.renderImage() }
-          <form>
-            { this.renderInput() }
-            { this.renderAnswers() }
-            <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
-            <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
-            { this.renderArchiveButton() }
-          </form>
+    if (this.state.errors.length > 0) {
+      return(
+        <div id="quiz-run" className="component">
+          { this.renderErrors() }
+          <a href={ `/quizzes/${window.location.pathname.split('/')[2]}` }>Edit Quiz</a>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return(
+        <div id="quiz-run" className="component">
+          <h1>{ this.renderHeader() }</h1>
+          { this.renderWrongAnswers() }
+          <div className="white-box">
+            { Common.renderSpinner(this.state.fetching) }
+            { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+            <p className="question m-bottom">{ this.renderQuestion() }</p>
+            { this.renderDescription() }
+            { this.renderImage() }
+            <form>
+              { this.renderInput() }
+              { this.renderAnswers() }
+              <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
+              <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
+              { this.renderArchiveButton() }
+            </form>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  renderErrors() {
+    return this.state.errors.map((error, index) => {
+      return(
+        <p key={ index } className="error">{ error }</p>
+      );
+    })
   }
 
   renderDescription() {
