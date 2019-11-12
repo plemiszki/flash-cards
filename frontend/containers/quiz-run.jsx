@@ -281,7 +281,7 @@ class QuizRun extends React.Component {
       return(
         <div id="quiz-run" className="component">
           { this.renderErrors() }
-          <a href={ `/quizzes/${window.location.pathname.split('/')[2]}` }>Edit Quiz</a>
+          <a className="edit-quiz" href={ `/quizzes/${window.location.pathname.split('/')[2]}` }>Edit Quiz</a>
         </div>
       );
     } else {
