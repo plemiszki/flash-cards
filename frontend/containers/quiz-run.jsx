@@ -311,7 +311,7 @@ class QuizRun extends React.Component {
   renderErrors() {
     return this.state.errors.map((error, index) => {
       return(
-        <p key={ index } className="error">{ error }</p>
+        <p key={ index } className="quiz-run-error">{ error }</p>
       );
     })
   }
