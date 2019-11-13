@@ -28,7 +28,22 @@ class QuizDetails extends React.Component {
   }
 
   componentDidMount() {
-    Details.fetchEntity.bind(this)();
+    this.props.fetchEntity({
+      id: window.location.pathname.split('/')[2],
+      directory: 'quizzes'
+    }).then(() => {
+      this.setState({
+        fetching: false,
+        quiz: this.props.quiz,
+        quizSaved: HandyTools.deepCopy(this.props.quiz),
+        quizQuestions: this.props.quizQuestions,
+        questions: this.props.questions,
+        tags: this.props.tags,
+        changesToSave: false
+      }, () => {
+        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
+      });
+    });
   }
 
   changeFieldArgs() {
@@ -70,11 +85,15 @@ class QuizDetails extends React.Component {
       fetching: true
     });
     let id = e.target.parentElement.dataset.id;
-    this.props.deleteEntity('quiz_questions', id, (response) => {
-      this.setState({
-        fetching: false,
-        quizQuestions: response.quizQuestions
-      });
+    this.props.deleteEntity({
+      directory: 'quiz_questions',
+      id,
+      callback: (response) => {
+        this.setState({
+          fetching: false,
+          quizQuestions: response.quizQuestions
+        });
+      }
     });
   }
 

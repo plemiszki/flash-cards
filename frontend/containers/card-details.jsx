@@ -93,11 +93,6 @@ class CardDetails extends React.Component {
     });
   }
 
-  deleteCardTag(e) {
-    let id = e.target.dataset.id;
-    this.props.deleteEntity('card_tags', id, this.updateCardTags.bind(this));
-  }
-
   clickTag(e) {
     e.persist();
     this.setState({
@@ -236,7 +231,7 @@ class CardDetails extends React.Component {
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
               { Details.saveButtonText.call(this) }
             </a>
-            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
+            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this, { callback: null }) }>
               Delete
             </a>
           </div>

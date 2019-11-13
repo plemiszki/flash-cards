@@ -18,11 +18,15 @@ let EntityTags = {
     this.setState({
       fetching: true
     });
-    this.props.deleteEntity('card_tags', id, (response) => {
-      this.setState({
-        fetching: false,
-        [`${entityName}Tags`]: response.cardTags
-      });
+    this.props.deleteEntity({
+      directory: 'card_tags',
+      id,
+      callback: (response) => {
+        this.setState({
+          fetching: false,
+          [`${entityName}Tags`]: response.cardTags
+        });
+      }
     });
   },
 
