@@ -6,7 +6,9 @@ module Spanish
       until !tagged_nouns.empty? do
         tagged_nouns = nouns.select { |noun| noun.tags.map(&:id).include?(quiz_question.tag_id) }
         if tagged_nouns.empty?
-          nouns += SpanishNoun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          new_tagged_nouns = SpanishNoun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No Spanish Nouns with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_nouns.empty?
+          nouns += new_tagged_nouns
         end
       end
       noun = tagged_nouns.sample
@@ -23,7 +25,9 @@ module Spanish
       until !tagged_verbs.empty? do
         tagged_verbs = verbs.select { |verb| verb.tags.map(&:id).include?(quiz_question.tag_id) }
         if tagged_verbs.empty?
-          verbs += SpanishVerb.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          new_tagged_verbs = SpanishVerb.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No Spanish Verbs with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_verbs.empty?
+          verbs += new_tagged_verbs
         end
       end
       verb = tagged_verbs.sample
@@ -40,7 +44,9 @@ module Spanish
       until !tagged_adjectives.empty? do
         tagged_adjectives = adjectives.select { |adjective| adjective.tags.map(&:id).include?(quiz_question.tag_id) }
         if tagged_adjectives.empty?
-          adjectives += SpanishAdjective.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          new_tagged_adjectives = SpanishAdjective.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No Spanish Adjectives with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_adjectives.empty?
+          adjectives += new_tagged_adjectives
         end
       end
       adjective = tagged_adjectives.sample

@@ -49,7 +49,9 @@ module Hindi
       until !tagged_adjectives.empty? do
         tagged_adjectives = adjectives.select { |adjective| adjective.tags.map(&:id).include?(quiz_question.tag_id) }
         if tagged_adjectives.empty?
-          adjectives += Adjective.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          new_tagged_adjectives = Adjective.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No Hindi Adjectives with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_adjectives.empty?
+          adjectives += new_tagged_adjectives
         end
       end
       adjective = tagged_adjectives.sample

@@ -885,7 +885,9 @@ class Quiz < ActiveRecord::Base
       until !tagged_nouns.empty? do
         tagged_nouns = @nouns.select { |noun| noun.tags.map(&:id).include?(quiz_question.tag_id) }
         if tagged_nouns.empty?
-          @nouns += Noun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          new_tagged_nouns = Noun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No Hindi Nouns with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_nouns.empty?
+          @nouns += new_tagged_nouns
         end
       end
       noun = tagged_nouns.sample
@@ -902,7 +904,9 @@ class Quiz < ActiveRecord::Base
       until !tagged_verbs.empty? do
         tagged_verbs = @verbs.select { |verb| verb.tags.map(&:id).include?(quiz_question.tag_id) }
         if tagged_verbs.empty?
-          @verbs += Verb.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          new_tagged_verbs = Noun.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No Hindi Verbs with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_verbs
+          @verbs += new_tagged_verbs
         end
       end
       verb = tagged_verbs.sample
