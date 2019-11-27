@@ -1,6 +1,6 @@
 import HandyTools from 'handy-tools';
 
-export function createEntity(args, arrayName) {
+export function createEntity(args) {
   return (dispatch) => {
     return $.ajax({
       method: 'POST',
@@ -83,7 +83,8 @@ export function runQuiz(id) {
       (response) => dispatch({
         type: 'RUN_QUIZ',
         quiz: response.quiz,
-        archivedTagId: response.archivedTagId
+        archivedTagId: response.archivedTagId,
+        needsAttentionTagId: response.needsAttentionTagId
       }),
       (response) => dispatch({
         type: 'ERRORS',

@@ -107,7 +107,7 @@ class CardDetails extends React.Component {
           cardtagableId: this.state.card.id,
           cardtagableType: 'Card'
         }
-      }, 'cardTags').then(this.updateCardTags.bind(this));
+      }).then(this.updateCardTags.bind(this));
     });
   }
 

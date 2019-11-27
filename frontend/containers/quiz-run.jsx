@@ -154,7 +154,8 @@ class QuizRun extends React.Component {
     return result;
   }
 
-  clickArchive() {
+  clickArchive(e) {
+    e.target.classList.add('hidden');
     this.setState({
       fetching: true
     });
@@ -162,7 +163,25 @@ class QuizRun extends React.Component {
       directory: 'card_tags',
       entityName: 'cardTag',
       entity: { tagId: this.props.archivedTagId, cardtagableId: this.state.quiz.questions[this.state.questionNumber].cardId, cardtagableType: 'Card' }
-    }, 'cardTags').then(() => {
+    }).then(() => {
+      this.setState({
+        fetching: false
+      });
+    });
+  }
+
+  clickHighlight(e) {
+    e.target.classList.add('hidden');
+    let question = this.state.quiz.questions[this.state.questionNumber];
+    let entityName = question.entity;
+    this.setState({
+      fetching: true
+    });
+    this.props.createEntity({
+      directory: 'card_tags',
+      entityName: 'cardTag',
+      entity: { tagId: this.props.needsAttentionTagId, cardtagableId: question.wordId, cardtagableType: ChangeCase.pascalCase(entityName) }
+    }).then(() => {
       this.setState({
         fetching: false
       });
@@ -301,6 +320,7 @@ class QuizRun extends React.Component {
               <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
               <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
               { this.renderArchiveButton() }
+              { this.renderHighlightButton() }
             </form>
           </div>
         </div>
@@ -328,9 +348,25 @@ class QuizRun extends React.Component {
   }
 
   renderArchiveButton() {
-    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].archiveButton) {
+    if (!this.state.quiz.questions) {
+      return;
+    }
+    let question = this.state.quiz.questions[this.state.questionNumber];
+    if (question.archiveButton && question.tags.indexOf('Archived') === -1) {
       return(
         <div className="archive-button" onClick={ this.clickArchive.bind(this) }></div>
+      );
+    }
+  }
+
+  renderHighlightButton() {
+    if (!this.state.quiz.questions) {
+      return;
+    }
+    let question = this.state.quiz.questions[this.state.questionNumber];
+    if (question.highlightButton && question.tags.indexOf('Needs Attention') === -1) {
+      return(
+        <div className="highlight-button" onClick={ this.clickHighlight.bind(this) }></div>
       );
     }
   }

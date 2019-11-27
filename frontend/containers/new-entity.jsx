@@ -35,7 +35,7 @@ class NewEntity extends React.Component {
       directory,
       entityName: this.props.entityName,
       entity: this.state[this.props.entityName]
-    }, entityNamePlural).then(() => {
+    }).then(() => {
       if (this.props.redirect) {
         window.location.pathname = `/${directory}/${this.props[this.props.entityName].id}`;
       } else {

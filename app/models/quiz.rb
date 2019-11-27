@@ -106,7 +106,8 @@ class Quiz < ActiveRecord::Base
             streak: noun.streak,
             question: get_english_plural(use_plural, @noun).capitalize,
             answers: answers.uniq,
-            description: 'noun'
+            description: 'noun',
+            tags: noun.tags.pluck(:name)
           }
         when 'Hindi - Single Verb'
           verb = get_verb(quiz_question)
@@ -119,7 +120,8 @@ class Quiz < ActiveRecord::Base
               verb.transliterated_infinitive,
               verb.infinitive
             ],
-            description: 'verb'
+            description: 'verb',
+            tags: verb.tags.pluck(:name)
           }
         when 'Hindi - Single Adjective'
           adjective = Hindi::get_adjective(quiz_question, @adjectives)
@@ -132,7 +134,8 @@ class Quiz < ActiveRecord::Base
               adjective.transliterated_masculine,
               adjective.masculine
             ],
-            description: 'adjective'
+            description: 'adjective',
+            tags: adjective.tags.pluck(:name)
           }
         when 'Hindi - Does Subject know that...?'
           english_subject = get_random_single_english_subject
@@ -487,7 +490,8 @@ class Quiz < ActiveRecord::Base
             matchBinsShuffled: card.match_bins_and_items_shuffled,
             archiveButton: true,
             cardId: card.id,
-            streak: card.streak
+            streak: card.streak,
+            tags: card.tags.pluck(:name)
           }
           if card.multiple_choice
             other_cards = CardTag.where(tag_id: card.tags.first.id, cardtagable_type: "Card").map(&:cardtagable) - [card]
@@ -721,7 +725,9 @@ class Quiz < ActiveRecord::Base
             answers: synonyms.map do |noun|
               (plural ? noun.spanish_plural : noun.spanish)
             end,
-            description: 'noun'
+            description: 'noun',
+            highlightButton: true,
+            tags: noun.tags.pluck(:name)
           }
         when 'Spanish - Single Verb'
           verb = Spanish::get_verb(quiz_question, @spanish_verbs)
@@ -734,7 +740,9 @@ class Quiz < ActiveRecord::Base
             answers: synonyms.map do |verb|
               verb.spanish
             end,
-            description: 'verb'
+            description: 'verb',
+            highlightButton: true,
+            tags: verb.tags.pluck(:name)
           }
         when 'Spanish - Single Adjective'
           adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
@@ -747,7 +755,9 @@ class Quiz < ActiveRecord::Base
             answers: synonyms.map do |adjective|
               adjective.masculine
             end,
-            description: 'adjective'
+            description: 'adjective',
+            highlightButton: true,
+            tags: adjective.tags.pluck(:name)
           }
         when 'Spanish - Noun is Adjective'
           noun = Spanish::get_noun(quiz_question, @spanish_nouns)

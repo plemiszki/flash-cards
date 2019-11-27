@@ -40,7 +40,7 @@ let EntityTags = {
         directory: 'card_tags',
         entityName: 'cardTag',
         entity: { tagId: e.target.dataset.id, cardtagableId: this.state[entityName].id, cardtagableType: ChangeCase.pascalCase(entityName) }
-      }, 'cardTags').then(() => {
+      }).then(() => {
         EntityTags.updateEntityTags.call(this, entityName, this.props.cardTags);
       });
     });

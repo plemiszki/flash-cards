@@ -65,6 +65,17 @@
     cursor: pointer;
   }
 
+  div.highlight-button {
+    margin-top: 2px;
+    float: right;
+    background-image: image-url('highlighter.jpg');
+    margin-right: 20px;
+    width: 25px;
+    height: 25px;
+    background-size: contain;
+    cursor: pointer;
+  }
+
   input[type="radio"] {
     display: inline-block;
     width: inherit;
