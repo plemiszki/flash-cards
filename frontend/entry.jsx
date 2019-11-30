@@ -14,6 +14,7 @@ import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 import CardDetails from './containers/card-details'
 import QuizDetails from './containers/quiz-details'
 import QuizRun from './containers/quiz-run'
+import Vocabulary from './containers/vocabulary'
 
 import TabActions from './containers/modules/tab-actions.js'
 
@@ -380,6 +381,15 @@ $(document).ready(function() {
         <SpanishAdjectiveDetails />
       </Provider>,
       document.querySelector('#spanish-adjective-details')
+    );
+  }
+
+  if (document.querySelector('#vocabulary')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <Vocabulary />
+      </Provider>,
+      document.querySelector('#vocabulary')
     );
   }
 });

@@ -1,13 +1,15 @@
 import HandyTools from 'handy-tools';
 
 export function createEntity(args) {
+  let data = { [HandyTools.convertToUnderscore(args.entityName)]: HandyTools.convertObjectKeysToUnderscore(args.entity) };
+  if (args.additionalData) {
+    data = Object.assign(data, HandyTools.convertObjectKeysToUnderscore(args.additionalData));
+  }
   return (dispatch) => {
     return $.ajax({
       method: 'POST',
       url: `/api/${args.directory}`,
-      data: {
-        [HandyTools.convertToUnderscore(args.entityName)]: HandyTools.convertObjectKeysToUnderscore(args.entity)
-      }
+      data
     }).then(
       (response) => {
         let obj = Object.assign(response, { type: 'CREATE_ENTITY' });

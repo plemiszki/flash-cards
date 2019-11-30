@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_27_212816) do
+ActiveRecord::Schema.define(version: 2019_11_29_154154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,17 @@ ActiveRecord::Schema.define(version: 2019_10_27_212816) do
     t.string "image_url", default: ""
     t.boolean "multiple_choice", default: false
     t.integer "streak", default: 0
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "text", default: ""
+    t.boolean "show_progress", default: true
+    t.integer "current_value", default: 0
+    t.integer "total_value", default: 0
+    t.jsonb "metadata", default: {}
+    t.boolean "done", default: false
+    t.boolean "killed", default: false
   end
 
   create_table "match_bins", force: :cascade do |t|
