@@ -8,11 +8,11 @@ class FetchWordDefinitions
     result = {}
     words.each do |word|
       response = HTTParty.get("https://wordsapiv1.p.mashape.com/words/#{word}", headers: { 'X-Mashape-Key' => ENV['WORDS_API_KEY'] })
-      if response.has_key?('message') && response['message'] == 'word not found'
-        result[word] = nil
-      else
+      if response.has_key?('results')
         definitions = response['results'].map { |result| result['definition'] }
         result[word] = definitions
+      else
+        result[word] = nil
       end
       job.update(current_value: job.current_value + 1)
     end
