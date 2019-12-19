@@ -1,5 +1,16 @@
 #quiz-details {
 
+  .admin-table tr.wide-arrows {
+
+    .amount {
+      width: 80px;
+    }
+
+    &.red td {
+      color: red;
+    }
+  }
+
   .admin-table tbody tr:last-of-type td {
     font-family: 'TeachableSans-SemiBold';
     color: black;
@@ -21,7 +32,7 @@
     width: 50px;
     cursor: pointer;
     background-size: 0;
-    background-position-y: 50%;
+    background-position-y: 47%;
     background-repeat: no-repeat;
   }
 

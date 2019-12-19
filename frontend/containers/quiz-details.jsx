@@ -171,17 +171,24 @@ class QuizDetails extends React.Component {
                 <td></td>
               </tr>
               { HandyTools.alphabetizeArrayOfObjects(this.state.quizQuestions, 'questionName').map((quizQuestion, index) => {
+                let rowClasses = '';
+                if (quizQuestion.available) {
+                  rowClasses = 'wide-arrows';
+                  if (quizQuestion.available < quizQuestion.amount) {
+                    rowClasses = 'wide-arrows red';
+                  }
+                }
                 return(
-                  <tr key={ index } data-id={ quizQuestion.id }>
+                  <tr className={ rowClasses } key={ index } data-id={ quizQuestion.id }>
                     <td>{ quizQuestion.questionName }</td>
                     <td>{ quizQuestion.tagName }</td>
                     <td className="left-arrow" onClick={ this.updateQuizQuestion.bind(this, 'left') }></td>
-                    <td className="amount">{ quizQuestion.amount }</td>
+                    <td className="amount">{ quizQuestion.amount }{ quizQuestion.available ? ` / ${quizQuestion.available}` : '' }</td>
                     <td className="right-arrow" onClick={ this.updateQuizQuestion.bind(this, 'right') }></td>
                     <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) }></td>
                   </tr>
                 );
-              })}
+              }) }
               { this.renderTotalRow() }
             </tbody>
           </table>
