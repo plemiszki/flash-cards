@@ -22,4 +22,8 @@ class Noun < ActiveRecord::Base
     uncountable == false
   end
 
+  def uncountable?
+    uncountable == true
+  end
+
 end

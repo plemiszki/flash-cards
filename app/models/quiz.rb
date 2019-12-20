@@ -330,7 +330,9 @@ class Quiz < ActiveRecord::Base
             answers: hindi_answers + transliterated_answers
           }
         when 'Hindi - Subject is an Adjective Noun'
-          @noun = get_noun(quiz_question)
+          until @noun.countable?
+            @noun = get_noun(quiz_question)
+          end
           adjective = @adjectives.pop
           subject_objects = Hindi::get_subject_objects(get_random_single_english_subject)
           question_subject_object = subject_objects.sample
@@ -351,14 +353,18 @@ class Quiz < ActiveRecord::Base
           use_plural = true
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           question_subject_object = subject_objects.first
-          @noun = get_noun(quiz_question)
+          until @noun.countable?
+            @noun = get_noun(quiz_question)
+          end
           synonyms = @noun.synonyms
           adjective = @adjectives.pop
           answers = []
           subject_objects.each do |hash|
             synonyms.each do |synonym|
-              answers << "#{hash[:transliterated]} #{synonym[:gender] == 1 ? adjective[:transliterated_masculine_plural] : adjective[:transliterated_feminine]} #{synonym[:transliterated_plural]} #{hash[:transliterated_be]}"
-              answers << "#{hash[:hindi]} #{synonym[:gender] == 1 ? adjective[:masculine_plural] : adjective[:feminine]} #{synonym[:foreign_plural]} #{hash[:hindi_be]}"
+              masculine_adjective = @noun.uncountable? adjective[:masculine] : adjective[:masculine_plural]
+              transliterated_masculine_adjective = @noun.uncountable? adjective[:transliterated_masculine] : adjective[:transliterated_masculine_plural]
+              answers << "#{hash[:transliterated]} #{synonym[:gender] == 1 ? transliterated_masculine_adjective : adjective[:transliterated_feminine]} #{synonym[:transliterated_plural]} #{hash[:transliterated_be]}"
+              answers << "#{hash[:hindi]} #{synonym[:gender] == 1 ? masculine_adjective : adjective[:feminine]} #{synonym[:foreign_plural]} #{hash[:hindi_be]}"
             end
           end
           result << {
@@ -697,11 +703,15 @@ class Quiz < ActiveRecord::Base
             answers: answers.uniq
           }
         when "Hindi - Noun's Noun"
-          use_plural = [true, false].sample
           noun_1 = get_noun(quiz_question)
           noun_1_synonyms = noun_1.synonyms
           noun_2 = get_noun(quiz_question)
           noun_2_synonyms = noun_2.synonyms
+          if noun_2.uncountable?
+            use_plural = false
+          else
+            use_plural = [true, false].sample
+          end
           answers = []
           noun_1_synonyms.each do |noun_1_synonym|
             noun_2_synonyms.each do |noun_2_synonym|
