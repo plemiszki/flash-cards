@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Common } from 'handy-components'
 import HandyTools from 'handy-tools'
-import { createEntity, updateEntity, runQuiz } from '../actions/index'
+import { createEntity, updateEntity, deleteEntity, runQuiz } from '../actions/index'
 import ChangeCase from 'change-case'
 
 class QuizRun extends React.Component {
@@ -21,7 +21,8 @@ class QuizRun extends React.Component {
       unmatchedItems: [],
       status: 'question',
       showAnswers: false,
-      wrongAnswerLog: {}
+      wrongAnswerLog: {},
+      renderUnarchiveButton: true
     };
   }
 
@@ -116,7 +117,8 @@ class QuizRun extends React.Component {
           questionNumber: this.state.questionNumber += 1,
           answer: '',
           status: 'question',
-          showAnswers: false
+          showAnswers: false,
+          renderUnarchiveButton: true
         }, this.setUpMatching.bind(this));
       }
     } else {
@@ -167,6 +169,22 @@ class QuizRun extends React.Component {
       this.setState({
         fetching: false
       });
+    });
+  }
+
+  clickUnarchive(e) {
+    this.setState({
+      renderUnarchiveButton: false,
+      fetching: true
+    });
+    this.props.deleteEntity({
+      directory: 'card_tags',
+      id: this.state.quiz.questions[this.state.questionNumber].tags.find((tag) => { return tag['name'] === 'Archived' }).id,
+      callback: () => {
+        this.setState({
+          fetching: false
+        });
+      }
     });
   }
 
@@ -320,6 +338,7 @@ class QuizRun extends React.Component {
               <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
               <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
               { this.renderArchiveButton() }
+              { this.renderUnarchiveButton() }
               { this.renderHighlightButton() }
             </form>
           </div>
@@ -352,9 +371,24 @@ class QuizRun extends React.Component {
       return;
     }
     let question = this.state.quiz.questions[this.state.questionNumber];
-    if (question.archiveButton && question.tags.indexOf('Archived') === -1) {
+    if (question.archiveButton && !question.tags.find((tag) => { return tag['name'] === 'Archived' })) {
       return(
         <div className="archive-button" onClick={ this.clickArchive.bind(this) }></div>
+      );
+    }
+  }
+
+  renderUnarchiveButton() {
+    if (!this.state.quiz.questions) {
+      return;
+    }
+    let question = this.state.quiz.questions[this.state.questionNumber];
+    if (this.state.renderUnarchiveButton && question.unarchiveButton && question.tags.find((tag) => { return tag['name'] === 'Archived' })) {
+      return(
+        <div className="unarchive-button-container">
+          <div className="unarchive-button" onClick={ this.clickUnarchive.bind(this) }></div>
+          <div className="archive-button"></div>
+        </div>
       );
     }
   }
@@ -510,7 +544,7 @@ const mapStateToProps = (reducers) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ createEntity, updateEntity, runQuiz }, dispatch);
+  return bindActionCreators({ createEntity, updateEntity, deleteEntity, runQuiz }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizRun);

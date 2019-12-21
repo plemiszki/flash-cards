@@ -361,8 +361,8 @@ class Quiz < ActiveRecord::Base
           answers = []
           subject_objects.each do |hash|
             synonyms.each do |synonym|
-              masculine_adjective = @noun.uncountable? adjective[:masculine] : adjective[:masculine_plural]
-              transliterated_masculine_adjective = @noun.uncountable? adjective[:transliterated_masculine] : adjective[:transliterated_masculine_plural]
+              masculine_adjective = @noun.uncountable? ? adjective[:masculine] : adjective[:masculine_plural]
+              transliterated_masculine_adjective = @noun.uncountable? ? adjective[:transliterated_masculine] : adjective[:transliterated_masculine_plural]
               answers << "#{hash[:transliterated]} #{synonym[:gender] == 1 ? transliterated_masculine_adjective : adjective[:transliterated_feminine]} #{synonym[:transliterated_plural]} #{hash[:transliterated_be]}"
               answers << "#{hash[:hindi]} #{synonym[:gender] == 1 ? masculine_adjective : adjective[:feminine]} #{synonym[:foreign_plural]} #{hash[:hindi_be]}"
             end
@@ -494,10 +494,11 @@ class Quiz < ActiveRecord::Base
             imageUrl: card.image_url,
             matchBins: card.match_bins_and_items,
             matchBinsShuffled: card.match_bins_and_items_shuffled,
-            archiveButton: true,
+            archiveButton: !self.use_archived,
+            unarchiveButton: self.use_archived,
             cardId: card.id,
             streak: card.streak,
-            tags: card.tags.pluck(:name)
+            tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } }
           }
           if card.multiple_choice
             other_cards = CardTag.where(tag_id: card.tags.first.id, cardtagable_type: "Card").map(&:cardtagable) - [card]
