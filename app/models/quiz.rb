@@ -793,6 +793,25 @@ class Quiz < ActiveRecord::Base
               "#{adjective.masculine}"
             ]
           }
+        when 'Spanish - Number'
+          numbers = ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte']
+          tens = ['treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa', 'cien']
+          n = rand(1..100)
+          if n <= 20
+            answer = numbers[n - 1]
+          elsif n > 20 && n < 30
+            answer = "vienti#{numbers[n - 21]}".gsub('dos', 'dós').gsub('tres', 'trés').gsub('seis', 'séis')
+          else
+            ten = n / 10
+            one = n % 10
+            answer = "#{tens[ten - 3]}#{one.zero? ? '' : " y #{numbers[one - 1]}"}"
+          end
+          result << {
+            question: n,
+            answers: [
+              answer
+            ]
+          }
         end
       end
     end
