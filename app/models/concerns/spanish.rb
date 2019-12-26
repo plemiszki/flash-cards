@@ -72,8 +72,8 @@ module Spanish
     end
   end
 
-  def self.get_subject_object(english_subject:, use_plural: false, gender:, state:, formal: false, region: 'latin america')
-    case :english_subject.downcase
+  def self.get_subject_object(english_subject:, use_plural: false, gender:, formal: false, region: 'latin america')
+    case english_subject.downcase
     when 'i'
       obj = {
         english: 'I',
@@ -126,43 +126,32 @@ module Spanish
         english_be: 'are'
       }
       obj[:spanish] = (:gender == 'male' ? 'ellos' : 'ellas')
-    # when 'this'
-    #   [
-    #     {
-    #       english: 'this',
-    #       english_be: 'is',
-    #       spanish: 'यह',
-    #       spanish_be: 'है'
-    #     }
-    #   ]
-    # when 'that'
-    #   [
-    #     {
-    #       english: 'that',
-    #       english_be: 'is',
-    #       spanish: 'वह',
-    #       spanish_be: 'है'
-    #     }
-    #   ]
-    # when 'these'
-    #   [
-    #     {
-    #       english: 'these',
-    #       english_be: 'are',
-    #       spanish: 'ये',
-    #       spanish_be: 'हैं'
-    #     }
-    #   ]
-    # when 'those'
-    #   [
-    #     {
-    #       english: 'those',
-    #       english_be: 'are',
-    #       spanish: 'वे',
-    #       spanish_be: 'हैं'
-    #     }
-    #   ]
+    when 'this'
+      obj = {
+        english: 'this',
+        english_be: 'is'
+      }
+      obj[:spanish] = (:gender == 'male' ? 'este' : 'esta')
+    when 'that'
+      obj = {
+        english: 'that',
+        english_be: 'is'
+      }
+      obj[:spanish] = (:gender == 'male' ? 'ese' : 'esa')
+    when 'these'
+      obj = {
+        english: 'these',
+        english_be: 'are'
+      }
+      obj[:spanish] = (:gender == 'male' ? 'estos' : 'estas')
+    when 'those'
+      obj = {
+        english: 'those',
+        english_be: 'are'
+      }
+      obj[:spanish] = (:gender == 'male' ? 'esos' : 'esas')
     end
+    obj
   end
 
 end

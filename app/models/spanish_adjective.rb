@@ -11,7 +11,7 @@ class SpanishAdjective < ActiveRecord::Base
   end
 
   def conjugate(gender:, use_plural: false)
-    if gender == 1
+    if gender == 1 || gender == :male
       use_plural ? masculine_plural : masculine
     else
       use_plural ? feminine_plural : feminine

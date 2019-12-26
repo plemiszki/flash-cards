@@ -787,10 +787,13 @@ class Quiz < ActiveRecord::Base
           }
         when 'Spanish - Subject is Adjective'
           adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
+          english_subject = English::get_random_english_subject
+          gender, subject_use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
+          subject_object = Spanish::get_subject_object(english_subject: english_subject, gender: gender, use_plural: subject_use_plural)
           result << {
-            question: "#{adjective.english}",
+            question: "#{subject_object[:english].capitalize} #{subject_object[:english_be]} #{adjective.english}.#{notification}",
             answers: [
-              "#{adjective.masculine}"
+              "#{subject_object[:spanish]} es #{adjective.conjugate(gender: gender, use_plural: subject_use_plural)}"
             ]
           }
         when 'Spanish - Number'
