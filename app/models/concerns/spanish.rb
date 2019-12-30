@@ -73,6 +73,7 @@ module Spanish
   end
 
   def self.get_subject_object(english_subject:, use_plural: false, gender:, formal: false, region: 'latin america')
+    gender = (gender.in?(['male', :male]) ? 'male' : 'female')
     case english_subject.downcase
     when 'i'
       obj = {
@@ -87,13 +88,13 @@ module Spanish
         english_be: 'are'
       }
       if :use_plural
-        if :region == 'europe' && :formal == false
-          obj[:spanish] = (:gender == 'male' ? 'vosotros' : 'vosotras')
+        if region == 'europe' && formal == false
+          obj[:spanish] = (gender == 'male' ? 'vosotros' : 'vosotras')
         else
           obj[:spanish] = 'ustedes'
         end
       else
-        obj[:spanish] = (:formal ? 'usted' : 'tú')
+        obj[:spanish] = (formal ? 'usted' : 'tú')
       end
       obj
     when 'he'
@@ -113,43 +114,47 @@ module Spanish
         english: 'it',
         english_be: 'is'
       }
-      obj[:spanish] = (:gender == 'male' ? 'él' : 'ella')
+      obj[:spanish] = (gender == 'male' ? 'él' : 'ella')
     when 'we'
       obj = {
         english: 'we',
         english_be: 'are'
       }
-      obj[:spanish] = (:gender == 'male' ? 'nosotros' : 'nosotras')
+      obj[:spanish] = (gender == 'male' ? 'nosotros' : 'nosotras')
     when 'they'
       obj = {
         english: 'they',
         english_be: 'are'
       }
-      obj[:spanish] = (:gender == 'male' ? 'ellos' : 'ellas')
+      if use_plural
+        obj[:spanish] = (gender == 'male' ? 'él' : 'ella')
+      else
+        obj[:spanish] = (gender == 'male' ? 'ellos' : 'ellas')
+      end
     when 'this'
       obj = {
         english: 'this',
         english_be: 'is'
       }
-      obj[:spanish] = (:gender == 'male' ? 'este' : 'esta')
+      obj[:spanish] = (gender == 'male' ? 'este' : 'esta')
     when 'that'
       obj = {
         english: 'that',
         english_be: 'is'
       }
-      obj[:spanish] = (:gender == 'male' ? 'ese' : 'esa')
+      obj[:spanish] = (gender == 'male' ? 'ese' : 'esa')
     when 'these'
       obj = {
         english: 'these',
         english_be: 'are'
       }
-      obj[:spanish] = (:gender == 'male' ? 'estos' : 'estas')
+      obj[:spanish] = (gender == 'male' ? 'estos' : 'estas')
     when 'those'
       obj = {
         english: 'those',
         english_be: 'are'
       }
-      obj[:spanish] = (:gender == 'male' ? 'esos' : 'esas')
+      obj[:spanish] = (gender == 'male' ? 'esos' : 'esas')
     end
     obj
   end
