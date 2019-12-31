@@ -43,17 +43,22 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Let Subject Verb'
           english_subject = English::get_random_english_subject
+          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
           english_object = English::convert_subject_to_object(english_subject)
           english_object = 'yourself' if english_object == 'you'
           use_formal = random_boolean
-          use_plural = random_boolean
-          answers = []
           subject_objects = Hindi::get_subject_objects(english_subject, use_plural)
           transliterated_let = use_formal ? "dijie" : "do"
           hindi_let = use_formal ? "दीजिए" : "दो"
-          @verb = get_verb(quiz_question)
+          verb = get_verb(quiz_question)
+          answers = []
+          subject_objects.each do |subject_object|
+            oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
+            answers << "#{oblique_subject[:transliterated]} #{verb.transliterated_oblique} #{transliterated_let}"
+            answers << "#{oblique_subject[:hindi]} #{verb.hindi_oblique} #{hindi_let}"
+          end
           result << {
-            question: "#{use_formal ? 'please ' : ''}let #{english_object} #{@verb.english}.".capitalize,
+            question: "#{use_formal ? 'please ' : ''}let #{english_object} #{verb.english}.".capitalize + "#{notification}",
             answers: answers
           }
         when 'Hindi - Age'
@@ -146,10 +151,10 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
-              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
               answers += [
-                "kya #{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'hota' : 'hote') : 'hoti'} hai?",
-                "क्या #{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'होता' : 'होते') : 'होती'} हैं?"
+                "kya #{oblique_subject[:transliterated]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'hota' : 'hote') : 'hoti'} hai?",
+                "क्या #{oblique_subject[:hindi]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'होता' : 'होते') : 'होती'} हैं?"
               ]
             end
           end
@@ -166,10 +171,10 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
-              oblique_subject = obliqify_subject(subject_object[:transliterated])
+              oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
               answers += [
-                "#{oblique_subject[:transliterated][0]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'hota' : 'hote') : 'hoti'} hai",
-                "#{oblique_subject[:hindi][0]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'होता' : 'होते') : 'होती'} हैं"
+                "#{oblique_subject[:transliterated]} malum hai ki #{synonym.transliterated_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.transliterated_masculine : adjective.transliterated_masculine_plural) : adjective.transliterated_feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'hota' : 'hote') : 'hoti'} hai",
+                "#{oblique_subject[:hindi]} मालूम है कि #{synonym.foreign_plural} #{synonym.gender.odd? ? (synonym.uncountable ? adjective.masculine : adjective.masculine_plural) : adjective.feminine} #{synonym.gender.odd? ? (synonym.uncountable ? 'होता' : 'होते') : 'होती'} हैं"
               ]
             end
           end
@@ -631,9 +636,9 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
-              oblique_subject = obliqify_subject(subject_object[:transliterated])
-              answers << "#{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai"
-              answers << "#{oblique_subject[:hindi][0]} #{synonym.foreign_plural} पसंद हैं"
+              oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
+              answers << "#{oblique_subject[:transliterated]} #{synonym.transliterated_plural} pasand hai"
+              answers << "#{oblique_subject[:hindi]} #{synonym.foreign_plural} पसंद हैं"
             end
           end
           result << {
@@ -650,9 +655,9 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
-              oblique_subject = obliqify_subject(subject_object[:transliterated])
-              answers << "kya #{oblique_subject[:transliterated][0]} #{synonym.transliterated_plural} pasand hai?"
-              answers << "क्या #{oblique_subject[:hindi][0]} #{synonym.foreign_plural} पसंद हैं?"
+              oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
+              answers << "kya #{oblique_subject[:transliterated]} #{synonym.transliterated_plural} pasand hai?"
+              answers << "क्या #{oblique_subject[:hindi]} #{synonym.foreign_plural} पसंद हैं?"
             end
           end
           result << {
@@ -671,11 +676,11 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
-              oblique_subject = obliqify_subject(subject_object[:transliterated])
-              answers << "#{oblique_subject[:transliterated][0]} #{use_noun_plural ? synonym.transliterated_plural : synonym.transliterated} chahie"
-              answers << "#{oblique_subject[:transliterated][0]} ek #{synonym.transliterated} chahie" unless use_noun_plural
-              answers << "#{oblique_subject[:hindi][0]} #{use_noun_plural ? synonym.foreign_plural : synonym.foreign} चाहिए"
-              answers << "#{oblique_subject[:hindi][0]} एक #{synonym.foreign} चाहिए" unless use_noun_plural
+              oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
+              answers << "#{oblique_subject[:transliterated]} #{use_noun_plural ? synonym.transliterated_plural : synonym.transliterated} chahie"
+              answers << "#{oblique_subject[:transliterated]} ek #{synonym.transliterated} chahie" unless use_noun_plural
+              answers << "#{oblique_subject[:hindi]} #{use_noun_plural ? synonym.foreign_plural : synonym.foreign} चाहिए"
+              answers << "#{oblique_subject[:hindi]} एक #{synonym.foreign} चाहिए" unless use_noun_plural
             end
           end
           result << {
@@ -692,11 +697,11 @@ class Quiz < ActiveRecord::Base
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
-              oblique_subject = obliqify_subject(subject_object[:transliterated])
-              answers << "kya #{oblique_subject[:transliterated][0]} #{use_plural ? synonym.transliterated_plural : synonym.transliterated} chahie?"
-              answers << "kya #{oblique_subject[:transliterated][0]} ek #{synonym.transliterated} chahie?" unless use_plural
-              answers << "क्या #{oblique_subject[:hindi][0]} #{use_plural ? synonym.foreign_plural : synonym.foreign} चाहिए?"
-              answers << "क्या #{oblique_subject[:hindi][0]} एक #{synonym.foreign} चाहिए?" unless use_plural
+              oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
+              answers << "kya #{oblique_subject[:transliterated]} #{use_plural ? synonym.transliterated_plural : synonym.transliterated} chahie?"
+              answers << "kya #{oblique_subject[:transliterated]} ek #{synonym.transliterated} chahie?" unless use_plural
+              answers << "क्या #{oblique_subject[:hindi]} #{use_plural ? synonym.foreign_plural : synonym.foreign} चाहिए?"
+              answers << "क्या #{oblique_subject[:hindi]} एक #{synonym.foreign} चाहिए?" unless use_plural
             end
           end
           result << {
@@ -958,27 +963,6 @@ class Quiz < ActiveRecord::Base
       verb = @verbs.pop
     end
     verb
-  end
-
-  def obliqify_subject(subject)
-    case subject
-    when 'mai'
-      { hindi: ['मुझको'], transliterated: ['mujhko'] }
-    when 'tum'
-      { hindi: ['तुझको'], transliterated: ['tumko'] }
-    when 'ap'
-      { hindi: ['आपको'], transliterated: ['apko'] }
-    when 'ham'
-      { hindi: ['हमको'], transliterated: ['hamko'] }
-    when 'yah'
-      { hindi: ['इसको'], transliterated: ['isko'] }
-    when 'ye'
-      { hindi: ['इनको'], transliterated: ['inko'] }
-    when 'vah'
-      { hindi: ['उसको'], transliterated: ['usko'] }
-    when 've'
-      { hindi: ['उनको'], transliterated: ['unko'] }
-    end
   end
 
   def get_random_possession_english_subject

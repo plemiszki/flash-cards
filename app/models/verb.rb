@@ -44,6 +44,10 @@ class Verb < ActiveRecord::Base
     infinitive[0...-2]
   end
 
+  def hindi_oblique
+    "#{hindi_stem}ने"
+  end
+
   def postposition_trans
     {
       से: 'se',
@@ -77,6 +81,10 @@ class Verb < ActiveRecord::Base
 
   def transliterated_stem
     transliterated_infinitive[0...-2]
+  end
+
+  def transliterated_oblique
+    "#{transliterated_stem}ne"
   end
 
 end

@@ -550,4 +550,25 @@ module Hindi
     end
   end
 
+  def self.obliqify_subject(transliterated_subject)
+    case transliterated_subject
+    when 'mai'
+      { hindi: 'मुझको', transliterated: 'mujhko' }
+    when 'tum'
+      { hindi: 'तुझको', transliterated: 'tumko' }
+    when 'ap'
+      { hindi: 'आपको', transliterated: 'apko' }
+    when 'ham'
+      { hindi: 'हमको', transliterated: 'hamko' }
+    when 'yah'
+      { hindi: 'इसको', transliterated: 'isko' }
+    when 'ye'
+      { hindi: 'इनको', transliterated: 'inko' }
+    when 'vah'
+      { hindi: 'उसको', transliterated: 'usko' }
+    when 've'
+      { hindi: 'उनको', transliterated: 'unko' }
+    end
+  end
+
 end

@@ -146,7 +146,7 @@ $(document).ready(function() {
         <SimpleDetails
           context={ MyContext }
           entityName='adverb'
-          initialEntity={ { name: '' } }
+          initialEntity={ {} }
           fields={ [[
             { columnWidth: 4, entity: 'adverb', property: 'foreign' },
             { columnWidth: 4, entity: 'adverb', property: 'transliterated' },
