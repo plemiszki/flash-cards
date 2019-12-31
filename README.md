@@ -53,3 +53,7 @@ You can insert an image into the question if desired.
 For longer answers, such as a word definition, you can make cards multiple choice.
 
 ![multiple_choice](./doc/multiple_choice.png)
+
+You can even create matching questions!
+
+![matching](./doc/matching.png)
