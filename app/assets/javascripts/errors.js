@@ -39,7 +39,8 @@ Errors = {
     "Feminine plural can't be blank"
   ],
   name: [
-    "Name can't be blank"
+    "Name can't be blank",
+    "Name has already been taken"
   ],
   transliterated: [
     "Transliterated can't be blank"

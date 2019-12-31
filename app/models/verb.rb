@@ -24,9 +24,9 @@ class Verb < ActiveRecord::Base
     end
   end
 
-  def hindi_imperfective(gender, plural)
-    if gender == 'M'
-      plural ? "#{hindi_stem}ते" : "#{hindi_stem}ता"
+  def hindi_imperfective(args)
+    if args[:gender].to_s == 'male'
+      args[:plural] ? "#{hindi_stem}ते" : "#{hindi_stem}ता"
     else
       "#{hindi_stem}ती"
     end
@@ -63,9 +63,9 @@ class Verb < ActiveRecord::Base
     end
   end
 
-  def transliterated_imperfective(gender, plural)
-    if gender == 'M'
-      plural ? "#{transliterated_stem}te" : "#{transliterated_stem}ta"
+  def transliterated_imperfective(args)
+    if args[:gender].to_s == 'male'
+      args[:plural] ? "#{transliterated_stem}te" : "#{transliterated_stem}ta"
     else
       "#{transliterated_stem}ti"
     end

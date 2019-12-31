@@ -61,6 +61,29 @@ class Quiz < ActiveRecord::Base
             question: "#{use_formal ? 'please ' : ''}let #{english_object} #{verb.english}.".capitalize + "#{notification}",
             answers: answers
           }
+        when 'Hindi - Subject lets Subject Verb'
+          english_subject_1 = English::get_random_english_subject
+          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject_1)
+          subject_objects_1 = Hindi::get_subject_objects(english_subject_1, use_plural)
+          english_subject_2 = English::get_random_english_subject
+          gender_2, use_plural_2, notification_2 = English::get_gender_and_plural_from_subject(english_subject_2)
+          subject_objects_2 = Hindi::get_subject_objects(english_subject_2, use_plural_2)
+          english_object = English::convert_subject_to_object(english_subject_2)
+          give_verb = Verb.find_by_english('give')
+          verb = get_verb(quiz_question)
+          answers = []
+          subject_objects_1.each do |subject_object_1|
+            subject_objects_2.each do |subject_object_2|
+              oblique_subject_2 = Hindi::obliqify_subject(subject_object_2[:transliterated])
+              answers << "#{subject_object_1[:transliterated]} #{oblique_subject_2[:transliterated]} #{verb.transliterated_oblique} #{give_verb.transliterated_imperfective({ gender: gender, plural: use_plural })} #{subject_object_1[:transliterated_be]}"
+              answers << "#{subject_object_1[:hindi]} #{oblique_subject_2[:hindi]} #{verb.hindi_oblique} #{hindi_let} #{give_verb.hindi_imperfective({ gender: gender, plural: use_plural })} #{subject_object_1[:hindi_be]}"
+            end
+          end
+          let_or_lets = english_subject_1.downcase.in?(['i', 'you', 'we', 'they', 'these', 'those']) ? 'let' : 'lets'
+          result << {
+            question: "#{english_subject_1} #{let_or_lets} #{english_object} #{verb.english}.".capitalize + "#{notification}",
+            answers: answers
+          }
         when 'Hindi - Age'
           n = rand(10) + 1
           english_subject = English::get_random_english_subject
@@ -521,8 +544,8 @@ class Quiz < ActiveRecord::Base
             question: "#{do_verb.english_imperfective(english_subject, plural).capitalize} #{english_subject == 'I' ? 'I' : english_subject.downcase}#{subject_plural_notification} #{verb.english}?#{gender_notification}",
             answers: subject_objects.map do |subject_object|
               [
-                "kya #{subject_object[:transliterated]} #{verb.transliterated_imperfective(gender, plural)} #{subject_object[:transliterated_be]}?",
-                "क्या #{subject_object[:hindi]} #{verb.hindi_imperfective(gender, plural)} #{subject_object[:hindi_be]}?"
+                "kya #{subject_object[:transliterated]} #{verb.transliterated_imperfective({ gender: gender, plural: plural })} #{subject_object[:transliterated_be]}?",
+                "क्या #{subject_object[:hindi]} #{verb.hindi_imperfective({ gender: gender, plural: plural })} #{subject_object[:hindi_be]}?"
               ]
             end.flatten.uniq
           }
@@ -538,8 +561,8 @@ class Quiz < ActiveRecord::Base
             question: "#{question_word[:english].capitalize} #{do_verb.english_imperfective(english_subject, plural)} #{english_subject == 'I' ? 'I' : english_subject.downcase} #{verb.english}?#{gender_notification}#{subject_plural_notification}",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{question_word[:transliterated]} #{verb.transliterated_imperfective(gender, plural)} #{subject_object[:transliterated_be]}?",
-                "#{subject_object[:hindi]} #{question_word[:hindi]} #{verb.hindi_imperfective(gender, plural)} #{subject_object[:hindi_be]}?"
+                "#{subject_object[:transliterated]} #{question_word[:transliterated]} #{verb.transliterated_imperfective({ gender: gender, plural: plural })} #{subject_object[:transliterated_be]}?",
+                "#{subject_object[:hindi]} #{question_word[:hindi]} #{verb.hindi_imperfective({ gender: gender, plural: plural })} #{subject_object[:hindi_be]}?"
               ]
             end.flatten.uniq
           }
@@ -564,10 +587,10 @@ class Quiz < ActiveRecord::Base
             question: "#{english_subject.capitalize} #{english_negative_verb(use_negative, english_subject)}#{verb.english_imperfective(english_subject, use_negative)}#{extra_eng}.#{gender_notification}",
             answers: subject_objects.map do |subject_object|
               [
-                "#{subject_object[:transliterated]} #{extra_trans}#{negative_trans}#{verb.transliterated_imperfective(gender, use_plural)} #{subject_object[:transliterated_be]}",
-                "#{subject_object[:hindi]} #{extra_hindi}#{negative_hindi}#{verb.hindi_imperfective(gender, use_plural)} #{subject_object[:hindi_be]}",
-                (use_negative ? "#{subject_object[:transliterated]} #{extra_trans}#{negative_trans}#{verb.transliterated_imperfective(gender, use_plural)}" : nil),
-                (use_negative ? "#{subject_object[:hindi]} #{extra_hindi}#{negative_hindi}#{verb.hindi_imperfective(gender, use_plural)}" : nil)
+                "#{subject_object[:transliterated]} #{extra_trans}#{negative_trans}#{verb.transliterated_imperfective({ gender: gender, plural: use_plural })} #{subject_object[:transliterated_be]}",
+                "#{subject_object[:hindi]} #{extra_hindi}#{negative_hindi}#{verb.hindi_imperfective({ gender: gender, plural: use_plural })} #{subject_object[:hindi_be]}",
+                (use_negative ? "#{subject_object[:transliterated]} #{extra_trans}#{negative_trans}#{verb.transliterated_imperfective({ gender: gender, plural: use_plural })}" : nil),
+                (use_negative ? "#{subject_object[:hindi]} #{extra_hindi}#{negative_hindi}#{verb.hindi_imperfective({ gender: gender, plural: use_plural })}" : nil)
               ].compact
             end.flatten.uniq
           }
@@ -1095,13 +1118,13 @@ class Quiz < ActiveRecord::Base
 
   def get_gender_from_subject(subject)
     if ['I', 'he'].include?(subject)
-      gender = 'M'
+      gender = 'male'
     elsif ['she'].include?(subject)
-      gender = 'F'
+      gender = 'female'
     else
-      gender = ['M', 'F'].sample
+      gender = ['male', 'female'].sample
     end
-    gender_notification = ['I', 'he', 'she'].include?(subject) ? '' : " (#{gender})"
+    gender_notification = ['I', 'he', 'she'].include?(subject) ? '' : " (#{gender[0].capitalize})"
     [gender, gender_notification]
   end
 
