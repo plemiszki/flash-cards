@@ -403,9 +403,14 @@ class Quiz < ActiveRecord::Base
           subject = English::get_random_english_subject
           use_subject_plural, subject_plural_notification = English::get_plural_from_subject(subject)
           subject_objects = Hindi::get_subject_objects(subject, use_subject_plural)
-          subject_has_objects = Hindi::get_subject_has_objects(subject_objects)
           @noun = get_noun(quiz_question)
           use_noun_plural = @noun.uncountable ? false : [true, false].sample
+          tags = @noun.tags.pluck(:name)
+          if (tags & ['Body Part', 'Relative', 'Real Estate']).present?
+            subject_has_objects = Hindi::get_subject_has_objects_using_ka(subject_objects: subject_objects, gender: @noun.english_gender, plural: use_noun_plural)
+          else
+            subject_has_objects = Hindi::get_subject_has_objects(subject_objects)
+          end
           use_article = !use_noun_plural && @noun.countable?
           answers = []
           @noun.synonyms.each do |synonym|

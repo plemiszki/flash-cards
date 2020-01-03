@@ -62,6 +62,90 @@ module Hindi
     adjective
   end
 
+  def self.get_subject_has_objects_using_ka(subject_objects:, gender:, plural:)
+    transliterated_ending = (gender == 'male' ? (plural ? 'e' : 'a') : 'i')
+    hindi_ending = (gender == 'male' ? (plural ? 'े' : 'ा') : 'ी')
+    subject_objects.map do |subject_object|
+      case subject_object[:english]
+      when 'I'
+        {
+          english: 'I have',
+          transliterated: "mer#{transliterated_ending}",
+          hindi: "मेर#{hindi_ending}"
+        }
+      when 'you'
+        {
+          english: 'you have',
+          transliterated: "apk#{transliterated_ending}",
+          hindi: "आपक#{hindi_ending}"
+        }
+      when 'he', 'she', 'it'
+        {
+          english: "#{subject_object[:english]} has",
+          transliterated: (subject_object[:hindi] == 'यह' ? "usk#{transliterated_ending}" : "isk#{transliterated_ending}"),
+          hindi: (subject_object[:hindi] == 'यह' ? "उसक#{hindi_ending}" : "इसक#{hindi_ending}")
+        }
+      when 'this'
+        {
+          english: 'this has',
+          transliterated: "isk#{transliterated_ending}",
+          hindi: "इसक#{hindi_ending}"
+        }
+      when 'that'
+        {
+          english: 'that has',
+          transliterated: "usk#{transliterated_ending}",
+          hindi: "उसक#{hindi_ending}"
+        }
+      when 'we'
+        {
+          english: 'we have',
+          transliterated: "hamar#{transliterated_ending}",
+          hindi: "हमार#{hindi_ending}"
+        }
+      when 'they'
+        case subject_object[:hindi]
+        when 'यह'
+          {
+            english: 'they have',
+            transliterated: "isk#{transliterated_ending}",
+            hindi: "इसक#{hindi_ending}"
+          }
+        when 'ये'
+          {
+            english: 'they have',
+            transliterated: "ink#{transliterated_ending}",
+            hindi: "इनक#{hindi_ending}"
+          }
+        when 'वह'
+          {
+            english: 'they have',
+            transliterated: "usk#{transliterated_ending}",
+            hindi: "उसक#{hindi_ending}"
+          }
+        when 'वे'
+          {
+            english: 'they have',
+            transliterated: "unk#{transliterated_ending}",
+            hindi: "उनक#{hindi_ending}"
+          }
+        end
+      when 'these'
+        {
+          english: 'these have',
+          transliterated: "ink#{transliterated_ending}",
+          hindi: "इनक#{hindi_ending}"
+        }
+      when 'those'
+        {
+          english: 'those have',
+          transliterated: "unk#{transliterated_ending}",
+          hindi: "उनक#{hindi_ending}"
+        }
+      end
+    end
+  end
+
   def self.get_subject_has_objects(subject_objects)
     subject_objects.map do |subject_object|
       case subject_object[:english]

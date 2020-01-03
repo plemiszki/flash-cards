@@ -6,6 +6,10 @@ class Noun < ActiveRecord::Base
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags
 
+  def english_gender
+    gender == 1 ? 'male' : 'female'
+  end
+
   def synonyms
     Noun.where(english: self.english)
   end
