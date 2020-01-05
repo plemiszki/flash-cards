@@ -226,10 +226,6 @@ class QuizDetails extends React.Component {
       );
     }
   }
-
-  componentDidUpdate() {
-    Common.matchColumnHeight();
-  }
 }
 
 const mapStateToProps = (reducers) => {

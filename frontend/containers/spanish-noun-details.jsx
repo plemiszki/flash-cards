@@ -122,10 +122,6 @@ class SpanishNounDetails extends React.Component {
       </div>
     );
   }
-
-  componentDidUpdate() {
-    Common.matchColumnHeight();
-  }
 }
 
 const mapStateToProps = (reducers) => {

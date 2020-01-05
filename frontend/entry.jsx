@@ -152,6 +152,7 @@ $(document).ready(function() {
             { columnWidth: 4, entity: 'adverb', property: 'transliterated' },
             { columnWidth: 4, entity: 'adverb', property: 'english' }
           ]] }
+          csrfToken={ true }
         />
       </Provider>,
       document.querySelector('#adverb-details')
@@ -258,6 +259,7 @@ $(document).ready(function() {
           entityName='question'
           initialEntity={ { name: '' } }
           fields={ [[{ columnWidth: 6, entity: 'question', property: 'name' }]] }
+          csrfToken={ true }
         />
       </Provider>,
       document.querySelector('#question-details')
@@ -291,6 +293,7 @@ $(document).ready(function() {
           entityName='tag'
           initialEntity={ { name: '' } }
           fields={ [[{ columnWidth: 6, entity: 'tag', property: 'name' }]] }
+          csrfToken={ true }
         />
       </Provider>,
       document.querySelector('#tag-details')

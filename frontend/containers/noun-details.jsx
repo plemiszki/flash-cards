@@ -129,10 +129,6 @@ class NounDetails extends React.Component {
       </div>
     );
   }
-
-  componentDidUpdate() {
-    Common.matchColumnHeight();
-  }
 }
 
 const mapStateToProps = (reducers) => {

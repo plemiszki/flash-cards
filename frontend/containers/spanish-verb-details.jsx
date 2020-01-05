@@ -110,10 +110,6 @@ class SpanishVerbDetails extends React.Component {
       </div>
     );
   }
-
-  componentDidUpdate() {
-    Common.matchColumnHeight();
-  }
 }
 
 const mapStateToProps = (reducers) => {

@@ -178,10 +178,6 @@ class Vocabulary extends React.Component {
       );
     }
   }
-
-  componentDidUpdate() {
-    Common.matchColumnHeight();
-  }
 }
 
 const mapStateToProps = (reducers) => {
