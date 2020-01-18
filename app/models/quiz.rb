@@ -311,32 +311,24 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Subject is a Noun'
           @noun = get_noun(quiz_question)
-          subject_objects = Hindi::get_subject_objects(get_random_single_english_subject)
+          english_subject = (@noun.uncountable? ? English::get_random_single_english_subject : English::get_random_english_subject)
+          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
+          subject_objects = Hindi::get_subject_objects(english_subject)
           question_subject_object = subject_objects.sample
+          answers = []
+          subject_objects.map do |subject_object|
+            @noun.synonyms.each do |synonym|
+              answers << "#{subject_object[:transliterated]} #{synonym[:transliterated]} #{subject_object[:transliterated_be]}"
+              answers << "#{subject_object[:hindi]} #{synonym[:foreign]} #{subject_object[:hindi_be]}"
+              unless @noun.uncountable? || use_plural
+                answers << "#{subject_object[:transliterated]} ek #{synonym[:transliterated]} #{subject_object[:transliterated_be]}"
+                answers << "#{subject_object[:hindi]} एक #{synonym[:foreign]} #{subject_object[:hindi_be]}"
+              end
+            end
+          end
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{a_or_an(@noun[:english])} #{@noun[:english]}.",
-            answers: all_synonyms(subject_objects.map do |hash|
-              [
-                "#{hash[:transliterated]} #{@noun[:transliterated]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{@noun[:foreign]} #{hash[:hindi_be]}",
-                "#{hash[:transliterated]} ek #{@noun[:transliterated]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} एक #{@noun[:foreign]} #{hash[:hindi_be]}"
-              ]
-            end.flatten.uniq)
-          }
-        when 'Hindi - Subject are Nouns'
-          @noun = get_noun(quiz_question)
-          use_plural = true
-          subject_objects = Hindi::get_subject_objects(English::get_random_plural_english_subject, use_plural)
-          question_subject_object = subject_objects.sample
-          result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]} #{@noun[:english_plural]}.",
-            answers: all_synonyms(subject_objects.map do |hash|
-              [
-                "#{hash[:transliterated]} #{@noun[:transliterated_plural]} #{hash[:transliterated_be]}",
-                "#{hash[:hindi]} #{@noun[:foreign_plural]} #{hash[:hindi_be]}"
-              ]
-            end.flatten.uniq, true)
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[:english_be]}#{use_plural ? " #{@noun[:english_plural]}" : "#{(@noun.countable? ? " #{a_or_an(@noun[:english])}" : '')} #{@noun[:english]}"}.",
+            answers: answers
           }
         when 'Hindi - Subject is Adjective'
           adjective = @adjectives.pop
@@ -705,10 +697,10 @@ class Quiz < ActiveRecord::Base
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
               oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
-              answers << "#{oblique_subject[:transliterated]} #{use_noun_plural ? synonym.transliterated_plural : synonym.transliterated} chahie"
-              answers << "#{oblique_subject[:transliterated]} ek #{synonym.transliterated} chahie" unless use_noun_plural
-              answers << "#{oblique_subject[:hindi]} #{use_noun_plural ? synonym.foreign_plural : synonym.foreign} चाहिए"
-              answers << "#{oblique_subject[:hindi]} एक #{synonym.foreign} चाहिए" unless use_noun_plural
+              answers << "#{oblique_subject[:transliterated]} #{(use_noun_plural && synonym.countable?) ? synonym.transliterated_plural : synonym.transliterated} chahie"
+              answers << "#{oblique_subject[:transliterated]} ek #{synonym.transliterated} chahie" unless (use_noun_plural || synonym.uncountable?)
+              answers << "#{oblique_subject[:hindi]} #{(use_noun_plural && synonym.countable?) ? synonym.foreign_plural : synonym.foreign} चाहिए"
+              answers << "#{oblique_subject[:hindi]} एक #{synonym.foreign} चाहिए" unless (use_noun_plural || synonym.uncountable?)
             end
           end
           result << {

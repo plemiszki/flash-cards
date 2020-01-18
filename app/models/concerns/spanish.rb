@@ -127,9 +127,9 @@ module Spanish
         english_be: 'are'
       }
       if use_plural
-        obj[:spanish] = (gender == 'male' ? 'él' : 'ella')
-      else
         obj[:spanish] = (gender == 'male' ? 'ellos' : 'ellas')
+      else
+        obj[:spanish] = (gender == 'male' ? 'él' : 'ella')
       end
     when 'this'
       obj = {

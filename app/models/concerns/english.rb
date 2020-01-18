@@ -4,6 +4,10 @@ module English
     ['we', 'they', 'these', 'those', 'I', 'you', 'he', 'she', 'it', 'this', 'that'][plural_only ? rand(4) : rand(11)]
   end
 
+  def self.get_random_single_english_subject
+    ['I', 'you', 'he', 'she', 'it', 'this', 'that'].sample
+  end
+
   def self.get_random_plural_english_subject
     English::get_random_english_subject(plural_only: true)
   end
