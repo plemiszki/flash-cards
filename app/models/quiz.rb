@@ -58,15 +58,15 @@ class Quiz < ActiveRecord::Base
             answers << "#{oblique_subject[:hindi]} #{verb.hindi_oblique} #{hindi_let}"
           end
           result << {
-            question: "#{use_formal ? 'please ' : ''}let #{english_object} #{verb.english}.".capitalize + "#{notification}",
+            question: "#{use_formal ? 'Please let' : 'Let'} #{english_object.downcase}#{notification} #{verb.english}.",
             answers: answers
           }
         when 'Hindi - Subject lets Subject Verb'
           english_subject_1 = English::get_random_english_subject
-          gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject_1)
+          gender, use_plural, subject_notification = English::get_gender_and_plural_from_subject(english_subject_1)
           subject_objects_1 = Hindi::get_subject_objects(english_subject_1, use_plural)
           english_subject_2 = English::get_random_english_subject
-          gender_2, use_plural_2, notification_2 = English::get_gender_and_plural_from_subject(english_subject_2)
+          gender_2, use_plural_2, object_notification = English::get_gender_and_plural_from_subject(english_subject_2)
           subject_objects_2 = Hindi::get_subject_objects(english_subject_2, use_plural_2)
           english_object = English::convert_subject_to_object(english_subject_2)
           give_verb = Verb.find_by_english('give')
@@ -81,7 +81,7 @@ class Quiz < ActiveRecord::Base
           end
           let_or_lets = english_subject_1.downcase.in?(['i', 'you', 'we', 'they', 'these', 'those']) ? 'let' : 'lets'
           result << {
-            question: "#{english_subject_1} #{let_or_lets} #{english_object} #{verb.english}.".capitalize + "#{notification}",
+            question: "#{english_subject_1.capitalize}#{subject_notification} #{let_or_lets} #{english_object.downcase}#{object_notification} #{verb.english}.",
             answers: answers
           }
         when 'Hindi - Age'
