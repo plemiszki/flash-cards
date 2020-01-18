@@ -796,6 +796,7 @@ class Quiz < ActiveRecord::Base
             tags: adjective.tags.pluck(:name)
           }
         when 'Spanish - Noun is Adjective'
+          # TODO: add 'this/these' and 'that/those' articles
           noun = Spanish::get_noun(quiz_question, @spanish_nouns)
           noun_synonyms = noun.synonyms
           adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)

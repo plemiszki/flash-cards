@@ -136,13 +136,13 @@ module Spanish
         english: 'this',
         english_be: 'is'
       }
-      obj[:spanish] = (gender == 'male' ? 'este' : 'esta')
+      obj[:spanish] = (gender == 'male' ? 'esto' : 'esta')
     when 'that'
       obj = {
         english: 'that',
         english_be: 'is'
       }
-      obj[:spanish] = (gender == 'male' ? 'ese' : 'esa')
+      obj[:spanish] = (gender == 'male' ? 'eso' : 'esa')
     when 'these'
       obj = {
         english: 'these',
