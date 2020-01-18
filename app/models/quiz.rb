@@ -815,11 +815,13 @@ class Quiz < ActiveRecord::Base
           english_subject = English::get_random_english_subject
           gender, subject_use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
           subject_object = Spanish::get_subject_object(english_subject: english_subject, gender: gender, use_plural: subject_use_plural)
+          answers = []
+          adjective.synonyms.each do |synonym|
+            "#{subject_object[:spanish]} es #{synonym.conjugate(gender: gender, use_plural: subject_use_plural)}"
+          end
           result << {
             question: "#{subject_object[:english].capitalize} #{subject_object[:english_be]} #{adjective.english}.#{notification}",
-            answers: [
-              "#{subject_object[:spanish]} es #{adjective.conjugate(gender: gender, use_plural: subject_use_plural)}"
-            ]
+            answers: answers
           }
         when 'Spanish - Number'
           numbers = ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte']
