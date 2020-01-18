@@ -804,7 +804,7 @@ class Quiz < ActiveRecord::Base
           answers = []
           noun_synonyms.each do |noun_synonym|
             adjective_synonyms.each do |adjective_synonym|
-              answers << "#{noun_synonym.with_article(article: 'definite')} es #{adjective_synonym.conjugate(gender: noun_synonym.gender)}"
+              answers << "#{noun_synonym.with_article(article: 'definite').capitalize} #{Spanish::conjugate_ser(noun: noun_synonym)} #{adjective_synonym.conjugate(gender: noun_synonym.gender)}."
             end
           end
           result << {
@@ -818,7 +818,7 @@ class Quiz < ActiveRecord::Base
           subject_object = Spanish::get_subject_object(english_subject: english_subject, gender: gender, use_plural: subject_use_plural)
           answers = []
           adjective.synonyms.each do |synonym|
-            "#{subject_object[:spanish]} es #{synonym.conjugate(gender: gender, use_plural: subject_use_plural)}"
+            answers << "#{subject_object[:spanish].capitalize} #{Spanish::conjugate_ser(subject: subject_object[:spanish])} #{synonym.conjugate(gender: gender, use_plural: subject_use_plural)}."
           end
           result << {
             question: "#{subject_object[:english].capitalize} #{subject_object[:english_be]} #{adjective.english}.#{notification}",

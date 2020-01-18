@@ -1,5 +1,32 @@
 module Spanish
 
+  def self.conjugate_ser(subject: nil, noun: nil, use_plural: false)
+    if subject
+      case subject
+      when 'yo'
+        'soy'
+      when 'tú'
+        'eres'
+      when 'usted', 'él', 'ella', 'esto', 'esta', 'este', 'eso', 'esa', 'ese'
+        'es'
+      when 'vosotros', 'vosotras'
+        'sois'
+      when 'nosotros', 'nosotras'
+        'somos'
+      when 'ellos', 'ellas', 'ustedes', 'estos', 'estas', 'esos', 'esas'
+        'son'
+      end
+    elsif noun
+      if use_plural
+        'son'
+      else
+        'es'
+      end
+    else
+      raise "conjugate ser is missing subject or noun"
+    end
+  end
+
   def self.get_noun(quiz_question, nouns)
     if quiz_question.tag_id
       tagged_nouns = []
@@ -72,7 +99,7 @@ module Spanish
     end
   end
 
-  def self.get_subject_object(english_subject:, use_plural: false, gender:, formal: false, region: 'latin america')
+  def self.get_subject_object(english_subject:, use_plural: false, gender:, formal: true, region: 'latin america')
     gender = (gender.in?(['male', :male]) ? 'male' : 'female')
     case english_subject.downcase
     when 'i'
@@ -87,7 +114,7 @@ module Spanish
         english: 'you',
         english_be: 'are'
       }
-      if :use_plural
+      if use_plural
         if region == 'europe' && formal == false
           obj[:spanish] = (gender == 'male' ? 'vosotros' : 'vosotras')
         else
