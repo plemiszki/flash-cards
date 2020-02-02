@@ -79,8 +79,8 @@ module English
       they: 'them',
       this: 'this',
       that: 'that',
-      these: 'them',
-      those: 'them'
+      these: 'these',
+      those: 'those'
     }
     subject = input.downcase.to_sym
     raise "invalid english subject (#{input}) for conversion to object" unless obj.key?(subject)

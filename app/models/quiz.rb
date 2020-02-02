@@ -239,7 +239,6 @@ class Quiz < ActiveRecord::Base
           }
         when 'Hindi - Availability'
           noun = get_noun(quiz_question)
-          english_single_plural_same = (noun.english == noun.english_plural)
           adjective = @adjectives.pop
           synonyms = noun.synonyms
           answers = []
@@ -313,14 +312,15 @@ class Quiz < ActiveRecord::Base
           @noun = get_noun(quiz_question)
           english_subject = (@noun.uncountable? ? English::get_random_single_english_subject : English::get_random_english_subject)
           gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
+          use_plural = use_plural && @noun.countable?
           subject_objects = Hindi::get_subject_objects(english_subject)
           question_subject_object = subject_objects.sample
           answers = []
           subject_objects.map do |subject_object|
             @noun.synonyms.each do |synonym|
-              answers << "#{subject_object[:transliterated]} #{synonym[:transliterated]} #{subject_object[:transliterated_be]}"
-              answers << "#{subject_object[:hindi]} #{synonym[:foreign]} #{subject_object[:hindi_be]}"
-              unless @noun.uncountable? || use_plural
+              answers << "#{subject_object[:transliterated]} #{use_plural ? synonym[:transliterated_plural] : synonym[:transliterated]} #{subject_object[:transliterated_be]}"
+              answers << "#{subject_object[:hindi]} #{use_plural ? synonym[:foreign_plural] : synonym[:foreign]} #{subject_object[:hindi_be]}"
+              unless use_plural
                 answers << "#{subject_object[:transliterated]} ek #{synonym[:transliterated]} #{subject_object[:transliterated_be]}"
                 answers << "#{subject_object[:hindi]} एक #{synonym[:foreign]} #{subject_object[:hindi_be]}"
               end
@@ -691,20 +691,20 @@ class Quiz < ActiveRecord::Base
           question_subject_object = subject_objects.first
           use_want = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
           @noun = get_noun(quiz_question)
-          use_noun_plural = random_boolean
+          use_noun_plural = @noun.countable? ? random_boolean : false
           synonyms = @noun.synonyms
           answers = []
           synonyms.each do |synonym|
             subject_objects.each do |subject_object|
               oblique_subject = Hindi::obliqify_subject(subject_object[:transliterated])
-              answers << "#{oblique_subject[:transliterated]} #{(use_noun_plural && synonym.countable?) ? synonym.transliterated_plural : synonym.transliterated} chahie"
-              answers << "#{oblique_subject[:transliterated]} ek #{synonym.transliterated} chahie" unless (use_noun_plural || synonym.uncountable?)
-              answers << "#{oblique_subject[:hindi]} #{(use_noun_plural && synonym.countable?) ? synonym.foreign_plural : synonym.foreign} चाहिए"
-              answers << "#{oblique_subject[:hindi]} एक #{synonym.foreign} चाहिए" unless (use_noun_plural || synonym.uncountable?)
+              answers << "#{oblique_subject[:transliterated]} #{use_noun_plural ? synonym.transliterated_plural : synonym.transliterated} chahie"
+              answers << "#{oblique_subject[:transliterated]} ek #{synonym.transliterated} chahie" unless use_noun_plural
+              answers << "#{oblique_subject[:hindi]} #{use_noun_plural ? synonym.foreign_plural : synonym.foreign} चाहिए"
+              answers << "#{oblique_subject[:hindi]} एक #{synonym.foreign} चाहिए" unless use_noun_plural
             end
           end
           result << {
-            question: "#{english_subject.capitalize} want#{use_want ? '' : 's'} #{use_noun_plural ? '' : a_or_an(@noun.english) + ' '}#{use_noun_plural ? @noun.english_plural : @noun.english}.#{notification}",
+            question: "#{english_subject.capitalize} want#{use_want ? '' : 's'} #{use_noun_plural || @noun.uncountable? ? '' : a_or_an(@noun.english) + ' '}#{use_noun_plural ? @noun.english_plural : @noun.english}.#{notification}",
             answers: answers.uniq
           }
         when 'Hindi - Does Subject want a Noun?'
