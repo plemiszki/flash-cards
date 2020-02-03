@@ -11,15 +11,40 @@ class Quiz < ActiveRecord::Base
     @verbs = []
     @adjectives = []
     @adverbs = []
-    @cards = []
     @spanish_nouns = []
     @spanish_verbs = []
     @spanish_adjectives = []
+    @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
+    @other_answers_cache = Hash.new { |h, k| h[k] = [] }
     quiz_questions.each do |quiz_question|
       question = quiz_question.question
       quiz_question.amount.times do
         check_if_anything_empty
         case question.name
+        when 'Card'
+          card = @cards.pop
+          obj = {
+            question: card.question,
+            answers: (card.match_bins.present? ? [card.match_answer] : [card.answer]),
+            textbox: card.answer.include?("\n"),
+            imageUrl: card.image_url,
+            matchBins: card.match_bins_and_items,
+            matchBinsShuffled: card.match_bins_and_items_shuffled,
+            archiveButton: !self.use_archived,
+            unarchiveButton: self.use_archived,
+            cardId: card.id,
+            streak: card.streak,
+            tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } }
+          }
+          if card.multiple_choice
+            tag_id = card.tags.first.id
+            unless @other_answers_cache[tag_id].present?
+              @other_answers_cache[tag_id] = CardTag.includes(:cardtagable).where(tag_id: tag_id, cardtagable_type: "Card").map(&:cardtagable).pluck(:answer)
+            end
+            other_answers = (@other_answers_cache[tag_id].shuffle - [card.answer]).take(7)
+            obj["choices"] = ([card.answer] + other_answers)
+          end
+          result << obj
         when 'Hindi - Subject can Verb'
           english_subject = English::get_random_english_subject
           gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
@@ -490,46 +515,6 @@ class Quiz < ActiveRecord::Base
               use_plural ? plural_answers : single_answers
             ].flatten, use_plural)
           }
-        when 'Card'
-          if quiz_question.tag_id
-            tagged_cards = []
-            until !tagged_cards.empty? do
-              tagged_cards = @cards.select { |card| card.tags.map(&:id).include?(quiz_question.tag_id) }
-              if tagged_cards.empty?
-                archived_cards = Card.includes(:tags).where(tags: { name: 'Archived' })
-                all_tagged_cards = Card.includes(:tags).where(tags: { id: quiz_question.tag_id })
-                if self.use_archived
-                  @cards += (all_tagged_cards & archived_cards)
-                else
-                  cards_to_use = all_tagged_cards - archived_cards
-                  raise "No Unarchived Cards: #{Tag.find(quiz_question.tag_id).name}" if cards_to_use.empty?
-                  @cards += cards_to_use
-                end
-              end
-            end
-            card = tagged_cards.sample
-            @cards.reject! { |c| c == card }
-          else
-            card = @cards.pop
-          end
-          obj = {
-            question: card.question,
-            answers: (card.match_bins.present? ? [card.match_answer] : [card.answer]),
-            textbox: card.answer.include?("\n"),
-            imageUrl: card.image_url,
-            matchBins: card.match_bins_and_items,
-            matchBinsShuffled: card.match_bins_and_items_shuffled,
-            archiveButton: !self.use_archived,
-            unarchiveButton: self.use_archived,
-            cardId: card.id,
-            streak: card.streak,
-            tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } }
-          }
-          if card.multiple_choice
-            other_cards = CardTag.where(tag_id: card.tags.first.id, cardtagable_type: "Card").map(&:cardtagable) - [card]
-            obj["choices"] = ([card.answer] + other_cards.shuffle.take(7).map(&:answer))
-          end
-          result << obj
         when 'Hindi - Imperfective Present Yes/No Question'
           english_subject = English::get_random_english_subject
           gender, gender_notification = get_gender_from_subject(english_subject)
@@ -928,6 +913,32 @@ class Quiz < ActiveRecord::Base
     result.flatten.uniq
   end
 
+  def get_cards(quiz_questions)
+    result = []
+    all_archived_cards = Card.includes(:tags).where(tags: { name: 'Archived' })
+    Tag.all.each do |tag|
+      n = quiz_questions.reduce(0) do |sum, qq|
+        if qq.tag_id == tag.id
+          sum + qq.amount
+        else
+          sum
+        end
+      end
+      if n > 0
+        all_tagged_cards = Card.includes(:tags).where(tags: { id: tag.id })
+        archived_tagged_cards = (all_tagged_cards & all_archived_cards).shuffle
+        unarchived_tagged_cards = (all_tagged_cards - all_archived_cards).shuffle
+        if n <= unarchived_tagged_cards.length
+          result += unarchived_tagged_cards.take(n)
+        else
+          result += unarchived_tagged_cards
+          result += archived_tagged_cards.take(n - unarchived_tagged_cards.length)
+        end
+      end
+    end
+    result
+  end
+
   def check_if_anything_empty
     @nouns = Noun.all.to_a.shuffle if @nouns.empty?
     @verbs = Verb.all.to_a.shuffle if @verbs.empty?
@@ -936,18 +947,6 @@ class Quiz < ActiveRecord::Base
     @spanish_nouns = SpanishNoun.all.to_a.shuffle if @spanish_nouns.empty?
     @spanish_verbs = SpanishVerb.all.to_a.shuffle if @spanish_verbs.empty?
     @spanish_adjectives = SpanishAdjective.all.to_a.shuffle if @spanish_adjectives.empty?
-    if @cards.empty?
-      if self.use_archived
-        archived_cards = Card.joins(:tags).where(tags: { name: 'Archived' })
-        raise 'No Archived Cards' if archived_cards.empty?
-        @cards = archived_cards.to_a.shuffle
-        puts archived_cards.pluck(:question)
-      else
-        unarchived_cards = Card.all - Card.joins(:tags).where(tags: { name: 'Archived' })
-        raise 'No Unarchived Cards' if unarchived_cards.empty?
-        @cards = unarchived_cards.to_a.shuffle
-      end
-    end
   end
 
   def get_noun(quiz_question)

@@ -42,18 +42,14 @@ class Api::QuizzesController < AdminController
   end
 
   def run
-    begin
-      quiz = Quiz.find(params[:id])
-      @quiz = {
-        name: quiz.name,
-        questions: quiz.run.map { |element| element.transform_keys { |key| key.to_s.camelize(:lower) } }
-      }
-      @archived_tag_id = Tag.find_by_name('Archived').id
-      @needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
-      render 'run.json.jbuilder'
-    rescue StandardError => error
-      render json: [error.to_s], status: 422
-    end
+    quiz = Quiz.find(params[:id])
+    @quiz = {
+      name: quiz.name,
+      questions: quiz.run.map { |element| element.transform_keys { |key| key.to_s.camelize(:lower) } }
+    }
+    @archived_tag_id = Tag.find_by_name('Archived').id
+    @needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
+    render 'run.json.jbuilder'
   end
 
   private
