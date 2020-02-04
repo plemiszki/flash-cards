@@ -141,7 +141,6 @@ class QuizDetails extends React.Component {
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quiz', property: 'name' }) }
-            { Details.renderDropDown.bind(this)({ columnWidth: 3, entity: 'quiz', property: 'useArchived', columnHeader: 'Use Archived Questions?', boolean: true, maxOptions: 2 }) }
           </div>
           <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
             { Details.saveButtonText.call(this) }
@@ -158,6 +157,8 @@ class QuizDetails extends React.Component {
                 <th></th>
                 <th className="amount">Amount</th>
                 <th></th>
+                <th className="unarchived"><div className="unarchived-header"></div></th>
+                <th className="archived"><div className="archived-header"></div></th>
                 <th></th>
               </tr>
             </thead>
@@ -169,13 +170,17 @@ class QuizDetails extends React.Component {
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
               </tr>
               { HandyTools.alphabetizeArrayOfObjects(this.state.quizQuestions, 'questionName').map((quizQuestion, index) => {
                 let rowClasses = '';
                 if (quizQuestion.available) {
                   rowClasses = 'wide-arrows';
-                  if (quizQuestion.available < quizQuestion.amount) {
+                  if ((quizQuestion.available.unarchived + quizQuestion.available.archived) < quizQuestion.amount) {
                     rowClasses = 'wide-arrows red';
+                  } else if (quizQuestion.available.unarchived > 0) {
+                    rowClasses = 'wide-arrows green';
                   }
                 }
                 return(
@@ -183,8 +188,10 @@ class QuizDetails extends React.Component {
                     <td>{ quizQuestion.questionName }</td>
                     <td>{ quizQuestion.tagName }</td>
                     <td className="left-arrow" onClick={ this.updateQuizQuestion.bind(this, 'left') }></td>
-                    <td className="amount">{ quizQuestion.amount }{ quizQuestion.available ? ` / ${quizQuestion.available}` : '' }</td>
+                    <td className="amount">{ quizQuestion.amount }</td>
                     <td className="right-arrow" onClick={ this.updateQuizQuestion.bind(this, 'right') }></td>
+                    <td>{ quizQuestion.available ? quizQuestion.available.unarchived : '' }</td>
+                    <td>{ quizQuestion.available ? quizQuestion.available.archived : '' }</td>
                     <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) }></td>
                   </tr>
                 );
