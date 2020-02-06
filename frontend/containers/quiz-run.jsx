@@ -533,10 +533,6 @@ class QuizRun extends React.Component {
       return '';
     }
   }
-
-  componentDidUpdate() {
-    Common.matchColumnHeight();
-  }
 }
 
 const mapStateToProps = (reducers) => {
