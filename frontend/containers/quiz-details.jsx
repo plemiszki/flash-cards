@@ -6,6 +6,7 @@ import { Common, Details } from 'handy-components'
 import HandyTools from 'handy-tools'
 import { fetchEntity, updateEntity, deleteEntity } from '../actions/index'
 import NewEntity from './new-entity.jsx'
+import { sortBy } from 'lodash'
 
 class QuizDetails extends React.Component {
   constructor(props) {
@@ -173,7 +174,7 @@ class QuizDetails extends React.Component {
                 <td></td>
                 <td></td>
               </tr>
-              { HandyTools.alphabetizeArrayOfObjects(this.state.quizQuestions, 'questionName').map((quizQuestion, index) => {
+              { sortBy(this.state.quizQuestions, ['questionName', 'tagName']).map((quizQuestion, index) => {
                 let rowClasses = '';
                 if (quizQuestion.available) {
                   rowClasses = 'wide-arrows';
