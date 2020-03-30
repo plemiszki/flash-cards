@@ -33,6 +33,7 @@ class QuizDetails extends React.Component {
       id: window.location.pathname.split('/')[2],
       directory: 'quizzes'
     }).then(() => {
+      let columnsVisible = this.determineColumnVisibility(this.props.quizQuestions);
       this.setState({
         fetching: false,
         quiz: this.props.quiz,
@@ -40,7 +41,9 @@ class QuizDetails extends React.Component {
         quizQuestions: this.props.quizQuestions,
         questions: this.props.questions,
         tags: this.props.tags,
-        changesToSave: false
+        changesToSave: false,
+        renderAvailableColumn: columnsVisible[0],
+        renderArchivedColumns: columnsVisible[1]
       }, () => {
         HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
@@ -90,9 +93,12 @@ class QuizDetails extends React.Component {
       directory: 'quiz_questions',
       id,
       callback: (response) => {
+        let columnsVisible = this.determineColumnVisibility(response.quizQuestions);
         this.setState({
           fetching: false,
-          quizQuestions: response.quizQuestions
+          quizQuestions: response.quizQuestions,
+          renderAvailableColumn: columnsVisible[0],
+          renderArchivedColumns: columnsVisible[1]
         });
       }
     });
@@ -126,11 +132,27 @@ class QuizDetails extends React.Component {
       entityName: 'quizQuestion',
       entity: { amount: newAmount }
     }).then(() => {
+      let columnsVisible = this.determineColumnVisibility(this.props.quizQuestions);
       this.setState({
         fetching: false,
-        quizQuestions: this.props.quizQuestions
+        quizQuestions: this.props.quizQuestions,
+        renderAvailableColumn: columnsVisible[0],
+        renderArchivedColumns: columnsVisible[1]
       });
     })
+  }
+
+  determineColumnVisibility(quizQuestions) {
+    let quizQuestionsWithAvailabilityData = 0;
+    let quizQuestionsWithArchivedData = 0;
+    quizQuestions.forEach((quizQuestion) => {
+      if (typeof quizQuestion.available === 'number') {
+        quizQuestionsWithAvailabilityData += 1;
+      } else {
+        quizQuestionsWithArchivedData += 1;
+      }
+    })
+    return [quizQuestionsWithAvailabilityData > 0, quizQuestionsWithArchivedData > 0];
   }
 
   render() {
@@ -158,20 +180,13 @@ class QuizDetails extends React.Component {
                 <th></th>
                 <th className="amount">Amount</th>
                 <th></th>
-                <th className="unarchived"><div className="unarchived-header"></div></th>
-                <th className="archived"><div className="archived-header"></div></th>
+                { this.renderAvailableHeader() }
+                { this.renderArchivedHeaders() }
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td></td>
               </tr>
               { sortBy(this.state.quizQuestions, ['questionName', 'tagName']).map((quizQuestion, index) => {
@@ -191,8 +206,8 @@ class QuizDetails extends React.Component {
                     <td className="left-arrow" onClick={ this.updateQuizQuestion.bind(this, 'left') }></td>
                     <td className="amount">{ quizQuestion.amount }</td>
                     <td className="right-arrow" onClick={ this.updateQuizQuestion.bind(this, 'right') }></td>
-                    <td>{ quizQuestion.available ? quizQuestion.available.unarchived : '' }</td>
-                    <td>{ quizQuestion.available ? quizQuestion.available.archived : '' }</td>
+                    { this.renderAvailableColumn(quizQuestion) }
+                    { this.renderArchivedColumns(quizQuestion) }
                     <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) }></td>
                   </tr>
                 );
@@ -217,6 +232,40 @@ class QuizDetails extends React.Component {
         </Modal>
       </div>
     );
+  }
+
+  renderAvailableHeader() {
+    if (this.state.renderAvailableColumn) {
+      return(
+        <th className="available">Available</th>
+      );
+    }
+  }
+
+  renderArchivedHeaders() {
+    if (this.state.renderArchivedColumns) {
+      return([
+        <th key="1" className="unarchived"><div className="unarchived-header"></div></th>,
+        <th key="2" className="archived"><div className="archived-header"></div></th>
+      ]);
+    }
+  }
+
+  renderAvailableColumn(quizQuestion) {
+    if (this.state.renderAvailableColumn) {
+      return(
+        <td className="available">{ typeof quizQuestion.available == 'number' ? quizQuestion.available : '' }</td>
+      );
+    }
+  }
+
+  renderArchivedColumns(quizQuestion) {
+    if (this.state.renderArchivedColumns) {
+      return([
+        <td key="1">{ quizQuestion.available ? quizQuestion.available.unarchived : '' }</td>,
+        <td key="2">{ quizQuestion.available ? quizQuestion.available.archived : '' }</td>
+      ]);
+    }
   }
 
   renderTotalRow() {

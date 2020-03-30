@@ -14,6 +14,7 @@ module AvailableQuestions
           archived: (tagged_card_ids & archived_card_ids).count
         }
       else
+        needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
         type = {
           'Hindi - Single Noun': 'Noun',
           'Hindi - Single Verb': 'Verb',
