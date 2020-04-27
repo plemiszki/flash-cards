@@ -228,34 +228,43 @@ module Hindi
     end
   end
 
-  def self.get_subject_objects(english_subject, use_plural = false)
+  def self.get_subject_objects(english_subject:, use_plural: false, gender: :male)
     case english_subject.downcase
     when 'i'
       [{
         english: 'I',
         english_be: 'am',
+        english_be_past: 'was',
         hindi: 'मैं',
         hindi_be: 'हूँ',
+        hindi_be_past: 'था',
         transliterated: 'mai',
-        transliterated_be: 'hu'
+        transliterated_be: 'hu',
+        transliterated_be_past: 'tha'
       }]
     when 'you'
       [
         {
           english: 'you',
           english_be: 'are',
+          english_be_past: 'were',
           hindi: 'तुम',
           hindi_be: 'हो',
+          hindi_be_past: (gender == :male ? (use_plural ? 'थे' : 'था') : 'थी'),
           transliterated: 'tum',
-          transliterated_be: 'ho'
+          transliterated_be: 'ho',
+          transliterated_be_past: (gender == :male ? (use_plural ? 'the' : 'tha') : 'thi')
         },
         {
           english: 'you',
           english_be: 'are',
+          english_be_past: 'were',
           hindi: 'आप',
           hindi_be: 'हैं',
+          hindi_be_past: (gender == :male ? 'थे' : 'थी'),
           transliterated: 'ap',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'the' : 'thi')
         }
       ]
     when 'he'
@@ -263,18 +272,24 @@ module Hindi
         {
           english: 'he',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'यह',
           hindi_be: 'है',
+          hindi_be_past: 'था',
           transliterated: 'yah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: 'tha'
         },
         {
           english: 'he',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'वह',
           hindi_be: 'है',
+          hindi_be_past: 'था',
           transliterated: 'vah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: 'tha'
         }
       ]
     when 'she'
@@ -282,18 +297,24 @@ module Hindi
         {
           english: 'she',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'यह',
           hindi_be: 'है',
+          hindi_be_past: 'थी',
           transliterated: 'yah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: 'thi'
         },
         {
           english: 'she',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'वह',
           hindi_be: 'है',
+          hindi_be_past: 'थी',
           transliterated: 'vah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: 'thi'
         }
       ]
     when 'it'
@@ -301,18 +322,24 @@ module Hindi
         {
           english: 'it',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'यह',
           hindi_be: 'है',
+          hindi_be_past: (gender == :male ? 'था' : 'थी'),
           transliterated: 'yah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'tha' : 'thi')
         },
         {
           english: 'it',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'वह',
           hindi_be: 'है',
+          hindi_be_past: (gender == :male ? 'था' : 'थी'),
           transliterated: 'vah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'tha' : 'thi')
         }
       ]
     when 'we'
@@ -320,10 +347,13 @@ module Hindi
         {
           english: 'we',
           english_be: 'are',
+          english_be_past: 'were',
           hindi: 'हम',
           hindi_be: 'हैं',
+          hindi_be_past: (gender == :male ? 'थे' : 'थी'),
           transliterated: 'ham',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'the' : 'thi')
         }
       ]
     when 'this'
@@ -331,10 +361,13 @@ module Hindi
         {
           english: 'this',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'यह',
           hindi_be: 'है',
+          hindi_be_past: (gender == :male ? 'था' : 'थी'),
           transliterated: 'yah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'tha' : 'thi')
         }
       ]
     when 'that'
@@ -342,10 +375,13 @@ module Hindi
         {
           english: 'that',
           english_be: 'is',
+          english_be_past: 'was',
           hindi: 'वह',
           hindi_be: 'है',
+          hindi_be_past: (gender == :male ? 'था' : 'थी'),
           transliterated: 'vah',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'tha' : 'thi')
         }
       ]
     when 'they'
@@ -354,18 +390,24 @@ module Hindi
           {
             english: 'they',
             english_be: 'are',
+            english_be_past: 'were',
             hindi: 'ये',
             hindi_be: 'हैं',
+            hindi_be_past: (gender == :male ? 'थे' : 'थी'),
             transliterated: 'ye',
-            transliterated_be: 'hai'
+            transliterated_be: 'hai',
+            transliterated_be_past: (gender == :male ? 'the' : 'thi')
           },
           {
             english: 'they',
             english_be: 'are',
+            english_be_past: 'were',
             hindi: 'वे',
             hindi_be: 'हैं',
+            hindi_be_past: (gender == :male ? 'थे' : 'थी'),
             transliterated: 've',
-            transliterated_be: 'hai'
+            transliterated_be: 'hai',
+            transliterated_be_past: (gender == :male ? 'the' : 'thi')
           }
         ]
       else
@@ -373,18 +415,24 @@ module Hindi
           {
             english: 'they',
             english_be: 'are',
+            english_be_past: 'were',
             hindi: 'यह',
             hindi_be: 'है',
+            hindi_be_past: (gender == :male ? 'था' : 'थी'),
             transliterated: 'yah',
-            transliterated_be: 'hai'
+            transliterated_be: 'hai',
+            transliterated_be_past: (gender == :male ? 'tha' : 'thi')
           },
           {
             english: 'they',
             english_be: 'are',
+            english_be_past: 'were',
             hindi: 'वह',
             hindi_be: 'है',
+            hindi_be_past: (gender == :male ? 'था' : 'थी'),
             transliterated: 'vah',
-            transliterated_be: 'hai'
+            transliterated_be: 'hai',
+            transliterated_be_past: (gender == :male ? 'tha' : 'thi')
           }
         ]
       end
@@ -393,10 +441,13 @@ module Hindi
         {
           english: 'these',
           english_be: 'are',
+          english_be_past: 'were',
           hindi: 'ये',
           hindi_be: 'हैं',
+          hindi_be_past: (gender == :male ? 'थे' : 'थी'),
           transliterated: 'ye',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'the' : 'thi')
         }
       ]
     when 'those'
@@ -404,10 +455,13 @@ module Hindi
         {
           english: 'those',
           english_be: 'are',
+          english_be_past: 'were',
           hindi: 'वे',
           hindi_be: 'हैं',
+          hindi_be_past: (gender == :male ? 'थे' : 'थी'),
           transliterated: 've',
-          transliterated_be: 'hai'
+          transliterated_be: 'hai',
+          transliterated_be_past: (gender == :male ? 'the' : 'thi')
         }
       ]
     end
