@@ -57,5 +57,10 @@ Errors = {
   ],
   spanishPlural: [
     "Spanish plural can't be blank"
+  ],
+  maxQuestions: [
+    "Max questions is not a number",
+    "Max questions must be an integer",
+    "Max questions must be greater than or equal to 0"
   ]
 }

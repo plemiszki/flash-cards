@@ -1,6 +1,7 @@
 class Quiz < ActiveRecord::Base
 
   validates :name, presence: true
+  validates_numericality_of :max_questions, greater_than_or_equal_to: 0, only_integer: true
 
   has_many :quiz_questions, -> { order(:id) }
   has_many :questions, through: :quiz_questions
@@ -231,6 +232,7 @@ class Quiz < ActiveRecord::Base
             answers: answers.uniq
           }
         when 'Hindi - General Statement'
+          # TODO: add past
           noun = get_noun(quiz_question)
           english_single_plural_same = (noun.english == noun.english_plural)
           adjective = @adjectives.pop
@@ -296,6 +298,7 @@ class Quiz < ActiveRecord::Base
             end.flatten.uniq, noun_use_plural)
           }
         when 'Hindi - The Noun is Preposition the Adjective Noun'
+          # TODO: add past
           @noun = get_noun(quiz_question)
           use_noun_plural = @noun.uncountable ? false : random_boolean
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
@@ -315,6 +318,7 @@ class Quiz < ActiveRecord::Base
             answers: all_synonyms(hindi_answers, use_noun_plural, use_noun2_plural) + all_synonyms(transliterated_answers, use_noun_plural, use_noun2_plural)
           }
         when 'Hindi - There is a Noun Preposition the Adjective Noun'
+          # TODO: add past
           @noun = get_noun(quiz_question)
           use_noun_plural = @noun.uncountable ? false : [true, false].sample
           noun_english, noun_transliterated, noun_hindi = get_proper_words_from_plural({ noun: @noun, plural: use_noun_plural })
@@ -378,7 +382,8 @@ class Quiz < ActiveRecord::Base
             question: "#{question_subject_object[:english].capitalize} #{question_subject_object[english_be_symbol]} #{adjective[:english]}.#{use_past ? notification : ''}",
             answers: hindi_answers + transliterated_answers
           }
-      when 'Hindi - Subject is an Adjective Noun'
+        when 'Hindi - Subject is an Adjective Noun'
+          # TODO: use past
           english_subject = English::get_random_english_subject
           gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
           subject_objects = Hindi::get_subject_objects(english_subject: english_subject, use_plural: use_plural)
@@ -405,6 +410,7 @@ class Quiz < ActiveRecord::Base
             answers: answers
           }
         when 'Hindi - Subject has a Noun'
+          # TODO: use past
           subject = English::get_random_english_subject
           use_subject_plural, subject_plural_notification = English::get_plural_from_subject(subject)
           subject_objects = Hindi::get_subject_objects(english_subject: subject, use_plural: use_subject_plural)
@@ -431,6 +437,7 @@ class Quiz < ActiveRecord::Base
             answers: answers.uniq
           }
         when 'Hindi - Subject has an Adjective Noun'
+          # TODO: use past
           subject = English::get_random_english_subject
           use_subject_plural, subject_plural_notification = English::get_plural_from_subject(subject)
           subject_objects = Hindi::get_subject_objects(english_subject: subject, use_plural: use_subject_plural)
@@ -471,6 +478,7 @@ class Quiz < ActiveRecord::Base
             ]
           }
         when 'Hindi - Noun is Adjective'
+          # TODO: add past
           @noun = get_noun(quiz_question)
           adjective = @adjectives.pop
           if @noun.uncountable
@@ -620,6 +628,7 @@ class Quiz < ActiveRecord::Base
             ].flatten
           }
         when 'Hindi - Subject likes Noun'
+          # TODO: add past
           english_subject = English::get_random_english_subject
           use_plural, notification = English::get_plural_from_subject(english_subject)
           subject_objects = Hindi::get_subject_objects(english_subject: english_subject, use_plural: use_plural)
@@ -639,6 +648,7 @@ class Quiz < ActiveRecord::Base
             answers: answers.uniq
           }
         when 'Hindi - Does Subject like Noun?'
+          # TODO: add past
           english_subject = English::get_random_english_subject
           use_do = ['you', 'these', 'those', 'they', 'we', 'I'].include?(english_subject)
           use_plural, notification = English::get_plural_from_subject(english_subject)
@@ -818,6 +828,9 @@ class Quiz < ActiveRecord::Base
           }
         end
       end
+    end
+    if max_questions > 0 && result.length > max_questions
+      result = result.sample(max_questions)
     end
     result.shuffle
   end
