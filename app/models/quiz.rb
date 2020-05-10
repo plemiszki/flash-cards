@@ -1,5 +1,7 @@
 class Quiz < ActiveRecord::Base
 
+  include AvailableQuestions
+
   validates :name, presence: true
   validates_numericality_of :max_questions, greater_than_or_equal_to: 0, only_integer: true
 
@@ -17,9 +19,14 @@ class Quiz < ActiveRecord::Base
     @spanish_adjectives = []
     @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
-    quiz_questions.each do |quiz_question|
+
+    my_quiz_questions = quiz_questions
+    available_questions = get_available_questions(quiz_questions: my_quiz_questions, quiz: self)
+
+    my_quiz_questions.each do |quiz_question|
       question = quiz_question.question
-      quiz_question.amount.times do
+      number_of_questions = quiz_question.use_all_available ? available_questions[quiz_question.id] : quiz_question.amount
+      number_of_questions.times do
         check_if_anything_empty
         case question.name
         when 'Card'
