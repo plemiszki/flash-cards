@@ -1,5 +1,9 @@
 module English
 
+  def self.get_random_weekday
+    ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].sample
+  end
+
   def self.get_random_english_subject(plural_only: false)
     ['we', 'they', 'these', 'those', 'I', 'you', 'he', 'she', 'it', 'this', 'that'][plural_only ? rand(4) : rand(11)]
   end

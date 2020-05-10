@@ -1,5 +1,33 @@
 module Spanish
 
+  WEEKDAYS = [
+    { spanish: 'lunes',
+      english: 'Monday'
+    },
+    { spanish: 'martes',
+      english: 'Tuesday'
+    },
+    { spanish: 'miércoles',
+      english: 'Wednesday'
+    },
+    { spanish: 'jueves',
+      english: 'Thursday'
+    },
+    { spanish: 'viernes',
+      english: 'Friday'
+    },
+    { spanish: 'sábado',
+      english: 'Saturday'
+    },
+    { spanish: 'domingo',
+      english: 'Sunday'
+    }
+  ]
+
+  def self.get_weekday(english)
+    WEEKDAYS.detect { |weekday| weekday[:english] == english }
+  end
+
   def self.conjugate_ser(subject: nil, noun: nil, use_plural: false)
     if subject
       case subject

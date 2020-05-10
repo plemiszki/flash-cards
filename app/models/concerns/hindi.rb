@@ -1,5 +1,40 @@
 module Hindi
 
+  WEEKDAYS = [
+    { hindi: 'रविवार',
+      transliterated: 'ravivar',
+      english: 'Sunday'
+    },
+    { hindi: 'सोमवार',
+      transliterated: 'somvar',
+      english: 'Monday'
+    },
+    { hindi: 'मंगलवार',
+      transliterated: 'mangalvar',
+      english: 'Tuesday'
+    },
+    { hindi: 'बुधवार',
+      transliterated: 'budhvar',
+      english: 'Wednesday'
+    },
+    { hindi: 'गुरुवार',
+      transliterated: 'guruvar',
+      english: 'Thursday'
+    },
+    { hindi: 'शुक्रवार',
+      transliterated: 'shukravar',
+      english: 'Friday'
+    },
+    { hindi: 'शुक्रवार',
+      transliterated: 'shanivar',
+      english: 'Saturday'
+    }
+  ]
+
+  def self.get_weekday(english)
+    WEEKDAYS.detect { |weekday| weekday[:english] == english }
+  end
+
   def self.conjugate_ka(args)
     gender = args[:noun] ? [:male, :female][args[:noun].gender - 1] : args[:gender]
     if args[:output] == 'transliterated'

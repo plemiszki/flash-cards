@@ -826,6 +826,23 @@ class Quiz < ActiveRecord::Base
               answer
             ]
           }
+        when 'Spanish - Weekdays'
+          english = English.get_random_weekday
+          result << {
+            question: english,
+            answers: [
+              Spanish.get_weekday(english)[:spanish]
+            ]
+          }
+        when 'Hindi - Weekdays'
+          english = English.get_random_weekday
+          result << {
+            question: english,
+            answers: [
+              Hindi.get_weekday(english)[:hindi],
+              Hindi.get_weekday(english)[:transliterated]
+            ]
+          }
         end
       end
     end
