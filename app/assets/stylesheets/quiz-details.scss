@@ -33,6 +33,10 @@
     }
   }
 
+  .admin-table input[type="checkbox"] {
+    margin: 0;
+  }
+
   .amount {
     text-align: center;
     width: 60px;
@@ -63,18 +67,21 @@
 
   .right-arrow, .left-arrow {
     width: 50px;
-    cursor: pointer;
     background-size: 0;
     background-position-y: 47%;
     background-repeat: no-repeat;
+
+    &:not(.hide-arrow) {
+      cursor: pointer;
+    }
   }
 
-  .right-arrow {
+  .right-arrow:not(.hide-arrow) {
     background-image: image-url('right-arrow');
     background-position-x: 0;
   }
 
-  .left-arrow {
+  .left-arrow:not(.hide-arrow) {
     background-image: image-url('left-arrow');
     background-position-x: 100%;
   }

@@ -107,9 +107,32 @@ class QuizDetails extends React.Component {
   totalQuestions() {
     let result = 0;
     this.state.quizQuestions.forEach((quizQuestion) => {
-      result += quizQuestion.amount;
+      if (quizQuestion.useAllAvailable) {
+        result += quizQuestion.available;
+      } else {
+        result += quizQuestion.amount;
+      }
     })
     return result;
+  }
+
+  clickCheckbox(e) {
+    let id = e.target.parentElement.parentElement.dataset.id;
+    let quizQuestion = HandyTools.deepCopy(HandyTools.findObjectInArrayById(this.state.quizQuestions, id));
+    this.setState({
+      fetching: true
+    });
+    this.props.updateEntity({
+      id,
+      directory: 'quiz_questions',
+      entityName: 'quizQuestion',
+      entity: { useAllAvailable: e.target.checked }
+    }).then(() => {
+      this.setState({
+        fetching: false,
+        quizQuestions: this.props.quizQuestions
+      });
+    })
   }
 
   updateQuizQuestion(dir, e) {
@@ -178,6 +201,7 @@ class QuizDetails extends React.Component {
               <tr>
                 <th>Question</th>
                 <th>Tag</th>
+                { this.renderUseAllHeader() }
                 <th></th>
                 <th className="amount">Amount</th>
                 <th></th>
@@ -204,9 +228,10 @@ class QuizDetails extends React.Component {
                   <tr className={ rowClasses } key={ index } data-id={ quizQuestion.id }>
                     <td>{ quizQuestion.questionName }</td>
                     <td>{ quizQuestion.tagName }</td>
-                    <td className="left-arrow" onClick={ this.updateQuizQuestion.bind(this, 'left') }></td>
-                    <td className="amount">{ quizQuestion.amount }</td>
-                    <td className="right-arrow" onClick={ this.updateQuizQuestion.bind(this, 'right') }></td>
+                    { this.renderUseAllColumn(quizQuestion) }
+                    <td className={ 'left-arrow' + (quizQuestion.useAllAvailable ? ' hide-arrow' : '') } onClick={ quizQuestion.useAllAvailable ? null : this.updateQuizQuestion.bind(this, 'left') }></td>
+                    <td className="amount">{ quizQuestion.useAllAvailable ? quizQuestion.available : quizQuestion.amount }</td>
+                    <td className={ 'right-arrow' + (quizQuestion.useAllAvailable ? ' hide-arrow' : '') } onClick={ quizQuestion.useAllAvailable ? null : this.updateQuizQuestion.bind(this, 'right') }></td>
                     { this.renderAvailableColumn(quizQuestion) }
                     { this.renderArchivedColumns(quizQuestion) }
                     <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) }></td>
@@ -235,6 +260,14 @@ class QuizDetails extends React.Component {
     );
   }
 
+  renderUseAllHeader() {
+    if (this.state.renderAvailableColumn) {
+      return(
+        <th>Use All</th>
+      );
+    }
+  }
+
   renderAvailableHeader() {
     if (this.state.renderAvailableColumn) {
       return(
@@ -249,6 +282,14 @@ class QuizDetails extends React.Component {
         <th key="1" className="unarchived"><div className="unarchived-header"></div></th>,
         <th key="2" className="archived"><div className="archived-header"></div></th>
       ]);
+    }
+  }
+
+  renderUseAllColumn(quizQuestion) {
+    if (this.state.renderAvailableColumn) {
+      return(
+        <td><input type="checkbox" checked={ quizQuestion.useAllAvailable } onChange={ this.clickCheckbox.bind(this) } /></td>
+      );
     }
   }
 
@@ -270,19 +311,17 @@ class QuizDetails extends React.Component {
   }
 
   renderTotalRow() {
-    let totalQuestions = this.totalQuestions();
-    if (totalQuestions) {
-      return(
-        <tr className="no-hover">
-          <td></td>
-          <td></td>
-          <td></td>
-          <td className="amount">{ totalQuestions }</td>
-          <td></td>
-          <td></td>
-        </tr>
-      );
-    }
+    return(
+      <tr className="no-hover">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td className="amount">{ this.totalQuestions() }</td>
+        <td></td>
+        <td></td>
+      </tr>
+    );
   }
 }
 

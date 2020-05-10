@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_09_221239) do
+ActiveRecord::Schema.define(version: 2020_05_10_190947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2020_05_09_221239) do
     t.integer "question_id", null: false
     t.integer "amount", null: false
     t.integer "tag_id"
+    t.boolean "use_all_available", default: false
     t.index ["question_id"], name: "index_quiz_questions_on_question_id"
     t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id"
     t.index ["tag_id"], name: "index_quiz_questions_on_tag_id"
