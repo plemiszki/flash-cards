@@ -48,7 +48,17 @@ class Api::SpanishAdjectivesController < AdminController
   private
 
   def spanish_adjective_params
-    params[:spanish_adjective].permit(:english, :masculine, :masculine_plural, :feminine, :feminine_plural, :streak)
+    result = params[:spanish_adjective].permit(
+      :english,
+      :masculine,
+      :masculine_plural,
+      :feminine,
+      :feminine_plural,
+      :streak,
+      :last_streak_add
+    )
+    result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result
   end
 
 end

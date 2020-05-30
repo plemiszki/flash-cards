@@ -42,6 +42,7 @@ class Quiz < ActiveRecord::Base
             unarchiveButton: self.use_archived,
             cardId: card.id,
             streak: card.streak,
+            lastStreakAdd: card.last_streak_add.try(:to_time).try(:to_i),
             tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } }
           }
           if card.multiple_choice
@@ -165,6 +166,7 @@ class Quiz < ActiveRecord::Base
             wordId: noun.id,
             entity: 'noun',
             streak: noun.streak,
+            lastStreakAdd: noun.last_streak_add.try(:to_time).try(:to_i),
             question: get_english_plural(use_plural, @noun).capitalize,
             answers: answers.uniq,
             description: 'noun',
@@ -176,6 +178,7 @@ class Quiz < ActiveRecord::Base
             wordId: verb.id,
             entity: 'verb',
             streak: verb.streak,
+            lastStreakAdd: verb.last_streak_add.try(:to_time).try(:to_i),
             question: verb.english.capitalize,
             answers: [
               verb.transliterated_infinitive,
@@ -190,6 +193,7 @@ class Quiz < ActiveRecord::Base
             wordId: adjective.id,
             entity: 'adjective',
             streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:to_time).try(:to_i),
             question: adjective.english.capitalize,
             answers: [
               adjective.transliterated_masculine,
@@ -747,6 +751,7 @@ class Quiz < ActiveRecord::Base
             wordId: noun.id,
             entity: 'spanishNoun',
             streak: noun.streak,
+            lastStreakAdd: noun.last_streak_add.try(:to_time).try(:to_i),
             question: Spanish::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
             answers: synonyms.map do |noun|
               (plural ? noun.spanish_plural : noun.spanish)
@@ -762,6 +767,7 @@ class Quiz < ActiveRecord::Base
             wordId: verb.id,
             entity: 'spanishVerb',
             streak: verb.streak,
+            lastStreakAdd: verb.last_streak_add.try(:to_time).try(:to_i),
             question: verb.english.capitalize,
             answers: synonyms.map do |verb|
               verb.spanish
@@ -777,6 +783,7 @@ class Quiz < ActiveRecord::Base
             wordId: adjective.id,
             entity: 'spanishAdjective',
             streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:to_time).try(:to_i),
             question: adjective.english.capitalize,
             answers: synonyms.map do |adjective|
               adjective.masculine

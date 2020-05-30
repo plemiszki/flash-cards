@@ -48,7 +48,19 @@ class Api::AdjectivesController < AdminController
   private
 
   def adjective_params
-    params[:adjective].permit(:english, :masculine, :feminine, :masculine_plural, :transliterated_masculine, :transliterated_feminine, :transliterated_masculine_plural, :streak)
+    result = params[:adjective].permit(
+      :english,
+      :masculine,
+      :feminine,
+      :masculine_plural,
+      :transliterated_masculine,
+      :transliterated_feminine,
+      :transliterated_masculine_plural,
+      :streak,
+      :last_streak_add
+    )
+    result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result
   end
 
 end

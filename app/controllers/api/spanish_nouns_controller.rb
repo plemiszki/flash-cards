@@ -48,7 +48,9 @@ class Api::SpanishNounsController < AdminController
   private
 
   def spanish_noun_params
-    params[:spanish_noun].permit(:english, :english_plural, :spanish, :spanish_plural, :gender, :streak)
+    result = params[:spanish_noun].permit(:english, :english_plural, :spanish, :spanish_plural, :gender, :streak, :last_streak_add)
+    result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result
   end
 
 end

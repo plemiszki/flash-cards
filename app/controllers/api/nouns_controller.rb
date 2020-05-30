@@ -48,7 +48,9 @@ class Api::NounsController < AdminController
   private
 
   def noun_params
-    params[:noun].permit(:english, :english_plural, :foreign, :foreign_plural, :gender, :transliterated, :transliterated_plural, :uncountable, :streak)
+    result = params[:noun].permit(:english, :english_plural, :foreign, :foreign_plural, :gender, :transliterated, :transliterated_plural, :uncountable, :streak, :last_streak_add)
+    result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result
   end
 
 end

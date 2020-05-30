@@ -59,25 +59,34 @@ class QuizRun extends React.Component {
 
   updateStreak(status) {
     let question = this.state.quiz.questions[this.state.questionNumber];
+    let directory;
+    let id;
+    let entityName;
+
     if (question.cardId) {
-      this.props.updateEntity({
-        directory: 'cards',
-        id: question.cardId,
-        entityName: 'card',
-        entity: {
-          streak: (status === 'correct' ? (+question.streak + 1) : 0)
-        }
-      });
+      directory = 'cards';
+      id = question.cardId;
+      entityName = 'card';
     } else if (question.wordId) {
-      this.props.updateEntity({
-        directory: `${ChangeCase.snakeCase(question.entity)}s`,
-        id: question.wordId,
-        entityName: question.entity,
-        entity: {
-          streak: (status === 'correct' ? (+question.streak + 1) : 0)
-        }
-      });
+      directory = `${ChangeCase.snakeCase(question.entity)}s`;
+      id = question.wordId;
+      entityName = question.entity;
     }
+
+    let entity = {};
+    if (status === 'correct') {
+      entity.streak = (+question.streak + 1);
+      entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
+    } else {
+      entity.streak = 0;
+    }
+
+    this.props.updateEntity({
+      directory,
+      id,
+      entityName,
+      entity
+    });
   }
 
   checkAnswer(e) {
@@ -127,7 +136,11 @@ class QuizRun extends React.Component {
         this.setState({
           status: 'correct'
         }, () => {
-          if (!this.state.wrongAnswerLog[this.state.questionNumber]) {
+          const gotCorrectAfterFailing = !!this.state.wrongAnswerLog[this.state.questionNumber];
+          const lastStreakUpdateTimestamp = quizQuestion.lastStreakAdd && (quizQuestion.lastStreakAdd * 1000);
+          const beginningOfTodayTimestamp = new Date().setHours(0, 0, 0, 0);
+          const streakAlreadyUpdatedToday = quizQuestion.lastStreakAdd && (lastStreakUpdateTimestamp === beginningOfTodayTimestamp);
+          if (!gotCorrectAfterFailing && !streakAlreadyUpdatedToday) {
             this.updateStreak.call(this, this.state.status);
           }
         });

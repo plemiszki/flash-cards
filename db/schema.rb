@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_10_190947) do
+ActiveRecord::Schema.define(version: 2020_05_30_175626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2020_05_10_190947) do
     t.string "masculine_plural"
     t.string "transliterated_masculine_plural"
     t.integer "streak", default: 0
+    t.date "last_streak_add"
   end
 
   create_table "adverbs", id: :serial, force: :cascade do |t|
@@ -80,6 +81,7 @@ ActiveRecord::Schema.define(version: 2020_05_10_190947) do
     t.string "transliterated_plural"
     t.boolean "uncountable", default: false
     t.integer "streak", default: 0
+    t.date "last_streak_add"
   end
 
   create_table "questions", id: :serial, force: :cascade do |t|
@@ -110,6 +112,7 @@ ActiveRecord::Schema.define(version: 2020_05_10_190947) do
     t.string "masculine_plural", null: false
     t.string "feminine_plural", null: false
     t.integer "streak", default: 0
+    t.date "last_streak_add"
   end
 
   create_table "spanish_nouns", force: :cascade do |t|
@@ -119,12 +122,14 @@ ActiveRecord::Schema.define(version: 2020_05_10_190947) do
     t.string "spanish_plural", null: false
     t.integer "gender", null: false
     t.integer "streak", default: 0
+    t.date "last_streak_add"
   end
 
   create_table "spanish_verbs", force: :cascade do |t|
     t.string "english", null: false
     t.string "spanish", null: false
     t.integer "streak", default: 0
+    t.date "last_streak_add"
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
@@ -154,6 +159,7 @@ ActiveRecord::Schema.define(version: 2020_05_10_190947) do
     t.string "english_irregular_imperfective", default: ""
     t.string "english_preposition", default: ""
     t.integer "streak", default: 0
+    t.date "last_streak_add"
   end
 
 end

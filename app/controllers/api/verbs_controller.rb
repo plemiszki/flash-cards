@@ -48,7 +48,7 @@ class Api::VerbsController < AdminController
   private
 
   def verb_params
-    params[:verb].permit(
+    result = params[:verb].permit(
       :english,
       :english_irregular_imperfective,
       :infinitive,
@@ -59,8 +59,11 @@ class Api::VerbsController < AdminController
       :irregular_imperative_informal_transliterated,
       :postposition,
       :english_preposition,
-      :streak
+      :streak,
+      :last_streak_add
     )
+    result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result
   end
 
 end
