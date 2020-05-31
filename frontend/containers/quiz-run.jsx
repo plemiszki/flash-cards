@@ -136,12 +136,14 @@ class QuizRun extends React.Component {
         this.setState({
           status: 'correct'
         }, () => {
-          const gotCorrectAfterFailing = !!this.state.wrongAnswerLog[this.state.questionNumber];
-          const lastStreakUpdateTimestamp = quizQuestion.lastStreakAdd && (quizQuestion.lastStreakAdd * 1000);
-          const beginningOfTodayTimestamp = new Date().setHours(0, 0, 0, 0);
-          const streakAlreadyUpdatedToday = quizQuestion.lastStreakAdd && (lastStreakUpdateTimestamp === beginningOfTodayTimestamp);
-          if (!gotCorrectAfterFailing && !streakAlreadyUpdatedToday) {
-            this.updateStreak.call(this, this.state.status);
+          if (quizQuestion.cardId || quizQuestion.wordId) {
+            const gotCorrectAfterFailing = !!this.state.wrongAnswerLog[this.state.questionNumber];
+            const lastStreakUpdateTimestamp = quizQuestion.lastStreakAdd && (quizQuestion.lastStreakAdd * 1000);
+            const beginningOfTodayTimestamp = new Date().setHours(0, 0, 0, 0);
+            const streakAlreadyUpdatedToday = quizQuestion.lastStreakAdd && (lastStreakUpdateTimestamp === beginningOfTodayTimestamp);
+            if (!gotCorrectAfterFailing && !streakAlreadyUpdatedToday) {
+              this.updateStreak.call(this, this.state.status);
+            }
           }
         });
       } else {
@@ -151,7 +153,9 @@ class QuizRun extends React.Component {
           status: 'wrong',
           wrongAnswerLog
         }, () => {
-          this.updateStreak.call(this, this.state.status);
+          if (quizQuestion.cardId || quizQuestion.wordId) {
+            this.updateStreak.call(this, this.state.status);
+          }
         });
       }
     }
