@@ -7,7 +7,7 @@ end
 
 ruby '2.6.6'
 
-gem 'rails', '5.2.2.1'
+gem 'rails', '5.2.4.3'
 gem 'pg', '~> 0.18'
 
 gem 'bootstrap-sass'
