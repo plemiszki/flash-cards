@@ -20,6 +20,7 @@ class QuizRun extends React.Component {
       matchedItems: {},
       unmatchedItems: [],
       status: 'question',
+      streak: 0,
       showAnswers: false,
       wrongAnswerLog: {},
       renderUnarchiveButton: true
@@ -75,7 +76,9 @@ class QuizRun extends React.Component {
 
     let entity = {};
     if (status === 'correct') {
-      entity.streak = (+question.streak + 1);
+      let newStreak = +question.streak + 1;
+      entity.streak = (newStreak);
+      this.setState({ streak: newStreak });
       entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
     } else {
       entity.streak = 0;
@@ -124,6 +127,7 @@ class QuizRun extends React.Component {
       } else {
         this.setState({
           questionNumber: this.state.questionNumber += 1,
+          streak: 0,
           answer: '',
           status: 'question',
           showAnswers: false,
@@ -344,6 +348,7 @@ class QuizRun extends React.Component {
           <h1>{ this.renderHeader() }</h1>
           { this.renderWrongAnswers() }
           <div className="white-box">
+            { this.renderStreakNotification() }
             { Common.renderSpinner(this.state.fetching) }
             { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
             <p className="question m-bottom">{ this.renderQuestion() }</p>
@@ -435,6 +440,14 @@ class QuizRun extends React.Component {
     if (count > 0) {
       return (
         <p className="wrong-count">Wrong: { count }</p>
+      );
+    }
+  }
+
+  renderStreakNotification() {
+    if (this.state.streak > 0) {
+      return (
+        <div className="streak-notification">Streak: { this.state.streak }</div>
       );
     }
   }

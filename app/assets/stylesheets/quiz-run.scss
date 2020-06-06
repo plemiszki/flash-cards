@@ -1,5 +1,16 @@
 #quiz-run {
 
+  .streak-notification {
+    display: block;
+    padding: 5px 10px;
+    position: absolute;
+    right: 32px;
+    background-color: #04B404;
+    color: white;
+    border-radius: 5px;
+    font-family: 'TeachableSans-Bold';
+  }
+
   .quiz-run-error {
     padding: 10px;
     background-color: #fbe2e2;
