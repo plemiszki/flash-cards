@@ -98,7 +98,7 @@ class QuizRun extends React.Component {
     if (!matchingQuestion && this.state.answer === '') {
       return;
     }
-    if (this.state.status === 'correct') {
+    if (this.state.status === 'correct') { // next question
       if (this.state.questionNumber + 1 === this.state.quiz.questions.length) {
         if (this.totalWrongAnswers() > 0) {
           let total = this.state.quiz.questions.length;
