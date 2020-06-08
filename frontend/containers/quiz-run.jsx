@@ -75,21 +75,24 @@ class QuizRun extends React.Component {
     }
 
     let entity = {};
+    let newStreak;
     if (status === 'correct') {
-      let newStreak = +question.streak + 1;
-      entity.streak = (newStreak);
-      this.setState({ streak: newStreak });
-      entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
+      newStreak = +question.streak + 1;
+      entity.streak = newStreak;
     } else {
       entity.streak = 0;
     }
 
-    this.props.updateEntity({
-      directory,
-      id,
-      entityName,
-      entity
-    });
+    if (newStreak < 5) {
+      this.setState({ streak: newStreak });
+      entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
+      this.props.updateEntity({
+        directory,
+        id,
+        entityName,
+        entity
+      });
+    }
   }
 
   checkAnswer(e) {
