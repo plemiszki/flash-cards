@@ -83,7 +83,7 @@ class QuizRun extends React.Component {
       entity.streak = 0;
     }
 
-    if (newStreak < 5) {
+    if (newStreak <= 5) {
       this.setState({ streak: newStreak });
       entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
       this.props.updateEntity({
