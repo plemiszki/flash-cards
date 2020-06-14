@@ -83,16 +83,14 @@ class QuizRun extends React.Component {
       entity.streak = 0;
     }
 
-    if (newStreak <= 5) {
-      this.setState({ streak: newStreak });
-      entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
-      this.props.updateEntity({
-        directory,
-        id,
-        entityName,
-        entity
-      });
-    }
+    this.setState({ streak: newStreak });
+    entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
+    this.props.updateEntity({
+      directory,
+      id,
+      entityName,
+      entity
+    });
   }
 
   checkAnswer(e) {
@@ -448,7 +446,7 @@ class QuizRun extends React.Component {
   }
 
   renderStreakNotification() {
-    if (this.state.streak > 0) {
+    if (this.state.streak > 0 && this.state.streak <= 5) {
       return (
         <div className="streak-notification">Streak: { this.state.streak }</div>
       );
