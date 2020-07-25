@@ -7,7 +7,7 @@ class FetchWordDefinitions
     words = args['words']
     result = {}
     words.each do |word|
-      response = HTTParty.get("https://wordsapiv1.p.mashape.com/words/#{word}", headers: { 'X-Mashape-Key' => ENV['WORDS_API_KEY'] })
+      response = HTTParty.get("https://wordsapiv1.p.rapidapi.com/words/#{word}", headers: { 'X-Mashape-Key' => ENV['WORDS_API_KEY'] })
       if response.has_key?('results')
         definitions = response['results'].map { |result| result['definition'] }
         result[word] = definitions
