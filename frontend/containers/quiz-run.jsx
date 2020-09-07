@@ -342,14 +342,14 @@ class QuizRun extends React.Component {
   checkAnswer(args) {
     const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
     const { question } = args;
-    const userAnswer = args.answer;
+    // const userAnswer = args.answer;
     if (isMatchingQuestion) {
-      const isEqual = this.objectsAreEqual(this.state.matchedItems, question.matchBins);
+      let isEqual = this.objectsAreEqual(this.state.matchedItems, question.matchBins);
       return isEqual;
     }
-    if (question.answers.indexOf(userAnswer) > -1) {
-      return true;
-    }
+    // if (question.answers.indexOf(userAnswer) > -1) {
+    //   return true;
+    // }
     // const sortedQuestionAnswer = question.answers[0].split("\n").sort().join("\n");
     // const sortedUserAnswer = userAnswer.split("\n").sort().join("\n");
     // if (sortedQuestionAnswer === sortedUserAnswer) {
