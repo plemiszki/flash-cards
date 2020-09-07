@@ -340,9 +340,9 @@ class QuizRun extends React.Component {
   }
 
   checkAnswer(args) {
-    // const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
-    // const { question } = args;
-    // const userAnswer = args.answer;
+    const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
+    const { question } = args;
+    const userAnswer = args.answer;
     // if (isMatchingQuestion) {
     //   return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
     // }
