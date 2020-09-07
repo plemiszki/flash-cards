@@ -344,7 +344,8 @@ class QuizRun extends React.Component {
     const { question } = args;
     const userAnswer = args.answer;
     if (isMatchingQuestion) {
-      return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
+      const isEqual = this.objectsAreEqual(this.state.matchedItems, question.matchBins);
+      return isEqual;
     }
     if (question.answers.indexOf(userAnswer) > -1) {
       return true;
