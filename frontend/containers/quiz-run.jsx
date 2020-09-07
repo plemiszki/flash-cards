@@ -93,7 +93,7 @@ class QuizRun extends React.Component {
     });
   }
 
-  checkAnswer(e) {
+  clickCheckAnswer(e) {
     e.preventDefault();
     let matchingQuestion = Object.keys(this.state.matchedItems).length > 0;
     if (!matchingQuestion && this.state.answer === '') {
@@ -137,7 +137,11 @@ class QuizRun extends React.Component {
       }
     } else {
       let quizQuestion = this.state.quiz.questions[this.state.questionNumber];
-      if (quizQuestion.answers.indexOf(this.state.answer) > -1 || (matchingQuestion && this.objectsAreEqual(this.state.matchedItems, quizQuestion.matchBins))) {
+      let answerIsCorrect = this.checkAnswer({
+        question: quizQuestion,
+        answer: this.state.answer
+      });
+      if (answerIsCorrect) {
         this.setState({
           status: 'correct'
         }, () => {
@@ -335,6 +339,24 @@ class QuizRun extends React.Component {
     }, this.setUpDragAndDrop.bind(this));
   }
 
+  checkAnswer(args) {
+    const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
+    const { question } = args;
+    const userAnswer = args.answer;
+    if (isMatchingQuestion) {
+      return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
+    }
+    if (question.answers.indexOf(userAnswer) > -1) {
+      return true;
+    }
+    const sortedQuestionAnswer = question.answers[0].split("\n").sort().join("\n");
+    const sortedUserAnswer = userAnswer.split("\n").sort().join("\n");
+    if (sortedQuestionAnswer === sortedUserAnswer) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
     if (this.state.errors.length > 0) {
       return(
@@ -358,7 +380,7 @@ class QuizRun extends React.Component {
             <form>
               { this.renderInput() }
               { this.renderAnswers() }
-              <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.checkAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
+              <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickCheckAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
               <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
               { this.renderArchiveButton() }
               { this.renderUnarchiveButton() }
