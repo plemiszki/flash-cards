@@ -1,7 +1,6 @@
 json.quiz do
   json.id @quiz.id
   json.name @quiz.name
-  json.useArchived @quiz.use_archived
   json.maxQuestions @quiz.max_questions.to_s
 end
 json.quizQuestions @quiz_questions do |quiz_question|

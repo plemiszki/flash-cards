@@ -316,8 +316,10 @@ class QuizDetails extends React.Component {
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
         <td className="amount">{ this.totalQuestions() }</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
       </tr>
