@@ -152,18 +152,26 @@ class CardDetails extends React.Component {
       fetching: true
     });
     if (type === 'bin') {
-      this.props.deleteEntity('match_bins', id, (response) => {
-        this.setState({
-          fetching: false,
-          matchBins: response.matchBins
-        });
+      this.props.deleteEntity({
+        directory: 'match_bins',
+        id,
+        callback: (response) => {
+          this.setState({
+            fetching: false,
+            matchBins: response.matchBins
+          });
+        }
       });
     } else {
-      this.props.deleteEntity('match_items', id, (response) => {
-        this.setState({
-          fetching: false,
-          matchBins: response.matchBins
-        });
+      this.props.deleteEntity({
+        directory: 'match_items',
+        id,
+        callback: (response) => {
+          this.setState({
+            fetching: false,
+            matchBins: response.matchBins
+          });
+        }
       });
     }
   }
