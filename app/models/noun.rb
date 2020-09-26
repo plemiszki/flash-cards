@@ -10,6 +10,10 @@ class Noun < ActiveRecord::Base
     gender == 1 ? 'male' : 'female'
   end
 
+  def gender_symbol
+    gender == 1 ? :male : :female
+  end
+
   def synonyms
     Noun.where(english: self.english)
   end

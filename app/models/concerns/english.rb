@@ -4,7 +4,8 @@ module English
     ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].sample
   end
 
-  def self.get_random_english_subject(plural_only: false)
+  def self.get_random_english_subject(plural_only: false, override: nil)
+    return override if override
     ['we', 'they', 'these', 'those', 'I', 'you', 'he', 'she', 'it', 'this', 'that'][plural_only ? rand(4) : rand(11)]
   end
 
@@ -52,20 +53,27 @@ module English
     return [gender, notification || ""]
   end
 
-  def self.get_gender_and_plural_from_subject(subject)
-    if subject.downcase.in?(['i', 'he'])
-      gender = :male
-    elsif subject.downcase == 'she'
-      gender = :female
-    else
-      gender = [:male, :female].sample
-      notification = " (#{gender.to_s.capitalize[0]})"
+  def self.get_gender_and_plural_from_subject(subject, ignore_subject_gender: false)
+    unless ignore_subject_gender
+      if subject.downcase.in?(['i', 'he'])
+        gender = :male
+      elsif subject.downcase == 'she'
+        gender = :female
+      else
+        gender = [:male, :female].sample
+        notification = " (#{gender.to_s.capitalize[0]})"
+      end
     end
     if subject.downcase.in?(['we', 'these', 'those'])
       use_plural = true
     elsif subject.downcase == 'they'
       use_plural = [true, false].sample
-      notification.insert(-2, use_plural ? 'P' : 'S')
+      use_plural_symbol = (use_plural ? 'P' : 'S')
+      if notification
+        notification.insert(-2, use_plural_symbol)
+      else
+        notification = " (#{use_plural_symbol})"
+      end
     else
       use_plural = false
     end
