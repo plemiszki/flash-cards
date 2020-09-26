@@ -353,7 +353,7 @@ class Quiz < ActiveRecord::Base
           subject_gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject, ignore_subject_gender: true)
           use_plural = use_plural && @noun.countable?
           use_past, english_be_symbol, hindi_be_symbol, transliterated_be_symbol = set_past_symbols
-          subject_objects = Hindi::get_subject_objects(english_subject: english_subject, gender: @noun.gender_symbol)
+          subject_objects = Hindi::get_subject_objects(english_subject: english_subject, gender: @noun.gender_symbol, use_plural: use_plural)
           question_subject_object = subject_objects.sample
           answers = []
           subject_objects.map do |subject_object|
@@ -367,7 +367,7 @@ class Quiz < ActiveRecord::Base
             end
           end
           result << {
-            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[english_be_symbol]}#{use_plural ? " #{@noun[:english_plural]}" : "#{(@noun.countable? ? " #{a_or_an(@noun[:english])}" : '')} #{@noun[:english]}"}.#{use_past ? notification : ''}",
+            question: "#{question_subject_object[:english].capitalize} #{question_subject_object[english_be_symbol]}#{use_plural ? " #{@noun[:english_plural]}" : "#{(@noun.countable? ? " #{a_or_an(@noun[:english])}" : '')} #{@noun[:english]}"}.#{notification}",
             answers: answers
           }
         when 'Hindi - Subject is Adjective'
