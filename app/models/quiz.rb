@@ -827,7 +827,7 @@ class Quiz < ActiveRecord::Base
           if n <= 20
             answer = numbers[n - 1]
           elsif n > 20 && n < 30
-            answer = "vienti#{numbers[n - 21]}".gsub('dos', 'dós').gsub('tres', 'trés').gsub('seis', 'séis')
+            answer = "veinti#{numbers[n - 21]}".gsub('dos', 'dós').gsub('tres', 'trés').gsub('seis', 'séis')
           else
             ten = n / 10
             one = n % 10
