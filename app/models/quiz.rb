@@ -17,6 +17,7 @@ class Quiz < ActiveRecord::Base
     @spanish_nouns = []
     @spanish_verbs = []
     @spanish_adjectives = []
+    @spanish_miscs = []
     @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
 
@@ -790,6 +791,18 @@ class Quiz < ActiveRecord::Base
             description: 'adjective',
             highlightButton: true,
             tags: adjective.tags.pluck(:name)
+          }
+        when 'Spanish - Misc Word'
+          word = Spanish::get_misc_word(quiz_question, @spanish_miscs)
+          result << {
+            wordId: word.id,
+            entity: 'spanishMisc',
+            streak: word.streak,
+            lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: word.english.capitalize,
+            answers: [word.spanish],
+            highlightButton: true,
+            tags: word.tags.pluck(:name)
           }
         when 'Spanish - Noun is Adjective'
           # TODO: add 'this/these' and 'that/those' articles

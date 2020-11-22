@@ -21,7 +21,8 @@ module AvailableQuestions
           'Hindi - Single Adjective': 'Adjective',
           'Spanish - Single Noun': 'SpanishNoun',
           'Spanish - Single Verb': 'SpanishVerb',
-          'Spanish - Single Adjective': 'SpanishAdjective'
+          'Spanish - Single Adjective': 'SpanishAdjective',
+          'Spanish - Misc Word': 'SpanishMisc'
         }[quiz_question.question.name.to_sym]
         tagged_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: type).includes(:cardtagable).map(&:cardtagable).pluck(:id)
         available_questions[quiz_question.id] = tagged_ids.count
