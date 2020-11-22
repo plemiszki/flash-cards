@@ -11,6 +11,7 @@ import AdjectiveDetails from './containers/adjective-details'
 import SpanishNounDetails from './containers/spanish-noun-details'
 import SpanishVerbDetails from './containers/spanish-verb-details'
 import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
+import SpanishMiscDetails from './containers/spanish-misc-details'
 import CardDetails from './containers/card-details'
 import QuizDetails from './containers/quiz-details'
 import QuizRun from './containers/quiz-run'
@@ -21,7 +22,7 @@ import TabActions from './containers/modules/tab-actions.js'
 import configureStore from './store/store'
 let store = configureStore();
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', () => {
 
   ReactModal.setAppElement(document.body);
   const MyContext = React.createContext();
@@ -384,6 +385,36 @@ $(document).ready(function() {
         <SpanishAdjectiveDetails />
       </Provider>,
       document.querySelector('#spanish-adjective-details')
+    );
+  }
+
+  if (document.querySelector('#spanish-miscs-index')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <StandardIndex
+          context={ MyContext }
+          header='Spanish Miscellaneous Words'
+          entityName='spanishMisc'
+          columns={ ['spanish', 'english'] }
+          modalRows={ 1 }
+          modalDimensions={ { width: 900 } }
+        >
+          <NewEntity
+            context={ MyContext }
+            initialEntity={ { english: '', spanish: '', needsAttention: true } }
+          />
+        </StandardIndex>
+      </Provider>,
+      document.querySelector('#spanish-miscs-index')
+    );
+  }
+
+  if (document.querySelector('#spanish-misc-details')) {
+    ReactDOM.render(
+      <Provider store={ store }>
+        <SpanishMiscDetails />
+      </Provider>,
+      document.querySelector('#spanish-misc-details')
     );
   }
 

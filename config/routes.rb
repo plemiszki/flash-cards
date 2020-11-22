@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :spanish_nouns, only: [:index, :show]
   resources :spanish_verbs, only: [:index, :show]
   resources :spanish_adjectives, only: [:index, :show]
+  resources :spanish_miscs, only: [:index, :show]
   resources :vocabulary, only: [:index]
 
   namespace :api do
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
     resources :spanish_nouns, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_verbs, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_adjectives, only: [:index, :show, :create, :update, :destroy]
+    resources :spanish_miscs, only: [:index, :show, :create, :update, :destroy]
     resources :match_bins, only: [:create, :destroy]
     resources :match_items, only: [:create, :destroy]
     resources :jobs, only: [:create, :show]

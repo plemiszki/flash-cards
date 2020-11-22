@@ -201,6 +201,14 @@ class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'femininePlural' }) }
           </div>
         ]);
+      case 'spanishMisc':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishMisc', property: 'spanish' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishMisc', property: 'english' }) }
+            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'spanishMisc', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
+          </div>
+        ]);
       case 'matchBin':
         return([
           <div key="1" className="row">
