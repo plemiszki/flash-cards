@@ -577,8 +577,17 @@ class QuizRun extends React.Component {
             <pre key={ index } className="answer">{ answer }</pre>
           );
         } else {
+          let spanTags = answer.split("\n").map((line, index) => {
+            return(
+              <>
+                <span key={ index }>{ line }</span><br />
+              </>
+            );
+          })
           return(
-            <p key={ index } className="answer">{ answer }</p>
+            <p className="answer">
+              { spanTags }
+            </p>
           );
         }
       });
