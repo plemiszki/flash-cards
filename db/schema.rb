@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_22_161520) do
+ActiveRecord::Schema.define(version: 2020_11_25_164308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_161520) do
     t.integer "gender", null: false
     t.integer "streak", default: 0
     t.date "last_streak_add"
+    t.string "note", default: ""
   end
 
   create_table "spanish_verbs", force: :cascade do |t|

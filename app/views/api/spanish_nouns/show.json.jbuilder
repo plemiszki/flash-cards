@@ -5,6 +5,7 @@ json.spanishNoun do
   json.spanish @spanish_noun.spanish
   json.spanishPlural @spanish_noun.spanish_plural
   json.gender @spanish_noun.gender.to_s
+  json.note @spanish_noun.note
 end
 json.spanishNounTags @spanish_noun_tags do |spanish_noun_tag|
   json.id spanish_noun_tag.id

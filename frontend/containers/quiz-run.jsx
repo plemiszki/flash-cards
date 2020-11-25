@@ -402,11 +402,19 @@ class QuizRun extends React.Component {
 
   renderDescription() {
     if (this.state.quiz.questions) {
-      let description = this.state.quiz.questions[this.state.questionNumber].description;
+      const question = this.state.quiz.questions[this.state.questionNumber];
+      const description = question.description;
+      const note = question.note;
       if (description) {
-        return(
-          <p className="description">{ ChangeCase.titleCase(description) }</p>
-        );
+        if (note) {
+          return(
+            <p className="description">{ ChangeCase.titleCase(description) } - { note }</p>
+          );
+        } else {
+          return(
+            <p className="description">{ ChangeCase.titleCase(description) }</p>
+          );
+        }
       }
     }
   }

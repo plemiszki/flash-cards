@@ -14,7 +14,8 @@ class SpanishNounDetails extends React.Component {
       english: '',
       englishSaved: '',
       spanish: '',
-      spanishSaved: ''
+      spanishSaved: '',
+      note: ''
     };
 
     this.state = {
@@ -107,6 +108,7 @@ class SpanishNounDetails extends React.Component {
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'spanishPlural' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'note' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>

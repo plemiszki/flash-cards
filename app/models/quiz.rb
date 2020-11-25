@@ -758,7 +758,8 @@ class Quiz < ActiveRecord::Base
             end,
             description: 'noun',
             highlightButton: true,
-            tags: noun.tags.pluck(:name)
+            tags: noun.tags.pluck(:name),
+            note: noun.note
           }
         when 'Spanish - Single Verb'
           verb = Spanish::get_verb(quiz_question, @spanish_verbs)
