@@ -999,6 +999,7 @@ class Quiz < ActiveRecord::Base
     @spanish_nouns = SpanishNoun.all.to_a.shuffle if @spanish_nouns.empty?
     @spanish_verbs = SpanishVerb.all.to_a.shuffle if @spanish_verbs.empty?
     @spanish_adjectives = SpanishAdjective.all.to_a.shuffle if @spanish_adjectives.empty?
+    @spanish_miscs = SpanishMisc.all.to_a.shuffle if @spanish_miscs.empty?
   end
 
   def get_noun(quiz_question)
