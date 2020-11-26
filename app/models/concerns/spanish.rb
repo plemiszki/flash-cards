@@ -24,8 +24,51 @@ module Spanish
     }
   ]
 
+  MONTHS = [
+    { spanish: 'enero',
+      english: 'January'
+    },
+    { spanish: 'febrero',
+      english: 'February'
+    },
+    { spanish: 'marzo',
+      english: 'March'
+    },
+    { spanish: 'abril',
+      english: 'April'
+    },
+    { spanish: 'mayo',
+      english: 'May'
+    },
+    { spanish: 'junio',
+      english: 'June'
+    },
+    { spanish: 'julio',
+      english: 'July'
+    },
+    { spanish: 'agosto',
+      english: 'August'
+    },
+    { spanish: 'septiembre',
+      english: 'September'
+    },
+    { spanish: 'octubre',
+      english: 'October'
+    },
+    { spanish: 'noviembre',
+      english: 'November'
+    },
+    { spanish: 'diciembre',
+      english: 'December'
+    }
+  ]
+
   def self.get_weekday(english)
     WEEKDAYS.detect { |weekday| weekday[:english] == english }
+  end
+
+  def self.get_all_months
+    MONTHS.dup
   end
 
   def self.conjugate_ser(subject: nil, noun: nil, use_plural: false)
@@ -53,6 +96,11 @@ module Spanish
     else
       raise "conjugate ser is missing subject or noun"
     end
+  end
+
+  def self.get_month(months)
+    months.shuffle!
+    months.pop
   end
 
   def self.get_noun(quiz_question, nouns)

@@ -18,6 +18,7 @@ class Quiz < ActiveRecord::Base
     @spanish_verbs = []
     @spanish_adjectives = []
     @spanish_miscs = []
+    @spanish_months = []
     @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
 
@@ -870,6 +871,14 @@ class Quiz < ActiveRecord::Base
               Hindi.get_weekday(english)[:transliterated]
             ]
           }
+        when 'Spanish - Month'
+          month = Spanish.get_month(@spanish_months)
+          result << {
+            question: month[:english],
+            answers: [
+              month[:spanish]
+            ]
+          }
         end
       end
     end
@@ -1001,6 +1010,7 @@ class Quiz < ActiveRecord::Base
     @spanish_verbs = SpanishVerb.all.to_a.shuffle if @spanish_verbs.empty?
     @spanish_adjectives = SpanishAdjective.all.to_a.shuffle if @spanish_adjectives.empty?
     @spanish_miscs = SpanishMisc.all.to_a.shuffle if @spanish_miscs.empty?
+    @spanish_months = Spanish.get_all_months if @spanish_months.empty?
   end
 
   def get_noun(quiz_question)
