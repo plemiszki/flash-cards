@@ -32,7 +32,8 @@ class QuizRun extends React.Component {
       let matchItems = {};
       this.setState({
         fetching: false,
-        quiz: this.props.quiz
+        quiz: this.props.quiz,
+        answer: this.props.quiz.questions[0].answerPlaceholder,
       }, this.setUpMatching.bind(this));
     }, () => {
       this.setState({
@@ -126,10 +127,11 @@ class QuizRun extends React.Component {
         }
         window.location.pathname = '/quizzes';
       } else {
+        let nextQuestionNumber = this.state.questionNumber += 1;
         this.setState({
-          questionNumber: this.state.questionNumber += 1,
+          questionNumber: nextQuestionNumber,
           streak: 0,
-          answer: '',
+          answer: this.state.quiz.questions[nextQuestionNumber].answerPlaceholder,
           status: 'question',
           showAnswers: false,
           renderUnarchiveButton: true

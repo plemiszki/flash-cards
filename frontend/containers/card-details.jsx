@@ -232,7 +232,8 @@ class CardDetails extends React.Component {
             </div>
           </div>
           <div className="row">
-            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 10, entity: 'card', property: 'answer' }) }
+            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 5, entity: 'card', property: 'answer' }) }
+            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 5, entity: 'card', property: 'answerPlaceholder' }) }
             { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
           </div>
           <div>

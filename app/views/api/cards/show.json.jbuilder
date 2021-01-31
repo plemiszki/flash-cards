@@ -2,6 +2,7 @@ json.card do
   json.id @card.id
   json.question @card.question
   json.answer @card.answer
+  json.answerPlaceholder @card.answer_placeholder
   json.imageUrl @card.image_url
   json.multipleChoice @card.multiple_choice
 end
