@@ -131,7 +131,7 @@ class QuizRun extends React.Component {
         this.setState({
           questionNumber: nextQuestionNumber,
           streak: 0,
-          answer: this.state.quiz.questions[nextQuestionNumber].answerPlaceholder,
+          answer: (this.state.quiz.questions[nextQuestionNumber].answerPlaceholder || ''),
           status: 'question',
           showAnswers: false,
           renderUnarchiveButton: true
