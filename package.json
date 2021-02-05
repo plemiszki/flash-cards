@@ -20,7 +20,7 @@
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "webpack": "4.29.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   },
   "engines": {
     "node": "12.15.0"
