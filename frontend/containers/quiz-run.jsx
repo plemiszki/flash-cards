@@ -554,7 +554,7 @@ class QuizRun extends React.Component {
       );
     } else if (question && question.textbox) {
       return(
-        <textarea rows="5" columns="12" className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+        <textarea rows="6" columns="12" className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
       );
     } else {
       return(
