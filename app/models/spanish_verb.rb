@@ -10,4 +10,8 @@ class SpanishVerb < ActiveRecord::Base
     SpanishVerb.where(english: self.english)
   end
 
+  def just_synonyms
+    synonyms - [self]
+  end
+
 end

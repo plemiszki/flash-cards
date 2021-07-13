@@ -10,6 +10,10 @@ class SpanishAdjective < ActiveRecord::Base
     SpanishAdjective.where(english: self.english)
   end
 
+  def just_synonyms
+    synonyms - [self]
+  end
+
   def conjugate(gender:, use_plural: false)
     if gender == 1 || gender == :male
       use_plural ? masculine_plural : masculine

@@ -755,7 +755,10 @@ class Quiz < ActiveRecord::Base
             streak: noun.streak,
             lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
             question: Spanish::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
-            answers: synonyms.map do |noun|
+            answers: [
+              plural ? noun.spanish_plural : noun.spanish
+            ],
+            indeterminate: noun.just_synonyms.map do |noun|
               (plural ? noun.spanish_plural : noun.spanish)
             end,
             description: 'noun',
@@ -772,9 +775,12 @@ class Quiz < ActiveRecord::Base
             streak: verb.streak,
             lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
             question: verb.english.capitalize,
-            answers: synonyms.map do |verb|
+            indeterminate: just_synonyms.map do |verb|
               verb.spanish
             end,
+            answers: [
+              verb.spanish
+            ],
             description: 'verb',
             highlightButton: true,
             tags: verb.tags.pluck(:name)
@@ -788,9 +794,13 @@ class Quiz < ActiveRecord::Base
             streak: adjective.streak,
             lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
             question: adjective.english.capitalize,
-            answers: synonyms.map do |adjective|
-              adjective.masculine
-            end,
+            answers: [
+              adjective.masculine,
+              adjective.feminine
+            ],
+            indeterminate: just_synonyms.map do |adjective|
+              [ adjective.masculine, adjective.feminine ]
+            end.flatten,
             description: 'adjective',
             highlightButton: true,
             tags: adjective.tags.pluck(:name)
@@ -803,7 +813,7 @@ class Quiz < ActiveRecord::Base
             streak: word.streak,
             lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
             question: word.english.capitalize,
-            answers: [word.spanish],
+            answers: [ word.spanish ],
             highlightButton: true,
             tags: word.tags.pluck(:name)
           }

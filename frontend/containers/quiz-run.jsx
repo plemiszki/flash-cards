@@ -139,11 +139,11 @@ class QuizRun extends React.Component {
       }
     } else {
       let quizQuestion = this.state.quiz.questions[this.state.questionNumber];
-      let answerIsCorrect = this.checkAnswer({
+      let answerStatus = this.checkAnswer({
         question: quizQuestion,
         answer: this.state.answer
       });
-      if (answerIsCorrect) {
+      if (answerStatus === 'correct') {
         this.setState({
           status: 'correct'
         }, () => {
@@ -156,6 +156,10 @@ class QuizRun extends React.Component {
               this.updateStreak.call(this, this.state.status);
             }
           }
+        });
+      } else if (answerStatus === 'indeterminate') {
+        this.setState({
+          status: 'indeterminate'
         });
       } else {
         let { wrongAnswerLog } = this.state;
@@ -349,14 +353,17 @@ class QuizRun extends React.Component {
       return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
     }
     if (question.answers.indexOf(userAnswer) > -1) {
-      return true;
+      return 'correct';
+    }
+    if (question.indeterminate.indexOf(userAnswer) > -1) {
+      return 'indeterminate';
     }
     const sortedQuestionAnswer = question.answers[0].split("\n").sort().join("\n");
     const sortedUserAnswer = userAnswer.split("\n").sort().join("\n");
     if (sortedQuestionAnswer === sortedUserAnswer) {
-      return true;
+      return 'correct';
     }
-    return false;
+    return 'incorrect';
   }
 
   render() {
@@ -517,6 +524,7 @@ class QuizRun extends React.Component {
     if (this.state.quiz.questions) {
       question = this.state.quiz.questions[this.state.questionNumber];
     }
+    let textFieldClass = this.textFieldClass();
     if (question && question.matchBins && Object.keys(question.matchBins).length > 0) {
       let unmatchedItems = [];
       return([
@@ -554,11 +562,11 @@ class QuizRun extends React.Component {
       );
     } else if (question && question.textbox) {
       return(
-        <textarea rows="6" columns="12" className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+        <textarea rows="6" columns="12" className={ `m-bottom ${textFieldClass}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
       );
     } else {
       return(
-        <input className={ `m-bottom ${this.state.status === 'wrong' ? ' error' : ''}` } onKeyPress={ this.checkKey.bind(this) } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+        <input className={ `m-bottom ${textFieldClass}` } onKeyPress={ this.checkKey.bind(this) } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
       );
     }
   }
@@ -604,6 +612,17 @@ class QuizRun extends React.Component {
     } else {
       return '';
     }
+  }
+
+  textFieldClass() {
+    switch (this.state.status) {
+      case 'wrong':
+        return 'error';
+      case 'indeterminate':
+        return 'blue';
+      default:
+        return '';
+    };
   }
 }
 

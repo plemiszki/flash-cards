@@ -10,6 +10,10 @@ class SpanishNoun < ActiveRecord::Base
     SpanishNoun.where(english: self.english)
   end
 
+  def just_synonyms
+    synonyms - [self]
+  end
+
   def male?
     gender == 1
   end
