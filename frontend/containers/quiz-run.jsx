@@ -355,7 +355,7 @@ class QuizRun extends React.Component {
     if (question.answers.indexOf(userAnswer) > -1) {
       return 'correct';
     }
-    if (question.indeterminate.indexOf(userAnswer) > -1) {
+    if (question.indeterminate && question.indeterminate.indexOf(userAnswer) > -1) {
       return 'indeterminate';
     }
     const sortedQuestionAnswer = question.answers[0].split("\n").sort().join("\n");
