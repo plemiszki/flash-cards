@@ -177,12 +177,12 @@ class QuizRun extends React.Component {
   }
 
   objectsAreEqual(obj1, obj2) {
-    let result = true;
+    let result = 'correct';
     Object.keys(obj1).forEach((binName) => {
       let items1 = obj1[binName].sort();
       let items2 = obj2[binName].sort();
       if (JSON.stringify(items1) !== JSON.stringify(items2)) {
-        result = false;
+        result = 'incorrect';
       }
     })
     return result;
