@@ -95,6 +95,7 @@ class SpanishVerbDetails extends React.Component {
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'spanish' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'note' }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>

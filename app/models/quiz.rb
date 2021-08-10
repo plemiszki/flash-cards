@@ -783,7 +783,8 @@ class Quiz < ActiveRecord::Base
             ],
             description: 'verb',
             highlightButton: true,
-            tags: verb.tags.pluck(:name)
+            tags: verb.tags.pluck(:name),
+            note: verb.note
           }
         when 'Spanish - Single Adjective'
           adjective = Spanish::get_adjective(quiz_question, @spanish_adjectives)
