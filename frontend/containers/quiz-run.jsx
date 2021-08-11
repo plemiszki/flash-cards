@@ -347,10 +347,24 @@ class QuizRun extends React.Component {
 
   checkAnswer(args) {
     const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
+    const isChemicalEquation = args.answer.indexOf('→') > -1;
     const question = args.question;
     const userAnswer = args.answer;
     if (isMatchingQuestion) {
       return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
+    }
+    if (isChemicalEquation) {
+      const userAnswerSides = userAnswer.split('→');
+      const userAnswerLeft = userAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
+      const userAnswerRight = userAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
+      const correctAnswerSides = question.answers[0].split('→');
+      const correctAnswerLeft = correctAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
+      const correctAnswerRight = correctAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
+      if (HandyTools.objectsAreEqual(userAnswerLeft.sort(), correctAnswerLeft.sort()) && HandyTools.objectsAreEqual(userAnswerRight.sort(), correctAnswerRight.sort())) {
+        return 'correct'
+      } else {
+        return 'incorrect'
+      }
     }
     if (question.answers.indexOf(userAnswer) > -1) {
       return 'correct';
