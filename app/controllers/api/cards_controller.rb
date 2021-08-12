@@ -47,7 +47,9 @@ class Api::CardsController < AdminController
   private
 
   def card_params
-    params[:card].permit(:question, :answer, :answer_placeholder, :image_url, :multiple_choice, :streak)
+    result = params[:card].permit(:question, :answer, :answer_placeholder, :image_url, :multiple_choice, :streak, :last_streak_add)
+    result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result
   end
 
   def archive
