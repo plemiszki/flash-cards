@@ -129,6 +129,8 @@ class QuizRun extends React.Component {
       } else {
         let nextQuestionNumber = this.state.questionNumber += 1;
         this.setState({
+          showHighlightButton: true,
+          showArchiveButton: true,
           questionNumber: nextQuestionNumber,
           streak: 0,
           answer: (this.state.quiz.questions[nextQuestionNumber].answerPlaceholder || ''),
@@ -189,9 +191,9 @@ class QuizRun extends React.Component {
   }
 
   clickArchive(e) {
-    e.target.classList.add('hidden');
     this.setState({
-      fetching: true
+      fetching: true,
+      showArchiveButton: true
     });
     this.props.createEntity({
       directory: 'card_tags',
@@ -221,11 +223,11 @@ class QuizRun extends React.Component {
   }
 
   clickHighlight(e) {
-    e.target.classList.add('hidden');
     let question = this.state.quiz.questions[this.state.questionNumber];
     let entityName = question.entity;
     this.setState({
-      fetching: true
+      fetching: true,
+      showHighlightButton: false
     });
     this.props.createEntity({
       directory: 'card_tags',
@@ -447,7 +449,7 @@ class QuizRun extends React.Component {
       return;
     }
     let question = this.state.quiz.questions[this.state.questionNumber];
-    if (question.archiveButton && !question.tags.find((tag) => { return tag['name'] === 'Archived' })) {
+    if (this.state.showArchiveButton && question.archiveButton && !question.tags.find((tag) => { return tag['name'] === 'Archived' })) {
       return(
         <div className="archive-button" onClick={ this.clickArchive.bind(this) }></div>
       );
@@ -474,7 +476,7 @@ class QuizRun extends React.Component {
       return;
     }
     let question = this.state.quiz.questions[this.state.questionNumber];
-    if (question.highlightButton && question.tags.indexOf('Needs Attention') === -1) {
+    if (this.state.showHighlightButton && question.highlightButton && question.tags.indexOf('Needs Attention') === -1) {
       return(
         <div className="highlight-button" onClick={ this.clickHighlight.bind(this) }></div>
       );
