@@ -1,10 +1,12 @@
 class Api::CardsController < AdminController
 
+  include SearchIndex
+
   after_action :archive, only: [:update]
 
   def index
-    @cards = Card.unarchived
-    render 'index.json.jbuilder'
+    @cards = perform_search(model: 'Card')
+    render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
   def index_archived

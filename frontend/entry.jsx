@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import ReactModal from 'react-modal'
-import { SimpleDetails, StandardIndex, TabbedIndex, Message } from 'handy-components'
+import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
 
 import NewEntity from './containers/new-entity'
 import NounDetails from './containers/noun-details'
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#nouns-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='noun'
           columns={ ['foreign', 'transliterated', 'english', 'streak'] }
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', englishPlural: '', foreign: '', foreignPlural: '', gender: 1, needsAttention: true } }
           />
-        </StandardIndex>
+        </FullIndex>
       </Provider>,
       document.querySelector('#nouns-index')
     );
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#verbs-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='verb'
           columns={ ['infinitive', 'transliteratedInfinitive', 'english', 'streak'] }
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', infinitive: '', transliteratedInfinitive: '', needsAttention: true } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#verbs-index')
     );
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#adjectives-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='adjective'
           columns={ ['masculine', 'transliteratedMasculine', 'english', 'streak'] }
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', masculine: '', feminine: '', needsAttention: true } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#adjectives-index')
     );
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#adverbs-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='adverb'
           columns={ ['foreign', 'transliterated', 'english'] }
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { foreign: '', transliterated: '', english: '' } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#adverbs-index')
     );
@@ -163,22 +163,33 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#cards-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <TabbedIndex
+        <SearchIndex
           context={ MyContext }
           entityName='card'
-          columns={ ['question', 'tags', 'streak'] }
-          modalDimensions={ { width: 900, height: 432 } }
-          ellipses={ [80, null] }
-          tabs={ ['current', 'archived'] }
-          newEntityTab='current'
-          tabActions={ TabActions }
+          columns={[
+            { name: 'question' },
+            { name: 'tags', width: 300 },
+            { name: 'streak', width: 100 }
+          ]}
+          batchSize={ 50 }
+          searchModalRows={ 2 }
+          searchModalDimensions={ { width: 600 } }
+          showNewButton={ true }
+          newModalDimensions={ { width: 900, height: 432 } }
         >
+          <SearchCriteria
+            context={ MyContext }
+            fields={[
+              { name: 'question', fuzzy: true, columnWidth: 10 },
+              { name: 'answer', fuzzy: true, columnWidth: 10 }
+            ]}
+          />
           <NewEntity
             context={ MyContext }
             initialEntity={ { question: '', answer: '' } }
             redirect={ true }
           />
-        </TabbedIndex>
+        </SearchIndex>
       </Provider>,
       document.querySelector('#cards-index')
     );
@@ -196,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#quizzes-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='quiz'
           entityNamePlural='quizzes'
@@ -209,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { name: '' } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#quizzes-index')
     );
@@ -236,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#questions-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='question'
           columns={ ['name'] }
@@ -246,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { name: '' } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#questions-index')
     );
@@ -270,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#tags-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='tag'
           columns={ ['name'] }
@@ -280,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { name: '' } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#tags-index')
     );
@@ -304,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#spanish-nouns-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='spanishNoun'
           columns={ ['spanish', 'english', 'streak'] }
@@ -315,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1, needsAttention: true } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#spanish-nouns-index')
     );
@@ -333,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#spanish-verbs-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='spanishVerb'
           columns={ ['spanish', 'english', 'streak'] }
@@ -344,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', spanish: '', needsAttention: true } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#spanish-verbs-index')
     );
@@ -362,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#spanish-adjectives-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='spanishAdjective'
           columns={ ['masculine', 'english', 'streak'] }
@@ -373,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '', needsAttention: true } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#spanish-adjectives-index')
     );
@@ -391,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#spanish-miscs-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           header='Spanish Miscellaneous Words'
           entityName='spanishMisc'
@@ -403,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             initialEntity={ { english: '', spanish: '', needsAttention: true } }
           />
-        </StandardIndex>
+      </FullIndex>
       </Provider>,
       document.querySelector('#spanish-miscs-index')
     );
