@@ -211,9 +211,10 @@ document.addEventListener('DOMContentLoaded', () => {
           context={ MyContext }
           entityName='quiz'
           entityNamePlural='quizzes'
-          columns={ ['name', ''] }
-          columnClasses={ ['', 'play-column'] }
-          columnLinks={ ['', '/run'] }
+          columns={[
+            { name: 'name' },
+            { name: '', classes: 'play-column', links: '/run' }
+          ]}
           modalDimensions={ { width: 700 } }
         >
           <NewEntity
