@@ -60,11 +60,11 @@ class NewEntity extends React.Component {
     return(
       <div className="component admin-modal">
         <form className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           { this.renderFields() }
           <input type="submit" className={ "blue-button" + Common.renderDisabledButtonClass(this.state.fetching) } value={ this.props.buttonText || `Add ${ChangeCase.titleCase(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
         </form>
+        { Common.renderSpinner(this.state.fetching) }
+        { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
       </div>
     );
   }

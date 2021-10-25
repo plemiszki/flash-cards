@@ -8,7 +8,7 @@
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.5",
     "change-case": "3.1.0",
-    "handy-components": "2.10.0",
+    "handy-components": "2.11.0",
     "handy-tools": "2.6.3",
     "jquery": "3.5.0",
     "jquery-match-height": "0.7.2",
