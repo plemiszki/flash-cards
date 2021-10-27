@@ -9,9 +9,9 @@ class Api::CardsController < AdminController
     render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
-  def index_archived
-    @cards = Card.archived
-    render 'index.json.jbuilder'
+  def new
+    @tags = Tag.all.order(:name)
+    render 'new', formats: [:json], handlers: [:jbuilder]
   end
 
   def create

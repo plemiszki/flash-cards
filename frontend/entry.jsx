@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: 'streak', width: 100 }
           ]}
           batchSize={ 50 }
-          searchModalRows={ 2 }
+          searchModalRows={ 3 }
           searchModalDimensions={ { width: 600 } }
           showNewButton={ true }
           newModalDimensions={ { width: 900, height: 432 } }
@@ -181,7 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
             context={ MyContext }
             fields={[
               { name: 'question', fuzzy: true, columnWidth: 10 },
-              { name: 'answer', fuzzy: true, columnWidth: 10 }
+              { name: 'answer', fuzzy: true, columnWidth: 10 },
+              { name: 'tag', type: 'modal', optionDisplayProperty: 'name', responseArrayName: 'tags', dbName: 'card_tags.tag_id', columnWidth: 8 },
             ]}
           />
           <NewEntity

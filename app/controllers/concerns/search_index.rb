@@ -20,11 +20,13 @@ module SearchIndex
     order_string += ' DESC' if order_direction == 'desc'
 
     if params[:search_criteria]
-      where_obj, not_obj = {}, {}
-      fuzzy_where_obj = {}
+      where_obj, not_obj, fuzzy_where_obj = {}, {}, {}
+      database_table_names = []
       params[:search_criteria].each do |key, value|
         next if key.in?(custom_queries.keys.map(&:to_s))
         key = value['db_name'] if value['db_name']
+        split = key.split('.')
+        database_table_names << split[0] if split.count > 1
         if value['min_value']
           where_obj[key] = Range.new(value['min_value'].to_i, value['max_value'].to_i)
         elsif value['start_date']
@@ -42,7 +44,7 @@ module SearchIndex
           end
         end
       end
-      widgets_meeting_search_criteria = widget.where(where_obj).where.not(not_obj)
+      widgets_meeting_search_criteria = widget.includes(database_table_names).where(where_obj).where.not(not_obj)
       fuzzy_where_obj.each do |key, value|
         widgets_meeting_search_criteria = widgets_meeting_search_criteria.where("#{key} ilike ?", "%#{value}%")
       end
