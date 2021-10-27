@@ -35,6 +35,7 @@ class Quiz < ActiveRecord::Base
           card = @cards.pop
           obj = {
             question: card.question,
+            hint: card.hint,
             answers: (card.match_bins.present? ? [card.match_answer] : [card.answer]),
             answer_placeholder: card.answer_placeholder,
             textbox: card.answer.include?("\n"),

@@ -49,7 +49,7 @@ class Api::CardsController < AdminController
   private
 
   def card_params
-    result = params[:card].permit(:question, :answer, :answer_placeholder, :image_url, :multiple_choice, :streak, :last_streak_add)
+    result = params[:card].permit(:question, :answer, :answer_placeholder, :image_url, :multiple_choice, :streak, :last_streak_add, :hint)
     result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
     result
   end

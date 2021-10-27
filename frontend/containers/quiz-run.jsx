@@ -428,7 +428,7 @@ class QuizRun extends React.Component {
   renderDescription() {
     if (this.state.quiz.questions) {
       const question = this.state.quiz.questions[this.state.questionNumber];
-      const description = question.description;
+      const description = question.description || question.hint;
       const note = question.note;
       if (description) {
         if (note) {

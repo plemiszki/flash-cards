@@ -221,7 +221,8 @@ class CardDetails extends React.Component {
         <h1>Card Details</h1>
         <div className="white-box">
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'question' }) }
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'hint' }) }
           </div>
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 9, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }

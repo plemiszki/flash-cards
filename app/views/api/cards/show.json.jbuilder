@@ -5,6 +5,7 @@ json.card do
   json.answerPlaceholder @card.answer_placeholder
   json.imageUrl @card.image_url
   json.multipleChoice @card.multiple_choice
+  json.hint @card.hint
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id
