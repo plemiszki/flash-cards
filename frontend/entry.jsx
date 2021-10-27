@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
           entityName='card'
           columns={[
             { name: 'question' },
-            { name: 'tags', width: 300 },
+            { name: 'tags', width: 300, orderByDisabled: true },
             { name: 'streak', width: 100 }
           ]}
           batchSize={ 50 }
