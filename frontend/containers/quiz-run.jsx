@@ -397,8 +397,6 @@ class QuizRun extends React.Component {
           { this.renderWrongAnswers() }
           <div className="white-box">
             { this.renderStreakNotification() }
-            { Common.renderSpinner(this.state.fetching) }
-            { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
             <p className="question m-bottom">{ this.renderQuestion() }</p>
             { this.renderDescription() }
             { this.renderImage() }
@@ -411,6 +409,8 @@ class QuizRun extends React.Component {
               { this.renderUnarchiveButton() }
               { this.renderHighlightButton() }
             </form>
+            { Common.renderSpinner(this.state.fetching) }
+            { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           </div>
         </div>
       );

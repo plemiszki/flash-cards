@@ -220,8 +220,6 @@ class CardDetails extends React.Component {
       <div id="card-details" className="component details-component">
         <h1>Card Details</h1>
         <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
           </div>
@@ -280,6 +278,8 @@ class CardDetails extends React.Component {
               responseKey="matchBins"
             />
           </Modal>
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
         </div>
       </div>
     );

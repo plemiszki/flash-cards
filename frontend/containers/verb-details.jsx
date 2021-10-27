@@ -91,8 +91,6 @@ class VerbDetails extends React.Component {
       <div id="verb-details" className="component details-component">
         <h1>Verb Details</h1>
         <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'verb', property: 'infinitive' }) }
@@ -127,6 +125,8 @@ class VerbDetails extends React.Component {
           </div>
           <hr className="divider" />
           { EntityTags.renderTags.call(this, 'verb') }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
         </div>
       </div>
     );

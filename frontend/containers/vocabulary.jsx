@@ -118,9 +118,9 @@ class Vocabulary extends React.Component {
       <div id="vocabulary" className="component details-component">
         <h1>Bulk Vocabulary Import</h1>
         <div className="white-box">
+          { this.renderBody.call(this) }
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
-          { this.renderBody.call(this) }
         </div>
         <Modal isOpen={ !!this.state.job } contentLabel="Modal" style={ JobModalStyles }>
           <JobStatus job={ this.state.job } jobDone={ this.jobDone.bind(this) } />

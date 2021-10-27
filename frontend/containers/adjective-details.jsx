@@ -92,8 +92,6 @@ class AdjectiveDetails extends React.Component {
       <div id="adjective-details" className="component details-component">
         <h1>Adjective Details</h1>
         <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'adjective', property: 'english' }) }
           </div>
@@ -117,6 +115,8 @@ class AdjectiveDetails extends React.Component {
           </div>
           <hr className="divider" />
           { EntityTags.renderTags.call(this, 'adjective') }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
         </div>
       </div>
     );

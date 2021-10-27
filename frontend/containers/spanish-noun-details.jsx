@@ -91,8 +91,6 @@ class SpanishNounDetails extends React.Component {
       <div id="spanish-noun-details" className="component details-component">
         <h1>Spanish Noun Details</h1>
         <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishNoun', property: 'englishPlural' }) }
@@ -120,6 +118,8 @@ class SpanishNounDetails extends React.Component {
           </div>
           <hr className="divider" />
           { EntityTags.renderTags.call(this, 'spanishNoun') }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
         </div>
       </div>
     );

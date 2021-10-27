@@ -92,8 +92,6 @@ class NounDetails extends React.Component {
       <div id="noun-details" className="component details-component">
         <h1>Noun Details</h1>
         <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'noun', property: 'englishPlural' }) }
@@ -125,6 +123,8 @@ class NounDetails extends React.Component {
           </div>
           <hr className="divider" />
           { EntityTags.renderTags.call(this, 'noun') }
+          { Common.renderSpinner(this.state.fetching) }
+          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
         </div>
       </div>
     );

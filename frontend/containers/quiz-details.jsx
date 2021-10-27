@@ -183,8 +183,6 @@ class QuizDetails extends React.Component {
       <div id="quiz-details" className="component details-component">
         <h1>Quiz Details</h1>
         <div className="white-box">
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quiz', property: 'name' }) }
             { Details.renderField.bind(this)({ columnWidth: 2, entity: 'quiz', property: 'maxQuestions' }) }
@@ -256,6 +254,8 @@ class QuizDetails extends React.Component {
             }}
           />
         </Modal>
+        { Common.renderSpinner(this.state.fetching) }
+        { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
       </div>
     );
   }
