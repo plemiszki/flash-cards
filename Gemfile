@@ -10,6 +10,7 @@ ruby '2.7.2'
 gem 'rails', '6.0.3.4'
 gem 'pg', '~> 0.18'
 
+gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
 gem 'clearance', '~> 1.11'
 gem 'dotenv'

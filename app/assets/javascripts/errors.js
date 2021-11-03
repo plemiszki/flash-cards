@@ -62,5 +62,8 @@ Errors = {
     "Max questions is not a number",
     "Max questions must be an integer",
     "Max questions must be greater than or equal to 0"
+  ],
+  forms: [
+    "Forms translation missing: en.activerecord.errors.models.spanish_verb.attributes.forms.invalid_json"
   ]
 }

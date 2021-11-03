@@ -34,10 +34,11 @@ class SpanishVerbDetails extends React.Component {
       directory: window.location.pathname.split('/')[1],
       entityName: this.props.entityName
     }, 'spanishVerb').then(() => {
+      let spanishVerb = Details.stringifyJSONFields({ entity: this.props.spanishVerb, jsonFields: ['forms'] });
       this.setState({
         fetching: false,
-        spanishVerb: this.props.spanishVerb,
-        spanishVerbSaved: HandyTools.deepCopy(this.props.spanishVerb),
+        spanishVerb,
+        spanishVerbSaved: HandyTools.deepCopy(spanishVerb),
         tags: this.props.tags,
         spanishVerbTags: this.props.spanishVerbTags,
         changesToSave: false
@@ -70,10 +71,11 @@ class SpanishVerbDetails extends React.Component {
         entity: this.state.spanishVerb,
         entityName: 'spanishVerb'
       }).then(() => {
+        let spanishVerb = Details.stringifyJSONFields({ entity: this.props.spanishVerb, jsonFields: ['forms'] });
         this.setState({
           fetching: false,
-          spanishVerb: this.props.spanishVerb,
-          spanishVerbSaved: HandyTools.deepCopy(this.props.spanishVerb),
+          spanishVerb,
+          spanishVerbSaved: HandyTools.deepCopy(spanishVerb),
           changesToSave: false
         });
       }, () => {
@@ -86,7 +88,7 @@ class SpanishVerbDetails extends React.Component {
   }
 
   render() {
-    return (
+    return(
       <div id="spanish-verb-details" className="component details-component">
         <h1>Spanish Verb Details</h1>
         <div className="white-box">
@@ -94,6 +96,7 @@ class SpanishVerbDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'english' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishVerb', property: 'note' }) }
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'spanishVerb', property: 'forms', type: 'json', rows: 8 }) }
           </div>
           <div>
             <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
