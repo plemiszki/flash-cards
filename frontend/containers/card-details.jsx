@@ -93,23 +93,24 @@ class CardDetails extends React.Component {
     });
   }
 
-  clickTag(e) {
-    e.persist();
-    this.setState({
-      newCardTagModalOpen: false,
-      fetching: true
-    }, () => {
-      this.props.createEntity({
-        directory: 'card_tags',
-        entityName: 'cardTag',
-        entity: {
-          tagId: e.target.dataset.id,
-          cardtagableId: this.state.card.id,
-          cardtagableType: 'Card'
-        }
-      }).then(this.updateCardTags.bind(this));
-    });
-  }
+  // clickTag(e) {
+  //   console.log('we are here');
+  //   // e.persist();
+  //   this.setState({
+  //     newCardTagModalOpen: false,
+  //     fetching: true
+  //   }, () => {
+  //     this.props.createEntity({
+  //       directory: 'card_tags',
+  //       entityName: 'cardTag',
+  //       entity: {
+  //         tagId: e.target.dataset.id,
+  //         cardtagableId: this.state.card.id,
+  //         cardtagableType: 'Card'
+  //       }
+  //     }).then(this.updateCardTags.bind(this));
+  //   });
+  // }
 
   clickUploadImage() {
     const client = filestack.init(document.getElementById('filestack-api-key').innerHTML);

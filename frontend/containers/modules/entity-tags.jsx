@@ -30,8 +30,7 @@ let EntityTags = {
     });
   },
 
-  clickTag(entityName, e) {
-    e.persist();
+  clickTag(entityName, option) {
     this.setState({
       newCardTagModalOpen: false,
       fetching: true
@@ -39,7 +38,7 @@ let EntityTags = {
       this.props.createEntity({
         directory: 'card_tags',
         entityName: 'cardTag',
-        entity: { tagId: e.target.dataset.id, cardtagableId: this.state[entityName].id, cardtagableType: ChangeCase.pascalCase(entityName) }
+        entity: { tagId: option.id, cardtagableId: this.state[entityName].id, cardtagableType: ChangeCase.pascalCase(entityName) }
       }).then(() => {
         EntityTags.updateEntityTags.call(this, entityName, this.props.cardTags);
       });
