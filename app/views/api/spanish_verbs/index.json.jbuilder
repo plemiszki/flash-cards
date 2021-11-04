@@ -3,4 +3,5 @@ json.spanishVerbs @spanish_verbs do |spanish_verb|
   json.spanish spanish_verb.spanish
   json.english spanish_verb.english
   json.streak spanish_verb.streak
+  json.forms spanish_verb.forms.present? ? 'Yes' : 'No'
 end

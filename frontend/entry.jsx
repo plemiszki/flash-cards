@@ -349,7 +349,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <FullIndex
           context={ MyContext }
           entityName='spanishVerb'
-          columns={ ['spanish', 'english', 'streak'] }
+          columns={[
+            { name: 'spanish' },
+            { name: 'english' },
+            { name: 'streak' },
+            { name: 'forms' }
+          ]}
           modalRows={ 1 }
           modalDimensions={ { width: 900 } }
         >
