@@ -71,6 +71,20 @@ module Spanish
     MONTHS.dup
   end
 
+  def self.random_subject(override: nil)
+    return override if override.present?
+    ['yo', 'tú', 'él', 'ella', 'nosotros', 'nosotras', 'ellos', 'ellas'].sample
+  end
+
+  def self.verb_forms_key(pronoun)
+    hash = {
+      'ella' => 'él',
+      'nosotras' => 'nosotros',
+      'ellas' => 'ellos'
+    }
+    hash.has_key?(pronoun) ? hash[pronoun] : pronoun
+  end
+
   def self.conjugate_ser(subject: nil, noun: nil, use_plural: false)
     if subject
       case subject

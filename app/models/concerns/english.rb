@@ -17,6 +17,31 @@ module English
     English::get_random_english_subject(plural_only: true)
   end
 
+  def self.subject_pronoun(spanish_pronoun: nil)
+    result = {}
+    case spanish_pronoun
+    when 'yo'
+      result[:pronoun] = 'I'
+    when 'tú'
+      result[:pronoun] = 'you'
+    when 'él'
+      result[:pronoun] = 'he'
+    when 'ella'
+      result[:pronoun] = 'she'
+    when 'nosotros'
+      result[:pronoun] = 'we'
+    when 'nosotras'
+      result[:pronoun] = 'we'
+      result[:female_only] = true
+    when 'ellos'
+      result[:pronoun] = 'they'
+    when 'ellas'
+      result[:pronoun] = 'they'
+      result[:female_only] = true
+    end
+    result
+  end
+
   def self.convert_unusable_subjects_for_posession_conversion(input)
     subject = input.downcase
     case subject

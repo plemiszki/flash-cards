@@ -892,6 +892,20 @@ class Quiz < ActiveRecord::Base
               month[:spanish]
             ]
           }
+        when 'Spanish - Present Simple Tense'
+          verb = Spanish.get_verb(quiz_question, @spanish_verbs)
+          redo if verb.forms['present'].nil?
+          spanish_subject_pronoun = Spanish.random_subject
+          english_subject_pronoun, female_only = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only)
+          spanish_verb_conjugation = verb.forms['present'][Spanish.verb_forms_key(spanish_subject_pronoun)]
+          result << {
+            question: "#{english_subject_pronoun} #{verb.english_conjugation(spanish_pronoun: spanish_subject_pronoun)}.".capitalize,
+            answers: [
+              "#{spanish_subject_pronoun} #{spanish_verb_conjugation}.".capitalize,
+              "#{spanish_verb_conjugation}.".capitalize
+            ],
+            description: female_only.present? ? 'Only Females' : nil
+          }
         end
       end
     end

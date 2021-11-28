@@ -17,4 +17,11 @@ class SpanishVerb < ActiveRecord::Base
     synonyms - [self]
   end
 
+  def english_conjugation(spanish_pronoun: nil)
+    english_with_s = english.ends_with?('s') ? "#{english}es" : "#{english}s"
+    if spanish_pronoun.present?
+      spanish_pronoun.in?(['yo', 'tú', 'nosotros', 'nosotras', 'ellos', 'ellas']) ? english : english_with_s
+    end
+  end
+
 end

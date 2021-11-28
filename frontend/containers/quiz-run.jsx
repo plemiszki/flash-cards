@@ -582,7 +582,7 @@ class QuizRun extends React.Component {
       );
     } else {
       return(
-        <input className={ `m-bottom ${textFieldClass}` } onKeyPress={ this.checkKey.bind(this) } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+        <input className={ `m-bottom ${textFieldClass}` } onKeyPress={ this.checkKey.bind(this) } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer || "" } />
       );
     }
   }
@@ -613,13 +613,13 @@ class QuizRun extends React.Component {
         } else {
           let spanTags = answer.split("\n").map((line, index) => {
             return(
-              <>
+              <React.Fragment key={ index }>
                 <span key={ index }>{ line }</span><br />
-              </>
+              </React.Fragment>
             );
           })
           return(
-            <p className="answer">
+            <p key={ index } className="answer">
               { spanTags }
             </p>
           );
