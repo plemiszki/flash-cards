@@ -149,8 +149,8 @@ class NewEntity extends React.Component {
       case 'quizQuestion':
         return(
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', customType: 'modal', modalDisplayProperty: 'name' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', customType: 'modal', modalDisplayProperty: 'name', noneOption: true }) }
+            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'quizQuestion', property: 'questionId', columnHeader: 'Question', type: 'modal', optionsArrayName: 'questions', optionDisplayProperty: 'name' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'quizQuestion', property: 'tagId', columnHeader: 'Tag', type: 'modal', optionsArrayName: 'tags', optionDisplayProperty: 'name', noneOption: true }) }
             { Details.renderField.bind(this)({ columnWidth: 2, entity: 'quizQuestion', property: 'amount' }) }
           </div>
         );
