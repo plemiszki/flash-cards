@@ -897,13 +897,16 @@ class Quiz < ActiveRecord::Base
           redo if verb.forms['present'].nil?
           spanish_subject_pronoun = Spanish.random_subject
           english_subject_pronoun, female_only = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only)
-          spanish_verb_conjugation = verb.forms['present'][Spanish.verb_forms_key(spanish_subject_pronoun)]
-          result << {
-            question: "#{english_subject_pronoun} #{verb.english_conjugation(spanish_pronoun: spanish_subject_pronoun)}.".capitalize,
-            answers: [
+          answers = verb.synonyms.map do |synonym|
+            spanish_verb_conjugation = synonym.forms['present'][Spanish.verb_forms_key(spanish_subject_pronoun)]
+            [
               "#{spanish_subject_pronoun} #{spanish_verb_conjugation}.".capitalize,
               "#{spanish_verb_conjugation}.".capitalize
-            ],
+            ]
+          end
+          result << {
+            question: "#{english_subject_pronoun} #{verb.english_conjugation(spanish_pronoun: spanish_subject_pronoun)}.".capitalize,
+            answers: answers.flatten,
             description: female_only.present? ? 'Only Females' : nil
           }
         end
