@@ -9,6 +9,10 @@ class SpanishVerb < ActiveRecord::Base
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags
 
+  def stem
+    spanish[0..-3]
+  end
+
   def synonyms
     SpanishVerb.where(english: self.english)
   end
@@ -21,6 +25,31 @@ class SpanishVerb < ActiveRecord::Base
     english_with_s = english.ends_with?('s') ? "#{english}es" : "#{english}s"
     if spanish_pronoun.present?
       spanish_pronoun.in?(['yo', 'tú', 'nosotros', 'nosotras', 'ellos', 'ellas']) ? english : english_with_s
+    end
+  end
+
+  def english_continuous
+    words = english.split(' ')
+    first_word = words[0]
+    first_word = first_word.ends_with?('e') && !first_word.ends_with?('ee') && first_word != 'be' ? "#{first_word[0..-2]}ing" : "#{first_word}ing"
+    ([first_word] + words[1..-1]).join(' ')
+  end
+
+  def present_continuous
+    ending = spanish[-2..-1]
+    case ending
+    when 'er', 'ir'
+      "#{stem}iendo"
+    when 'ar'
+      "#{stem}ando"
+    end
+  end
+
+  def ending
+    if spanish.ends_with?('se')
+      spanish[-4..-3]
+    else
+      spanish[-2..-1]
     end
   end
 

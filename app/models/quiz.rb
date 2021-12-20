@@ -909,6 +909,21 @@ class Quiz < ActiveRecord::Base
             answers: answers.flatten,
             description: female_only.present? ? 'Only Females' : nil
           }
+        when 'Spanish - Present Continuous Tense'
+          verb = Spanish.get_verb(quiz_question, @spanish_verbs)
+          spanish_subject_pronoun = Spanish.random_subject
+          english_subject_pronoun, female_only = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only)
+          answers = verb.synonyms.map do |synonym|
+            [
+              "#{spanish_subject_pronoun} #{Spanish.conjugate_estar(subject: spanish_subject_pronoun)} #{synonym.present_continuous}.".capitalize,
+              "#{Spanish.conjugate_estar(subject: spanish_subject_pronoun)} #{synonym.present_continuous}.".capitalize
+            ]
+          end
+          result << {
+            question: "#{english_subject_pronoun} #{English.conjugate_be(subject: english_subject_pronoun)} #{verb.english_continuous}.".capitalize,
+            answers: answers.flatten,
+            description: female_only.present? ? 'Only Females' : nil
+          }
         end
       end
     end

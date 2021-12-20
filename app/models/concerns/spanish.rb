@@ -85,6 +85,33 @@ module Spanish
     hash.has_key?(pronoun) ? hash[pronoun] : pronoun
   end
 
+  def self.conjugate_estar(subject: nil, noun: nil, use_plural: false)
+    if subject
+      case subject
+      when 'yo'
+        'estoy'
+      when 'tú'
+        'estás'
+      when 'usted', 'él', 'ella', 'esto', 'esta', 'este', 'eso', 'esa', 'ese'
+        'está'
+      when 'vosotros', 'vosotras'
+        'estáis'
+      when 'nosotros', 'nosotras'
+        'estamos'
+      when 'ellos', 'ellas', 'ustedes', 'estos', 'estas', 'esos', 'esas'
+        'están'
+      end
+    elsif noun
+      if use_plural
+        'están'
+      else
+        'está'
+      end
+    else
+      raise "conjugate estar is missing subject or noun"
+    end
+  end
+
   def self.conjugate_ser(subject: nil, noun: nil, use_plural: false)
     if subject
       case subject
