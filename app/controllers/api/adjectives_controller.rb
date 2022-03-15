@@ -6,7 +6,6 @@ class Api::AdjectivesController < AdminController
 
   def index
     @adjectives = Adjective.all
-    render 'index.json.jbuilder'
   end
 
   def create
@@ -17,7 +16,7 @@ class Api::AdjectivesController < AdminController
         CardTag.create(cardtagable_type: 'Adjective', cardtagable_id: @adjective.id, tag_id: tag_id)
       end
       @adjectives = Adjective.all
-      render 'index.json.jbuilder'
+      render 'index'
     else
       render json: @adjective.errors.full_messages, status: 422
     end
@@ -27,13 +26,12 @@ class Api::AdjectivesController < AdminController
     @adjective = Adjective.find(params[:id])
     @adjective_tags = @adjective.card_tags
     @tags = Tag.all.order(:name)
-    render 'show.json.jbuilder'
   end
 
   def update
     @adjective = Adjective.find(params[:id])
     if @adjective.update(adjective_params)
-      render 'show.json.jbuilder'
+      render 'show'
     else
       render json: @adjective.errors.full_messages, status: 422
     end

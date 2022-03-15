@@ -17,7 +17,6 @@ class Api::CardsController < AdminController
   def create
     @card = Card.new(card_params)
     if @card.save
-      render 'create.json.jbuilder'
     else
       render json: @card.errors.full_messages, status: 422
     end
@@ -28,13 +27,12 @@ class Api::CardsController < AdminController
     @card_tags = @card.card_tags
     @tags = Tag.all.order(:name)
     @match_bins = @card.match_bins.includes(:match_items)
-    render 'show.json.jbuilder'
   end
 
   def update
     @card = Card.find(params[:id])
     if @card.update(card_params)
-      render 'show.json.jbuilder'
+      render 'show'
     else
       render json: @card.errors.full_messages, status: 422
     end

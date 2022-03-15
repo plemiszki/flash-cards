@@ -4,7 +4,7 @@ class Api::MatchBinsController < AdminController
     match_bin = MatchBin.new(match_bin_params)
     if match_bin.save
       @match_bins = MatchBin.where(card_id: match_bin.card_id)
-      render 'index.json.jbuilder'
+      render 'index'
     else
       render json: match_bin.errors.full_messages, status: 422
     end
@@ -14,7 +14,7 @@ class Api::MatchBinsController < AdminController
     match_bin = MatchBin.find(params[:id])
     match_bin.destroy
     @match_bins = MatchBin.where(card_id: match_bin.card_id)
-    render "index.json.jbuilder"
+    render "index"
   end
 
   private
