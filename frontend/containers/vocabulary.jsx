@@ -62,7 +62,9 @@ class Vocabulary extends React.Component {
     let data = {};
     let words = this.state.words;
     Object.keys(words).forEach((word) => {
-      data[word] = words[word][this.state.selectedDefs[word]];
+      if (words[word] !== null) {
+        data[word] = words[word][this.state.selectedDefs[word]];
+      }
     });
     this.setState({
       fetching: true
