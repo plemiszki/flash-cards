@@ -10,7 +10,7 @@ class SpanishVerb < ActiveRecord::Base
   has_many :tags, through: :card_tags
 
   def stem
-    spanish[0..-3]
+    reflexive? ? spanish[0..-5] : spanish[0..-3]
   end
 
   def synonyms
@@ -36,7 +36,6 @@ class SpanishVerb < ActiveRecord::Base
   end
 
   def present_continuous
-    ending = spanish[-2..-1]
     case ending
     when 'er', 'ir'
       "#{stem}iendo"
@@ -46,11 +45,15 @@ class SpanishVerb < ActiveRecord::Base
   end
 
   def ending
-    if spanish.ends_with?('se')
+    if reflexive?
       spanish[-4..-3]
     else
       spanish[-2..-1]
     end
+  end
+
+  def reflexive?
+    spanish.ends_with?('se')
   end
 
 end

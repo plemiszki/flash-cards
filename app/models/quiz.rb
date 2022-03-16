@@ -915,8 +915,8 @@ class Quiz < ActiveRecord::Base
           english_subject_pronoun, female_only = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only)
           answers = verb.synonyms.map do |synonym|
             [
-              "#{spanish_subject_pronoun} #{Spanish.conjugate_estar(subject: spanish_subject_pronoun)} #{synonym.present_continuous}.".capitalize,
-              "#{Spanish.conjugate_estar(subject: spanish_subject_pronoun)} #{synonym.present_continuous}.".capitalize
+              "#{spanish_subject_pronoun} #{verb.reflexive? ? "#{Spanish.reflexive_pronoun(spanish_subject_pronoun)} " : ""}#{Spanish.conjugate_estar(subject: spanish_subject_pronoun)} #{synonym.present_continuous}.".capitalize,
+              "#{verb.reflexive? ? "#{Spanish.reflexive_pronoun(spanish_subject_pronoun)} " : ""}#{Spanish.conjugate_estar(subject: spanish_subject_pronoun)} #{synonym.present_continuous}.".capitalize
             ]
           end
           result << {

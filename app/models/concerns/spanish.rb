@@ -322,4 +322,21 @@ module Spanish
     obj
   end
 
+  def self.reflexive_pronoun(subject_pronoun)
+    subject_pronoun = subject_pronoun.downcase.to_sym
+    obj = {
+      "yo": "me",
+      "tú": "te",
+      "él": "se",
+      "ella": "se",
+      "nosotros": "nos",
+      "nosotras": "nos",
+      "vosotros": "vos",
+      "ellos": "los",
+      "ellas": "las",
+    }
+    raise "reflexive pronoun missing for #{subject_pronoun}" unless obj.has_key?(subject_pronoun)
+    obj[subject_pronoun]
+  end
+
 end
