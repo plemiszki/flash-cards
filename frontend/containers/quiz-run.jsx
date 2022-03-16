@@ -43,10 +43,7 @@ class QuizRun extends React.Component {
   }
 
   changeAnswer(e) {
-    let answer = e.target.value;
-    if (answer.charAt(answer.length - 1) === '`') {
-      answer = answer.slice(0, -1);
-    }
+    const answer = e.target.value;
     this.setState({
       answer,
       status: 'question'
@@ -55,8 +52,22 @@ class QuizRun extends React.Component {
 
   checkKey(e) {
     if (e.charCode === 96) {
-      this.toggleAnswers.call(this);
+      if (!this.answerIncludesBacktick()) {
+        e.preventDefault();
+        this.toggleAnswers.call(this);
+      }
     }
+  }
+
+  answerIncludesBacktick() {
+    const question = this.state.quiz.questions[this.state.questionNumber];
+    let included = false;
+    question.answers.forEach((answer) => {
+      if (answer.indexOf('`') >= 0) {
+        included = true;
+      }
+    })
+    return included;
   }
 
   updateStreak(status) {
