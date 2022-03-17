@@ -39,6 +39,10 @@ module English
         result[:pronoun] = 'I'
       when 'tú'
         result[:pronoun] = 'you'
+        result[:format] = false
+      when 'usted'
+        result[:pronoun] = 'you'
+        result[:formal] = true
       when 'él'
         result[:pronoun] = 'he'
       when 'ella'

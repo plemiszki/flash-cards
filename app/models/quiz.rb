@@ -896,7 +896,7 @@ class Quiz < ActiveRecord::Base
           verb = Spanish.get_verb(quiz_question, @spanish_verbs)
           redo if verb.forms['present'].nil?
           spanish_subject_pronoun = Spanish.random_subject
-          english_subject_pronoun, female_only = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only)
+          english_subject_pronoun, female_only, is_formal = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only, :is_formal)
           answers = verb.synonyms.map do |synonym|
             spanish_verb_conjugation = synonym.forms['present'][Spanish.verb_forms_key(spanish_subject_pronoun)]
             [
@@ -904,10 +904,12 @@ class Quiz < ActiveRecord::Base
               "#{spanish_verb_conjugation}.".capitalize
             ]
           end
+          description = female_only.present? ? 'Only Females' : nil
+          description = 'Formal' if is_formal.present?
           result << {
             question: "#{english_subject_pronoun} #{verb.english_conjugation(spanish_pronoun: spanish_subject_pronoun)}.".capitalize,
             answers: answers.flatten,
-            description: female_only.present? ? 'Only Females' : nil
+            description: description,
           }
         when 'Spanish - Present Continuous Tense'
           verb = Spanish.get_verb(quiz_question, @spanish_verbs)
