@@ -2,13 +2,14 @@ class Api::AdverbsController < AdminController
 
   def index
     @adverbs = Adverb.all
+    render 'index.json.jbuilder'
   end
 
   def create
     @adverb = Adverb.new(adverb_params)
     if @adverb.save
       @adverbs = Adverb.all
-      render 'index'
+      render 'index.json.jbuilder'
     else
       render json: @adverb.errors.full_messages, status: 422
     end
@@ -16,12 +17,13 @@ class Api::AdverbsController < AdminController
 
   def show
     @adverb = Adverb.find(params[:id])
+    render 'show.json.jbuilder'
   end
 
   def update
     @adverb = Adverb.find(params[:id])
     if @adverb.update(adverb_params)
-      render 'show'
+      render 'show.json.jbuilder'
     else
       render json: @adverb.errors.full_messages, status: 422
     end

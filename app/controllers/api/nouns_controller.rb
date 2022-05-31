@@ -6,6 +6,7 @@ class Api::NounsController < AdminController
 
   def index
     @nouns = Noun.all
+    render 'index.json.jbuilder'
   end
 
   def create
@@ -16,7 +17,7 @@ class Api::NounsController < AdminController
         CardTag.create(cardtagable_type: 'Noun', cardtagable_id: @noun.id, tag_id: tag_id)
       end
       @nouns = Noun.all
-      render 'index'
+      render 'index.json.jbuilder'
     else
       render json: @noun.errors.full_messages, status: 422
     end
@@ -26,12 +27,13 @@ class Api::NounsController < AdminController
     @noun = Noun.find(params[:id])
     @noun_tags = @noun.card_tags
     @tags = Tag.all.order(:name)
+    render 'show.json.jbuilder'
   end
 
   def update
     @noun = Noun.find(params[:id])
     if @noun.update(noun_params)
-      render 'show'
+      render 'show.json.jbuilder'
     else
       render json: @noun.errors.full_messages, status: 422
     end

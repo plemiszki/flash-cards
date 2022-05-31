@@ -2,13 +2,14 @@ class Api::QuestionsController < AdminController
 
   def index
     @questions = Question.all
+    render 'index.json.jbuilder'
   end
 
   def create
     @question = Question.new(questions_params)
     if @question.save
       @questions = Question.all
-      render 'index'
+      render 'index.json.jbuilder'
     else
       render json: @question.errors.full_messages, status: 422
     end
@@ -16,12 +17,13 @@ class Api::QuestionsController < AdminController
 
   def show
     @question = Question.find(params[:id])
+    render 'show.json.jbuilder'
   end
 
   def update
     @question = Question.find(params[:id])
     if @question.update(questions_params)
-      render 'show'
+      render 'show.json.jbuilder'
     else
       render json: @question.errors.full_messages, status: 422
     end

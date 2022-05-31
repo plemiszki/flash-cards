@@ -8,7 +8,7 @@ class Api::QuizQuestionsController < AdminController
     if @quiz_question.save
       @quiz_questions = QuizQuestion.where(quiz_id: @quiz_question.quiz_id).order(:id)
       @available_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz)
-      render 'index'
+      render 'index.json.jbuilder'
     else
       render json: @quiz_question.errors.full_messages, status: 422
     end
@@ -20,7 +20,7 @@ class Api::QuizQuestionsController < AdminController
     if @quiz_question.update(quiz_question_params)
       @quiz_questions = QuizQuestion.where(quiz_id: @quiz_question.quiz_id).order(:id)
       @available_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz)
-      render 'index'
+      render 'index.json.jbuilder'
     else
       render json: @quiz_question.errors.full_messages, status: 422
     end
@@ -32,7 +32,7 @@ class Api::QuizQuestionsController < AdminController
     quiz_question.destroy
     @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:id)
     @available_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz)
-    render 'index'
+    render 'index.json.jbuilder'
   end
 
   private

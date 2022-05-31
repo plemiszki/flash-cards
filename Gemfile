@@ -5,10 +5,10 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '3.0.2'
+ruby '2.7.2'
 
-gem 'rails', '7.0.2.3'
-gem 'pg', '~> 1.1'
+gem 'rails', '6.0.3.4'
+gem 'pg', '~> 0.18'
 
 gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
@@ -35,6 +35,7 @@ group :development do
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '~> 3.0.5'
   gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :production do

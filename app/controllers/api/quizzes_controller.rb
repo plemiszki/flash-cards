@@ -4,12 +4,14 @@ class Api::QuizzesController < AdminController
 
   def index
     @quizzes = Quiz.all
+    render 'index.json.jbuilder'
   end
 
   def create
     @quiz = Quiz.new(quiz_params)
     if @quiz.save
       @quizzes = Quiz.all
+      render 'index.json.jbuilder'
     else
       render json: @quiz.errors.full_messages, status: 422
     end
@@ -21,12 +23,13 @@ class Api::QuizzesController < AdminController
     @available_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: @quiz)
     @questions = Question.all.order(:name)
     @tags = Tag.all.order(:name)
+    render 'show.json.jbuilder'
   end
 
   def update
     @quiz = Quiz.find(params[:id])
     if @quiz.update(quiz_params)
-      render 'show'
+      render 'show.json.jbuilder'
     else
       render json: @quiz.errors.full_messages, status: 422
     end
@@ -46,6 +49,7 @@ class Api::QuizzesController < AdminController
     }
     @archived_tag_id = Tag.find_by_name('Archived').id
     @needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
+    render 'run.json.jbuilder'
   end
 
   private
