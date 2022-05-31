@@ -8,7 +8,7 @@ end
 ruby '3.0.4'
 
 gem 'rails', '6.0.3.4'
-gem 'pg', '~> 0.18'
+gem 'pg'
 
 gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
