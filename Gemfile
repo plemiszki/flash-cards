@@ -12,7 +12,7 @@ gem 'pg'
 
 gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
-gem 'clearance', '~> 1.11'
+gem 'clearance', '~> 2.5'
 gem 'dotenv'
 gem 'filestack-rails'
 gem 'httparty'
