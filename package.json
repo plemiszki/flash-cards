@@ -1,7 +1,8 @@
 {
   "name": "flash-cards",
   "scripts": {
-    "heroku-postbuild": "webpack --mode production"
+    "heroku-postbuild": "webpack --mode production",
+    "dev": "webpack --watch"
   },
   "dependencies": {
     "@babel/core": "7.4.0",

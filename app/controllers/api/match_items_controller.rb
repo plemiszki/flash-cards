@@ -4,7 +4,7 @@ class Api::MatchItemsController < AdminController
     match_item = MatchItem.new(match_item_params)
     if match_item.save
       @match_bins = MatchBin.where(card_id: match_item.match_bin.card_id)
-      render 'index.json.jbuilder'
+      render 'index', formats: [:json], handlers: [:jbuilder]
     else
       render json: match_item.errors.full_messages, status: 422
     end

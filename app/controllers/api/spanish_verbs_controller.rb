@@ -6,7 +6,7 @@ class Api::SpanishVerbsController < AdminController
 
   def index
     @spanish_verbs = SpanishVerb.all
-    render 'index.json.jbuilder'
+    render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
   def create
@@ -17,7 +17,7 @@ class Api::SpanishVerbsController < AdminController
         CardTag.create(cardtagable_type: 'SpanishVerb', cardtagable_id: @spanish_verb.id, tag_id: tag_id)
       end
       @spanish_verbs = SpanishVerb.all
-      render 'index.json.jbuilder'
+      render 'index', formats: [:json], handlers: [:jbuilder]
     else
       render json: @spanish_verb.errors.full_messages, status: 422
     end
@@ -27,13 +27,13 @@ class Api::SpanishVerbsController < AdminController
     @spanish_verb = SpanishVerb.find(params[:id])
     @spanish_verb_tags = @spanish_verb.card_tags
     @tags = Tag.all.order(:name)
-    render 'show.json.jbuilder'
+    render 'show', formats: [:json], handlers: [:jbuilder]
   end
 
   def update
     @spanish_verb = SpanishVerb.find(params[:id])
     if @spanish_verb.update(spanish_verb_params)
-      render 'show.json.jbuilder'
+      render 'show', formats: [:json], handlers: [:jbuilder]
     else
       render json: @spanish_verb.errors.full_messages, status: 422
     end

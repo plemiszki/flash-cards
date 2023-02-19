@@ -5,16 +5,16 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '3.0.4'
+ruby '3.2.0'
 
-gem 'rails', '6.0.3.4'
+gem 'rails', '7.0.4.2'
 gem 'pg'
 
 gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
-gem 'clearance', '~> 1.11'
+gem 'clearance', '~> 2.5'
 gem 'dotenv'
-gem 'filestack-rails'
+gem 'filestack-rails', '5.5.2'
 gem 'httparty'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'

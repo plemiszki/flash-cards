@@ -6,7 +6,7 @@ class Api::SpanishMiscsController < AdminController
 
   def index
     @spanish_miscs = SpanishMisc.all
-    render 'index.json.jbuilder'
+    render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
   def create
@@ -17,7 +17,7 @@ class Api::SpanishMiscsController < AdminController
         CardTag.create(cardtagable_type: 'SpanishMisc', cardtagable_id: @spanish_misc.id, tag_id: tag_id)
       end
       @spanish_miscs = SpanishMisc.all
-      render 'index.json.jbuilder'
+      render 'index', formats: [:json], handlers: [:jbuilder]
     else
       render json: @spanish_misc.errors.full_messages, status: 422
     end
@@ -27,13 +27,13 @@ class Api::SpanishMiscsController < AdminController
     @spanish_misc = SpanishMisc.find(params[:id])
     @spanish_misc_tags = @spanish_misc.card_tags
     @tags = Tag.all.order(:name)
-    render 'show.json.jbuilder'
+    render 'show', formats: [:json], handlers: [:jbuilder]
   end
 
   def update
     @spanish_misc = SpanishMisc.find(params[:id])
     if @spanish_misc.update(spanish_misc_params)
-      render 'show.json.jbuilder'
+      render 'show', formats: [:json], handlers: [:jbuilder]
     else
       render json: @spanish_misc.errors.full_messages, status: 422
     end

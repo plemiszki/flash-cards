@@ -6,7 +6,7 @@ class Api::VerbsController < AdminController
 
   def index
     @verbs = Verb.all
-    render 'index.json.jbuilder'
+    render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
   def create
@@ -17,7 +17,7 @@ class Api::VerbsController < AdminController
         CardTag.create(cardtagable_type: 'Verb', cardtagable_id: @verb.id, tag_id: tag_id)
       end
       @verbs = Verb.all
-      render 'index.json.jbuilder'
+      render 'index', formats: [:json], handlers: [:jbuilder]
     else
       render json: @verb.errors.full_messages, status: 422
     end
@@ -27,13 +27,13 @@ class Api::VerbsController < AdminController
     @verb = Verb.find(params[:id])
     @verb_tags = @verb.card_tags
     @tags = Tag.all.order(:name)
-    render 'show.json.jbuilder'
+    render 'show', formats: [:json], handlers: [:jbuilder]
   end
 
   def update
     @verb = Verb.find(params[:id])
     if @verb.update(verb_params)
-      render 'show.json.jbuilder'
+      render 'show', formats: [:json], handlers: [:jbuilder]
     else
       render json: @verb.errors.full_messages, status: 422
     end

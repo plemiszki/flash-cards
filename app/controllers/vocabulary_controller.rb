@@ -1,7 +1,7 @@
 class VocabularyController < AdminController
 
   def index
-    render 'index.html.erb'
+    render 'index', formats: [:html], handlers: [:erb]
   end
 
 end

@@ -1,12 +1,12 @@
 class TagsController < AdminController
 
   def index
-    render 'index.html.erb'
+    render 'index', formats: [:html], handlers: [:erb]
   end
 
   def show
     @tag = Tag.find_by(id: params[:id])
-    render 'show.html.erb'
+    render 'show', formats: [:html], handlers: [:erb]
   end
 
 end
