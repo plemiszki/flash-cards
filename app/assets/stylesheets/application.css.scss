@@ -14,9 +14,6 @@
  *= require_self
  */
 
-$highlight-color: #013ADF;
-$imgpath: 'handy-components/images';
-
 :root {
   --button-color: #013adf;
   --highlight-color: #012dac;
@@ -25,18 +22,12 @@ $imgpath: 'handy-components/images';
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
 @import 'library/nice-select';
+@import 'handy-components/styles/styles';
 
-@import 'handy-tools/styles/reset';
-@import 'handy-tools/styles/fonts';
-@import 'handy-tools/styles/general';
-@import 'handy-tools/styles/buttons';
-@import 'handy-tools/styles/sign-in';
-
-@import 'handy-components/styles/admin-layout';
-@import 'handy-components/styles/admin-layout-rails';
-@import 'handy-components/styles/admin-table';
-@import 'handy-components/styles/admin-table-rails';
-@import 'handy-components/styles/modal-select';
+@import 'reset';
+@import 'layout';
+@import 'sign-in';
+@import 'general';
 
 @import 'job-status';
 @import 'vocabulary';

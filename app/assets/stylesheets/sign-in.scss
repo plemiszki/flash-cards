@@ -1,0 +1,67 @@
+#clearance {
+
+    margin: auto;
+    margin-top: 30px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 5px;
+    text-align: center;
+    font-family: 'TeachableSans-SemiBold';
+
+    #header {
+      background-position-y: bottom;
+      // background-color: white;
+      color: #5f5f5f;
+      font-size: 18px;
+      padding: 50px 0;
+
+      #t-sign {
+        display: block;
+        width: 92px;
+        height: 70px;
+        margin: auto;
+        margin-bottom: 10px;
+      }
+    }
+
+    #content {
+
+      color: black;
+      font-size: 14px;
+
+      #flash-message {
+        color: red;
+        margin-bottom: 10px;
+      }
+
+      .text-field, .password-field {
+        display: block;
+        width: 80%;
+        margin: auto;
+        text-align: left;
+
+        input {
+          width: 100%;
+          margin-top: 10px;
+          margin-bottom: 30px;
+          color: black;
+          font-family: 'TeachableSans-Regular';
+          border: 1px solid #E4E9ED;
+          padding: 13px;
+          line-height: 20px;
+        }
+      }
+
+      .submit-field {
+        input {
+          display: inline-block;
+          font-family: 'TeachableSans-Regular';
+          font-size: 12px;
+          padding: 15px 40px;
+          border-radius: 100px;
+          color: white;
+          background-color: black;
+        }
+      }
+    }
+  }

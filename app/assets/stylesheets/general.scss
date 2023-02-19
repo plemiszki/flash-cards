@@ -1,0 +1,15 @@
+body {
+    font-family: 'TeachableSans-Regular', sans-serif;
+    font-size: 12px;
+    line-height: 17px;
+    letter-spacing: 1.08px;
+    background-color: #F5F6F7;
+}
+
+* {
+    background-repeat: no-repeat;
+
+    &:focus {
+        outline: none !important;
+    }
+}

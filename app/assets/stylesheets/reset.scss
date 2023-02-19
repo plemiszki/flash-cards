@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: normal;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+p {
+    margin: 0;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+button {
+    padding: 0;
+}
+
+hr {
+    margin: 0;
+}
+
+input {
+    border: none;
+    letter-spacing: inherit;
+}
+
+label {
+    font-weight: normal;
+    margin: 0;
+}
