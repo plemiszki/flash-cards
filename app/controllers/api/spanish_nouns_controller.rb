@@ -17,9 +17,8 @@ class Api::SpanishNounsController < AdminController
         CardTag.create(cardtagable_type: 'SpanishNoun', cardtagable_id: @spanish_noun.id, tag_id: tag_id)
       end
       @spanish_nouns = SpanishNoun.all
-      render 'index', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_noun.errors.full_messages, status: 422
+      render_errors(@spanish_noun)
     end
   end
 

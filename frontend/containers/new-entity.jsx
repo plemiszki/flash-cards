@@ -1,70 +1,109 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react'
 import ChangeCase from 'change-case'
-import { Common, Details } from 'handy-components'
-import HandyTools from 'handy-tools'
-import { createEntity } from '../actions/index'
+import { Details, deepCopy, setUpNiceSelect, resetNiceSelect, createEntity, sendRequest, GrayedOut, Spinner, Button } from 'handy-components'
 
-class NewEntity extends React.Component {
+let entityNamePlural;
+let directory;
+
+export default class NewEntity extends React.Component {
   constructor(props) {
     super(props);
-    let obj = {
-      fetching: false,
-      [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity),
-      errors: []
-    };
-    if (this.props.staticData) {
-      Object.assign(obj, this.props.staticData);
+
+    const { entityName, fetchData, initialEntity, passData } = this.props;
+
+    entityNamePlural = this.props.entityNamePlural || `${entityName}s`;
+    directory = ChangeCase.snakeCase(entityNamePlural);
+    let state_obj = {
+      spinner: !!fetchData,
+      [entityName]: deepCopy(initialEntity),
+      errors: {},
     }
-    this.state = obj;
+
+    if (passData) {
+      Object.keys(passData).forEach((arrayName) => {
+        state_obj[arrayName] = passData[arrayName];
+      });
+    }
+
+    if (fetchData) {
+      fetchData.forEach((arrayName) => {
+        state_obj[arrayName] = [];
+      });
+    }
+
+    this.state = state_obj;
   }
 
   componentDidMount() {
-    HandyTools.setUpNiceSelect({ selector: '.admin-modal select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
+    setUpNiceSelect({ selector: '.admin-modal select', func: Details.changeDropdownField.bind(this) });
+    if (this.props.fetchData) {
+      sendRequest(`/api/${directory}/new`).then((response) => {
+        let entity = deepCopy(this.state[this.props.entityName]);
+        let obj = { spinner: false };
+        this.props.fetchData.forEach((arrayName) => {
+          obj[arrayName] = response[arrayName];
+        })
+        obj[this.props.entityName] = entity;
+        this.setState(obj, () => {
+          resetNiceSelect({ selector: '.admin-modal select', func: Details.changeDropdownField.bind(this) });
+        });
+      });
+    } else {
+      resetNiceSelect({ selector: '.admin-modal select', func: Details.changeDropdownField.bind(this) });
+    }
   }
 
-  clickAdd(e) {
+  clickAdd() {
     let entityNamePlural = this.props.entityNamePlural || `${this.props.entityName}s`;
-    let directory = HandyTools.convertToUnderscore(entityNamePlural);
-    e.preventDefault();
+    let directory = ChangeCase.snakeCase(entityNamePlural);
     this.setState({
-      fetching: true
+      spinner: true
     });
-    this.props.createEntity({
+    createEntity({
       directory,
       entityName: this.props.entityName,
-      entity: this.state[this.props.entityName]
-    }).then(() => {
-      if (this.props.redirect) {
-        window.location.pathname = `/${directory}/${this.props[this.props.entityName].id}`;
+      entity: this.state[this.props.entityName],
+    }).then((response) => {
+      if (this.props.redirectAfterCreate) {
+        window.location.href = `/${directory}/${response[this.props.entityName].id}`;
       } else {
-        this.props.callback(this.props[this.props.responseKey || entityNamePlural]);
+        if (this.props.callback) {
+          this.props.callback(response[entityNamePlural], entityNamePlural);
+        }
+        if (this.props.callbackFullProps) {
+          this.props.callbackFullProps(response, entityNamePlural);
+        }
       }
-    }, () => {
+    }, (response) => {
       this.setState({
-        fetching: false,
-        errors: this.props.errors
+        spinner: false,
+        errors: response.errors
+      }, () => {
+        resetNiceSelect({ selector: '.admin-modal select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   }
 
   changeFieldArgs() {
-    return {
-      allErrors: Errors,
-      errorsArray: this.state.errors
-    }
+    return {}
   }
 
   render() {
-    return(
-      <div className="component admin-modal">
+    const { buttonText, entityName } = this.props;
+    const { spinner } = this.state;
+    return (
+      <div className="new-entity handy-component admin-modal">
         <form className="white-box">
           { this.renderFields() }
-          <input type="submit" className={ "blue-button" + Common.renderDisabledButtonClass(this.state.fetching) } value={ this.props.buttonText || `Add ${ChangeCase.titleCase(this.props.entityName)}` } onClick={ this.clickAdd.bind(this) } />
+          <Button
+            submit
+            disabled={ spinner }
+            text={ buttonText || `Add ${ChangeCase.titleCase(entityName)}` }
+            onClick={ () => { this.clickAdd() } }
+          />
+          <GrayedOut visible={ spinner } />
+          <Spinner visible={ spinner } />
         </form>
-        { Common.renderSpinner(this.state.fetching) }
-        { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
       </div>
     );
   }
@@ -84,7 +123,7 @@ class NewEntity extends React.Component {
               </select>
               { Details.renderDropdownFieldError([], []) }
             </div>
-            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'noun', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'noun', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>,
           <div key="2" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'noun', property: 'foreign', columnHeader: 'Hindi' }) }
@@ -173,7 +212,7 @@ class NewEntity extends React.Component {
               </select>
               { Details.renderDropdownFieldError([], []) }
             </div>
-            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'spanishNoun', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'spanishNoun', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>,
           <div key="2" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishNoun', property: 'spanish' }) }
@@ -224,13 +263,3 @@ class NewEntity extends React.Component {
     }
   }
 }
-
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ createEntity }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NewEntity);

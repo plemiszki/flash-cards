@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import ReactModal from 'react-modal'
 import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
 
-// import NewEntity from './containers/new-entity'
+import NewEntity from './containers/new-entity'
 // import NounDetails from './containers/noun-details'
 // import VerbDetails from './containers/verb-details'
 // import AdjectiveDetails from './containers/adjective-details'
@@ -101,28 +101,53 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { name: '' },
   }});
 
-  // if (document.querySelector('#quizzes-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         entityName='quiz'
-  //         entityNamePlural='quizzes'
-  //         columns={[
-  //           { name: 'name' },
-  //           { name: '', classes: 'play-column', links: '/run' }
-  //         ]}
-  //         modalDimensions={ { width: 700 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { name: '' } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#quizzes-index')
-  //   );
-  // }
+  renderFullIndex('tags-index', {
+    entityName: 'tag',
+    columns: ['name'],
+    modalRows: 1,
+    modalDimensions: { width: 700 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { name: '' },
+  }});
+
+  renderFullIndex('questions-index', {
+    entityName: 'question',
+    columns: ['name'],
+    modalRows: 1,
+    modalDimensions: { width: 700 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { name: '' },
+  }});
+
+  renderFullIndex('spanish-nouns-index', {
+    entityName: 'spanishNoun',
+    columns: ['spanish', 'english', 'streak'],
+    modalRows: 2,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1, needsAttention: true },
+  }});
+
+  renderFullIndex('spanish-verbs-index', {
+    entityName: 'spanishVerb',
+    columns: ['spanish', 'english', 'streak', 'forms'],
+    modalRows: 1,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { english: '', spanish: '', needsAttention: true },
+  }});
 
   // if (document.querySelector('#quiz-details')) {
   //   ReactDOM.render(
@@ -142,25 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //   );
   // }
 
-  // if (document.querySelector('#questions-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         entityName='question'
-  //         columns={ ['name'] }
-  //         modalDimensions={ { width: 700 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { name: '' } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#questions-index')
-  //   );
-  // }
-
   // if (document.querySelector('#question-details')) {
   //   ReactDOM.render(
   //     <Provider context={ MyContext } store={ store }>
@@ -173,25 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //       />
   //     </Provider>,
   //     document.querySelector('#question-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#tags-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         entityName='tag'
-  //         columns={ ['name'] }
-  //         modalDimensions={ { width: 500 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { name: '' } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#tags-index')
   //   );
   // }
 
@@ -210,57 +197,12 @@ document.addEventListener('DOMContentLoaded', () => {
   //   );
   // }
 
-  // if (document.querySelector('#spanish-nouns-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         entityName='spanishNoun'
-  //         columns={ ['spanish', 'english', 'streak'] }
-  //         modalRows={ 2 }
-  //         modalDimensions={ { width: 900 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1, needsAttention: true } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#spanish-nouns-index')
-  //   );
-  // }
-
   // if (document.querySelector('#spanish-noun-details')) {
   //   ReactDOM.render(
   //     <Provider store={ store }>
   //       <SpanishNounDetails />
   //     </Provider>,
   //     document.querySelector('#spanish-noun-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#spanish-verbs-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         entityName='spanishVerb'
-  //         columns={[
-  //           { name: 'spanish' },
-  //           { name: 'english' },
-  //           { name: 'streak' },
-  //           { name: 'forms' }
-  //         ]}
-  //         modalRows={ 1 }
-  //         modalDimensions={ { width: 900 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { english: '', spanish: '', needsAttention: true } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#spanish-verbs-index')
   //   );
   // }
 

@@ -1,6 +1,8 @@
 class AdminController < ApplicationController
 
-  # before_action :require_login
+  include RenderErrors
+
+  before_action :require_login
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.

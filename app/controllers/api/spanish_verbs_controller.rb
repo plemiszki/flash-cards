@@ -10,16 +10,18 @@ class Api::SpanishVerbsController < AdminController
   end
 
   def create
-    @spanish_verb = SpanishVerb.new(spanish_verb_params)
+    needs_attention = spanish_verb_params[:needs_attention]
+    p needs_attention
+    @spanish_verb = SpanishVerb.new(spanish_verb_params.except(:needs_attention))
     if @spanish_verb.save
-      if params[:spanish_verb][:needs_attention] == "true"
+      if needs_attention
         tag_id = Tag.find_by_name('Needs Attention').id
         CardTag.create(cardtagable_type: 'SpanishVerb', cardtagable_id: @spanish_verb.id, tag_id: tag_id)
       end
       @spanish_verbs = SpanishVerb.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_verb.errors.full_messages, status: 422
+      render_errors(@spanish_verb)
     end
   end
 
@@ -35,7 +37,7 @@ class Api::SpanishVerbsController < AdminController
     if @spanish_verb.update(spanish_verb_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_verb.errors.full_messages, status: 422
+      render_errors(@spanish_verb)
     end
   end
 
@@ -48,7 +50,7 @@ class Api::SpanishVerbsController < AdminController
   private
 
   def spanish_verb_params
-    result = params[:spanish_verb].permit(:english, :spanish, :streak, :last_streak_add, :note, :forms)
+    result = params[:spanish_verb].permit(:english, :spanish, :streak, :last_streak_add, :note, :forms, :needs_attention)
     result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
     result
   end
