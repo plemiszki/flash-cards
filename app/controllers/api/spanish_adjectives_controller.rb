@@ -19,7 +19,7 @@ class Api::SpanishAdjectivesController < AdminController
       @spanish_adjectives = SpanishAdjective.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_adjective.errors.full_messages, status: 422
+      render_errors(@spanish_adjective)
     end
   end
 
@@ -35,7 +35,7 @@ class Api::SpanishAdjectivesController < AdminController
     if @spanish_adjective.update(spanish_adjective_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_adjective.errors.full_messages, status: 422
+      render_errors(@spanish_adjective)
     end
   end
 

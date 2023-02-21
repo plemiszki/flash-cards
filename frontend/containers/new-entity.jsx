@@ -224,7 +224,7 @@ export default class NewEntity extends React.Component {
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishVerb', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishVerb', property: 'english' }) }
-            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'spanishVerb', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'spanishVerb', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>
         ]);
       case 'spanishAdjective':
@@ -235,7 +235,7 @@ export default class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'masculinePlural' }) }
           </div>,
           <div key="2" className="row">
-            { Details.renderCheckbox.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'spanishAdjective', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'feminine' }) }
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'femininePlural' }) }
           </div>
@@ -245,7 +245,7 @@ export default class NewEntity extends React.Component {
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishMisc', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishMisc', property: 'english' }) }
-            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'spanishMisc', property: 'needsAttention', columnHeader: 'N.A. Tag' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'spanishMisc', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>
         ]);
       case 'matchBin':

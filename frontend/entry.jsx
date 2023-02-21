@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import ReactModal from 'react-modal'
-import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
+import { FullIndex, SearchIndex, SearchCriteria, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
 
 import NewEntity from './containers/new-entity'
 // import NounDetails from './containers/noun-details'
@@ -26,6 +26,20 @@ const renderFullIndex = (id, props = {}, args = {}) => {
       <FullIndex csrfToken={ true } { ...props }>
         { newEntityProps && (<NewEntity { ...newEntityProps } />) }
       </FullIndex>
+    );
+  }
+}
+
+const renderSearchIndex = (id, props = {}, args = {}) => {
+  const { searchCriteria: searchCriteriaProps, newEntity: newEntityProps } = args;
+  const node = document.getElementById(id);
+  if (node) {
+    const root = createRoot(node);
+    root.render(
+      <SearchIndex csrfToken={ true } { ...props }>
+        <SearchCriteria { ...searchCriteriaProps } />
+        { newEntityProps && (<NewEntity { ...newEntityProps } />) }
+      </SearchIndex>
     );
   }
 }
@@ -149,6 +163,35 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', spanish: '', needsAttention: true },
   }});
 
+  renderFullIndex('spanish-adjectives-index', {
+    entityName: 'spanishAdjective',
+    columns: [
+      { name: 'masculine', header: 'Spanish' },
+      { name: 'english' },
+      { name: 'streak' },
+    ],
+    modalRows: 2,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '', needsAttention: true },
+  }});
+
+  renderFullIndex('spanish-miscs-index', {
+    entityName: 'spanishMisc',
+    columns: ['spanish', 'english'],
+    modalRows: 1,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+    header: 'Spanish Miscellaneous Words',
+  }, { newEntity: {
+    initialEntity: { english: '', spanish: '', needsAttention: true },
+  }});
+
   // if (document.querySelector('#quiz-details')) {
   //   ReactDOM.render(
   //     <Provider store={ store }>
@@ -215,53 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
   //   );
   // }
 
-  // if (document.querySelector('#spanish-adjectives-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         entityName='spanishAdjective'
-  //         columns={ ['masculine', 'english', 'streak'] }
-  //         modalRows={ 2 }
-  //         modalDimensions={ { width: 900 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '', needsAttention: true } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#spanish-adjectives-index')
-  //   );
-  // }
-
   // if (document.querySelector('#spanish-adjective-details')) {
   //   ReactDOM.render(
   //     <Provider store={ store }>
   //       <SpanishAdjectiveDetails />
   //     </Provider>,
   //     document.querySelector('#spanish-adjective-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#spanish-miscs-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <FullIndex
-  //         context={ MyContext }
-  //         header='Spanish Miscellaneous Words'
-  //         entityName='spanishMisc'
-  //         columns={ ['spanish', 'english'] }
-  //         modalRows={ 1 }
-  //         modalDimensions={ { width: 900 } }
-  //       >
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { english: '', spanish: '', needsAttention: true } }
-  //         />
-  //     </FullIndex>
-  //     </Provider>,
-  //     document.querySelector('#spanish-miscs-index')
   //   );
   // }
 

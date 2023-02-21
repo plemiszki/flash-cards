@@ -19,7 +19,7 @@ class Api::SpanishMiscsController < AdminController
       @spanish_miscs = SpanishMisc.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_misc.errors.full_messages, status: 422
+      render_errors(@spanish_misc)
     end
   end
 
@@ -35,7 +35,7 @@ class Api::SpanishMiscsController < AdminController
     if @spanish_misc.update(spanish_misc_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @spanish_misc.errors.full_messages, status: 422
+      render_errors(@spanish_misc)
     end
   end
 

@@ -11,7 +11,6 @@ class Api::SpanishVerbsController < AdminController
 
   def create
     needs_attention = spanish_verb_params[:needs_attention]
-    p needs_attention
     @spanish_verb = SpanishVerb.new(spanish_verb_params.except(:needs_attention))
     if @spanish_verb.save
       if needs_attention
