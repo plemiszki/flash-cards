@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import ReactModal from 'react-modal'
-import { FullIndex, SearchIndex, SearchCriteria, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
+import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
 
 import NewEntity from './containers/new-entity'
 // import NounDetails from './containers/noun-details'
@@ -27,6 +27,14 @@ const renderFullIndex = (id, props = {}, args = {}) => {
         { newEntityProps && (<NewEntity { ...newEntityProps } />) }
       </FullIndex>
     );
+  }
+}
+
+const renderSimpleDetails = (id, props = {}) => {
+  const node = document.getElementById(id);
+  if (node) {
+    const root = createRoot(node);
+    root.render(<SimpleDetails csrfToken={ true } { ...props } />);
   }
 }
 
@@ -101,11 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
   //   );
   // }
 
-
   renderFullIndex('quizzes-index', {
     entityName: 'quiz',
     entityNamePlural: 'quizzes',
-    columns: ['name'],
+    columns: [
+      'name',
+      { bold: true, isButton: true, buttonText: 'Run Quiz', clickButton: (quiz) => {
+        window.location.pathname = `/quizzes/${quiz.id}/run`
+      } },
+    ],
     modalRows: 1,
     modalDimensions: { width: 700 },
     includeLinks: true,
@@ -192,6 +204,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', spanish: '', needsAttention: true },
   }});
 
+  renderSimpleDetails('tag-details', {
+    entityName: 'tag',
+    initialEntity: { name: '' },
+    fields: [[
+      { columnWidth: 12, property: 'name' },
+    ]],
+  });
+
+  renderSimpleDetails('question-details', {
+    entityName: 'question',
+    initialEntity: { name: '' },
+    fields: [[
+      { columnWidth: 12, property: 'name' },
+    ]],
+  });
+
   // if (document.querySelector('#quiz-details')) {
   //   ReactDOM.render(
   //     <Provider store={ store }>
@@ -207,36 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //       <QuizRun entityName='quiz' />
   //     </Provider>,
   //     document.querySelector('#quiz-run')
-  //   );
-  // }
-
-  // if (document.querySelector('#question-details')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <SimpleDetails
-  //         context={ MyContext }
-  //         entityName='question'
-  //         initialEntity={ { name: '' } }
-  //         fields={ [[{ columnWidth: 6, entity: 'question', property: 'name' }]] }
-  //         csrfToken={ true }
-  //       />
-  //     </Provider>,
-  //     document.querySelector('#question-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#tag-details')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <SimpleDetails
-  //         context={ MyContext }
-  //         entityName='tag'
-  //         initialEntity={ { name: '' } }
-  //         fields={ [[{ columnWidth: 6, entity: 'tag', property: 'name' }]] }
-  //         csrfToken={ true }
-  //       />
-  //     </Provider>,
-  //     document.querySelector('#tag-details')
   //   );
   // }
 

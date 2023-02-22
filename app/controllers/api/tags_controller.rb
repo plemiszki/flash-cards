@@ -25,7 +25,7 @@ class Api::TagsController < AdminController
     if @tag.update(tag_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @tag.errors.full_messages, status: 422
+      render_errors(@tag)
     end
   end
 

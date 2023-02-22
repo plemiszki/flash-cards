@@ -24,7 +24,7 @@ class Api::QuestionsController < AdminController
     if @question.update(questions_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @question.errors.full_messages, status: 422
+      render_errors(@question)
     end
   end
 
