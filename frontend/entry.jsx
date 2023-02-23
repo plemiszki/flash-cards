@@ -55,14 +55,13 @@ const renderSearchIndex = (id, props = {}, args = {}) => {
 document.addEventListener('DOMContentLoaded', () => {
 
   ReactModal.setAppElement(document.body);
-  const MyContext = React.createContext();
 
-  // if (document.querySelector('#message')) {
-  //   ReactDOM.render(
-  //     <Message />,
-  //     document.querySelector('#message')
-  //   );
-  // }
+  const messageNode = document.getElementById('message');
+  if (messageNode) {
+    createRoot(messageNode).render(
+      <Message />,
+    )
+  }
 
   // if (document.querySelector('#cards-index')) {
   //   ReactDOM.render(
