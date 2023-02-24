@@ -4,10 +4,7 @@ import ReactModal from 'react-modal'
 import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from 'handy-components'
 
 import NewEntity from './containers/new-entity'
-// import NounDetails from './containers/noun-details'
-// import VerbDetails from './containers/verb-details'
-// import AdjectiveDetails from './containers/adjective-details'
-// import SpanishNounDetails from './containers/spanish-noun-details'
+import SpanishNounDetails from './containers/spanish-noun-details'
 // import SpanishVerbDetails from './containers/spanish-verb-details'
 // import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 // import SpanishMiscDetails from './containers/spanish-misc-details'
@@ -60,6 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (messageNode) {
     createRoot(messageNode).render(
       <Message />,
+    )
+  }
+
+  const spanishNounNode = document.getElementById('spanish-noun-details');
+  if (spanishNounNode) {
+    createRoot(spanishNounNode).render(
+      <SpanishNounDetails />
     )
   }
 
@@ -227,15 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //       <QuizRun entityName='quiz' />
   //     </Provider>,
   //     document.querySelector('#quiz-run')
-  //   );
-  // }
-
-  // if (document.querySelector('#spanish-noun-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <SpanishNounDetails />
-  //     </Provider>,
-  //     document.querySelector('#spanish-noun-details')
   //   );
   // }
 

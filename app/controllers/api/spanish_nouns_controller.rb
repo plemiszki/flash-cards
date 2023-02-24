@@ -25,7 +25,7 @@ class Api::SpanishNounsController < AdminController
   def show
     @spanish_noun = SpanishNoun.find(params[:id])
     @spanish_noun_tags = @spanish_noun.card_tags
-    @tags = Tag.all.order(:name)
+    @tags = Tag.where.not(id: @spanish_noun_tags.pluck(:tag_id)).order(:name)
     render 'show', formats: [:json], handlers: [:jbuilder]
   end
 
