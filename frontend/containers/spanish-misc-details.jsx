@@ -1,12 +1,8 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import HandyTools from 'handy-tools'
-import { Common, Details } from 'handy-components'
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
-import EntityTags from './modules/entity-tags.jsx'
+import React from 'react'
+import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, Table, updateEntity, BottomButtons, Spinner, GrayedOut, OutlineButton, createEntity, deleteEntity } from 'handy-components'
+import TagsSection from './tags-section';
 
-class SpanishMiscDetails extends React.Component {
+export default class SpanishMiscDetails extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,31 +14,27 @@ class SpanishMiscDetails extends React.Component {
     };
 
     this.state = {
-      fetching: true,
+      spinner: true,
       spanishMisc: emptySpanishMisc,
       spanishMiscSaved: emptySpanishMisc,
       errors: [],
       spanishMiscTags: [],
       tags: [],
-      newCardTagModalOpen: false
     };
   }
 
   componentDidMount() {
-    this.props.fetchEntity({
-      id: window.location.pathname.split('/')[2],
-      directory: window.location.pathname.split('/')[1],
-      entityName: this.props.entityName
-    }, 'spanishMisc').then(() => {
+    fetchEntity().then((response) => {
+      const { spanishMisc, spanishMiscTags, tags } = response;
       this.setState({
-        fetching: false,
-        spanishMisc: this.props.spanishMisc,
-        spanishMiscSaved: HandyTools.deepCopy(this.props.spanishMisc),
-        tags: this.props.tags,
-        spanishMiscTags: this.props.spanishMiscTags,
+        spinner: false,
+        spanishMisc,
+        spanishMiscSaved: deepCopy(spanishMisc),
+        tags,
+        spanishMiscTags,
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
+        setUpNiceSelect({ selector: 'select', func: Details.changeDropdownField.bind(this) });
       });
     });
   }
@@ -56,68 +48,67 @@ class SpanishMiscDetails extends React.Component {
   }
 
   checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.spanishMisc, this.state.spanishMiscSaved);
+    return !objectsAreEqual(this.state.spanishMisc, this.state.spanishMiscSaved);
   }
 
   clickSave() {
     this.setState({
-      fetching: true,
+      spinner: true,
       justSaved: true
     }, () => {
-      this.props.updateEntity({
-        id: window.location.pathname.split('/')[2],
-        directory: window.location.pathname.split('/')[1],
+      updateEntity({
+        entityName: 'spanishMisc',
         entity: this.state.spanishMisc,
-        entityName: 'spanishMisc'
-      }).then(() => {
+      }).then((response) => {
+        const { spanishMisc } = response;
         this.setState({
-          fetching: false,
-          spanishMisc: this.props.spanishMisc,
-          spanishMiscSaved: HandyTools.deepCopy(this.props.spanishMisc),
+          spinner: false,
+          spanishMisc,
+          spanishMiscSaved: deepCopy(spanishMisc),
           changesToSave: false
         });
-      }, () => {
+      }, (response) => {
+        const { errors } = response;
         this.setState({
-          fetching: false,
-          errors: this.props.errors
+          spinner: false,
+          errors,
         });
       });
     });
   }
 
   render() {
+    const { spinner, justSaved, changesToSave, spanishMiscTags, tags, spanishMisc } = this.state;
     return (
-      <div id="spanish-noun-details" className="component details-component">
-        <h1>Spanish Misc Details</h1>
+      <div className="handy-component">
+        <h1>Spanish Miscellaneous Word Details</h1>
         <div className="white-box">
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'spanishMisc', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'spanishMisc', property: 'english' }) }
           </div>
-          <div>
-            <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { Details.saveButtonText.call(this) }
-            </a>
-            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
-              Delete
-            </a>
-          </div>
-          <hr className="divider" />
-          { EntityTags.renderTags.call(this, 'spanishMisc') }
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          <BottomButtons
+            entityName="spanishMisc"
+            confirmDelete={ Details.confirmDelete.bind(this) }
+            justSaved={ justSaved }
+            changesToSave={ changesToSave }
+            disabled={ spinner }
+            clickSave={ () => { this.clickSave() } }
+            marginBottom
+          />
+          <hr />
+          <TagsSection
+            entity={ spanishMisc }
+            entityName="SpanishMisc"
+            entityTags={ spanishMiscTags }
+            tags={ tags }
+            setSpinner={ bool => this.setState({ spinner: bool }) }
+            setTags={ (entityTags, tags) => this.setState({ spanishMiscTags: entityTags, tags }) }
+          />
+          <Spinner visible={ spinner } />
+          <GrayedOut visible={ spinner } />
         </div>
       </div>
     );
   }
 }
-
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SpanishMiscDetails);

@@ -7,7 +7,7 @@ import NewEntity from './containers/new-entity'
 import SpanishNounDetails from './containers/spanish-noun-details'
 import SpanishVerbDetails from './containers/spanish-verb-details'
 import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
-// import SpanishMiscDetails from './containers/spanish-misc-details'
+import SpanishMiscDetails from './containers/spanish-misc-details'
 // import CardDetails from './containers/card-details'
 // import QuizDetails from './containers/quiz-details'
 // import QuizRun from './containers/quiz-run'
@@ -77,6 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (spanishAdjectiveNode) {
     createRoot(spanishAdjectiveNode).render(
       <SpanishAdjectiveDetails />
+    );
+  }
+
+  const spanishMiscNode = document.getElementById('spanish-misc-details');
+  if (spanishMiscNode) {
+    createRoot(spanishMiscNode).render(
+      <SpanishMiscDetails />
     );
   }
 
