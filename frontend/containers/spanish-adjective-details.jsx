@@ -1,12 +1,8 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import HandyTools from 'handy-tools'
-import { Common, Details } from 'handy-components'
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
-import EntityTags from './modules/entity-tags.jsx'
+import React from 'react'
+import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, Table, updateEntity, BottomButtons, Spinner, GrayedOut, OutlineButton, createEntity, deleteEntity } from 'handy-components'
+import TagsSection from './tags-section';
 
-class SpanishAdjectiveDetails extends React.Component {
+export default class SpanishAdjectiveDetails extends React.Component {
   constructor(props) {
     super(props);
 
@@ -19,31 +15,27 @@ class SpanishAdjectiveDetails extends React.Component {
     };
 
     this.state = {
-      fetching: true,
+      spinner: true,
       spanishAdjective: emptySpanishAdjective,
       spanishAdjectiveSaved: emptySpanishAdjective,
       errors: [],
       spanishAdjectiveTags: [],
       tags: [],
-      newCardTagModalOpen: false
     };
   }
 
   componentDidMount() {
-    this.props.fetchEntity({
-      id: window.location.pathname.split('/')[2],
-      directory: window.location.pathname.split('/')[1],
-      entityName: this.props.entityName
-    }, 'spanishAdjective').then(() => {
+    fetchEntity().then((response) => {
+      const { spanishAdjective, spanishAdjectiveTags, tags } = response;
       this.setState({
-        fetching: false,
-        spanishAdjective: this.props.spanishAdjective,
-        spanishAdjectiveSaved: HandyTools.deepCopy(this.props.spanishAdjective),
-        tags: this.props.tags,
-        spanishAdjectiveTags: this.props.spanishAdjectiveTags,
+        spinner: false,
+        spanishAdjective,
+        spanishAdjectiveSaved: deepCopy(spanishAdjective),
+        tags,
+        spanishAdjectiveTags,
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
+        setUpNiceSelect({ selector: 'select', func: Details.changeDropdownField.bind(this) });
       });
     });
   }
@@ -57,39 +49,40 @@ class SpanishAdjectiveDetails extends React.Component {
   }
 
   checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.spanishAdjective, this.state.spanishAdjectiveSaved);
+    return !objectsAreEqual(this.state.spanishAdjective, this.state.spanishAdjectiveSaved);
   }
 
   clickSave() {
     this.setState({
-      fetching: true,
+      spinner: true,
       justSaved: true
     }, () => {
-      this.props.updateEntity({
-        id: window.location.pathname.split('/')[2],
-        directory: window.location.pathname.split('/')[1],
+      updateEntity({
+        entityName: 'spanishAdjective',
         entity: this.state.spanishAdjective,
-        entityName: 'spanishAdjective'
-      }).then(() => {
+      }).then((response) => {
+        const { spanishAdjective } = response;
         this.setState({
-          fetching: false,
-          spanishAdjective: this.props.spanishAdjective,
-          spanishAdjectiveSaved: HandyTools.deepCopy(this.props.spanishAdjective),
+          spinner: false,
+          spanishAdjective,
+          spanishAdjectiveSaved: deepCopy(spanishAdjective),
           changesToSave: false
         });
-      }, () => {
+      }, (response) => {
+        const { errors } = response;
         this.setState({
-          fetching: false,
-          errors: this.props.errors
+          spinner: false,
+          errors,
         });
       });
     });
   }
 
   render() {
+    const { spinner, justSaved, changesToSave, spanishAdjectiveTags, newCardTagModalOpen, tags, spanishAdjective } = this.state;
     return (
-      <div id="spanish-verb-details" className="component details-component">
-        <h1>Spanish Adjective Details</h1>
+      <div className="handy-component">
+        <h1>Spanish Noun Details</h1>
         <div className="white-box">
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'english' }) }
@@ -102,30 +95,28 @@ class SpanishAdjectiveDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'feminine' }) }
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'femininePlural' }) }
           </div>
-          <div>
-            <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { Details.saveButtonText.call(this) }
-            </a>
-            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this) }>
-              Delete
-            </a>
-          </div>
-          <hr className="divider" />
-          { EntityTags.renderTags.call(this, 'spanishAdjective') }
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          <BottomButtons
+            entityName="spanishAdjective"
+            confirmDelete={ Details.confirmDelete.bind(this) }
+            justSaved={ justSaved }
+            changesToSave={ changesToSave }
+            disabled={ spinner }
+            clickSave={ () => { this.clickSave() } }
+            marginBottom
+          />
+          <hr />
+          <TagsSection
+            entity={ spanishAdjective }
+            entityName="SpanishAdjective"
+            entityTags={ spanishAdjectiveTags }
+            tags={ tags }
+            setSpinner={ bool => this.setState({ spinner: bool }) }
+            setTags={ (entityTags, tags) => this.setState({ spanishAdjectiveTags: entityTags, tags }) }
+          />
+          <Spinner visible={ spinner } />
+          <GrayedOut visible={ spinner } />
         </div>
       </div>
     );
   }
 }
-
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SpanishAdjectiveDetails);

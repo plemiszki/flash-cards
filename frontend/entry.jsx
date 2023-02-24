@@ -6,7 +6,7 @@ import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from '
 import NewEntity from './containers/new-entity'
 import SpanishNounDetails from './containers/spanish-noun-details'
 import SpanishVerbDetails from './containers/spanish-verb-details'
-// import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
+import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 // import SpanishMiscDetails from './containers/spanish-misc-details'
 // import CardDetails from './containers/card-details'
 // import QuizDetails from './containers/quiz-details'
@@ -56,21 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (messageNode) {
     createRoot(messageNode).render(
       <Message />,
-    )
+    );
   }
 
   const spanishNounNode = document.getElementById('spanish-noun-details');
   if (spanishNounNode) {
     createRoot(spanishNounNode).render(
       <SpanishNounDetails />
-    )
+    );
   }
 
   const spanishVerbNode = document.getElementById('spanish-verb-details');
   if (spanishVerbNode) {
     createRoot(spanishVerbNode).render(
       <SpanishVerbDetails />
-    )
+    );
+  }
+
+  const spanishAdjectiveNode = document.getElementById('spanish-adjective-details');
+  if (spanishAdjectiveNode) {
+    createRoot(spanishAdjectiveNode).render(
+      <SpanishAdjectiveDetails />
+    );
   }
 
   renderSearchIndex('cards-index', {
