@@ -63,50 +63,34 @@ document.addEventListener('DOMContentLoaded', () => {
     )
   }
 
-  // if (document.querySelector('#cards-index')) {
-  //   ReactDOM.render(
-  //     <Provider context={ MyContext } store={ store }>
-  //       <SearchIndex
-  //         context={ MyContext }
-  //         entityName='card'
-  //         columns={[
-  //           { name: 'question' },
-  //           { name: 'tags', width: 300, orderByDisabled: true },
-  //           { name: 'streak', width: 100 }
-  //         ]}
-  //         batchSize={ 50 }
-  //         searchModalRows={ 3 }
-  //         searchModalDimensions={ { width: 600 } }
-  //         showNewButton={ true }
-  //         newModalDimensions={ { width: 900, height: 432 } }
-  //       >
-  //         <SearchCriteria
-  //           context={ MyContext }
-  //           fields={[
-  //             { name: 'question', fuzzy: true, columnWidth: 10 },
-  //             { name: 'answer', fuzzy: true, columnWidth: 10 },
-  //             { name: 'tag', type: 'modal', optionDisplayProperty: 'name', responseArrayName: 'tags', dbName: 'card_tags.tag_id', columnWidth: 8 },
-  //           ]}
-  //         />
-  //         <NewEntity
-  //           context={ MyContext }
-  //           initialEntity={ { question: '', answer: '' } }
-  //           redirect={ true }
-  //         />
-  //       </SearchIndex>
-  //     </Provider>,
-  //     document.querySelector('#cards-index')
-  //   );
-  // }
-
-  // if (document.querySelector('#card-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <CardDetails entityName='card' array1Name='cardTags' array2Name='tags' />
-  //     </Provider>,
-  //     document.querySelector('#card-details')
-  //   );
-  // }
+  renderSearchIndex('cards-index', {
+    entityName: 'card',
+    columns: [
+      { name: 'question' },
+      { name: 'tags', width: 300, orderByDisabled: true },
+      { name: 'streak', width: 100 },
+    ],
+    batchSize: 50,
+    searchModalRows: 3,
+    searchModalDimensions: { width: 600 },
+    showNewButton: true,
+    newModalDimensions: { width: 900, height: 432 },
+  }, {
+    searchCriteria: {
+      fields: [
+        { name: 'question', fuzzy: true, columnWidth: 10 },
+        { name: 'answer', fuzzy: true, columnWidth: 10 },
+        { name: 'tag', type: 'modal', optionDisplayProperty: 'name', responseArrayName: 'tags', dbName: 'card_tags.tag_id', columnWidth: 8 },
+      ],
+    },
+    newEntity: {
+      initialEntity: {
+        question: '',
+        answer: '',
+      },
+      redirectAfterCreate: true,
+    }
+  });
 
   renderFullIndex('quizzes-index', {
     entityName: 'quiz',
@@ -218,6 +202,15 @@ document.addEventListener('DOMContentLoaded', () => {
       { columnWidth: 12, property: 'name' },
     ]],
   });
+
+  // if (document.querySelector('#card-details')) {
+  //   ReactDOM.render(
+  //     <Provider store={ store }>
+  //       <CardDetails entityName='card' array1Name='cardTags' array2Name='tags' />
+  //     </Provider>,
+  //     document.querySelector('#card-details')
+  //   );
+  // }
 
   // if (document.querySelector('#quiz-details')) {
   //   ReactDOM.render(

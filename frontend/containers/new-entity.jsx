@@ -174,7 +174,7 @@ export default class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'question' }) }
           </div>,
           <div key="2" className="row">
-            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
+            { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
           </div>
         ]);
       case 'tag':

@@ -15,7 +15,7 @@ module SearchIndex
     end
 
     order_column = params[:order_by]
-    order_direction = params[:order_direction]
+    order_direction = params[:order_dir]
     order_string = order_column
     order_string += ' DESC' if order_direction == 'desc'
 

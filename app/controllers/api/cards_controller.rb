@@ -5,7 +5,7 @@ class Api::CardsController < AdminController
   after_action :archive, only: [:update]
 
   def index
-    @cards = perform_search(model: 'Card')
+    @cards = perform_search(model: 'Card', associations: [:tags])
     render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
