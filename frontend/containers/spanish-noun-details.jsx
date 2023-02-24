@@ -1,6 +1,6 @@
 import React from 'react'
-import Modal from 'react-modal'
-import { Common, ModalSelect, ModalSelectStyles, deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, Table, updateEntity, BottomButtons, Spinner, GrayedOut, OutlineButton, createEntity, deleteEntity } from 'handy-components'
+import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, Table, updateEntity, BottomButtons, Spinner, GrayedOut, OutlineButton, createEntity, deleteEntity } from 'handy-components'
+import TagsSection from './tags-section';
 
 export default class SpanishNounDetails extends React.Component {
   constructor(props) {
@@ -51,27 +51,6 @@ export default class SpanishNounDetails extends React.Component {
 
   checkForChanges() {
     return !objectsAreEqual(this.state.spanishNoun, this.state.spanishNounSaved);
-  }
-
-  selectTag(option) {
-    const { spanishNoun } = this.state;
-    this.setState({
-      newCardTagModalOpen: false,
-      spinner: true
-    }, () => {
-      createEntity({
-        directory: 'card_tags',
-        entityName: 'cardTag',
-        entity: { tagId: option.id, cardtagableId: spanishNoun.id, cardtagableType: 'SpanishNoun' },
-      }).then((response) => {
-        const { cardTags, tags } = response;
-        this.setState({
-          spanishNounTags: cardTags,
-          spinner: false,
-          tags,
-        })
-      });
-    });
   }
 
   clickSave() {
@@ -133,41 +112,16 @@ export default class SpanishNounDetails extends React.Component {
             marginBottom
           />
           <hr />
-          <Table
-            columns={[
-              { name: 'tagName', header: 'Tags' },
-            ]}
-            rows={ spanishNounTags }
-            marginBottom
-            alphabetize
-            sortable={ false }
-            clickDelete={ (row) => {
-              this.setState({
-                spinner: true,
-              });
-              deleteEntity({
-                directory: 'card_tags',
-                id: row.id,
-              }).then((response) => {
-                const { cardTags, tags } = response;
-                this.setState({
-                  spinner: false,
-                  spanishNounTags: cardTags,
-                  tags,
-                });
-              })
-            }}
-          />
-          <OutlineButton
-            color="#5F5F5F"
-            text="Add Tag"
-            onClick={ () => this.setState({ newCardTagModalOpen: true }) }
+          <TagsSection
+            entity={ spanishNoun }
+            entityName="SpanishNoun"
+            entityTags={ spanishNounTags }
+            tags={ tags }
+            setSpinner={ bool => this.setState({ spinner: bool }) }
+            setTags={ (entityTags, tags) => this.setState({ spanishNounTags: entityTags, tags }) }
           />
           <Spinner visible={ spinner } />
           <GrayedOut visible={ spinner } />
-          <Modal isOpen={ newCardTagModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ ModalSelectStyles }>
-            <ModalSelect options={ tags } property="name" func={ (option) => this.selectTag(option) } />
-          </Modal>
         </div>
       </div>
     );
