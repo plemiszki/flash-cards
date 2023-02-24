@@ -5,14 +5,13 @@ import { FullIndex, SearchIndex, SearchCriteria, SimpleDetails, Message } from '
 
 import NewEntity from './containers/new-entity'
 import SpanishNounDetails from './containers/spanish-noun-details'
-// import SpanishVerbDetails from './containers/spanish-verb-details'
+import SpanishVerbDetails from './containers/spanish-verb-details'
 // import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 // import SpanishMiscDetails from './containers/spanish-misc-details'
 // import CardDetails from './containers/card-details'
 // import QuizDetails from './containers/quiz-details'
 // import QuizRun from './containers/quiz-run'
 // import Vocabulary from './containers/vocabulary'
-
 
 const renderFullIndex = (id, props = {}, args = {}) => {
   const { newEntity: newEntityProps } = args;
@@ -64,6 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (spanishNounNode) {
     createRoot(spanishNounNode).render(
       <SpanishNounDetails />
+    )
+  }
+
+  const spanishVerbNode = document.getElementById('spanish-verb-details');
+  if (spanishVerbNode) {
+    createRoot(spanishVerbNode).render(
+      <SpanishVerbDetails />
     )
   }
 
@@ -231,15 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //       <QuizRun entityName='quiz' />
   //     </Provider>,
   //     document.querySelector('#quiz-run')
-  //   );
-  // }
-
-  // if (document.querySelector('#spanish-verb-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <SpanishVerbDetails />
-  //     </Provider>,
-  //     document.querySelector('#spanish-verb-details')
   //   );
   // }
 
