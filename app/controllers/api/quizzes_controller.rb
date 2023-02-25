@@ -13,7 +13,7 @@ class Api::QuizzesController < AdminController
       @quizzes = Quiz.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @quiz.errors.full_messages, status: 422
+      render_errors(@quiz)
     end
   end
 
@@ -31,7 +31,7 @@ class Api::QuizzesController < AdminController
     if @quiz.update(quiz_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @quiz.errors.full_messages, status: 422
+      render_errors(@quiz)
     end
   end
 

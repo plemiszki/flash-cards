@@ -9,7 +9,7 @@ import SpanishVerbDetails from './containers/spanish-verb-details'
 import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 import SpanishMiscDetails from './containers/spanish-misc-details'
 import CardDetails from './containers/card-details'
-// import QuizDetails from './containers/quiz-details'
+import QuizDetails from './containers/quiz-details'
 // import QuizRun from './containers/quiz-run'
 // import Vocabulary from './containers/vocabulary'
 
@@ -63,6 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cardDetailsNode) {
     createRoot(cardDetailsNode).render(
       <CardDetails />
+    );
+  }
+
+  const quizDetailsNode = document.getElementById('quiz-details');
+  if (quizDetailsNode) {
+    createRoot(quizDetailsNode).render(
+      <QuizDetails />
     );
   }
 
