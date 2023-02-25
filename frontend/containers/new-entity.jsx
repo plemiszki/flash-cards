@@ -54,24 +54,25 @@ export default class NewEntity extends React.Component {
   }
 
   clickAdd() {
-    let entityNamePlural = this.props.entityNamePlural || `${this.props.entityName}s`;
-    let directory = ChangeCase.snakeCase(entityNamePlural);
+    const { entityNamePlural: entityNamePluralProps, responseKey, entityName, redirectAfterCreate, callback, callbackFullProps } = this.props;
+    const entityNamePlural = entityNamePluralProps || `${entityName}s`;
+    const directory = ChangeCase.snakeCase(entityNamePlural);
     this.setState({
       spinner: true
     });
     createEntity({
       directory,
-      entityName: this.props.entityName,
-      entity: this.state[this.props.entityName],
+      entityName,
+      entity: this.state[entityName],
     }).then((response) => {
-      if (this.props.redirectAfterCreate) {
-        window.location.href = `/${directory}/${response[this.props.entityName].id}`;
+      if (redirectAfterCreate) {
+        window.location.href = `/${directory}/${response[entityName].id}`;
       } else {
-        if (this.props.callback) {
-          this.props.callback(response[entityNamePlural], entityNamePlural);
+        if (callback) {
+          callback(response[responseKey || entityNamePlural], entityNamePlural);
         }
-        if (this.props.callbackFullProps) {
-          this.props.callbackFullProps(response, entityNamePlural);
+        if (callbackFullProps) {
+          callbackFullProps(response, entityNamePlural);
         }
       }
     }, (response) => {

@@ -14,7 +14,7 @@ class Api::MatchBinsController < AdminController
     match_bin = MatchBin.find(params[:id])
     match_bin.destroy
     @match_bins = MatchBin.where(card_id: match_bin.card_id)
-    render "index.json.jbuilder"
+    render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
   private

@@ -19,7 +19,7 @@ class Api::CardsController < AdminController
     if @card.save
       render 'create.json.jbuilder'
     else
-      render json: @card.errors.full_messages, status: 422
+      render_errors(@card)
     end
   end
 
@@ -36,7 +36,7 @@ class Api::CardsController < AdminController
     if @card.update(card_params)
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
-      render json: @card.errors.full_messages, status: 422
+      render_errors(@card)
     end
   end
 

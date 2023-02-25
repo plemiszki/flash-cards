@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from 'react-modal'
-import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, BottomButtons, objectsAreEqual, deepCopy } from 'handy-components'
+import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, deleteEntity, BottomButtons, objectsAreEqual, deepCopy, OutlineButton, Table } from 'handy-components'
 import NewEntity from './new-entity.jsx'
 import TagsSection from './tags-section';
 
@@ -102,88 +102,29 @@ export default class CardDetails extends React.Component {
     this.setState({
       newMatchBinModalOpen: false,
       newMatchItemModalOpen: false,
-      matchBins: response
+      matchBins: response,
     });
   }
 
-  clickPlus(binId, e) {
-    this.setState({
-      newMatchItemModalOpen: true,
-      selectedMatchBinId: binId
-    });
-  }
+  render() {
+    const { spinner, card, cardSaved, cardTags, tags, justSaved, changesToSave, matchBins, newMatchBinModalOpen, newMatchItemModalOpen, selectedMatchBinId } = this.state;
 
-  delete(type, e) {
-    let id = e.target.dataset.id;
-    this.setState({
-      fetching: true
-    });
-    if (type === 'bin') {
-      this.props.deleteEntity({
-        directory: 'match_bins',
-        id,
-        callback: (response) => {
-          this.setState({
-            fetching: false,
-            matchBins: response.matchBins
-          });
-        }
-      });
-    } else {
-      this.props.deleteEntity({
-        directory: 'match_items',
-        id,
-        callback: (response) => {
-          this.setState({
-            fetching: false,
-            matchBins: response.matchBins
-          });
-        }
-      });
-    }
-  }
-
-  renderMatchTable() {
-    let result = [];
-    HandyTools.alphabetizeArrayOfObjects(this.state.matchBins, 'name').forEach((matchBin) => {
-      result.push({
+    let matchBinsRows = [];
+    matchBins.forEach((matchBin) => {
+      matchBinsRows.push({
         text: matchBin.name,
         type: 'bin',
         id: matchBin.id
       });
       matchBin.matchItems.forEach((matchItem) => {
-        result.push({
+        matchBinsRows.push({
           text: matchItem.name,
           type: 'item',
           id: matchItem.id
-        })
-      })
-    })
-    return result.map((obj, index) => {
-      return(
-        <tr key={ index } className={ `${obj.type}-row` }>
-          <td>{ obj.text }</td>
-          { this.renderPlus(obj) }
-          <td className="x-column" onClick={ this.delete.bind(this, obj.type) } data-id={ obj.id }></td>
-        </tr>
-      );
-    })
-  }
+        });
+      });
+    });
 
-  renderPlus(obj) {
-    if (obj.type === 'bin') {
-      return(
-        <td className="x-column plus-column" onClick={ this.clickPlus.bind(this, obj.id) } data-id={ obj.id }></td>
-      );
-    } else {
-      return(
-        <td></td>
-      );
-    }
-  }
-
-  render() {
-    const { spinner, card, cardTags, tags, justSaved, changesToSave, newMatchBinModalOpen, newMatchItemModalOpen, selectedMatchBinId } = this.state;
     return (
       <>
         <div className="handy-component">
@@ -196,7 +137,7 @@ export default class CardDetails extends React.Component {
             <div className="row">
               { Details.renderField.bind(this)({ columnWidth: 9, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }
               <div className="col-xs-3">
-                <img src={ card.imageUrl } />
+                <img src={ cardSaved.imageUrl } />
               </div>
             </div>
             <div className="row">
@@ -213,6 +154,62 @@ export default class CardDetails extends React.Component {
               clickSave={ () => { this.clickSave() } }
               marginBottom
             />
+            { cardSaved.answer === 'MATCHING' && (
+              <>
+                <hr />
+                <Table
+                  columns={ [
+                    {
+                      name: 'text',
+                      header: 'Match Bins',
+                      boldIf: row => row.type === 'bin',
+                    },
+                    {
+                      isButton: true,
+                      buttonText: 'Add Item',
+                      width: 120,
+                      clickButton: row => { this.setState({ newMatchItemModalOpen: true, selectedMatchBinId: row.id }) },
+                      displayIf: row => row.type === 'bin',
+                    },
+                  ] }
+                  rows={ matchBinsRows }
+                  links={ false }
+                  sortable={ false }
+                  clickDelete={ row => {
+                    const { type, id } = row;
+                    this.setState({ spinner: true })
+                    if (type === 'bin') {
+                      deleteEntity({
+                        directory: 'match_bins',
+                        id,
+                      }).then((response) => {
+                        this.setState({
+                          spinner: false,
+                          matchBins: response.matchBins,
+                        });
+                      });
+                    } else {
+                      deleteEntity({
+                        directory: 'match_items',
+                        id,
+                      }).then((response) => {
+                        this.setState({
+                          spinner: false,
+                          matchBins: response.matchBins,
+                        });
+                      });;
+                    }
+                  } }
+                  marginBottom
+                />
+                <OutlineButton
+                  color="#5F5F5F"
+                  text="Add Bin"
+                  onClick={ () => this.setState({ newMatchBinModalOpen: true }) }
+                  marginBottom
+                />
+              </>
+            ) }
             <hr />
             <TagsSection
               entity={ card }
@@ -250,23 +247,3 @@ export default class CardDetails extends React.Component {
     );
   }
 }
-
-{/* <hr />
-<table className="admin-table no-links no-hover no-padding m-bottom">
-  <thead>
-    <tr>
-      <th>Match Bins</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    { this.renderMatchTable() }
-  </tbody>
-</table>
-<a className="gray-outline-button small-width small-padding m-bottom" onClick={ Common.changeState.bind(this, 'newMatchBinModalOpen', true) }>Add Bin</a> */}
