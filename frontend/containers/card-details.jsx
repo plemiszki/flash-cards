@@ -1,14 +1,10 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react'
 import Modal from 'react-modal'
-import HandyTools from 'handy-tools'
-import { Common, Details, ModalSelectStyles } from 'handy-components'
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../actions/index'
-import EntityTags from './modules/entity-tags.jsx'
+import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, BottomButtons, objectsAreEqual, deepCopy } from 'handy-components'
 import NewEntity from './new-entity.jsx'
+import TagsSection from './tags-section';
 
-class CardDetails extends React.Component {
+export default class CardDetails extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,7 +14,7 @@ class CardDetails extends React.Component {
     };
 
     this.state = {
-      fetching: true,
+      spinner: true,
       card: emptyCard,
       cardSaved: emptyCard,
       cardTags: [],
@@ -29,88 +25,58 @@ class CardDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchEntity({
-      id: window.location.pathname.split('/')[2],
-      directory: window.location.pathname.split('/')[1],
-      entityName: this.props.entityName
-    }, 'card').then(() => {
+    fetchEntity().then((response) => {
+      const { card, cardTags, tags, matchBins } = response;
       this.setState({
-        fetching: false,
-        card: this.props.card,
-        cardSaved: HandyTools.deepCopy(this.props.card),
-        cardTags: this.props.cardTags,
-        tags: this.props.tags,
-        matchBins: this.props.matchBins,
+        spinner: false,
+        card,
+        cardSaved: deepCopy(card),
+        cardTags,
+        tags,
+        matchBins,
         changesToSave: false
       }, () => {
-        HandyTools.setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
+        setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
     });
   }
 
   changeFieldArgs() {
     return {
-      allErrors: Errors,
-      errorsArray: this.state.errors,
       changesFunction: this.checkForChanges.bind(this)
     }
   }
 
   checkForChanges() {
-    return !HandyTools.objectsAreEqual(this.state.card, this.state.cardSaved);
+    return !objectsAreEqual(this.state.card, this.state.cardSaved);
   }
 
   clickSave() {
+    const { card } = this.state;
     this.setState({
-      fetching: true,
+      spinner: true,
       justSaved: true
     }, () => {
-      this.props.updateEntity({
-        id: window.location.pathname.split('/')[2],
-        directory: window.location.pathname.split('/')[1],
+      updateEntity({
         entityName: 'card',
         entity: this.state.card
-      }).then(() => {
+      }).then((response) => {
+        const { card } = response;
         this.setState({
-          fetching: false,
-          card: this.props.card,
-          cardSaved: HandyTools.deepCopy(this.props.card),
-          changesToSave: false
+          spinner: false,
+          card,
+          cardSaved: deepCopy(card),
+          changesToSave: false,
         });
-      }, () => {
+      }, (response) => {
+        const { errors } = response;
         this.setState({
-          fetching: false,
-          errors: this.props.errors
+          spinner: false,
+          errors,
         });
       });
     });
   }
-
-  updateCardTags(response) {
-    this.setState({
-      fetching: false,
-      cardTags: response.entities || response.cardTags
-    });
-  }
-
-  // clickTag(e) {
-  //   console.log('we are here');
-  //   // e.persist();
-  //   this.setState({
-  //     newCardTagModalOpen: false,
-  //     fetching: true
-  //   }, () => {
-  //     this.props.createEntity({
-  //       directory: 'card_tags',
-  //       entityName: 'cardTag',
-  //       entity: {
-  //         tagId: e.target.dataset.id,
-  //         cardtagableId: this.state.card.id,
-  //         cardtagableType: 'Card'
-  //       }
-  //     }).then(this.updateCardTags.bind(this));
-  //   });
-  // }
 
   clickUploadImage() {
     const client = filestack.init(document.getElementById('filestack-api-key').innerHTML);
@@ -217,83 +183,90 @@ class CardDetails extends React.Component {
   }
 
   render() {
-    return(
-      <div id="card-details" className="component details-component">
-        <h1>Card Details</h1>
-        <div className="white-box">
-          <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'question' }) }
-            { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'hint' }) }
-          </div>
-          <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 9, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }
-            <div className="col-xs-3">
-              <img src={ this.state.card.imageUrl } />
+    const { spinner, card, cardTags, tags, justSaved, changesToSave, newMatchBinModalOpen, newMatchItemModalOpen, selectedMatchBinId } = this.state;
+    return (
+      <>
+        <div className="handy-component">
+          <h1>Card Details</h1>
+          <div className="white-box">
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'question' }) }
+              { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'hint' }) }
             </div>
-          </div>
-          <div className="row">
-            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 5, entity: 'card', property: 'answer' }) }
-            { Details.renderTextBox.bind(this)({ rows: 5, columnWidth: 5, entity: 'card', property: 'answerPlaceholder' }) }
-            { Details.renderCheckbox.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
-          </div>
-          <div>
-            <a className={ "btn blue-button standard-width m-bottom" + Common.renderDisabledButtonClass(this.state.fetching || !this.state.changesToSave) } onClick={ this.clickSave.bind(this) }>
-              { Details.saveButtonText.call(this) }
-            </a>
-            <a className={ "btn delete-button" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ Details.clickDelete.bind(this, { callback: null }) }>
-              Delete
-            </a>
-          </div>
-          <hr className="divider" />
-          <table className="admin-table no-links no-hover no-padding m-bottom">
-            <thead>
-              <tr>
-                <th>Match Bins</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              { this.renderMatchTable() }
-            </tbody>
-          </table>
-          <a className="gray-outline-button small-width small-padding m-bottom" onClick={ Common.changeState.bind(this, 'newMatchBinModalOpen', true) }>Add Bin</a>
-          <hr className="divider" />
-          { EntityTags.renderTags.call(this, 'card') }
-          <Modal isOpen={ this.state.newMatchBinModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
-            <NewEntity
-              entityName="matchBin"
-              initialEntity={ { cardId: this.state.card.id, name: '' } }
-              callback={ this.updateMatchBins.bind(this) }
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 9, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }
+              <div className="col-xs-3">
+                <img src={ card.imageUrl } />
+              </div>
+            </div>
+            <div className="row">
+              { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answer' }) }
+              { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answerPlaceholder' }) }
+              { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
+            </div>
+            <BottomButtons
+              entityName="card"
+              confirmDelete={ Details.confirmDelete.bind(this) }
+              justSaved={ justSaved }
+              changesToSave={ changesToSave }
+              disabled={ spinner }
+              clickSave={ () => { this.clickSave() } }
+              marginBottom
             />
-          </Modal>
-          <Modal isOpen={ this.state.newMatchItemModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
-            <NewEntity
-              entityName="matchItem"
-              initialEntity={ { matchBinId: this.state.selectedMatchBinId, name: '' } }
-              callback={ this.updateMatchBins.bind(this) }
-              responseKey="matchBins"
+            <hr />
+            <TagsSection
+              entity={ card }
+              entityName="Card"
+              entityTags={ cardTags }
+              tags={ tags }
+              setSpinner={ bool => this.setState({ spinner: bool }) }
+              setTags={ (entityTags, tags) => this.setState({ cardTags: entityTags, tags }) }
             />
-          </Modal>
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+            <Modal isOpen={ newMatchBinModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
+              <NewEntity
+                entityName="matchBin"
+                initialEntity={ { cardId: card.id, name: '' } }
+                callback={ this.updateMatchBins.bind(this) }
+              />
+            </Modal>
+            <Modal isOpen={ newMatchItemModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
+              <NewEntity
+                entityName="matchItem"
+                initialEntity={ { matchBinId: selectedMatchBinId, name: '' } }
+                callback={ this.updateMatchBins.bind(this) }
+                responseKey="matchBins"
+              />
+            </Modal>
+            <Spinner visible={ spinner } />
+            <GrayedOut visible={ spinner } />
+          </div>
         </div>
-      </div>
+        <style jsx>{`
+          img {
+            margin-bottom: 30px;
+          }
+        `}</style>
+      </>
     );
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity, createEntity, updateEntity, deleteEntity }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CardDetails);
+{/* <hr />
+<table className="admin-table no-links no-hover no-padding m-bottom">
+  <thead>
+    <tr>
+      <th>Match Bins</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    { this.renderMatchTable() }
+  </tbody>
+</table>
+<a className="gray-outline-button small-width small-padding m-bottom" onClick={ Common.changeState.bind(this, 'newMatchBinModalOpen', true) }>Add Bin</a> */}

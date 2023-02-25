@@ -42,8 +42,6 @@ export default class SpanishAdjectiveDetails extends React.Component {
 
   changeFieldArgs() {
     return {
-      allErrors: Errors,
-      errorsArray: this.state.errors,
       changesFunction: this.checkForChanges.bind(this)
     }
   }
