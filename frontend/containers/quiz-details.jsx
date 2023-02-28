@@ -218,12 +218,31 @@ export default class QuizDetails extends React.Component {
                 },
                 {
                   name: 'amount',
+                  sortDir: 'desc',
+                  totalRow: true,
+                },
+                {
+                  name: 'active',
+                  sortDir: 'desc',
+                },
+                {
+                  name: 'inactive',
+                  sortDir: 'desc',
                 },
               ]
             }
             rows={ quizQuestions }
             links={ false }
-            sortable={ false }
+            defaultSearchColumn="tagName"
+            styleIf={[
+              {
+                func: row => row.active > 0,
+                style: {
+                  color: 'green',
+                  fontFamily: 'TeachableSans-SemiBold',
+                }
+              }
+            ]}
             clickDelete={ row => {
               this.setState({ spinner: true });
               deleteEntity({
