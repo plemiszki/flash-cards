@@ -217,6 +217,27 @@ export default class QuizDetails extends React.Component {
                   name: 'tagName', header: 'Tag',
                 },
                 {
+                  name: 'useAllAvailable',
+                  header: 'Use All',
+                  isSwitch: true,
+                  clickSwitch: (row, checked) => {
+                    const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === row.id)
+                    quizQuestion.useAllAvailable = checked;
+                    this.setState({ spinner: true });
+                    updateEntity({
+                      directory: 'quiz_questions',
+                      id: quizQuestion.id,
+                      entityName: 'quizQuestion',
+                      entity: quizQuestion,
+                    }).then(response => {
+                      this.setState({
+                        spinner: false,
+                        quizQuestions: response.quizQuestions,
+                      });
+                    })
+                  },
+                },
+                {
                   name: 'amount',
                   sortDir: 'desc',
                   totalRow: true,

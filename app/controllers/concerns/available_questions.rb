@@ -12,10 +12,7 @@ module AvailableQuestions
   }
 
   def get_available_questions(quiz_questions:, quiz:)
-    result = {
-      active: 0,
-      inactive: 0,
-    }
+    result = {}
     archived_tag_id = Tag.find_by_name('Archived').id
     needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
 
@@ -28,10 +25,10 @@ module AvailableQuestions
           active: (tagged_card_ids - archived_card_ids).count,
           inactive: (tagged_card_ids & archived_card_ids).count
         }
-      when 'Spanish - Single Noun'
-      when 'Spanish - Single Verb'
-      when 'Spanish - Single Adjective'
-      when 'Spanish - Misc Word'
+      when 'Spanish - Single Noun',
+      'Spanish - Single Verb',
+      'Spanish - Single Adjective',
+      'Spanish - Misc Word'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
         tagged_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).pluck(:id)
         result[quiz_question.id] = {
