@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from 'react-modal'
-import { Common, Details, BottomButtons, fetchEntity, updateEntity, deepCopy, setUpNiceSelect, objectsAreEqual, Spinner, GrayedOut, OutlineButton, Table, deleteEntity } from 'handy-components'
+import { Common, Details, BottomButtons, fetchEntity, updateEntity, deepCopy, setUpNiceSelect, objectsAreEqual, Spinner, GrayedOut, OutlineButton, Table, deleteEntity, Button } from 'handy-components'
 import NewEntity from './new-entity.jsx'
 
 export default class QuizDetails extends React.Component {
@@ -205,7 +205,14 @@ export default class QuizDetails extends React.Component {
             disabled={ spinner }
             clickSave={ () => { this.clickSave() } }
             marginBottom
-          />
+          >
+            <Button
+              text="Run Quiz"
+              onClick={ () => { window.location.pathname = `/quizzes/${quiz.id}/run` } }
+              float
+              marginRight
+            />
+          </BottomButtons>
           <hr />
           <Table
             columns={
