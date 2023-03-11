@@ -3,6 +3,17 @@ import Modal from 'react-modal'
 import { Common, Details, BottomButtons, fetchEntity, updateEntity, deepCopy, setUpNiceSelect, objectsAreEqual, Spinner, GrayedOut, OutlineButton, Table, deleteEntity, Button } from 'handy-components'
 import NewEntity from './new-entity.jsx'
 
+const USE_ALL_ENABLED = [
+  'Spanish - Single Noun',
+  'Spanish - Single Verb',
+  'Spanish - Single Adjective',
+  'Spanish - Misc Word',
+];
+
+const AVAILABLE_ENABLED = USE_ALL_ENABLED.concat([
+  'Card',
+]);
+
 export default class QuizDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +37,6 @@ export default class QuizDetails extends React.Component {
   componentDidMount() {
     fetchEntity().then((response) => {
       const { quiz, questions, quizQuestions, tags } = response;
-      let columnsVisible = this.determineColumnVisibility(quizQuestions);
       this.setState({
         fetching: false,
         quiz,
@@ -35,8 +45,6 @@ export default class QuizDetails extends React.Component {
         questions,
         tags,
         changesToSave: false,
-        renderAvailableColumn: columnsVisible[0],
-        renderArchivedColumns: columnsVisible[1]
       }, () => {
         setUpNiceSelect({ selector: 'select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
@@ -80,12 +88,6 @@ export default class QuizDetails extends React.Component {
     });
   }
 
-  clickNewQuizQuestion() {
-    this.setState({
-      newQuizQuestionModalOpen: true
-    });
-  }
-
   updateQuizQuestions(quizQuestions) {
     this.setState({
       newQuizQuestionModalOpen: false,
@@ -93,102 +95,29 @@ export default class QuizDetails extends React.Component {
     });
   }
 
-  deleteQuizQuestion(e) {
-    this.setState({
-      fetching: true
-    });
-    let id = e.target.parentElement.dataset.id;
-    this.props.deleteEntity({
+  updateQuizQuestion(quizQuestion) {
+    this.setState({ spinner: true });
+    updateEntity({
       directory: 'quiz_questions',
-      id,
-      callback: (response) => {
-        let columnsVisible = this.determineColumnVisibility(response.quizQuestions);
-        this.setState({
-          fetching: false,
-          quizQuestions: response.quizQuestions,
-          renderAvailableColumn: columnsVisible[0],
-          renderArchivedColumns: columnsVisible[1]
-        });
-      }
-    });
-  }
-
-  totalQuestions() {
-    let result = 0;
-    this.state.quizQuestions.forEach((quizQuestion) => {
-      if (quizQuestion.useAllAvailable) {
-        result += quizQuestion.available;
-      } else {
-        result += quizQuestion.amount;
-      }
-    })
-    return result;
-  }
-
-  clickCheckbox(e) {
-    let id = e.target.parentElement.parentElement.dataset.id;
-    let quizQuestion = HandyTools.deepCopy(HandyTools.findObjectInArrayById(this.state.quizQuestions, id));
-    this.setState({
-      fetching: true
-    });
-    this.props.updateEntity({
-      id,
-      directory: 'quiz_questions',
+      id: quizQuestion.id,
       entityName: 'quizQuestion',
-      entity: { useAllAvailable: e.target.checked }
-    }).then(() => {
+      entity: quizQuestion,
+    }).then(response => {
       this.setState({
-        fetching: false,
-        quizQuestions: this.props.quizQuestions
+        spinner: false,
+        quizQuestions: response.quizQuestions,
       });
-    })
-  }
-
-  updateQuizQuestion(dir, e) {
-    let id = e.target.parentElement.dataset.id;
-    let quizQuestion = HandyTools.deepCopy(HandyTools.findObjectInArrayById(this.state.quizQuestions, id));
-    let newAmount;
-    if (dir == 'left' && quizQuestion.amount > 1) {
-      newAmount = quizQuestion.amount -= 1;
-    } else if (dir == 'right') {
-      newAmount = quizQuestion.amount += 1;
-    } else {
-      return;
-    }
-    this.setState({
-      fetching: true
     });
-    this.props.updateEntity({
-      id,
-      directory: 'quiz_questions',
-      entityName: 'quizQuestion',
-      entity: { amount: newAmount }
-    }).then(() => {
-      let columnsVisible = this.determineColumnVisibility(this.props.quizQuestions);
-      this.setState({
-        fetching: false,
-        quizQuestions: this.props.quizQuestions,
-        renderAvailableColumn: columnsVisible[0],
-        renderArchivedColumns: columnsVisible[1]
-      });
-    })
-  }
-
-  determineColumnVisibility(quizQuestions) {
-    let quizQuestionsWithAvailabilityData = 0;
-    let quizQuestionsWithArchivedData = 0;
-    quizQuestions.forEach((quizQuestion) => {
-      if (typeof quizQuestion.available === 'number') {
-        quizQuestionsWithAvailabilityData += 1;
-      } else {
-        quizQuestionsWithArchivedData += 1;
-      }
-    })
-    return [quizQuestionsWithAvailabilityData > 0, quizQuestionsWithArchivedData > 0];
   }
 
   render() {
     const { spinner, quiz, questions, quizQuestions, tags, changesToSave, justSaved } = this.state;
+
+    const includesCardsQuestion = quizQuestions.some(quizQuestion => quizQuestion.questionName === 'Card');
+    const includesQuestionWithTag = quizQuestions.some(quizQuestion => quizQuestion.tagName);
+    const includesAvailableQuestion = quizQuestions.some(quizQuestion => AVAILABLE_ENABLED.includes(quizQuestion.questionName))
+    const includesUseAllSwitchQuestion = quizQuestions.some(quizQuestion => USE_ALL_ENABLED.includes(quizQuestion.questionName))
+
     return (
       <div className="handy-component">
         <h1>Quiz Details</h1>
@@ -221,50 +150,80 @@ export default class QuizDetails extends React.Component {
                   name: 'questionName', header: 'Question',
                 },
                 {
-                  name: 'tagName', header: 'Tag',
+                  name: 'tagName', header: 'Tag', include: includesQuestionWithTag,
                 },
                 {
                   name: 'useAllAvailable',
+                  include: includesUseAllSwitchQuestion,
                   header: 'Use All',
+                  sortable: false,
                   isSwitch: true,
                   clickSwitch: (row, checked) => {
                     const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === row.id)
                     quizQuestion.useAllAvailable = checked;
-                    this.setState({ spinner: true });
-                    updateEntity({
-                      directory: 'quiz_questions',
-                      id: quizQuestion.id,
-                      entityName: 'quizQuestion',
-                      entity: quizQuestion,
-                    }).then(response => {
-                      this.setState({
-                        spinner: false,
-                        quizQuestions: response.quizQuestions,
-                      });
-                    })
+                    this.updateQuizQuestion(quizQuestion);
                   },
+                  displayIf: row => USE_ALL_ENABLED.includes(row.quizQuestion),
                 },
                 {
                   name: 'amount',
                   sortDir: 'desc',
+                  centered: true,
                   totalRow: true,
+                  sortable: false,
+                  width: 150,
+                  displayFunction: row => row.useAllAvailable ? row.available : row.amount,
+                  arrowsIf: row => !row.useAllAvailable,
+                  clickLeft: (row) => {
+                    const { id, amount } = row;
+                    const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === id)
+                    quizQuestion.amount = Math.max(amount - 1, 1);
+                    this.updateQuizQuestion(quizQuestion);
+                  },
+                  clickRight: (row) => {
+                    const { id, amount } = row;
+                    const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === id)
+                    quizQuestion.amount = amount + 1;
+                    this.updateQuizQuestion(quizQuestion);
+                  },
                 },
                 {
-                  name: 'active',
+                  name: 'available',
+                  include: includesAvailableQuestion,
                   sortDir: 'desc',
+                  sortable: false,
+                  width: 100,
+                  centered: true,
+                  totalRow: true,
+                  displayIf: row => AVAILABLE_ENABLED.includes(row.questionName),
                 },
                 {
-                  name: 'inactive',
+                  name: 'unarchived',
+                  include: includesCardsQuestion,
+                  header: 'Active',
                   sortDir: 'desc',
+                  sortable: false,
+                  width: 100,
+                  centered: true,
+                  displayIf: row => row.questionName === 'Card',
+                },
+                {
+                  name: 'archived',
+                  include: includesCardsQuestion,
+                  sortDir: 'desc',
+                  sortable: false,
+                  width: 100,
+                  centered: true,
+                  displayIf: row => row.questionName === 'Card',
                 },
               ]
             }
             rows={ quizQuestions }
             links={ false }
-            defaultSearchColumn="tagName"
+            sortable={ includesQuestionWithTag }
             styleIf={[
               {
-                func: row => row.active > 0,
+                func: row => row.unarchived > 0,
                 style: {
                   color: 'green',
                   fontFamily: 'TeachableSans-SemiBold',
@@ -310,119 +269,4 @@ export default class QuizDetails extends React.Component {
       </div>
     );
   }
-
-  renderUseAllHeader() {
-    if (this.state.renderAvailableColumn) {
-      return (
-        <th>Use All</th>
-      );
-    }
-  }
-
-  renderAvailableHeader() {
-    if (this.state.renderAvailableColumn) {
-      return(
-        <th className="available">Available</th>
-      );
-    }
-  }
-
-  renderArchivedHeaders() {
-    if (this.state.renderArchivedColumns) {
-      return([
-        <th key="1" className="unarchived"><div className="unarchived-header"></div></th>,
-        <th key="2" className="archived"><div className="archived-header"></div></th>
-      ]);
-    }
-  }
-
-  renderUseAllColumn(quizQuestion) {
-    if (this.state.renderAvailableColumn) {
-      return(
-        <td><input type="checkbox" checked={ quizQuestion.useAllAvailable } onChange={ this.clickCheckbox.bind(this) } /></td>
-      );
-    }
-  }
-
-  renderAvailableColumn(quizQuestion) {
-    if (this.state.renderAvailableColumn) {
-      return(
-        <td className="available">{ typeof quizQuestion.available == 'number' ? quizQuestion.available : '' }</td>
-      );
-    }
-  }
-
-  renderArchivedColumns(quizQuestion) {
-    if (this.state.renderArchivedColumns) {
-      return([
-        <td key="1">{ quizQuestion.available ? quizQuestion.available.unarchived : '' }</td>,
-        <td key="2">{ quizQuestion.available ? quizQuestion.available.archived : '' }</td>
-      ]);
-    }
-  }
-
-  renderTotalRow() {
-    return(
-      <tr className="no-hover">
-        <td></td>
-        <td></td>
-        <td></td>
-        { this.state.renderAvailableColumn ? (<td></td>) : null }
-        <td className="amount">{ this.totalQuestions() }</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    );
-  }
 }
-
-
-{/* <hr />
-<table className={ `admin-table no-cursor no-links${this.totalQuestions() ? '' : ' m-bottom'}` }>
-  <thead>
-    <tr>
-      <th>Question</th>
-      <th>Tag</th>
-      { this.renderUseAllHeader() }
-      <th></th>
-      <th className="amount">Amount</th>
-      <th></th>
-      { this.renderAvailableHeader() }
-      { this.renderArchivedHeaders() }
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td></td>
-    </tr>
-    { sortBy(this.state.quizQuestions, ['questionName', 'tagName']).map((quizQuestion, index) => {
-      let rowClasses = '';
-      if (quizQuestion.available) {
-        rowClasses = 'wide-arrows';
-        if ((quizQuestion.available.unarchived + quizQuestion.available.archived) < quizQuestion.amount) {
-          rowClasses = 'wide-arrows red';
-        } else if (quizQuestion.available.unarchived > 0) {
-          rowClasses = 'wide-arrows green';
-        }
-      }
-      return (
-        <tr className={ rowClasses } key={ index } data-id={ quizQuestion.id }>
-          <td>{ quizQuestion.questionName }</td>
-          <td>{ quizQuestion.tagName }</td>
-          { this.renderUseAllColumn(quizQuestion) }
-          <td className={ 'left-arrow' + (quizQuestion.useAllAvailable ? ' hide-arrow' : '') } onClick={ quizQuestion.useAllAvailable ? null : this.updateQuizQuestion.bind(this, 'left') }></td>
-          <td className="amount">{ quizQuestion.useAllAvailable ? quizQuestion.available : quizQuestion.amount }</td>
-          <td className={ 'right-arrow' + (quizQuestion.useAllAvailable ? ' hide-arrow' : '') } onClick={ quizQuestion.useAllAvailable ? null : this.updateQuizQuestion.bind(this, 'right') }></td>
-          { this.renderAvailableColumn(quizQuestion) }
-          { this.renderArchivedColumns(quizQuestion) }
-          <td className="x-column" onClick={ this.deleteQuizQuestion.bind(this) }></td>
-        </tr>
-      );
-    }) }
-    { this.renderTotalRow() }
-  </tbody>
-  </table> */}

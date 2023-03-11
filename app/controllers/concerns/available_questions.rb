@@ -20,25 +20,41 @@ module AvailableQuestions
     quiz_questions.each do |quiz_question|
       case quiz_question.question.name
       when 'Card'
-        tagged_card_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: 'Card').includes(:cardtagable).map(&:cardtagable).pluck(:id)
-        result[quiz_question.id] = {
-          active: (tagged_card_ids - archived_card_ids).count,
-          inactive: (tagged_card_ids & archived_card_ids).count
-        }
+        if quiz_question.tag_id
+          tagged_card_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: 'Card').includes(:cardtagable).map(&:cardtagable).pluck(:id)
+          result[quiz_question.id] = {
+            unarchived: (tagged_card_ids - archived_card_ids).count,
+            archived: (tagged_card_ids & archived_card_ids).count,
+            available: tagged_card_ids.count,
+          }
+        else
+          card_count = Card.count
+          result[quiz_question.id] = {
+            unarchived: card_count - archived_card_ids.count,
+            archived: archived_card_ids.count,
+            available: card_count,
+          }
+        end
       when 'Spanish - Single Noun',
       'Spanish - Single Verb',
       'Spanish - Single Adjective',
       'Spanish - Misc Word'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
-        tagged_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).pluck(:id)
+        if quiz_question.tag_id
+          available_count = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).count
+        else
+          available_count = model_name.constantize.count
+        end
         result[quiz_question.id] = {
-          active: tagged_ids.count,
-          inactive: model_name.constantize.count(),
+          available: available_count,
+          unarchived: 0,
+          archived: 0,
         }
       else
         result[quiz_question.id] = {
-          active: 0,
-          inactive: 0,
+          unarchived: 0,
+          archived: 0,
+          available: 0,
         }
       end
     end
