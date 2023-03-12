@@ -10,7 +10,7 @@ import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 import SpanishMiscDetails from './containers/spanish-misc-details'
 import CardDetails from './containers/card-details'
 import QuizDetails from './containers/quiz-details'
-// import QuizRun from './containers/quiz-run'
+import QuizRun from './containers/quiz-run'
 // import Vocabulary from './containers/vocabulary'
 
 const renderFullIndex = (id, props = {}, args = {}) => {
@@ -98,6 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (spanishMiscNode) {
     createRoot(spanishMiscNode).render(
       <SpanishMiscDetails />
+    );
+  }
+
+  const quizRunNode = document.getElementById('quiz-run');
+  if (quizRunNode) {
+    createRoot(quizRunNode).render(
+      <QuizRun />
     );
   }
 

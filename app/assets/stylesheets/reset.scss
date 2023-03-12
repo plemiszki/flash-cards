@@ -36,6 +36,10 @@ hr {
 input {
     border: none;
     letter-spacing: inherit;
+
+    &[type="radio"] {
+        margin: 0;
+    }
 }
 
 label {

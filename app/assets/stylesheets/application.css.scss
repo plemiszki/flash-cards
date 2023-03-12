@@ -31,7 +31,6 @@
 
 @import 'job-status';
 @import 'vocabulary';
-@import 'quiz-run';
 
 #admin-sidebar-body ul {
   position: relative;
@@ -40,4 +39,16 @@
     width: 30px;
     right: 0;
   }
+}
+
+.archive-button {
+  background-image: image-url('archive.svg');
+}
+
+.unarchive-button {
+  background-image: image-url('no.svg');
+}
+
+.highlight-button {
+  background-image: image-url('highlighter.jpg');
 }

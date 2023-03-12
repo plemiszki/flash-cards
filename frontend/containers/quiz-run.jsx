@@ -1,18 +1,23 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Common } from 'handy-components'
-import HandyTools from 'handy-tools'
-import { createEntity, updateEntity, deleteEntity, runQuiz } from '../actions/index'
+import React from 'react'
+import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity } from 'handy-components'
+import { shuffle } from 'lodash';
 import ChangeCase from 'change-case'
 
-class QuizRun extends React.Component {
+const COLORS = {
+  red: '#FF0000',
+  redHover: '#B40404',
+  green: '#04B404',
+  greenHover: '088A08',
+  blue: 'blue',
+}
+
+export default class QuizRun extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      fetching: true,
+      spinner: true,
       errors: [],
       quiz: {},
       questionNumber: 0,
@@ -28,16 +33,18 @@ class QuizRun extends React.Component {
   }
 
   componentDidMount() {
-    this.props.runQuiz(window.location.pathname.split('/')[2]).then(() => {
-      let matchItems = {};
+    const id = window.location.pathname.split('/')[2];
+    sendRequest(`/api/quizzes/${id}/run`).then((response) => {
+      const { quiz } = response;
       this.setState({
-        fetching: false,
-        quiz: this.props.quiz,
-        answer: this.props.quiz.questions[0].answerPlaceholder,
+        spinner: false,
+        quiz,
+        answer: quiz.questions[0].answerPlaceholder,
       }, this.setUpMatching.bind(this));
-    }, () => {
+    }, (response) => {
+      const { errors } = response;
       this.setState({
-        errors: this.props.errors
+        errors,
       })
     });
   }
@@ -46,7 +53,7 @@ class QuizRun extends React.Component {
     const answer = e.target.value;
     this.setState({
       answer,
-      status: 'question'
+      status: 'question',
     });
   }
 
@@ -54,7 +61,9 @@ class QuizRun extends React.Component {
     if (e.charCode === 96) {
       if (!this.answerIncludesBacktick()) {
         e.preventDefault();
-        this.toggleAnswers.call(this);
+        this.setState({
+          showAnswers: !this.state.showAnswers,
+        });
       }
     }
   }
@@ -97,7 +106,7 @@ class QuizRun extends React.Component {
 
     this.setState({ streak: newStreak });
     entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
-    this.props.updateEntity({
+    updateEntity({
       directory,
       id,
       entityName,
@@ -105,19 +114,18 @@ class QuizRun extends React.Component {
     });
   }
 
-  clickCheckAnswer(e) {
-    e.preventDefault();
+  clickCheckAnswer(totalWrongAnswers) {
     let matchingQuestion = Object.keys(this.state.matchedItems).length > 0;
     if (!matchingQuestion && this.state.answer === '') {
       return;
     }
     if (this.state.status === 'correct') { // next question
       if (this.state.questionNumber + 1 === this.state.quiz.questions.length) {
-        if (this.totalWrongAnswers() > 0) {
+        if (totalWrongAnswers > 0) {
           let total = this.state.quiz.questions.length;
-          let correct = total - this.totalWrongAnswers();
+          let correct = total - totalWrongAnswers;
           let percentage = Math.floor((correct / total) * 100);
-          let firstLine = `${this.totalWrongAnswers()} wrong answers - ${percentage}% correct`;
+          let firstLine = `${totalWrongAnswers} wrong answers - ${percentage}% correct`;
           let messageLines = [firstLine];
           Object.keys(this.state.wrongAnswerLog).forEach((key) => {
             messageLines.push(this.state.quiz.questions[key].question);
@@ -203,7 +211,7 @@ class QuizRun extends React.Component {
 
   clickArchive(e) {
     this.setState({
-      fetching: true,
+      spinner: true,
       showArchiveButton: true
     });
     this.props.createEntity({
@@ -212,24 +220,23 @@ class QuizRun extends React.Component {
       entity: { tagId: this.props.archivedTagId, cardtagableId: this.state.quiz.questions[this.state.questionNumber].cardId, cardtagableType: 'Card' }
     }).then(() => {
       this.setState({
-        fetching: false
+        spinner: false
       });
     });
   }
 
-  clickUnarchive(e) {
+  clickUnarchive(currentQuestion) {
     this.setState({
       renderUnarchiveButton: false,
-      fetching: true
+      spinner: true
     });
-    this.props.deleteEntity({
+    deleteEntity({
       directory: 'card_tags',
-      id: this.state.quiz.questions[this.state.questionNumber].tags.find((tag) => { return tag['name'] === 'Archived' }).id,
-      callback: () => {
-        this.setState({
-          fetching: false
-        });
-      }
+      id: currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' }).id,
+    }).then(() => {
+      this.setState({
+        spinner: false,
+      });
     });
   }
 
@@ -237,8 +244,8 @@ class QuizRun extends React.Component {
     let question = this.state.quiz.questions[this.state.questionNumber];
     let entityName = question.entity;
     this.setState({
-      fetching: true,
-      showHighlightButton: false
+      spinner: true,
+      showHighlightButton: false,
     });
     this.props.createEntity({
       directory: 'card_tags',
@@ -246,7 +253,7 @@ class QuizRun extends React.Component {
       entity: { tagId: this.props.needsAttentionTagId, cardtagableId: question.wordId, cardtagableType: ChangeCase.pascalCase(entityName) }
     }).then(() => {
       this.setState({
-        fetching: false
+        spinner: false,
       });
     });
   }
@@ -263,7 +270,7 @@ class QuizRun extends React.Component {
       })
       this.setState({
         matchedItems,
-        unmatchedItems: HandyTools.shuffleArray(unmatchedItems)
+        unmatchedItems: shuffle(unmatchedItems),
       }, this.setUpDragAndDrop.bind(this));
     }
   }
@@ -280,16 +287,6 @@ class QuizRun extends React.Component {
       out: this.dragOutHandler,
       drop: this.dropHandler.bind(this)
     });
-  }
-
-  toggleAnswers() {
-    this.setState({
-      showAnswers: !this.state.showAnswers
-    });
-  }
-
-  totalWrongAnswers() {
-    return Object.keys(this.state.wrongAnswerLog).length;
   }
 
   selectOption(e) {
@@ -331,7 +328,7 @@ class QuizRun extends React.Component {
     }
     let itemName = ui.draggable.attr('data-name');
     let unmatchedItems = this.state.unmatchedItems;
-    unmatchedItems = HandyTools.removeFromArray(unmatchedItems, itemName);
+    unmatchedItems = removeFromArray(unmatchedItems, itemName);
     let matchedItems = this.state.matchedItems;
     let bin = matchedItems[binName];
     bin.push(itemName);
@@ -349,7 +346,7 @@ class QuizRun extends React.Component {
     let binName = e.target.parentElement.parentElement.dataset.name;
     let unmatchedItems = this.state.unmatchedItems;
     let matchedItems = this.state.matchedItems;
-    HandyTools.removeFromArray(matchedItems[binName], itemName);
+    removeFromArray(matchedItems[binName], itemName);
     unmatchedItems.push(itemName);
     this.setState({
       status: 'question',
@@ -373,7 +370,7 @@ class QuizRun extends React.Component {
       const correctAnswerSides = question.answers[0].split('→');
       const correctAnswerLeft = correctAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
       const correctAnswerRight = correctAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
-      if (HandyTools.objectsAreEqual(userAnswerLeft.sort(), correctAnswerLeft.sort()) && HandyTools.objectsAreEqual(userAnswerRight.sort(), correctAnswerRight.sort())) {
+      if (objectsAreEqual(userAnswerLeft.sort(), correctAnswerLeft.sort()) && objectsAreEqual(userAnswerRight.sort(), correctAnswerRight.sort())) {
         return 'correct'
       } else {
         return 'incorrect'
@@ -394,206 +391,314 @@ class QuizRun extends React.Component {
   }
 
   render() {
-    if (this.state.errors.length > 0) {
-      return(
-        <div id="quiz-run" className="component">
-          { this.renderErrors() }
-          <a className="edit-quiz" href={ `/quizzes/${window.location.pathname.split('/')[2]}` }>Edit Quiz</a>
-        </div>
-      );
-    } else {
-      return(
-        <div id="quiz-run" className="component">
-          <h1>{ this.renderHeader() }</h1>
-          { this.renderWrongAnswers() }
-          <div className="white-box">
-            { this.renderStreakNotification() }
-            <p className="question m-bottom">{ this.renderQuestion() }</p>
-            { this.renderDescription() }
-            { this.renderImage() }
-            <form>
-              { this.renderInput() }
-              { this.renderAnswers() }
-              <input type="submit" className={ this.buttonClass() + " standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickCheckAnswer.bind(this) } value={ this.state.status === 'correct' ? 'Next Question' : 'Check Answer' } />
-              <a className="gray-outline-button float-button small-padding small-width" onClick={ this.toggleAnswers.bind(this) }>{ this.state.showAnswers ? 'Hide Answers' : 'Show Answers' }</a>
-              { this.renderArchiveButton() }
-              { this.renderUnarchiveButton() }
-              { this.renderHighlightButton() }
-            </form>
-            { Common.renderSpinner(this.state.fetching) }
-            { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
-          </div>
-        </div>
-      );
+    const {
+      errors,
+      spinner,
+      showAnswers,
+      showArchiveButton,
+      showHighlightButton,
+      status,
+      streak,
+      quiz,
+      questionNumber,
+      wrongAnswerLog,
+    } = this.state;
+
+    let buttonColor;
+    let buttonHoverColor;
+    switch(status) {
+      case 'correct':
+        buttonColor = COLORS.green;
+        buttonHoverColor = COLORS.greenHover;
+        break
+      case 'wrong':
+        buttonColor = COLORS.red;
+        buttonHoverColor = COLORS.redHover;
     }
-  }
 
-  renderErrors() {
-    return this.state.errors.map((error, index) => {
-      return(
-        <p key={ index } className="quiz-run-error">{ error }</p>
-      );
-    })
-  }
-
-  renderDescription() {
-    if (this.state.quiz.questions) {
-      const question = this.state.quiz.questions[this.state.questionNumber];
-      const description = question.description || question.hint;
-      const note = question.note;
-      if (description) {
-        if (note) {
-          return(
-            <p className="description">{ ChangeCase.titleCase(description) } - { note }</p>
-          );
-        } else {
-          return(
-            <p className="description">{ ChangeCase.titleCase(description) }</p>
-          );
-        }
+    const statusCorrect = status === 'correct';
+    const totalWrongAnswers = Object.keys(wrongAnswerLog).length;
+    const currentQuestion = quiz.questions ? quiz.questions[questionNumber] : null;
+    let descriptionText;
+    if (currentQuestion) {
+      const { description, hint, note } = currentQuestion
+      descriptionText = ChangeCase.titleCase(description || hint);
+      if (note) {
+        descriptionText = descriptionText + ` - ${ note }`;
       }
     }
-  }
 
-  renderArchiveButton() {
-    if (!this.state.quiz.questions) {
-      return;
-    }
-    let question = this.state.quiz.questions[this.state.questionNumber];
-    if (this.state.showArchiveButton && question.archiveButton && !question.tags.find((tag) => { return tag['name'] === 'Archived' })) {
-      return(
-        <div className="archive-button" onClick={ this.clickArchive.bind(this) }></div>
-      );
-    }
-  }
+    const renderArchiveButton = currentQuestion && showArchiveButton && currentQuestion.archiveButton && !currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' });
+    const renderUnarchiveButton = currentQuestion && this.state.renderUnarchiveButton && currentQuestion.unarchiveButton && currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' });
+    const renderHighlightButton = currentQuestion && showHighlightButton && currentQuestion.highlightButton && currentQuestion.tags.indexOf('Needs Attention') === -1;
 
-  renderUnarchiveButton() {
-    if (!this.state.quiz.questions) {
-      return;
-    }
-    let question = this.state.quiz.questions[this.state.questionNumber];
-    if (this.state.renderUnarchiveButton && question.unarchiveButton && question.tags.find((tag) => { return tag['name'] === 'Archived' })) {
-      return(
-        <div className="unarchive-button-container">
-          <div className="unarchive-button" onClick={ this.clickUnarchive.bind(this) }></div>
-          <div className="archive-button"></div>
-        </div>
-      );
-    }
-  }
-
-  renderHighlightButton() {
-    if (!this.state.quiz.questions) {
-      return;
-    }
-    let question = this.state.quiz.questions[this.state.questionNumber];
-    if (this.state.showHighlightButton && question.highlightButton && question.tags.indexOf('Needs Attention') === -1) {
-      return(
-        <div className="highlight-button" onClick={ this.clickHighlight.bind(this) }></div>
-      );
-    }
-  }
-
-  renderImage() {
-    if (this.state.quiz.questions && this.state.quiz.questions[this.state.questionNumber].imageUrl) {
-      return(
-        <img src={ this.state.quiz.questions[this.state.questionNumber].imageUrl } />
-      );
-    }
-  }
-
-  renderWrongAnswers() {
-    let count = this.totalWrongAnswers();
-    if (count > 0) {
+    if (errors.length > 0) {
       return (
-        <p className="wrong-count">Wrong: { count }</p>
-      );
-    }
-  }
+        <>
+          <div className="handy-component">
+            { errors.map((error, index) => <p key={ index } className="quiz-run-error">{ error }</p>) }
+            <a className="edit-quiz" href={ `/quizzes/${window.location.pathname.split('/')[2]}` }>Edit Quiz</a>
+          </div>
+          <style jsx>{`
+            .quiz-run-error {
+              padding: 10px;
+              background-color: #fbe2e2;
+              color: #c74a47;
+              font-size: 14px;
+              font-family: 'TeachableSans-SemiBold';
+              margin-bottom: 20px;
+            }
 
-  renderStreakNotification() {
-    if (this.state.streak > 0 && this.state.streak <= 5) {
+            a.edit-quiz {
+              text-decoration: underline;
+            }
+          `}</style>
+        </>
+      );
+    } else {
+      const imageUrl = quiz.questions ? quiz.questions[questionNumber].imageUrl : null;
       return (
-        <div className="streak-notification">Streak: { this.state.streak }</div>
+        <>
+          <div className="handy-component">
+            <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${quiz.questions.length}` }</h1>
+            { !!totalWrongAnswers && <p className="wrong-count">Wrong: { totalWrongAnswers }</p> }
+            <div className="white-box">
+              { (0 < streak && streak <= 5) && <div className="streak-notification">Streak: { streak }</div> }
+              <p className="question">{ currentQuestion && currentQuestion.question }</p>
+              { currentQuestion && <p className="description">{ descriptionText }</p> }
+              { imageUrl && <img src={ imageUrl } /> }
+              <form>
+                <div className="input-container">
+                  { this.renderInput(currentQuestion) }
+                </div>
+                { this.renderAnswers(currentQuestion) }
+                <Button
+                  submit
+                  disabled={ spinner }
+                  text={ statusCorrect ? "Next Question" : "Check Answer" }
+                  onClick={ () => { this.clickCheckAnswer(totalWrongAnswers) } }
+                  color={ buttonColor }
+                  hoverColor={ buttonHoverColor }
+                />
+                <OutlineButton
+                  text={ showAnswers ? 'Hide Answers' : 'Show Answers' }
+                  onClick={ () => { this.setState({ showAnswers: !showAnswers }); } }
+                  color='#5F5F5F'
+                  float
+                />
+                { renderArchiveButton && (
+                  <div
+                    className="archive-button"
+                    onClick={ () => { this.clickArchive() } }
+                  />
+                ) }
+                { renderUnarchiveButton && (
+                  <div className="unarchive-button-container">
+                    <div className="unarchive-button" onClick={ () => this.clickUnarchive(currentQuestion) }></div>
+                    <div className="archive-button"></div>
+                  </div>
+                ) }
+                { renderHighlightButton && (
+                  <div
+                    className="highlight-button"
+                    onClick={ () => { this.clickHighlight() } }
+                  />
+                ) }
+              </form>
+              <Spinner visible={ spinner } />
+              <GrayedOut visible={ spinner } />
+            </div>
+          </div>
+          <style jsx>{`
+            p.question {
+              font-family: 'TeachableSans-ExtraBold';
+              font-size: 30px;
+              line-height: 42px;
+              color: black;
+              margin-bottom: 30px;
+            }
+            p.description {
+              margin-top: -20px;
+              margin-bottom: 20px;
+            }
+            p.wrong-count {
+              margin-top: 10px;
+              display: inline-block;
+              float: right;
+              color: red;
+            }
+            .streak-notification {
+              display: block;
+              padding: 5px 10px;
+              position: absolute;
+              right: 32px;
+              background-color: #04B404;
+              color: white;
+              border-radius: 5px;
+              font-family: 'TeachableSans-Bold';
+            }
+            img {
+              height: 200px;
+              margin-bottom: 30px;
+            }
+            .input-container {
+              margin-bottom: 30px;
+            }
+            div.archive-button {
+              margin-top: 2px;
+              float: right;
+              margin-right: 20px;
+              width: 25px;
+              height: 25px;
+              cursor: pointer;
+            }
+            div.unarchive-button-container {
+              float: right;
+              position: relative;
+            }
+            div.unarchive-button {
+              position: absolute;
+              background-size: 100%;
+              width: 50px;
+              height: 50px;
+              left: -12px;
+              top: -10px;
+              cursor: pointer;
+            }
+            div.highlight-button {
+              margin-top: 2px;
+              float: right;
+              margin-right: 20px;
+              width: 25px;
+              height: 25px;
+              background-size: contain;
+              cursor: pointer;
+            }
+            .grabbing {
+              cursor: grabbing !important;
+              cursor: -webkit-grabbing !important;
+              cursor: -moz-grabbing !important;
+            }
+          `}</style>
+        </>
       );
     }
   }
 
-  buttonClass() {
-    switch (this.state.status) {
-      case 'correct':
-        return 'green-button';
-      case 'wrong':
-        return 'red-button';
-      default:
-        return 'blue-button';
-    }
-  }
-
-  renderHeader() {
-    if (this.state.quiz.name) {
-      return `${this.state.quiz.name} - ${this.state.questionNumber + 1}/${this.state.quiz.questions.length}`
-    } else {
-      return '';
-    }
-  }
-
-  renderQuestion() {
-    if (this.state.quiz.questions) {
-      return this.state.quiz.questions[this.state.questionNumber].question;
-    } else {
-      return '';
-    }
-  }
-
-  renderInput() {
-    let question;
-    if (this.state.quiz.questions) {
-      question = this.state.quiz.questions[this.state.questionNumber];
-    }
-    let textFieldClass = this.textFieldClass();
-    if (question && question.matchBins && Object.keys(question.matchBins).length > 0) {
-      let unmatchedItems = [];
-      return([
-        <ul key="1" className="bins-container m-bottom">
-          { Object.keys(question.matchBinsShuffled).map((binName, index) => {
-            return(
-              <li key={ index } className="bin" data-name={ binName }>
-                { binName }
-                { this.renderMatchedItems(binName) }
-              </li>
-            );
-          }) }
-        </ul>,
-        <ul key="2" className="unmatched-items-container m-bottom">
-          { this.state.unmatchedItems.map((itemName, index) => {
-            return(
-              <li key={ index } className="unmatched-item" onMouseDown={ this.mouseDownHandler } onMouseUp={ this.mouseUpHandler } data-name={ itemName } >
-                { itemName }
-              </li>
-            );
-          }) }
-        </ul>
-      ]);
-    } else if (question && question.choices) {
-      return(
-        <div className="m-bottom">
-          { this.state.quiz.questions[this.state.questionNumber].choices.sort().map((choice, index) => {
-            return(
-              <div key={ index }>
-                <input id={ `option-${index}` } onChange={ this.selectOption.bind(this) } checked={ this.state.answer === choice } type="radio" name="choice" value={ choice } /><label htmlFor={`option-${index}`}>{ choice }</label>
-              </div>
+  renderInput(currentQuestion) {
+    const { answer, unmatchedItems, status } = this.state;
+    if (currentQuestion && currentQuestion.matchBins && Object.keys(currentQuestion.matchBins).length > 0) {
+      return (
+        <>
+          <ul key="1" className="bins-container">
+            { Object.keys(currentQuestion.matchBinsShuffled).map((binName, index) => {
+              return(
+                <li key={ index } className="bin" data-name={ binName }>
+                  { binName }
+                  { this.renderMatchedItems(binName) }
+                </li>
+              );
+            }) }
+          </ul>
+          <ul key="2" className="unmatched-items-container">
+            { unmatchedItems.map((itemName, index) => {
+              return (
+                <li key={ index } className="unmatched-item" onMouseDown={ this.mouseDownHandler } onMouseUp={ this.mouseUpHandler } data-name={ itemName } >
+                  { itemName }
+                </li>
+              );
+            }) }
+          </ul>
+          <style jsx>{`
+            .bins-container {
+              margin-bottom: 30px;
+            }
+            .bin {
+              display: inline-block;
+              border: solid 1px gray;
+              border-radius: 3px;
+              padding: 20px 30px;
+              font-size: 14px;
+              user-select: none;
+              vertical-align: top;
+              text-align: center;
+              margin-bottom: 15px;
+            }
+            .bin.selected {
+              background-color: #CEECF5;
+            }
+            .bin:not(:last-of-type) {
+              margin-right: 30px;
+            }
+            .unmatched-item {
+              display: inline-block;
+              border: solid 1px gray;
+              border-radius: 3px;
+              padding: 8px 10px;
+              cursor: grab;
+              user-select: none;
+            }
+            .unmatched-item.selected {
+              background-color: #CEECF5;
+            }
+            .unmatched-item:not(:last-of-type) {
+              margin-right: 10px;
+              margin-bottom: 10px;
+            }
+          `}</style>
+        </>
+      );
+    } else if (currentQuestion && currentQuestion.choices) {
+      return (
+        <div>
+          { currentQuestion.choices.sort().map((choice, index) => {
+            return (
+              <React.Fragment key={ index }>
+                <div className="choice-container">
+                  <input id={ `option-${index}` } onChange={ this.selectOption.bind(this) } checked={ answer === choice } type="radio" name="choice" value={ choice } />
+                  <label htmlFor={`option-${index}`}>{ choice }</label>
+                </div>
+                <style jsx>{`
+                  div:not(:last-of-type) {
+                    margin-bottom: 4px;
+                  }
+                  input {
+                    display: inline-block;
+                    height: 20px;
+                    margin-right: 10px;
+                    vertical-align: top;
+                  }
+                  label {
+                    display: inline-block;
+                    vertical-align: top;
+                    font-size: 14px;
+                    line-height: 20px;
+                    width: calc(100% - 23px);
+                  }
+                `}</style>
+              </React.Fragment>
             );
           })}
         </div>
       );
-    } else if (question && question.textbox) {
-      return(
-        <textarea rows="6" columns="12" className={ `m-bottom ${textFieldClass}` } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer } />
+    } else if (currentQuestion && currentQuestion.textbox) {
+      return (
+        <textarea
+          rows="6"
+          columns="12"
+          className={ status === 'wrong' ? 'error' : null }
+          onChange={ this.changeAnswer.bind(this) } value={ answer }
+        />
       );
     } else {
-      return(
-        <input className={ `m-bottom ${textFieldClass}` } onKeyPress={ this.checkKey.bind(this) } onChange={ this.changeAnswer.bind(this) } value={ this.state.answer || "" } />
+      return (
+        <input
+          style={ status === 'indeterminate' ? { border: COLORS.blue } : null }
+          className={ status === 'wrong' ? 'error' : null }
+          onKeyPress={ this.checkKey.bind(this) }
+          onChange={ this.changeAnswer.bind(this) }
+          value={ answer || "" }
+        />
       );
     }
   }
@@ -601,64 +706,83 @@ class QuizRun extends React.Component {
   renderMatchedItems(binName) {
     let matchedItems = this.state.matchedItems[binName];
     if (matchedItems && matchedItems.length > 0) {
-      return(
-        <ul className="bin-items-container">
-          { matchedItems.map((itemName, index) => {
-            return(
-              <li key={ itemName } className="bin-item" onClick={ this.removeMatchItem.bind(this) }>{ itemName }</li>
-            );
-          }) }
-        </ul>
+      return (
+        <>
+          <ul className="bin-items-container">
+            { matchedItems.map((itemName) => {
+              return (
+                <li key={ itemName } className="bin-item" onClick={ this.removeMatchItem.bind(this) }>{ itemName }</li>
+              );
+            }) }
+          </ul>
+          <style jsx>{`
+            .bin-item {
+              margin-top: 10px;
+              border: solid 1px gray;
+              border-radius: 3px;
+              padding: 8px 10px;
+              font-size: 12px;
+              text-align: center;
+              cursor: pointer;
+            }
+          `}</style>
+        </>
       );
     }
   }
 
-  renderAnswers() {
-    if (this.state.quiz.questions && this.state.showAnswers) {
-      let question = this.state.quiz.questions[this.state.questionNumber];
-      return question.answers.map((answer, index) => {
-        if (question.matchBins && Object.keys(question.matchBins).length > 0) {
-          return(
-            <pre key={ index } className="answer">{ answer }</pre>
-          );
-        } else {
-          let spanTags = answer.split("\n").map((line, index) => {
-            return(
-              <React.Fragment key={ index }>
-                <span key={ index }>{ line }</span><br />
-              </React.Fragment>
-            );
-          })
-          return(
-            <p key={ index } className="answer">
-              { spanTags }
-            </p>
-          );
-        }
-      });
-    } else {
-      return '';
+  renderAnswers(currentQuestion) {
+    const { showAnswers } = this.state;
+    if (currentQuestion && showAnswers) {
+      const { answers, matchBins } = currentQuestion;
+      if (matchBins && matchBins.length > 0) {
+        const answer = answers[0];
+        return (
+          <>
+            <div className="answers-container">
+              <pre>{ answer }</pre>
+            </div>
+            <style jsx>{`
+              .answers-container {
+                margin-top: -15px;
+                margin-bottom: 15px;
+              }
+            `}</style>
+          </>
+        );
+      } else {
+        let answers = [];
+        currentQuestion.answers.forEach((answer) => {
+          if (/\n/.test(answer)) {
+            answers.concat(answer.split("\n"));
+          } else {
+            answers.push(answer)
+          }
+        });
+        return (
+          <>
+            <div className="answers-container">
+              { answers.map((answer, index) => {
+                return (
+                  <p key={ index } className="answer">{ answer }</p>
+                );
+              }) }
+            </div>
+            <style jsx>{`
+              .answers-container {
+                margin-top: -15px;
+                margin-bottom: 15px;
+              }
+              .answer {
+                font-size: 14px;
+              }
+              .answer:not(:last-of-type) {
+                margin-bottom: 5px;
+              }
+            `}</style>
+          </>
+        );
+      }
     }
   }
-
-  textFieldClass() {
-    switch (this.state.status) {
-      case 'wrong':
-        return 'error';
-      case 'indeterminate':
-        return 'blue';
-      default:
-        return '';
-    };
-  }
 }
-
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ createEntity, updateEntity, deleteEntity, runQuiz }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(QuizRun);

@@ -27,7 +27,7 @@ class Quiz < ActiveRecord::Base
 
     my_quiz_questions.each do |quiz_question|
       question = quiz_question.question
-      number_of_questions = quiz_question.use_all_available ? available_questions[quiz_question.id] : quiz_question.amount
+      number_of_questions = quiz_question.use_all_available ? available_questions[quiz_question.id][:available] : quiz_question.amount
       number_of_questions.times do
         check_if_anything_empty
         case question.name
