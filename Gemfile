@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '3.2.0'
+ruby '3.2.1'
 
 gem 'rails', '7.0.4.2'
 gem 'pg'
@@ -22,7 +22,7 @@ gem 'jquery-ui-rails'
 gem 'pry-rails'
 gem 'puma'
 gem 'sassc-rails'
-gem 'sidekiq'
+gem 'sidekiq', '7.0.6'
 gem 'uglifier', '>= 1.3.0'
 
 group :development, :test do
