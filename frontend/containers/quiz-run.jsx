@@ -465,7 +465,7 @@ export default class QuizRun extends React.Component {
             <div className="white-box">
               { (0 < streak && streak <= 5) && <div className="streak-notification">Streak: { streak }</div> }
               <p className="question">{ currentQuestion && currentQuestion.question }</p>
-              { currentQuestion && <p className="description">{ descriptionText }</p> }
+              { descriptionText && <p className="description">{ descriptionText }</p> }
               { imageUrl && <img src={ imageUrl } /> }
               <form>
                 <div className="input-container">
