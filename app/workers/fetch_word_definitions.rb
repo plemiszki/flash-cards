@@ -2,9 +2,8 @@ class FetchWordDefinitions
   include Sidekiq::Worker
   sidekiq_options :retry => false
 
-  def perform(args)
-    job = Job.find(args['job_id'])
-    words = args['words']
+  def perform(job_id, words)
+    job = Job.find(job_id)
     result = {}
     words.each do |word|
       response = HTTParty.get("https://wordsapiv1.p.rapidapi.com/words/#{word}", headers: { 'X-Mashape-Key' => ENV['WORDS_API_KEY'] })

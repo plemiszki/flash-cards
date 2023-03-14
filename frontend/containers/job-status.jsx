@@ -1,9 +1,24 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { fetchEntity } from '../actions/index'
+import Modal from 'react-modal'
+import { fetchEntity } from 'handy-components'
 
-class JobStatus extends React.Component {
+export const modalStyles = {
+  overlay: {
+    background: 'rgba(0, 0, 0, 0.50)',
+  },
+  content: {
+    background: '#FFFFFF',
+    margin: 'auto',
+    maxWidth: 500,
+    height: 250,
+    border: 'solid 1px #5F5F5F',
+    borderRadius: '6px',
+    textAlign: 'center',
+    color: '#5F5F5F',
+  }
+}
+
+export default class JobStatus extends React.Component {
 
   constructor(props) {
     super(props);
@@ -11,51 +26,73 @@ class JobStatus extends React.Component {
   }
 
   componentDidMount() {
-    const { job } = this.props;
+    const { job, jobDone } = this.props;
     let interval = window.setInterval(() => {
-      this.props.fetchEntity({
+      fetchEntity({
         id: job.id,
         directory: 'jobs',
-        entityName: 'job'
-      }).then(() => {
-        if (this.props.job.done) {
+        entityName: 'job',
+      }).then((response) => {
+        const { job } = response;
+        if (job.done) {
           clearInterval(interval);
-          this.props.jobDone(this.props.job);
+          jobDone(job);
         }
       });
     }, 1000);
   }
 
   render() {
-    return(
-      <div className="job-status vertically-align-contents">
-        <div className="inner">
-          <div className="spinner"></div>
-          <p>{ this.props.job.text }</p>
-          { this.renderProgress() }
-        </div>
-      </div>
-    );
-  }
-
-  renderProgress() {
-    const { job } = this.props;
-    if (job.showProgress) {
-      return(
-        <p>{ job.currentValue } of { job.totalValue }</p>
-      );
-    } else {
+    const { job, isOpen } = this.props;
+    if (!job) {
       return null;
     }
+    return (
+      <>
+        <Modal
+          isOpen={ isOpen }
+          style={ modalStyles }
+        >
+          <div className="job-status jobs-modal">
+            <div className="inner">
+              <div className="spinner"></div>
+              <p>{ job.text }</p>
+              { job.showProgress && (
+                <p className="progress-text">{ job.currentValue } of { job.totalValue }</p>
+              ) }
+            </div>
+          </div>
+        </Modal>
+        <style jsx>{`
+          .job-status {
+            color: black;
+            height: 100%;
+            display: flex;
+            align-items: center;
+          }
+          .inner {
+            margin: auto;
+          }
+          p:first-of-type {
+            font-family: 'TeachableSans-Medium';
+            font-size: 24px;
+            line-height: 30px;
+          }
+          p.progress-text {
+            margin-top: 10px;
+            font-family: 'TeachableSans-Regular';
+            font-size: 20px;
+            line-height: 20px;
+          }
+          .spinner {
+            position: relative;
+            margin: auto;
+            width: 75px;
+            height: 75px;
+            margin-bottom: 20px;
+          }
+        `}</style>
+      </>
+    );
   }
 }
-
-const mapStateToProps = (reducers, props) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchEntity }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(JobStatus);

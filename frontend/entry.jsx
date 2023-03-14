@@ -11,7 +11,7 @@ import SpanishMiscDetails from './containers/spanish-misc-details'
 import CardDetails from './containers/card-details'
 import QuizDetails from './containers/quiz-details'
 import QuizRun from './containers/quiz-run'
-// import Vocabulary from './containers/vocabulary'
+import Vocabulary from './containers/vocabulary'
 
 const renderFullIndex = (id, props = {}, args = {}) => {
   const { newEntity: newEntityProps } = args;
@@ -105,6 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (quizRunNode) {
     createRoot(quizRunNode).render(
       <QuizRun />
+    );
+  }
+
+  const vocabularyNode = document.getElementById('vocabulary');
+  if (vocabularyNode) {
+    createRoot(vocabularyNode).render(
+      <Vocabulary />
     );
   }
 

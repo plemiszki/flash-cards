@@ -1,34 +1,27 @@
 import React, { Component } from 'react'
-import Modal from 'react-modal'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Common, Details } from 'handy-components'
-import HandyTools from 'handy-tools'
+import { Common, Details, createEntity, Spinner, GrayedOut, Button } from 'handy-components'
 import ChangeCase from 'change-case'
-import JobStatus from './job-status.jsx'
-import { createEntity } from '../actions/index'
-import { JobModalStyles } from './helpers/modal-styles'
+import JobStatus from './job-status';
 
-class Vocabulary extends React.Component {
+export default class Vocabulary extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      fetching: false,
+      spinner: false,
       job: null,
       data: {
         text: ''
       },
       words: null,
-      selectedDefs: {}
+      selectedDefs: {},
+      errors: [],
     };
   }
 
   changeFieldArgs() {
     return {
-      allErrors: Errors,
-      errorsArray: [],
       changesFunction: null
     }
   }
@@ -37,22 +30,24 @@ class Vocabulary extends React.Component {
     if (this.state.data.text === '') { return; }
     let words = this.state.data.text.split('\n');
     this.setState({
-      fetching: true
+      spinner: true,
     }, () => {
-      this.props.createEntity({
+      createEntity({
         directory: 'jobs',
         entityName: 'job',
         entity: {
-          name: 'fetch vocabulary'
+          name: 'fetch vocabulary',
         },
         additionalData: {
-          words
-        }
-      }).then(() => {
+          words,
+        },
+      }).then((response) => {
+        const { job } = response;
         this.setState({
-          fetching: false,
+          spinner: false,
+          jobModalOpen: true,
           data: { text: '' },
-          job: this.props.job
+          job,
         });
       });
     });
@@ -67,21 +62,22 @@ class Vocabulary extends React.Component {
       }
     });
     this.setState({
-      fetching: true
+      spinner: true,
     });
-    this.props.createEntity({
+    createEntity({
       directory: 'jobs',
       entityName: 'job',
       entity: {
         name: 'create vocabulary cards'
       },
       additionalData: {
-        words: data
-      }
-    }).then(() => {
+        words: data,
+      },
+    }).then((response) => {
+      const { job } = response;
       this.setState({
-        fetching: false,
-        job: this.props.job
+        spinner: false,
+        job,
       });
     });
   }
@@ -116,78 +112,114 @@ class Vocabulary extends React.Component {
   }
 
   render() {
-    return(
-      <div id="vocabulary" className="component details-component">
+    const { spinner, words, selectedDefs, job, jobModalOpen } = this.state;
+    return (
+      <div className="handy-component">
         <h1>Bulk Vocabulary Import</h1>
         <div className="white-box">
           { this.renderBody.call(this) }
-          { Common.renderSpinner(this.state.fetching) }
-          { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }
+          <Spinner visible={ spinner } />
+          <GrayedOut visible={ spinner } />
         </div>
-        <Modal isOpen={ !!this.state.job } contentLabel="Modal" style={ JobModalStyles }>
-          <JobStatus job={ this.state.job } jobDone={ this.jobDone.bind(this) } />
-        </Modal>
+        { job && (
+          <JobStatus
+            job={ job }
+            isOpen={ jobModalOpen }
+            jobDone={ this.jobDone.bind(this) }
+          />
+        ) }
       </div>
     );
   }
 
   renderBody() {
-    if (this.state.words) {
-      return(
-        <div className="select-definitions">
+    const { words, selectedDefs, spinner } = this.state;
+    if (words) {
+      return (
+        <>
+          <div className="select-definitions">
+            <div className="row">
+              <div className="col-xs-12 m-bottom">
+                { Object.keys(words).map((word, index) => {
+                  if (words[word]) {
+                    return(
+                      <div key={ index } className="definitions-container">
+                        <p className="word">{ ChangeCase.titleCase(word) }</p>
+                        { words[word].map((def, index) => {
+                          let id = `${word}-${index}`;
+                          return (
+                            <div key={ index } className="definition">
+                              <input id={ id } type="radio" value={ index } checked={ selectedDefs[word] === index } onChange={ this.clickRadioButton.bind(this) } data-word={ word } data-index={ index } />
+                              <label htmlFor={ id }>{ def }</label>
+                            </div>
+                          );
+                        }) }
+                      </div>
+                    );
+                  }
+                }) }
+              </div>
+            </div>
+            <div>
+              <Button
+                disabled={ spinner }
+                onClick={ () => { this.clickCreateCards() } }
+                text="Create Cards"
+              />
+            </div>
+          </div>
+          <style jsx>{`
+            p.word {
+              color: black;
+              font-size: 16px;
+              font-family: 'TeachableSans-SemiBold';
+              margin-bottom: 10px;
+            }
+            .definitions-container {
+              margin-bottom: 30px;
+            }
+            .definition {
+              margin-bottom: 4px;
+            }
+            input {
+              display: inline-block;
+              height: 20px;
+              margin-right: 10px;
+              vertical-align: top;
+            }
+            label {
+              display: inline-block;
+              vertical-align: top;
+              font-size: 14px;
+              line-height: 20px;
+              width: calc(100% - 23px);
+            }
+          `}</style>
+        </>
+      );
+    } else {
+      return (
+        <div>
           <div className="row">
-            <div className="col-xs-12 m-bottom">
-              { Object.keys(this.state.words).map((word, index) => {
-                if (this.state.words[word]) {
-                  return(
-                    <div key={ index } className="definitions-container">
-                      <p className="word">{ ChangeCase.titleCase(word) }</p>
-                      { this.state.words[word].map((def, index) => {
-                        let id = `${word}-${index}`;
-                        return(
-                          <div key={ index }>
-                            <input id={ id } type="radio" value={ index } checked={ this.state.selectedDefs[word] === index } onChange={ this.clickRadioButton.bind(this) } data-word={ word } data-index={ index } /><label htmlFor={ id }>{ def }</label>
-                          </div>
-                        );
-                      }) }
-                    </div>
-                  );
-                }
+            <div className="col-xs-12">
+              { Details.renderField.bind(this)({
+                type: 'textbox',
+                rows: 10,
+                columnWidth: 12,
+                entity: 'data',
+                property: 'text',
               }) }
             </div>
           </div>
           <div>
-            <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickCreateCards.bind(this) }>
-              Create Cards
-            </a>
-          </div>
-        </div>
-      );
-    } else {
-      return(
-        <div>
-          <div className="row">
-            <div className="col-xs-12">
-              { Details.renderTextBox.bind(this)({ rows: 10, columnWidth: 12, entity: 'data', property: 'text' }) }
-            </div>
-          </div>
-          <div>
-            <a className={ "btn blue-button standard-width" + Common.renderDisabledButtonClass(this.state.fetching) } onClick={ this.clickFetchDefinitions.bind(this) }>
-              Fetch Definitions
-            </a>
+            <Button
+              disabled={ spinner }
+              onClick={ () => { this.clickFetchDefinitions() } }
+              text="Fetch Definitions"
+            />
           </div>
         </div>
       );
     }
   }
 }
-
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ createEntity }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Vocabulary);
