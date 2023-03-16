@@ -209,18 +209,23 @@ export default class QuizRun extends React.Component {
     return result;
   }
 
-  clickArchive(e) {
+  clickArchive() {
+    const { quiz, questionNumber } = this.state;
     this.setState({
       spinner: true,
-      showArchiveButton: true
+      showArchiveButton: true,
     });
-    this.props.createEntity({
+    createEntity({
       directory: 'card_tags',
       entityName: 'cardTag',
-      entity: { tagId: this.props.archivedTagId, cardtagableId: this.state.quiz.questions[this.state.questionNumber].cardId, cardtagableType: 'Card' }
+      entity: {
+        tagId: this.props.archivedTagId,
+        cardtagableId: quiz.questions[questionNumber].cardId,
+        cardtagableType: 'Card',
+      },
     }).then(() => {
       this.setState({
-        spinner: false
+        spinner: false,
       });
     });
   }
@@ -228,7 +233,7 @@ export default class QuizRun extends React.Component {
   clickUnarchive(currentQuestion) {
     this.setState({
       renderUnarchiveButton: false,
-      spinner: true
+      spinner: true,
     });
     deleteEntity({
       directory: 'card_tags',
@@ -693,7 +698,7 @@ export default class QuizRun extends React.Component {
     } else {
       return (
         <input
-          style={ status === 'indeterminate' ? { border: COLORS.blue } : null }
+          style={ status === 'indeterminate' ? { border: `solid 1px ${COLORS.blue}` } : null }
           className={ status === 'wrong' ? 'error' : null }
           onKeyPress={ this.checkKey.bind(this) }
           onChange={ this.changeAnswer.bind(this) }
@@ -754,7 +759,7 @@ export default class QuizRun extends React.Component {
         let answers = [];
         currentQuestion.answers.forEach((answer) => {
           if (/\n/.test(answer)) {
-            answers.concat(answer.split("\n"));
+            answers = answers.concat(answer.split("\n"));
           } else {
             answers.push(answer)
           }
