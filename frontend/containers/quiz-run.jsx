@@ -245,17 +245,22 @@ export default class QuizRun extends React.Component {
     });
   }
 
-  clickHighlight(e) {
-    let question = this.state.quiz.questions[this.state.questionNumber];
+  clickHighlight() {
+    const { quiz, questionNumber } = this.state;
+    let question = quiz.questions[questionNumber];
     let entityName = question.entity;
     this.setState({
       spinner: true,
       showHighlightButton: false,
     });
-    this.props.createEntity({
+    createEntity({
       directory: 'card_tags',
       entityName: 'cardTag',
-      entity: { tagId: this.props.needsAttentionTagId, cardtagableId: question.wordId, cardtagableType: ChangeCase.pascalCase(entityName) }
+      entity: {
+        tagId: this.props.needsAttentionTagId,
+        cardtagableId: question.wordId,
+        cardtagableType: ChangeCase.pascalCase(entityName),
+      }
     }).then(() => {
       this.setState({
         spinner: false,
