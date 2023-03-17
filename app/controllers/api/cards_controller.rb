@@ -17,7 +17,7 @@ class Api::CardsController < AdminController
   def create
     @card = Card.new(card_params)
     if @card.save
-      render 'create.json.jbuilder'
+      render 'create', formats: [:json], handlers: [:jbuilder]
     else
       render_errors(@card)
     end
