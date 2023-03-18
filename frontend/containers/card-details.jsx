@@ -26,8 +26,7 @@ export default class CardDetails extends React.Component {
 
   componentDidMount() {
     fetchEntity().then((response) => {
-      const { card: rawCard, cardTags, tags, matchBins } = response;
-      const card = stringifyJSONFields({ entity: rawCard, jsonFields: ['config'] });
+      const { card, cardTags, tags, matchBins } = response;
       this.setState({
         spinner: false,
         card,
@@ -60,10 +59,10 @@ export default class CardDetails extends React.Component {
     }, () => {
       updateEntity({
         entityName: 'card',
-        entity: this.state.card
+        entity: card,
+        jsonFieldsToConvert: ['config'],
       }).then((response) => {
-        const { card: rawCard } = response;
-        const card = stringifyJSONFields({ entity: rawCard, jsonFields: ['config'] });
+        const { card } = response;
         this.setState({
           spinner: false,
           card,
@@ -147,8 +146,9 @@ export default class CardDetails extends React.Component {
               { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answerPlaceholder' }) }
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
             </div>
-            <div className="row">
-              { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'config', type: 'json', rows: 8, columnHeader: 'Configuration Options' }) }
+            <div className="row switches">
+              { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'inconsolata'], columnHeader: 'Inconsolata' }) }
+              { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'rowCount'], columnHeader: 'Line Count' }) }
             </div>
             <BottomButtons
               entityName="card"
@@ -244,7 +244,7 @@ export default class CardDetails extends React.Component {
           </div>
         </div>
         <style jsx>{`
-          img {
+          img, .switches {
             margin-bottom: 30px;
           }
         `}</style>

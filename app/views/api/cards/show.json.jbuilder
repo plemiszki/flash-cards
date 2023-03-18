@@ -1,3 +1,6 @@
+json.key_format! camelize: :lower
+json.deep_format_keys!
+
 json.card do
   json.id @card.id
   json.question @card.question
