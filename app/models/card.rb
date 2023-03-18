@@ -1,6 +1,9 @@
 class Card < ActiveRecord::Base
 
+  SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'card.json')).to_s
+
   validates :question, :answer, presence: true
+  validates :config, json: { schema: JSON.parse(File.read(SCHEMA)) }
 
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags

@@ -80,7 +80,6 @@ export default class SpanishVerbDetails extends React.Component {
 
   render() {
     const { spinner, justSaved, changesToSave, spanishVerbTags, tags, spanishVerb } = this.state;
-    console.log(spanishVerb);
     return (
       <div className="handy-component">
         <h1>Spanish Verb Details</h1>

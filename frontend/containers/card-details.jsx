@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from 'react-modal'
-import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, deleteEntity, BottomButtons, objectsAreEqual, deepCopy, OutlineButton, Table } from 'handy-components'
+import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, deleteEntity, BottomButtons, objectsAreEqual, deepCopy, OutlineButton, Table, stringifyJSONFields } from 'handy-components'
 import NewEntity from './new-entity.jsx'
 import TagsSection from './tags-section';
 
@@ -26,7 +26,8 @@ export default class CardDetails extends React.Component {
 
   componentDidMount() {
     fetchEntity().then((response) => {
-      const { card, cardTags, tags, matchBins } = response;
+      const { card: rawCard, cardTags, tags, matchBins } = response;
+      const card = stringifyJSONFields({ entity: rawCard, jsonFields: ['config'] });
       this.setState({
         spinner: false,
         card,
@@ -61,7 +62,8 @@ export default class CardDetails extends React.Component {
         entityName: 'card',
         entity: this.state.card
       }).then((response) => {
-        const { card } = response;
+        const { card: rawCard } = response;
+        const card = stringifyJSONFields({ entity: rawCard, jsonFields: ['config'] });
         this.setState({
           spinner: false,
           card,
@@ -144,6 +146,9 @@ export default class CardDetails extends React.Component {
               { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answer' }) }
               { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answerPlaceholder' }) }
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
+            </div>
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 12, entity: 'card', property: 'config', type: 'json', rows: 8, columnHeader: 'Configuration Options' }) }
             </div>
             <BottomButtons
               entityName="card"

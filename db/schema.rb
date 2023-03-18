@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2021_10_28_014809) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_18_171634) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_10_28_014809) do
     t.date "last_streak_add"
     t.string "answer_placeholder", default: ""
     t.string "hint", default: ""
+    t.jsonb "config", default: {}
   end
 
   create_table "jobs", force: :cascade do |t|

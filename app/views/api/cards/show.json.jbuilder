@@ -6,6 +6,7 @@ json.card do
   json.imageUrl @card.image_url
   json.multipleChoice @card.multiple_choice
   json.hint @card.hint
+  json.config @card.config
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id
