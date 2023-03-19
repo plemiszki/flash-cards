@@ -4,7 +4,7 @@
   "properties": {
     "options": {
       "inconsolata": "boolean",
-      "row_count": "boolean"
+      "line_count": "boolean"
     }
   },
   "additionalProperties": false

@@ -692,18 +692,39 @@ export default class QuizRun extends React.Component {
         </div>
       );
     } else if (currentQuestion && currentQuestion.textbox) {
+      const lineCount = answer.split("\n").length;
       return (
-        <textarea
-          rows="6"
-          columns="12"
-          className={ status === 'wrong' ? 'error' : null }
-          onChange={ this.changeAnswer.bind(this) } value={ answer }
-        />
+        <>
+          <textarea
+            rows="6"
+            columns="12"
+            className={ status === 'wrong' ? 'error' : null }
+            onChange={ this.changeAnswer.bind(this) } value={ answer }
+          />
+          { currentQuestion.lineCount && (
+            <p>Line Count: { lineCount }</p>
+          ) }
+          <style jsx>{`
+            p {
+              margin-top: 5px;
+            }
+          `}</style>
+        </>
       );
     } else {
+      let style = {
+        border: status === 'indeterminate' ? `solid 1px ${COLORS.blue}` : null,
+      }
+      if (currentQuestion && currentQuestion.inconsolata) {
+        style = {
+          ...style,
+          fontSize: 16,
+          fontFamily: 'Inconsolata',
+        }
+      }
       return (
         <input
-          style={ status === 'indeterminate' ? { border: `solid 1px ${COLORS.blue}` } : null }
+          style={ style }
           className={ status === 'wrong' ? 'error' : null }
           onKeyPress={ this.checkKey.bind(this) }
           onChange={ this.changeAnswer.bind(this) }

@@ -46,7 +46,9 @@ class Quiz < ActiveRecord::Base
             cardId: card.id,
             streak: card.streak,
             lastStreakAdd: card.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-            tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } }
+            tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } },
+            lineCount: card.config.dig("options", "line_count"),
+            inconsolata: card.config.dig("options", "inconsolata"),
           }
           if card.multiple_choice
             tag_id = card.tags.first.id

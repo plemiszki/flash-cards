@@ -148,7 +148,7 @@ export default class CardDetails extends React.Component {
             </div>
             <div className="row switches">
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'inconsolata'], columnHeader: 'Inconsolata' }) }
-              { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'rowCount'], columnHeader: 'Line Count' }) }
+              { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'lineCount'], columnHeader: 'Line Count' }) }
             </div>
             <BottomButtons
               entityName="card"
