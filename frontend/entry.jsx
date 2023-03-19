@@ -8,6 +8,10 @@ import SpanishNounDetails from './containers/spanish-noun-details'
 import SpanishVerbDetails from './containers/spanish-verb-details'
 import SpanishAdjectiveDetails from './containers/spanish-adjective-details'
 import SpanishMiscDetails from './containers/spanish-misc-details'
+import FrenchNounDetails from './containers/french-noun-details'
+import FrenchVerbDetails from './containers/french-verb-details'
+import FrenchAdjectiveDetails from './containers/french-adjective-details'
+import FrenchMiscDetails from './containers/french-misc-details'
 import CardDetails from './containers/card-details'
 import QuizDetails from './containers/quiz-details'
 import QuizRun from './containers/quiz-run'
@@ -98,6 +102,34 @@ document.addEventListener('DOMContentLoaded', () => {
   if (spanishMiscNode) {
     createRoot(spanishMiscNode).render(
       <SpanishMiscDetails />
+    );
+  }
+
+  const frenchNounNode = document.getElementById('french-noun-details');
+  if (frenchNounNode) {
+    createRoot(frenchNounNode).render(
+      <FrenchNounDetails />
+    );
+  }
+
+  const frenchVerbNode = document.getElementById('french-verb-details');
+  if (frenchVerbNode) {
+    createRoot(frenchVerbNode).render(
+      <FrenchVerbDetails />
+    );
+  }
+
+  const frenchAdjectiveNode = document.getElementById('french-adjective-details');
+  if (frenchAdjectiveNode) {
+    createRoot(frenchAdjectiveNode).render(
+      <FrenchAdjectiveDetails />
+    );
+  }
+
+  const frenchMiscNode = document.getElementById('french-misc-details');
+  if (frenchMiscNode) {
+    createRoot(frenchMiscNode).render(
+      <FrenchMiscDetails />
     );
   }
 
@@ -198,6 +230,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', englishPlural: '', spanish: '', spanishPlural: '', gender: 1, needsAttention: true },
   }});
 
+  renderFullIndex('french-nouns-index', {
+    entityName: 'frenchNoun',
+    columns: ['french', 'english', 'streak'],
+    modalRows: 2,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { english: '', englishPlural: '', french: '', frenchPlural: '', gender: 1, needsAttention: true },
+  }});
+
   renderFullIndex('spanish-verbs-index', {
     entityName: 'spanishVerb',
     columns: ['spanish', 'english', 'streak', 'forms'],
@@ -210,10 +254,38 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', spanish: '', needsAttention: true },
   }});
 
+  renderFullIndex('french-verbs-index', {
+    entityName: 'frenchVerb',
+    columns: ['french', 'english', 'streak', 'forms'],
+    modalRows: 1,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { english: '', french: '', needsAttention: true },
+  }});
+
   renderFullIndex('spanish-adjectives-index', {
     entityName: 'spanishAdjective',
     columns: [
       { name: 'masculine', header: 'Spanish' },
+      { name: 'english' },
+      { name: 'streak' },
+    ],
+    modalRows: 2,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+  }, { newEntity: {
+    initialEntity: { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '', needsAttention: true },
+  }});
+
+  renderFullIndex('french-adjectives-index', {
+    entityName: 'frenchAdjective',
+    columns: [
+      { name: 'masculine', header: 'French' },
       { name: 'english' },
       { name: 'streak' },
     ],
@@ -239,6 +311,19 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', spanish: '', needsAttention: true },
   }});
 
+  renderFullIndex('french-miscs-index', {
+    entityName: 'frenchMisc',
+    columns: ['french', 'english'],
+    modalRows: 1,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+    header: 'French Miscellaneous Words',
+  }, { newEntity: {
+    initialEntity: { english: '', french: '', needsAttention: true },
+  }});
+
   renderSimpleDetails('tag-details', {
     entityName: 'tag',
     initialEntity: { name: '' },
@@ -254,58 +339,4 @@ document.addEventListener('DOMContentLoaded', () => {
       { columnWidth: 12, property: 'name' },
     ]],
   });
-
-  // if (document.querySelector('#card-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <CardDetails entityName='card' array1Name='cardTags' array2Name='tags' />
-  //     </Provider>,
-  //     document.querySelector('#card-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#quiz-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <QuizDetails entityName='quiz' array1Name='quizQuestions' array2Name='questions' array3Name='tags' />
-  //     </Provider>,
-  //     document.querySelector('#quiz-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#quiz-run')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <QuizRun entityName='quiz' />
-  //     </Provider>,
-  //     document.querySelector('#quiz-run')
-  //   );
-  // }
-
-  // if (document.querySelector('#spanish-adjective-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <SpanishAdjectiveDetails />
-  //     </Provider>,
-  //     document.querySelector('#spanish-adjective-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#spanish-misc-details')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <SpanishMiscDetails />
-  //     </Provider>,
-  //     document.querySelector('#spanish-misc-details')
-  //   );
-  // }
-
-  // if (document.querySelector('#vocabulary')) {
-  //   ReactDOM.render(
-  //     <Provider store={ store }>
-  //       <Vocabulary />
-  //     </Provider>,
-  //     document.querySelector('#vocabulary')
-  //   );
-  // }
 });

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "present": {
+      "je": "string",
+      "tu": "string",
+      "il": "string",
+      "nous": "string",
+      "ils": "string"
+    }
+  },
+  "additionalProperties": false
+}

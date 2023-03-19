@@ -1,10 +1,10 @@
 class FrenchVerb < ActiveRecord::Base
 
-  # SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'french_verb.json')).to_s
+  SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'french_verb.json')).to_s
 
-  validates_presence_of :english, :spanish
-  validates_uniqueness_of :english, scope: :spanish, message: '/ French combo already used'
-  # validates :forms, json: { schema: JSON.parse(File.read(SCHEMA)) }
+  validates_presence_of :english, :french
+  validates_uniqueness_of :english, scope: :french, message: '/ French combo already used'
+  validates :forms, json: { schema: JSON.parse(File.read(SCHEMA)) }
 
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags

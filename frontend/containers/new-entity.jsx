@@ -78,7 +78,7 @@ export default class NewEntity extends React.Component {
     }, (response) => {
       this.setState({
         spinner: false,
-        errors: response.errors
+        errors: response.errors,
       }, () => {
         resetNiceSelect({ selector: '.admin-modal select', func: Details.changeField.bind(this, this.changeFieldArgs()) });
       });
@@ -220,12 +220,40 @@ export default class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishNoun', property: 'spanishPlural' }) }
           </div>
         ]);
+      case 'frenchNoun':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'englishPlural' }) }
+            <div className="col-xs-2">
+              <h2>Gender</h2>
+              <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.frenchNoun.gender } data-entity="frenchNoun" data-field="gender">
+                <option value={ "1" }>Male</option>
+                <option value={ "2" }>Female</option>
+              </select>
+              { Details.renderDropdownFieldError([], []) }
+            </div>
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchNoun', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
+          </div>,
+          <div key="2" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchNoun', property: 'french' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchNoun', property: 'frenchPlural' }) }
+          </div>
+        ]);
       case 'spanishVerb':
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishVerb', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishVerb', property: 'english' }) }
             { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'spanishVerb', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
+          </div>
+        ]);
+      case 'frenchVerb':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchVerb', property: 'french' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchVerb', property: 'english' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchVerb', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>
         ]);
       case 'spanishAdjective':
@@ -241,12 +269,33 @@ export default class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'spanishAdjective', property: 'femininePlural' }) }
           </div>
         ]);
+      case 'frenchAdjective':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchAdjective', property: 'english' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchAdjective', property: 'masculine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchAdjective', property: 'masculinePlural' }) }
+          </div>,
+          <div key="2" className="row">
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchAdjective', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchAdjective', property: 'feminine' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchAdjective', property: 'femininePlural' }) }
+          </div>
+        ]);
       case 'spanishMisc':
         return([
           <div key="1" className="row">
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishMisc', property: 'spanish' }) }
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'spanishMisc', property: 'english' }) }
             { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'spanishMisc', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
+          </div>
+        ]);
+      case 'frenchMisc':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchMisc', property: 'french' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchMisc', property: 'english' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchMisc', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>
         ]);
       case 'matchBin':

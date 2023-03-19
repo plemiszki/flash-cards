@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   resources :spanish_verbs, only: [:index, :show]
   resources :spanish_adjectives, only: [:index, :show]
   resources :spanish_miscs, only: [:index, :show]
+  resources :french_nouns, only: [:index, :show]
+  resources :french_verbs, only: [:index, :show]
+  resources :french_adjectives, only: [:index, :show]
+  resources :french_miscs, only: [:index, :show]
   resources :vocabulary, only: [:index]
 
   namespace :api do
