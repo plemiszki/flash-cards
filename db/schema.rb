@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_18_171634) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_19_142751) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,51 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_18_171634) do
     t.string "answer_placeholder", default: ""
     t.string "hint", default: ""
     t.jsonb "config", default: {}
+  end
+
+  create_table "french_adjectives", force: :cascade do |t|
+    t.string "english", null: false
+    t.string "masculine", null: false
+    t.string "feminine", null: false
+    t.string "masculine_plural", null: false
+    t.string "feminine_plural", null: false
+    t.integer "streak", default: 0
+    t.date "last_streak_add"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "french_miscs", force: :cascade do |t|
+    t.string "french", null: false
+    t.string "english", null: false
+    t.integer "streak", default: 0
+    t.date "last_streak_add"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "french_nouns", id: :serial, force: :cascade do |t|
+    t.string "english", null: false
+    t.string "english_plural", null: false
+    t.string "french", null: false
+    t.string "french_plural", null: false
+    t.integer "gender", null: false
+    t.integer "streak", default: 0
+    t.date "last_streak_add"
+    t.string "note", default: ""
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "french_verbs", force: :cascade do |t|
+    t.string "english", null: false
+    t.string "french", null: false
+    t.integer "streak", default: 0
+    t.date "last_streak_add"
+    t.string "note", default: ""
+    t.jsonb "forms", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "jobs", force: :cascade do |t|
