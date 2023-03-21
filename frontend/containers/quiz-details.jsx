@@ -53,7 +53,7 @@ export default class QuizDetails extends React.Component {
 
   changeFieldArgs() {
     return {
-      changesFunction: this.checkForChanges.bind(this)
+      changesFunction: this.checkForChanges.bind(this),
     }
   }
 
@@ -91,7 +91,7 @@ export default class QuizDetails extends React.Component {
   updateQuizQuestions(quizQuestions) {
     this.setState({
       newQuizQuestionModalOpen: false,
-      quizQuestions: quizQuestions
+      quizQuestions: quizQuestions,
     });
   }
 
@@ -163,7 +163,7 @@ export default class QuizDetails extends React.Component {
                     quizQuestion.useAllAvailable = checked;
                     this.updateQuizQuestion(quizQuestion);
                   },
-                  displayIf: row => USE_ALL_ENABLED.includes(row.quizQuestion),
+                  displayIf: row => USE_ALL_ENABLED.includes(row.questionName),
                 },
                 {
                   name: 'amount',
