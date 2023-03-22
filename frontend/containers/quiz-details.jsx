@@ -177,7 +177,7 @@ export default class QuizDetails extends React.Component {
                   clickLeft: (row) => {
                     const { id, amount } = row;
                     const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === id)
-                    quizQuestion.amount = Math.max(amount - 1, 1);
+                    quizQuestion.amount = Math.max(amount - 1, 0);
                     this.updateQuizQuestion(quizQuestion);
                   },
                   clickRight: (row) => {
