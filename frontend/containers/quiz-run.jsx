@@ -39,7 +39,7 @@ export default class QuizRun extends React.Component {
       this.setState({
         spinner: false,
         quiz,
-        answer: quiz.questions[0].answerPlaceholder,
+        answer: (quiz.questions[0] && quiz.questions[0].answerPlaceholder) || '',
       }, this.setUpMatching.bind(this));
     }, (response) => {
       const { errors } = response;
@@ -270,6 +270,9 @@ export default class QuizRun extends React.Component {
 
   setUpMatching() {
     let question = this.state.quiz.questions[this.state.questionNumber];
+    if (!question) {
+      return;
+    }
     if (question.matchBins) {
       let matchBinNames = Object.keys(question.matchBinsShuffled);
       let matchedItems = {};
@@ -420,7 +423,7 @@ export default class QuizRun extends React.Component {
       case 'correct':
         buttonColor = COLORS.green;
         buttonHoverColor = COLORS.greenHover;
-        break
+        break;
       case 'wrong':
         buttonColor = COLORS.red;
         buttonHoverColor = COLORS.redHover;
@@ -466,7 +469,7 @@ export default class QuizRun extends React.Component {
         </>
       );
     } else {
-      const imageUrl = quiz.questions ? quiz.questions[questionNumber].imageUrl : null;
+      const imageUrl = (quiz.questions && quiz.questions[questionNumber] && quiz.questions[questionNumber].imageUrl) || null;
       return (
         <>
           <div className="handy-component">

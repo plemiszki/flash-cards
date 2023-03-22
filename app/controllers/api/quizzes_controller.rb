@@ -49,7 +49,13 @@ class Api::QuizzesController < AdminController
     }
     @archived_tag_id = Tag.find_by_name('Archived').id
     @needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
-    render 'run', formats: [:json], handlers: [:jbuilder]
+
+    if @quiz[:questions].empty?
+      @errors = ['No Questions']
+      render 'run', formats: [:json], handlers: [:jbuilder], status: 422
+    else
+      render 'run', formats: [:json], handlers: [:jbuilder]
+    end
   end
 
   private
