@@ -703,6 +703,10 @@ export default class QuizRun extends React.Component {
             columns="12"
             className={ status === 'wrong' ? 'error' : null }
             onChange={ this.changeAnswer.bind(this) } value={ answer }
+            style={ currentQuestion.inconsolata ? {
+              fontSize: 16,
+              fontFamily: 'Inconsolata',
+            } : {} }
           />
           { currentQuestion.lineCount && (
             <p>Line Count: { lineCount }</p>
