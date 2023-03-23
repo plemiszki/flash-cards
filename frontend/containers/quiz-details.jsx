@@ -250,6 +250,8 @@ export default class QuizDetails extends React.Component {
             text="Add New"
             onClick={ () => this.setState({ newQuizQuestionModalOpen: true }) }
           />
+          <Spinner visible={ spinner } />
+          <GrayedOut visible={ spinner } />
         </div>
         <Modal isOpen={ this.state.newQuizQuestionModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 900 }, 1) }>
           <NewEntity
@@ -264,8 +266,6 @@ export default class QuizDetails extends React.Component {
             }}
           />
         </Modal>
-        <Spinner visible={ spinner } />
-        <GrayedOut visible={ spinner } />
       </div>
     );
   }
