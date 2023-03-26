@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Modal from 'react-modal'
-import { ModalSelectStyles, deleteEntity, createEntity, Table, OutlineButton, ModalSelect } from 'handy-components'
+import { deleteEntity, createEntity, Table, OutlineButton, ModalSelect } from 'handy-components'
 
 export default function TagsSection({ entity, entityName, entityTags, tags, setSpinner, setTags }) {
 
@@ -47,9 +46,13 @@ export default function TagsSection({ entity, entityName, entityTags, tags, setS
         text="Add Tag"
         onClick={ () => setModalOpen(true) }
       />
-      <Modal isOpen={ modalOpen } onRequestClose={ () => setModalOpen(false) } contentLabel="Modal" style={ ModalSelectStyles }>
-        <ModalSelect options={ tags } property="name" func={ option => selectTag(option) } />
-      </Modal>
+      <ModalSelect
+        isOpen={ modalOpen }
+        onClose={ () => setModalOpen(false) }
+        options={ tags }
+        property="name"
+        func={ option => selectTag(option) }
+      />
     </>
   );
 }
