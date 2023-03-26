@@ -369,10 +369,13 @@ export default class QuizRun extends React.Component {
   }
 
   checkAnswer(args) {
+    const { answer: userAnswer, question } = args;
+    const correctAnswerCharacters = question.answers[0].split('');
+
     const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
-    const isChemicalEquation = args.answer.indexOf('→') > -1;
-    const question = args.question;
-    const userAnswer = args.answer;
+    const isChemicalEquation = userAnswer.indexOf('→') > -1;
+    const isRegEx = correctAnswerCharacters[0] === '/' && correctAnswerCharacters[correctAnswerCharacters.length - 1] === '/';
+
     if (isMatchingQuestion) {
       return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
     }
@@ -387,6 +390,14 @@ export default class QuizRun extends React.Component {
         return 'correct'
       } else {
         return 'incorrect'
+      }
+    }
+    if (isRegEx) {
+      const regexString = question.answers[0];
+      const regex = new RegExp(regexString.slice(1, -1));
+      const matchData = userAnswer.match(regex);
+      if (matchData && matchData[0] === userAnswer) {
+        return 'correct';
       }
     }
     if (question.answers.indexOf(userAnswer) > -1) {

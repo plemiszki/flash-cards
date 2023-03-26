@@ -109,6 +109,8 @@ export default class CardDetails extends React.Component {
 
   render() {
     const { spinner, card, cardSaved, cardTags, tags, justSaved, changesToSave, matchBins, newMatchBinModalOpen, newMatchItemModalOpen, selectedMatchBinId } = this.state;
+    const answerCharacters = card.answer.split('');
+    const answerIsRegEx = answerCharacters[0] === '/' && answerCharacters[answerCharacters.length - 1] === '/';
 
     let matchBinsRows = [];
     matchBins.forEach((matchBin) => {
@@ -142,7 +144,17 @@ export default class CardDetails extends React.Component {
               </div>
             </div>
             <div className="row">
-              { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answer' }) }
+              { Details.renderField.bind(this)({
+                type: 'textbox',
+                rows: 5,
+                columnWidth: 5,
+                entity: 'card',
+                property: 'answer',
+                styles: (answerIsRegEx ? {
+                  fontSize: 16,
+                  fontFamily: 'Inconsolata',
+                } : {}),
+              }) }
               { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 5, entity: 'card', property: 'answerPlaceholder' }) }
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'multipleChoice' }) }
             </div>
