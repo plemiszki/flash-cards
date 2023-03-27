@@ -20,7 +20,8 @@ export default class CardDetails extends React.Component {
       cardTags: [],
       errors: [],
       matchBins: [],
-      newCardTagModalOpen: false
+      newCardTagModalOpen: false,
+      tags: [],
     };
   }
 
