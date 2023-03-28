@@ -1,5 +1,5 @@
 import React from 'react'
-import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity } from 'handy-components'
+import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity, createEntity } from 'handy-components'
 import { shuffle } from 'lodash';
 import ChangeCase from 'change-case'
 
