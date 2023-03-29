@@ -35,8 +35,9 @@ export default class QuizRun extends React.Component {
   componentDidMount() {
     const id = window.location.pathname.split('/')[2];
     sendRequest(`/api/quizzes/${id}/run`).then((response) => {
-      const { quiz } = response;
+      const { quiz, needsAttentionTagId } = response;
       this.setState({
+        needsAttentionTagId,
         spinner: false,
         quiz,
         answer: (quiz.questions[0] && quiz.questions[0].answerPlaceholder) || '',
@@ -246,7 +247,7 @@ export default class QuizRun extends React.Component {
   }
 
   clickHighlight() {
-    const { quiz, questionNumber } = this.state;
+    const { quiz, questionNumber, needsAttentionTagId } = this.state;
     let question = quiz.questions[questionNumber];
     let entityName = question.entity;
     this.setState({
@@ -257,7 +258,7 @@ export default class QuizRun extends React.Component {
       directory: 'card_tags',
       entityName: 'cardTag',
       entity: {
-        tagId: this.props.needsAttentionTagId,
+        tagId: needsAttentionTagId,
         cardtagableId: question.wordId,
         cardtagableType: ChangeCase.pascalCase(entityName),
       }
