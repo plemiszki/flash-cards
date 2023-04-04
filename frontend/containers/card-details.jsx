@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from 'react-modal'
-import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, deleteEntity, BottomButtons, objectsAreEqual, deepCopy, OutlineButton, Table, stringifyJSONFields } from 'handy-components'
+import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, deleteEntity, BottomButtons, objectsAreEqual, deepCopy, OutlineButton, Table, Button } from 'handy-components'
 import NewEntity from './new-entity.jsx'
 import TagsSection from './tags-section';
 
@@ -22,6 +22,7 @@ export default class CardDetails extends React.Component {
       matchBins: [],
       newCardTagModalOpen: false,
       tags: [],
+      newEntityModalOpen: false,
     };
   }
 
@@ -109,7 +110,7 @@ export default class CardDetails extends React.Component {
   }
 
   render() {
-    const { spinner, card, cardSaved, cardTags, tags, justSaved, changesToSave, matchBins, newMatchBinModalOpen, newMatchItemModalOpen, selectedMatchBinId } = this.state;
+    const { spinner, card, cardSaved, cardTags, tags, justSaved, changesToSave, matchBins, newMatchBinModalOpen, newMatchItemModalOpen, selectedMatchBinId, newEntityModalOpen } = this.state;
     const answerCharacters = card.answer.split('');
     const answerIsRegEx = answerCharacters[0] === '/' && answerCharacters[answerCharacters.length - 1] === '/';
 
@@ -133,6 +134,11 @@ export default class CardDetails extends React.Component {
       <>
         <div className="handy-component">
           <h1>Card Details</h1>
+          <Button
+            text="Add Card"
+            onClick={ () => this.setState({ newEntityModalOpen: true }) }
+            float
+          />
           <div className="white-box">
             <div className="row">
               { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'question' }) }
@@ -255,6 +261,20 @@ export default class CardDetails extends React.Component {
             <Spinner visible={ spinner } />
             <GrayedOut visible={ spinner } />
           </div>
+          <Modal
+            isOpen={ newEntityModalOpen }
+            onRequestClose={ () => { this.setState({ newEntityModalOpen: false }) } }
+            style={ Common.newEntityModalStyles({ width: 900, height: 432 }) }
+          >
+            <NewEntity
+              entityName="card"
+              initialEntity={{
+                question: '',
+                answer: '',
+              }}
+              redirectAfterCreate={ true }
+            />
+          </Modal>
         </div>
         <style jsx>{`
           img, .switches {
