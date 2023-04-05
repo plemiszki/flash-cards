@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchModalRows: 3,
     searchModalDimensions: { width: 600 },
     showNewButton: true,
-    newModalDimensions: { width: 900, height: 432 },
+    newModalDimensions: { width: 900, height: 551 },
   }, {
     searchCriteria: {
       fields: [
@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         answer: '',
       },
       redirectAfterCreate: true,
+      fetchData: ['tags'],
     }
   });
 

@@ -17,6 +17,7 @@ class Api::CardsController < AdminController
   def create
     @card = Card.new(card_params)
     if @card.save
+      tag = CardTag.create(cardtagable: @card, cardtagable_type: 'Card', tag_id: params[:tag_id]) if params[:tag_id]
       render 'create', formats: [:json], handlers: [:jbuilder]
     else
       render_errors(@card)

@@ -264,10 +264,11 @@ export default class CardDetails extends React.Component {
           <Modal
             isOpen={ newEntityModalOpen }
             onRequestClose={ () => { this.setState({ newEntityModalOpen: false }) } }
-            style={ Common.newEntityModalStyles({ width: 900, height: 432 }) }
+            style={ Common.newEntityModalStyles({ width: 900, height: 551 }) }
           >
             <NewEntity
               entityName="card"
+              fetchData={['tags']}
               initialEntity={{
                 question: '',
                 answer: '',

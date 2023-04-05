@@ -17,6 +17,9 @@ export default class NewEntity extends React.Component {
       spinner: !!fetchData,
       [entityName]: deepCopy(initialEntity),
       errors: {},
+      tag: {
+        id: null,
+      },
     }
 
     if (passData) {
@@ -64,6 +67,9 @@ export default class NewEntity extends React.Component {
       directory,
       entityName,
       entity: this.state[entityName],
+      additionalData: {
+        tagId: this.state.tag["Id"],
+      }
     }).then((response) => {
       if (redirectAfterCreate) {
         window.location.href = `/${directory}/${response[entityName].id}`;
@@ -176,7 +182,10 @@ export default class NewEntity extends React.Component {
           </div>,
           <div key="2" className="row">
             { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
-          </div>
+          </div>,
+          <div key="3" className="row">
+          { Details.renderField.bind(this)({ type: 'modal', columnWidth: 4, entity: 'tag', property: 'id', columnHeader: 'Tag', optionsArrayName: 'tags', optionDisplayProperty: 'name', noneOption: true }) }
+        </div>
         ]);
       case 'tag':
       case 'quiz':
