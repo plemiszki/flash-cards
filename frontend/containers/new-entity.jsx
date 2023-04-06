@@ -18,7 +18,7 @@ export default class NewEntity extends React.Component {
       [entityName]: deepCopy(initialEntity),
       errors: {},
       tag: {
-        id: null,
+        Id: null,
       },
     }
 
@@ -38,15 +38,25 @@ export default class NewEntity extends React.Component {
   }
 
   componentDidMount() {
+    const { entityName, fetchData } = this.props;
+
     setUpNiceSelect({ selector: '.admin-modal select', func: Details.changeDropdownField.bind(this) });
-    if (this.props.fetchData) {
+    if (fetchData) {
       sendRequest(`/api/${directory}/new`).then((response) => {
-        let entity = deepCopy(this.state[this.props.entityName]);
+        let entity = deepCopy(this.state[entityName]);
         let obj = { spinner: false };
-        this.props.fetchData.forEach((arrayName) => {
+        fetchData.forEach((arrayName) => {
           obj[arrayName] = response[arrayName];
         })
-        obj[this.props.entityName] = entity;
+        obj[entityName] = entity;
+
+        if (entityName === 'card') {
+          const storedTagId = localStorage.getItem("tag-id");
+          if (storedTagId) {
+            obj.tag = { Id: storedTagId }
+          }
+        }
+
         this.setState(obj, () => {
           resetNiceSelect({ selector: '.admin-modal select', func: Details.changeDropdownField.bind(this) });
         });
@@ -92,7 +102,11 @@ export default class NewEntity extends React.Component {
   }
 
   changeFieldArgs() {
-    return {}
+    return {
+      callback: () => {
+        localStorage.setItem("tag-id", this.state.tag.Id);
+      },
+    }
   }
 
   render() {
