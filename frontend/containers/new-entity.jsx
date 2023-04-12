@@ -17,9 +17,12 @@ export default class NewEntity extends React.Component {
       spinner: !!fetchData,
       [entityName]: deepCopy(initialEntity),
       errors: {},
-      tag: {
+    }
+
+    if (entityName === 'card') {
+      state_obj.tag = {
         Id: null,
-      },
+      }
     }
 
     if (passData) {
@@ -77,9 +80,9 @@ export default class NewEntity extends React.Component {
       directory,
       entityName,
       entity: this.state[entityName],
-      additionalData: {
+      additionalData: entityName === 'card' ? {
         tagId: this.state.tag["Id"],
-      }
+      } : null
     }).then((response) => {
       if (redirectAfterCreate) {
         window.location.href = `/${directory}/${response[entityName].id}`;
@@ -104,7 +107,9 @@ export default class NewEntity extends React.Component {
   changeFieldArgs() {
     return {
       callback: () => {
-        localStorage.setItem("tag-id", this.state.tag.Id);
+        if (this.props.entityName === 'card') {
+          localStorage.setItem("tag-id", this.state.tag.Id);
+        }
       },
     }
   }
