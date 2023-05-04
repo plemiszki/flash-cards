@@ -9,7 +9,7 @@
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.5",
     "change-case": "3.1.0",
-    "handy-components": "3.10.7",
+    "handy-components": "3.10.8",
     "jquery": "3.5.0",
     "jquery-match-height": "0.7.2",
     "lodash": "4.17.19",
@@ -17,10 +17,10 @@
     "react-dom": "18.2.0",
     "react-modal": "3.15.1",
     "styled-jsx": "5.0.7",
-    "webpack": "5.75.0",
+    "webpack": "5.81.0",
     "webpack-cli": "4.10.0"
   },
   "engines": {
-    "node": "19.7.0"
+    "node": "20.0.0"
   }
 }
