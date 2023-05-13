@@ -80,7 +80,7 @@ export default class SpanishAdjectiveDetails extends React.Component {
     const { spinner, justSaved, changesToSave, spanishAdjectiveTags, newCardTagModalOpen, tags, spanishAdjective } = this.state;
     return (
       <div className="handy-component">
-        <h1>Spanish Noun Details</h1>
+        <h1>Spanish Adjective Details</h1>
         <div className="white-box">
           <div className="row">
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'spanishAdjective', property: 'english' }) }
