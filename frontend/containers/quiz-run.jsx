@@ -11,6 +11,8 @@ const COLORS = {
   blue: 'blue',
 }
 
+const REPEAT_WRONG_ANSWERS = true;
+
 export default class QuizRun extends React.Component {
 
   constructor(props) {
@@ -21,14 +23,17 @@ export default class QuizRun extends React.Component {
       errors: [],
       quiz: {},
       questionNumber: 0,
+      currentRotation: [],
+      rotationNumber: 1,
+      repeatQuestions: [],
       answer: '',
       matchedItems: {},
       unmatchedItems: [],
       status: 'question',
       streak: 0,
       showAnswers: false,
-      wrongAnswerLog: {},
-      renderUnarchiveButton: true
+      incorrectQuestionIds: [],
+      renderUnarchiveButton: true,
     };
   }
 
@@ -41,6 +46,7 @@ export default class QuizRun extends React.Component {
         spinner: false,
         quiz,
         answer: (quiz.questions[0] && quiz.questions[0].answerPlaceholder) || '',
+        currentRotation: quiz.questions,
       }, this.setUpMatching.bind(this));
     }, (response) => {
       const { errors } = response;
@@ -115,83 +121,107 @@ export default class QuizRun extends React.Component {
     });
   }
 
-  clickCheckAnswer(totalWrongAnswers) {
-    let matchingQuestion = Object.keys(this.state.matchedItems).length > 0;
-    if (!matchingQuestion && this.state.answer === '') {
+  clickCheckAnswer(totalIncorrectAnswers) {
+    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation } = this.state;
+    let matchingQuestion = Object.keys(matchedItems).length > 0;
+    if (!matchingQuestion && answer === '') {
       return;
     }
-    if (this.state.status === 'correct') { // next question
-      if (this.state.questionNumber + 1 === this.state.quiz.questions.length) {
-        if (totalWrongAnswers > 0) {
-          let total = this.state.quiz.questions.length;
-          let correct = total - totalWrongAnswers;
-          let percentage = Math.floor((correct / total) * 100);
-          let firstLine = `${totalWrongAnswers} wrong answers - ${percentage}% correct`;
-          let messageLines = [firstLine];
-          Object.keys(this.state.wrongAnswerLog).forEach((key) => {
-            messageLines.push(this.state.quiz.questions[key].question);
-          });
-          let color;
-          if (percentage >= 80) {
-            color = 'light-green';
-          } else if (percentage >= 70) {
-            color = 'yellow';
-          } else {
-            color = 'red';
-          }
-          localStorage.setItem('message', messageLines.join("\n"));
-          localStorage.setItem('message-color', color);
+    if (status === 'correct') { // next question
+      const finishedAllQuestions = (questionNumber + 1) === currentRotation.length;
+      if (finishedAllQuestions) {
+        if (repeatQuestions.length > 0) {
+          this.setState({
+            quiz,
+            showHighlightButton: true,
+            showArchiveButton: true,
+            questionNumber: 0,
+            streak: 0,
+            answer: (repeatQuestions[0].answerPlaceholder || ''),
+            status: 'question',
+            showAnswers: false,
+            renderUnarchiveButton: true,
+            currentRotation: repeatQuestions,
+            rotationNumber: rotationNumber + 1,
+            repeatQuestions: [],
+          }, this.setUpMatching.bind(this));
         } else {
-          localStorage.setItem('message', 'Great job. You aced the quiz!');
-          localStorage.setItem('message-color', 'green');
+          if (totalIncorrectAnswers > 0) {
+            let total = quiz.questions.length;
+            let correct = total - totalIncorrectAnswers;
+            let percentage = Math.floor((correct / total) * 100);
+            let firstLine = `${totalIncorrectAnswers} wrong answers - ${percentage}% correct`;
+            let messageLines = [firstLine];
+            incorrectQuestionIds.forEach((id) => {
+              messageLines.push(quiz.questions.find(question => question.id === id).question);
+            });
+            let color;
+            if (percentage >= 80) {
+              color = 'light-green';
+            } else if (percentage >= 70) {
+              color = 'yellow';
+            } else {
+              color = 'red';
+            }
+            localStorage.setItem('message', messageLines.join("\n"));
+            localStorage.setItem('message-color', color);
+          } else {
+            localStorage.setItem('message', 'Great job. You aced the quiz!');
+            localStorage.setItem('message-color', 'green');
+          }
+          window.location.pathname = '/quizzes';
         }
-        window.location.pathname = '/quizzes';
       } else {
-        let nextQuestionNumber = this.state.questionNumber += 1;
+        let nextQuestionNumber = questionNumber + 1;
         this.setState({
           showHighlightButton: true,
           showArchiveButton: true,
           questionNumber: nextQuestionNumber,
           streak: 0,
-          answer: (this.state.quiz.questions[nextQuestionNumber].answerPlaceholder || ''),
+          answer: (currentRotation[nextQuestionNumber].answerPlaceholder || ''),
           status: 'question',
           showAnswers: false,
           renderUnarchiveButton: true
         }, this.setUpMatching.bind(this));
       }
     } else {
-      let quizQuestion = this.state.quiz.questions[this.state.questionNumber];
+      let quizQuestion = currentRotation[questionNumber];
       let answerStatus = this.checkAnswer({
         question: quizQuestion,
-        answer: this.state.answer
+        answer,
       });
       if (answerStatus === 'correct') {
         this.setState({
           status: 'correct'
         }, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
-            const gotCorrectAfterFailing = !!this.state.wrongAnswerLog[this.state.questionNumber];
+            const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
             const lastStreakUpdateTimestamp = quizQuestion.lastStreakAdd && (quizQuestion.lastStreakAdd * 1000);
             const beginningOfTodayTimestamp = new Date().setHours(0, 0, 0, 0);
             const streakAlreadyUpdatedToday = quizQuestion.lastStreakAdd && (lastStreakUpdateTimestamp === beginningOfTodayTimestamp);
             if (!gotCorrectAfterFailing && !streakAlreadyUpdatedToday) {
-              this.updateStreak.call(this, this.state.status);
+              this.updateStreak.call(this, status);
             }
           }
         });
       } else if (answerStatus === 'indeterminate') {
         this.setState({
-          status: 'indeterminate'
+          status: 'indeterminate',
         });
       } else {
-        let { wrongAnswerLog } = this.state;
-        wrongAnswerLog[this.state.questionNumber] = 'wrong';
+        let { incorrectQuestionIds, repeatQuestions } = this.state;
+        incorrectQuestionIds.push(quizQuestion.id);
+        incorrectQuestionIds = [...new Set(incorrectQuestionIds)];
+        if (REPEAT_WRONG_ANSWERS) {
+          repeatQuestions.push(quizQuestion);
+        }
         this.setState({
           status: 'wrong',
-          wrongAnswerLog
+          incorrectQuestionIds,
+          repeatQuestions,
         }, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
-            this.updateStreak.call(this, this.state.status);
+            this.updateStreak.call(this, status);
           }
         });
       }
@@ -426,7 +456,8 @@ export default class QuizRun extends React.Component {
       streak,
       quiz,
       questionNumber,
-      wrongAnswerLog,
+      incorrectQuestionIds,
+      currentRotation,
     } = this.state;
 
     let buttonColor;
@@ -442,8 +473,8 @@ export default class QuizRun extends React.Component {
     }
 
     const statusCorrect = status === 'correct';
-    const totalWrongAnswers = Object.keys(wrongAnswerLog).length;
-    const currentQuestion = quiz.questions ? quiz.questions[questionNumber] : null;
+    const totalIncorrectAnswers = incorrectQuestionIds.length;
+    const currentQuestion = currentRotation ? currentRotation[questionNumber] : null;
     let descriptionText;
     if (currentQuestion) {
       const { description, hint, note } = currentQuestion
@@ -481,12 +512,12 @@ export default class QuizRun extends React.Component {
         </>
       );
     } else {
-      const imageUrl = (quiz.questions && quiz.questions[questionNumber] && quiz.questions[questionNumber].imageUrl) || null;
+      const imageUrl = (currentRotation && currentRotation[questionNumber] && currentRotation[questionNumber].imageUrl) || null;
       return (
         <>
           <div className="handy-component">
-            <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${quiz.questions.length}` }</h1>
-            { !!totalWrongAnswers && <p className="wrong-count">Wrong: { totalWrongAnswers }</p> }
+            <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
+            { !!totalIncorrectAnswers && <p className="wrong-count">Wrong: { totalIncorrectAnswers }</p> }
             <div className="white-box">
               { (0 < streak && streak <= 5) && <div className="streak-notification">Streak: { streak }</div> }
               <p className="question">{ currentQuestion && currentQuestion.question }</p>
@@ -501,7 +532,7 @@ export default class QuizRun extends React.Component {
                   submit
                   disabled={ spinner }
                   text={ statusCorrect ? "Next Question" : "Check Answer" }
-                  onClick={ () => { this.clickCheckAnswer(totalWrongAnswers) } }
+                  onClick={ () => { this.clickCheckAnswer(totalIncorrectAnswers) } }
                   color={ buttonColor }
                   hoverColor={ buttonHoverColor }
                 />

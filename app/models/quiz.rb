@@ -934,6 +934,10 @@ class Quiz < ActiveRecord::Base
     if max_questions > 0 && result.length > max_questions
       result = result.sample(max_questions)
     end
+    result.map!.with_index do |question, index|
+      question[:id] = index
+      question
+    end
     result.shuffle
   end
 
