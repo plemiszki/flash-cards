@@ -168,6 +168,7 @@ export default class CardDetails extends React.Component {
             <div className="row switches">
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'inconsolata'], columnHeader: 'Inconsolata' }) }
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'lineCount'], columnHeader: 'Line Count' }) }
+              { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'noRepeat'], columnHeader: 'Do Not Repeat' }) }
             </div>
             <BottomButtons
               entityName="card"
@@ -280,6 +281,9 @@ export default class CardDetails extends React.Component {
         <style jsx>{`
           img, .switches {
             margin-bottom: 30px;
+          }
+          img {
+            max-width: 100%;
           }
         `}</style>
       </>

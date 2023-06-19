@@ -11,8 +11,6 @@ const COLORS = {
   blue: 'blue',
 }
 
-const REPEAT_WRONG_ANSWERS = true;
-
 export default class QuizRun extends React.Component {
 
   constructor(props) {
@@ -210,7 +208,7 @@ export default class QuizRun extends React.Component {
         });
       } else {
         let { incorrectQuestionIds, repeatQuestions } = this.state;
-        if (REPEAT_WRONG_ANSWERS && !repeatQuestions.map(question => question.id).includes(quizQuestion.id)) {
+        if (!quizQuestion.noRepeat && !repeatQuestions.map(question => question.id).includes(quizQuestion.id)) {
           repeatQuestions.push(quizQuestion);
         }
         incorrectQuestionIds.push(quizQuestion.id);

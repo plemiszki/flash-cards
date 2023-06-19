@@ -49,6 +49,7 @@ class Quiz < ActiveRecord::Base
             tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } },
             lineCount: card.config.dig("options", "line_count"),
             inconsolata: card.config.dig("options", "inconsolata"),
+            noRepeat: card.config.dig("options", "no_repeat"),
           }
           if card.multiple_choice
             tag_id = card.tags.first.id
