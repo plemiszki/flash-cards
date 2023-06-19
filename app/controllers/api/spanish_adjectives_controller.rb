@@ -12,7 +12,7 @@ class Api::SpanishAdjectivesController < AdminController
   def create
     @spanish_adjective = SpanishAdjective.new(spanish_adjective_params)
     if @spanish_adjective.save
-      if params[:spanish_adjective][:needs_attention] == "true"
+      if params[:spanish_adjective][:needs_attention] == true
         tag_id = Tag.find_by_name('Needs Attention').id
         CardTag.create(cardtagable_type: 'SpanishAdjective', cardtagable_id: @spanish_adjective.id, tag_id: tag_id)
       end

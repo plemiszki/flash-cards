@@ -12,7 +12,7 @@ class Api::FrenchNounsController < AdminController
   def create
     @french_noun = FrenchNoun.new(french_noun_params)
     if @french_noun.save
-      if params[:french_noun][:needs_attention] == "true"
+      if params[:french_noun][:needs_attention] == true
         tag_id = Tag.find_by_name('Needs Attention').id
         CardTag.create(cardtagable_type: 'FrenchNoun', cardtagable_id: @french_noun.id, tag_id: tag_id)
       end
