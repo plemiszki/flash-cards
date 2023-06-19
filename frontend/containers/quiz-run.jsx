@@ -210,7 +210,7 @@ export default class QuizRun extends React.Component {
         });
       } else {
         let { incorrectQuestionIds, repeatQuestions } = this.state;
-        if (REPEAT_WRONG_ANSWERS && !incorrectQuestionIds.includes(quizQuestion.id)) {
+        if (REPEAT_WRONG_ANSWERS && !repeatQuestions.map(question => question.id).includes(quizQuestion.id)) {
           repeatQuestions.push(quizQuestion);
         }
         incorrectQuestionIds.push(quizQuestion.id);
