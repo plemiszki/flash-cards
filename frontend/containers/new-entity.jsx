@@ -55,7 +55,7 @@ export default class NewEntity extends React.Component {
 
         if (entityName === 'card') {
           const storedTagId = localStorage.getItem("tag-id");
-          if (storedTagId) {
+          if (storedTagId && storedTagId !== 'undefined') {
             obj.tag = { Id: storedTagId }
           }
         }
@@ -203,8 +203,8 @@ export default class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ type: 'textbox', rows: 5, columnWidth: 12, entity: 'card', property: 'answer' }) }
           </div>,
           <div key="3" className="row">
-          { Details.renderField.bind(this)({ type: 'modal', columnWidth: 4, entity: 'tag', property: 'id', columnHeader: 'Tag', optionsArrayName: 'tags', optionDisplayProperty: 'name', noneOption: true }) }
-        </div>
+            { Details.renderField.bind(this)({ type: 'modal', columnWidth: 4, entity: 'tag', property: 'id', columnHeader: 'Tag', optionsArrayName: 'tags', optionDisplayProperty: 'name', noneOption: true }) }
+          </div>
         ]);
       case 'tag':
       case 'quiz':
