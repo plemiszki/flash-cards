@@ -9,6 +9,7 @@ class Api::QuestionsController < AdminController
     @question = Question.new(questions_params)
     if @question.save
       @questions = Question.all
+      render 'index', formats: [:json], handlers: [:jbuilder]
     else
       render_errors(@question)
     end
