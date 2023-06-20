@@ -85,6 +85,58 @@ class Quiz < ActiveRecord::Base
             tags: noun.tags.pluck(:name),
             note: noun.note
           }
+        when 'French - Single Verb'
+          verb = French::get_verb(quiz_question, @french_verbs)
+          synonyms = verb.synonyms
+          result << {
+            wordId: verb.id,
+            entity: 'frenchVerb',
+            streak: verb.streak,
+            lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: verb.english.capitalize,
+            indeterminate: verb.just_synonyms.map do |verb|
+              verb.french
+            end,
+            answers: [
+              verb.french
+            ],
+            description: 'verb',
+            highlightButton: true,
+            tags: verb.tags.pluck(:name),
+            note: verb.note
+          }
+        when 'French - Single Adjective'
+          adjective = French::get_adjective(quiz_question, @french_adjectives)
+          synonyms = adjective.synonyms
+          result << {
+            wordId: adjective.id,
+            entity: 'frenchAdjective',
+            streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: adjective.english.capitalize,
+            answers: [
+              adjective.masculine,
+              adjective.feminine
+            ],
+            indeterminate: adjective.just_synonyms.map do |adjective|
+              [ adjective.masculine, adjective.feminine ]
+            end.flatten,
+            description: 'adjective',
+            highlightButton: true,
+            tags: adjective.tags.pluck(:name)
+          }
+        when 'French - Misc Word'
+          word = French::get_misc_word(quiz_question, @french_miscs)
+          result << {
+            wordId: word.id,
+            entity: 'frenchMisc',
+            streak: word.streak,
+            lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: word.english.capitalize,
+            answers: [ word.french ],
+            highlightButton: true,
+            tags: word.tags.pluck(:name)
+          }
         when 'Hindi - Subject can Verb'
           english_subject = English::get_random_english_subject
           gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
