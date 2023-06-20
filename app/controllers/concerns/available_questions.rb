@@ -8,7 +8,11 @@ module AvailableQuestions
     'Spanish - Single Noun': 'SpanishNoun',
     'Spanish - Single Verb': 'SpanishVerb',
     'Spanish - Single Adjective': 'SpanishAdjective',
-    'Spanish - Misc Word': 'SpanishMisc'
+    'Spanish - Misc Word': 'SpanishMisc',
+    'French - Single Noun': 'FrenchNoun',
+    'French - Single Verb': 'FrenchVerb',
+    'French - Single Adjective': 'FrenchAdjective',
+    'French - Misc Word': 'FrenchMisc',
   }
 
   def get_available_questions(quiz_questions:, quiz:)
@@ -38,7 +42,11 @@ module AvailableQuestions
       when 'Spanish - Single Noun',
       'Spanish - Single Verb',
       'Spanish - Single Adjective',
-      'Spanish - Misc Word'
+      'Spanish - Misc Word',
+      'French - Single Noun',
+      'French - Single Verb',
+      'French - Single Adjective',
+      'French - Misc Word'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
         if quiz_question.tag_id
           available_count = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).count
