@@ -19,6 +19,10 @@ class Quiz < ActiveRecord::Base
     @spanish_adjectives = []
     @spanish_miscs = []
     @spanish_months = []
+    @french_nouns = []
+    @french_verbs = []
+    @french_adjectives = []
+    @french_miscs = []
     @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
 
@@ -60,6 +64,27 @@ class Quiz < ActiveRecord::Base
             obj["choices"] = ([card.answer] + other_answers)
           end
           result << obj
+        when 'French - Single Noun'
+          noun = French::get_noun(quiz_question, @french_nouns)
+          synonyms = noun.synonyms
+          plural = (rand(2) == 1)
+          result << {
+            wordId: noun.id,
+            entity: 'frenchNoun',
+            streak: noun.streak,
+            lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: French::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
+            answers: [
+              plural ? noun.french_plural : noun.french
+            ],
+            indeterminate: noun.just_synonyms.map do |noun|
+              (plural ? noun.french_plural : noun.french)
+            end,
+            description: 'noun',
+            highlightButton: true,
+            tags: noun.tags.pluck(:name),
+            note: noun.note
+          }
         when 'Hindi - Subject can Verb'
           english_subject = English::get_random_english_subject
           gender, use_plural, notification = English::get_gender_and_plural_from_subject(english_subject)
@@ -1065,6 +1090,10 @@ class Quiz < ActiveRecord::Base
     @spanish_adjectives = SpanishAdjective.all.to_a.shuffle if @spanish_adjectives.empty?
     @spanish_miscs = SpanishMisc.all.to_a.shuffle if @spanish_miscs.empty?
     @spanish_months = Spanish.get_all_months if @spanish_months.empty?
+    @french_nouns = FrenchNoun.all.to_a.shuffle if @french_nouns.empty?
+    @french_verbs = FrenchVerb.all.to_a.shuffle if @french_verbs.empty?
+    @french_adjectives = FrenchAdjective.all.to_a.shuffle if @french_adjectives.empty?
+    @french_miscs = FrenchMisc.all.to_a.shuffle if @french_miscs.empty?
   end
 
   def get_noun(quiz_question)

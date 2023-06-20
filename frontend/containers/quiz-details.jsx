@@ -8,6 +8,10 @@ const USE_ALL_ENABLED = [
   'Spanish - Single Verb',
   'Spanish - Single Adjective',
   'Spanish - Misc Word',
+  'French - Single Noun',
+  'French - Single Verb',
+  'French - Single Adjective',
+  'French - Misc Word',
 ];
 
 const AVAILABLE_ENABLED = USE_ALL_ENABLED.concat([
