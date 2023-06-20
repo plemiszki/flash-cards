@@ -198,6 +198,7 @@ export default class QuizRun extends React.Component {
             const beginningOfTodayTimestamp = new Date().setHours(0, 0, 0, 0);
             const streakAlreadyUpdatedToday = quizQuestion.lastStreakAdd && (lastStreakUpdateTimestamp === beginningOfTodayTimestamp);
             if (!gotCorrectAfterFailing && !streakAlreadyUpdatedToday) {
+              const { status } = this.state;
               this.updateStreak.call(this, status);
             }
           }
