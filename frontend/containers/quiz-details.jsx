@@ -177,6 +177,7 @@ export default class QuizDetails extends React.Component {
                   sortable: false,
                   width: 150,
                   displayFunction: row => row.useAllAvailable ? row.available : row.amount,
+                  totalFunction: row => row.useAllAvailable ? row.available : row.amount,
                   arrowsIf: row => !row.useAllAvailable,
                   clickLeft: (row) => {
                     const { id, amount } = row;
