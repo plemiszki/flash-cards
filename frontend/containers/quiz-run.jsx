@@ -32,6 +32,7 @@ export default class QuizRun extends React.Component {
       showAnswers: false,
       incorrectQuestionIds: [],
       renderUnarchiveButton: true,
+      wrongAnswerCount: 0,
     };
   }
 
@@ -120,7 +121,7 @@ export default class QuizRun extends React.Component {
   }
 
   clickCheckAnswer(totalIncorrectAnswers) {
-    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation } = this.state;
+    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, wrongAnswerCount } = this.state;
     let matchingQuestion = Object.keys(matchedItems).length > 0;
     if (!matchingQuestion && answer === '') {
       return;
@@ -142,8 +143,10 @@ export default class QuizRun extends React.Component {
             currentRotation: repeatQuestions,
             rotationNumber: rotationNumber + 1,
             repeatQuestions: [],
+            wrongAnswerCount: 0,
           }, this.setUpMatching.bind(this));
         } else {
+          const totalIncorrectAnswers = incorrectQuestionIds.length;
           if (totalIncorrectAnswers > 0) {
             let total = quiz.questions.length;
             let correct = total - totalIncorrectAnswers;
@@ -208,9 +211,10 @@ export default class QuizRun extends React.Component {
           status: 'indeterminate',
         });
       } else {
-        let { incorrectQuestionIds, repeatQuestions } = this.state;
+        let { incorrectQuestionIds, repeatQuestions, wrongAnswerCount } = this.state;
         if (!quizQuestion.noRepeat && !repeatQuestions.map(question => question.id).includes(quizQuestion.id)) {
           repeatQuestions.push(quizQuestion);
+          wrongAnswerCount += 1;
         }
         incorrectQuestionIds.push(quizQuestion.id);
         incorrectQuestionIds = [...new Set(incorrectQuestionIds)];
@@ -218,6 +222,7 @@ export default class QuizRun extends React.Component {
           status: 'wrong',
           incorrectQuestionIds,
           repeatQuestions,
+          wrongAnswerCount,
         }, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             this.updateStreak.call(this, status);
@@ -455,7 +460,7 @@ export default class QuizRun extends React.Component {
       streak,
       quiz,
       questionNumber,
-      incorrectQuestionIds,
+      wrongAnswerCount,
       currentRotation,
     } = this.state;
 
@@ -472,7 +477,6 @@ export default class QuizRun extends React.Component {
     }
 
     const statusCorrect = status === 'correct';
-    const totalIncorrectAnswers = incorrectQuestionIds.length;
     const currentQuestion = currentRotation ? currentRotation[questionNumber] : null;
     let descriptionText;
     if (currentQuestion) {
@@ -516,7 +520,7 @@ export default class QuizRun extends React.Component {
         <>
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
-            { !!totalIncorrectAnswers && <p className="wrong-count">Wrong: { totalIncorrectAnswers }</p> }
+            { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
             <div className="white-box">
               { (0 < streak && streak <= 5) && <div className="streak-notification">Streak: { streak }</div> }
               <p className="question">{ currentQuestion && currentQuestion.question }</p>
@@ -531,7 +535,7 @@ export default class QuizRun extends React.Component {
                   submit
                   disabled={ spinner }
                   text={ statusCorrect ? "Next Question" : "Check Answer" }
-                  onClick={ () => { this.clickCheckAnswer(totalIncorrectAnswers) } }
+                  onClick={ () => { this.clickCheckAnswer() } }
                   color={ buttonColor }
                   hoverColor={ buttonHoverColor }
                 />
