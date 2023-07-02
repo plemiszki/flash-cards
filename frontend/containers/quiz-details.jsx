@@ -12,11 +12,10 @@ const USE_ALL_ENABLED = [
   'French - Single Verb',
   'French - Single Adjective',
   'French - Misc Word',
+  'Card',
 ];
 
-const AVAILABLE_ENABLED = USE_ALL_ENABLED.concat([
-  'Card',
-]);
+const AVAILABLE_ENABLED = USE_ALL_ENABLED;
 
 export default class QuizDetails extends React.Component {
   constructor(props) {
@@ -176,8 +175,8 @@ export default class QuizDetails extends React.Component {
                   totalRow: true,
                   sortable: false,
                   width: 150,
-                  displayFunction: row => row.useAllAvailable ? row.available : row.amount,
-                  totalFunction: row => row.useAllAvailable ? row.available : row.amount,
+                  displayFunction: row => row.useAllAvailable ? (row.questionName === 'Card' ? row.unarchived : row.available) : row.amount,
+                  totalFunction: row => row.useAllAvailable ? (row.questionName === 'Card' ? row.unarchived : row.available) : row.amount,
                   arrowsIf: row => !row.useAllAvailable,
                   clickLeft: (row) => {
                     const { id, amount } = row;
