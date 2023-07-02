@@ -31,7 +31,7 @@ class Quiz < ActiveRecord::Base
 
     my_quiz_questions.each do |quiz_question|
       question = quiz_question.question
-      number_of_questions = quiz_question.use_all_available ? available_questions[quiz_question.id][:available] : quiz_question.amount
+      number_of_questions = quiz_question.use_all_available ? available_questions[quiz_question.id][(quiz_question.question.name == 'Card' ? :unarchived : :available)] : quiz_question.amount
       number_of_questions.times do
         check_if_anything_empty
         case question.name
@@ -1109,23 +1109,29 @@ class Quiz < ActiveRecord::Base
   def get_cards(quiz_questions)
     result = []
     all_archived_cards = Card.includes(:tags).where(tags: { name: 'Archived' })
+    use_all_cards_tag_ids = quiz_questions.select { |quiz_question| quiz_question.use_all_available }.map { |quiz_question| quiz_question.tag_id }
     Tag.all.each do |tag|
-      n = quiz_questions.reduce(0) do |sum, qq|
-        if qq.tag_id == tag.id
-          sum + qq.amount
-        else
-          sum
+      if use_all_cards_tag_ids.include?(tag.id)
+        tagged_cards = Card.includes(:tags).where(tags: { id: tag.id })
+        result += (tagged_cards - all_archived_cards)
+      else
+        n = quiz_questions.reduce(0) do |sum, qq|
+          if qq.tag_id == tag.id
+            sum + qq.amount
+          else
+            sum
+          end
         end
-      end
-      if n > 0
-        all_tagged_cards = Card.includes(:tags).where(tags: { id: tag.id })
-        archived_tagged_cards = (all_tagged_cards & all_archived_cards).shuffle
-        unarchived_tagged_cards = (all_tagged_cards - all_archived_cards).shuffle
-        if n <= unarchived_tagged_cards.length
-          result += unarchived_tagged_cards.take(n)
-        else
-          result += unarchived_tagged_cards
-          result += archived_tagged_cards.take(n - unarchived_tagged_cards.length)
+        if n > 0
+          all_tagged_cards = Card.includes(:tags).where(tags: { id: tag.id })
+          archived_tagged_cards = (all_tagged_cards & all_archived_cards).shuffle
+          unarchived_tagged_cards = (all_tagged_cards - all_archived_cards).shuffle
+          if n <= unarchived_tagged_cards.length
+            result += unarchived_tagged_cards.take(n)
+          else
+            result += unarchived_tagged_cards
+            result += archived_tagged_cards.take(n - unarchived_tagged_cards.length)
+          end
         end
       end
     end
