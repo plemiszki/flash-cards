@@ -2,6 +2,10 @@ module English
 
   class << self
 
+    def vowel?(input)
+      input.downcase.in?('aeiou'.split(''))
+    end
+
     def get_random_weekday
       ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].sample
     end

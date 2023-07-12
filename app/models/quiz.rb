@@ -75,7 +75,7 @@ class Quiz < ActiveRecord::Base
             lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
             question: French::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
             answers: [
-              plural ? noun.french_plural : noun.french
+              plural ? "les #{noun.french_plural}" : "#{noun.definite_article}#{noun.french}"
             ],
             indeterminate: noun.just_synonyms.map do |noun|
               (plural ? noun.french_plural : noun.french)

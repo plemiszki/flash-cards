@@ -22,4 +22,10 @@ class FrenchNoun < ActiveRecord::Base
     gender == 2
   end
 
+  def definite_article(plural: false)
+    return 'les ' if plural
+    return "l'" if English.vowel?(french[0]) || french[0] == 'h'
+    male? ? 'le ' : 'la '
+  end
+
 end
