@@ -567,8 +567,16 @@ export default class QuizRun extends React.Component {
               <Spinner visible={ spinner } />
               <GrayedOut visible={ spinner } />
             </div>
+            { currentQuestion && currentQuestion.editLink && <a className="card-link" href={ currentQuestion.editLink } target="_blank">{ currentQuestion.editLinkText }</a> }
           </div>
           <style jsx>{`
+            a.card-link {
+              margin-top: 10px;
+              display: inline-block;
+              position: absolute;
+              right: 40px;
+              color: gray;
+            }
             p.question {
               font-family: 'TeachableSans-ExtraBold';
               font-size: 30px;

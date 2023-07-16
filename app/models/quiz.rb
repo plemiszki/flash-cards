@@ -54,6 +54,8 @@ class Quiz < ActiveRecord::Base
             lineCount: card.config.dig("options", "line_count"),
             inconsolata: card.config.dig("options", "inconsolata"),
             noRepeat: card.config.dig("options", "no_repeat"),
+            editLink: "/cards/#{card.id}",
+            editLinkText: "Edit Card",
           }
           if card.multiple_choice
             tag_id = card.tags.first.id
