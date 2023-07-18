@@ -1,9 +1,15 @@
 module English
 
+  VOWELS = 'aeiou'.split('')
+
   class << self
 
     def vowel?(input)
-      input.downcase.in?('aeiou'.split(''))
+      input.downcase.in?(VOWELS)
+    end
+
+    def vowels
+      VOWELS
     end
 
     def get_random_weekday
