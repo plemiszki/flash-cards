@@ -31,8 +31,11 @@ export default class QuizRun extends React.Component {
       streak: 0,
       showAnswers: false,
       incorrectQuestionIds: [],
+      highlightQuestionIds: [],
       renderUnarchiveButton: true,
       wrongAnswerCount: 0,
+      showHighlightButton: true,
+      showArchiveButton: true,
     };
   }
 
@@ -246,6 +249,7 @@ export default class QuizRun extends React.Component {
 
   clickArchive() {
     const { quiz, questionNumber } = this.state;
+    let question = quiz.questions[questionNumber];
     this.setState({
       spinner: true,
       showArchiveButton: true,
@@ -255,7 +259,7 @@ export default class QuizRun extends React.Component {
       entityName: 'cardTag',
       entity: {
         tagId: this.props.archivedTagId,
-        cardtagableId: quiz.questions[questionNumber].cardId,
+        cardtagableId: question.cardId,
         cardtagableType: 'Card',
       },
     }).then(() => {
@@ -266,6 +270,7 @@ export default class QuizRun extends React.Component {
   }
 
   clickUnarchive(currentQuestion) {
+    const { highlightQuestionIds } = this.state;
     this.setState({
       renderUnarchiveButton: false,
       spinner: true,
@@ -276,12 +281,13 @@ export default class QuizRun extends React.Component {
     }).then(() => {
       this.setState({
         spinner: false,
+        highlightQuestionIds: [...new Set(highlightQuestionIds + [currentQuestion.id])],
       });
     });
   }
 
   clickHighlight() {
-    const { quiz, questionNumber, needsAttentionTagId } = this.state;
+    const { quiz, questionNumber, needsAttentionTagId, highlightQuestionIds } = this.state;
     let question = quiz.questions[questionNumber];
     let entityName = question.entity;
     this.setState({
@@ -299,6 +305,7 @@ export default class QuizRun extends React.Component {
     }).then(() => {
       this.setState({
         spinner: false,
+        highlightQuestionIds: [...new Set(highlightQuestionIds + [question.id])],
       });
     });
   }
@@ -462,6 +469,7 @@ export default class QuizRun extends React.Component {
       questionNumber,
       wrongAnswerCount,
       currentRotation,
+      highlightQuestionIds,
     } = this.state;
 
     let buttonColor;
@@ -488,8 +496,8 @@ export default class QuizRun extends React.Component {
     }
 
     const renderArchiveButton = currentQuestion && showArchiveButton && currentQuestion.archiveButton && !currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' });
-    const renderUnarchiveButton = currentQuestion && this.state.renderUnarchiveButton && currentQuestion.unarchiveButton && currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' });
-    const renderHighlightButton = currentQuestion && showHighlightButton && currentQuestion.highlightButton && currentQuestion.tags.indexOf('Needs Attention') === -1;
+    const renderUnarchiveButton = currentQuestion && this.state.renderUnarchiveButton && currentQuestion.unarchiveButton && currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' }) && !highlightQuestionIds.includes(currentQuestion.id.toString());
+    const renderHighlightButton = currentQuestion && showHighlightButton && currentQuestion.highlightButton && currentQuestion.tags.indexOf('Needs Attention') === -1 && !highlightQuestionIds.includes(currentQuestion.id.toString());
 
     if (errors.length > 0) {
       return (
