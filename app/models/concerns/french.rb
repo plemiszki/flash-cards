@@ -196,9 +196,8 @@ module French
   def self.display_plural_with_notification(args)
     noun = args[:noun]
     english_single_plural_same = (noun.english == noun.english_plural)
-    french_single_plural_same = (noun.french == noun.french_plural)
     if args[:use_plural]
-      if english_single_plural_same && !french_single_plural_same
+      if english_single_plural_same
         "#{args[:noun].english_plural} (plural)"
       else
         "#{args[:noun].english_plural}"
