@@ -37,7 +37,7 @@ class SpanishVerb < ActiveRecord::Base
 
   def present_continuous
     case ending
-    when 'er', 'ir'
+    when 'er', 'ir', 'ír'
       "#{stem}iendo"
     when 'ar'
       "#{stem}ando"
