@@ -123,7 +123,7 @@ export default class QuizRun extends React.Component {
     });
   }
 
-  clickCheckAnswer(totalIncorrectAnswers) {
+  clickCheckAnswer() {
     const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, wrongAnswerCount } = this.state;
     let matchingQuestion = Object.keys(matchedItems).length > 0;
     if (!matchingQuestion && answer === '') {
@@ -419,9 +419,11 @@ export default class QuizRun extends React.Component {
     const isRegEx = correctAnswerCharacters[0] === '/' && correctAnswerCharacters[correctAnswerCharacters.length - 1] === '/';
 
     if (isMatchingQuestion) {
+      console.log('is matching question')
       return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
     }
     if (isChemicalEquation) {
+      console.log('is chemical equation')
       const userAnswerSides = userAnswer.split('→');
       const userAnswerLeft = userAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
       const userAnswerRight = userAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
