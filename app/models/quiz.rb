@@ -80,7 +80,7 @@ class Quiz < ActiveRecord::Base
               plural ? "les #{noun.french_plural}" : "#{noun.definite_article}#{noun.french}"
             ],
             indeterminate: noun.just_synonyms.map do |noun|
-              (plural ? noun.french_plural : noun.french)
+              plural ? "les #{noun.french_plural}" : "#{noun.definite_article}#{noun.french}"
             end,
             description: 'noun',
             highlightButton: true,
