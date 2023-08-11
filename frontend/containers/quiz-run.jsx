@@ -321,12 +321,17 @@ export default class QuizRun extends React.Component {
       let unmatchedItems = [];
       matchBinNames.forEach((binName) => {
         matchedItems[binName] = [];
-        unmatchedItems = unmatchedItems.concat(this.state.quiz.questions[this.state.questionNumber].matchBinsShuffled[binName]);
+        unmatchedItems = unmatchedItems.concat(question.matchBinsShuffled[binName]);
       })
       this.setState({
         matchedItems,
         unmatchedItems: shuffle(unmatchedItems),
       }, this.setUpDragAndDrop.bind(this));
+    } else {
+      this.setState({
+        matchedItems: {},
+        unmatchedItems: [],
+      })
     }
   }
 
