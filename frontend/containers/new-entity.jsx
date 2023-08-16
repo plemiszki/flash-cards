@@ -1,5 +1,6 @@
 import React from 'react'
-import ChangeCase from 'change-case'
+import { snakeCase } from 'change-case'
+import { titleCase } from 'title-case'
 import { Details, deepCopy, setUpNiceSelect, resetNiceSelect, createEntity, sendRequest, GrayedOut, Spinner, Button } from 'handy-components'
 
 let entityNamePlural;
@@ -12,7 +13,7 @@ export default class NewEntity extends React.Component {
     const { entityName, fetchData, initialEntity, passData } = this.props;
 
     entityNamePlural = this.props.entityNamePlural || `${entityName}s`;
-    directory = ChangeCase.snakeCase(entityNamePlural);
+    directory = snakeCase(entityNamePlural);
     let state_obj = {
       spinner: !!fetchData,
       [entityName]: deepCopy(initialEntity),
@@ -72,7 +73,7 @@ export default class NewEntity extends React.Component {
   clickAdd() {
     const { entityNamePlural: entityNamePluralProps, responseKey, entityName, redirectAfterCreate, callback, callbackFullProps } = this.props;
     const entityNamePlural = entityNamePluralProps || `${entityName}s`;
-    const directory = ChangeCase.snakeCase(entityNamePlural);
+    const directory = snakeCase(entityNamePlural);
     this.setState({
       spinner: true
     });
@@ -124,7 +125,7 @@ export default class NewEntity extends React.Component {
           <Button
             submit
             disabled={ spinner }
-            text={ buttonText || `Add ${ChangeCase.titleCase(entityName)}` }
+            text={ buttonText || `Add ${titleCase(entityName)}` }
             onClick={ () => { this.clickAdd() } }
           />
           <GrayedOut visible={ spinner } />

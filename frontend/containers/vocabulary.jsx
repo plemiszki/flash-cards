@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Common, Details, createEntity, Spinner, GrayedOut, Button } from 'handy-components'
-import ChangeCase from 'change-case'
+import { Details, createEntity, Spinner, GrayedOut, Button } from 'handy-components'
+import { capitalCase } from 'change-case'
 import JobStatus from './job-status';
 
 export default class Vocabulary extends Component {
@@ -144,7 +144,7 @@ export default class Vocabulary extends Component {
                   if (words[word]) {
                     return(
                       <div key={ index } className="definitions-container">
-                        <p className="word">{ ChangeCase.titleCase(word) }</p>
+                        <p className="word">{ capitalCase(word) }</p>
                         { words[word].map((def, index) => {
                           let id = `${word}-${index}`;
                           return (

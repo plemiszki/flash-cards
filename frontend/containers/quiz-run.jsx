@@ -1,7 +1,8 @@
 import React from 'react'
 import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity, createEntity } from 'handy-components'
 import { shuffle } from 'lodash';
-import ChangeCase from 'change-case'
+import { pascalCase, snakeCase } from 'change-case'
+import { titleCase } from 'title-case'
 
 const COLORS = {
   red: '#FF0000',
@@ -99,7 +100,7 @@ export default class QuizRun extends React.Component {
       id = question.cardId;
       entityName = 'card';
     } else if (question.wordId) {
-      directory = `${ChangeCase.snakeCase(question.entity)}s`;
+      directory = `${snakeCase(question.entity)}s`;
       id = question.wordId;
       entityName = question.entity;
     }
@@ -300,7 +301,7 @@ export default class QuizRun extends React.Component {
       entity: {
         tagId: needsAttentionTagId,
         cardtagableId: question.wordId,
-        cardtagableType: ChangeCase.pascalCase(entityName),
+        cardtagableType: pascalCase(entityName),
       }
     }).then(() => {
       this.setState({
@@ -496,7 +497,7 @@ export default class QuizRun extends React.Component {
     let descriptionText;
     if (currentQuestion) {
       const { description, hint, note } = currentQuestion
-      descriptionText = ChangeCase.titleCase(description || hint);
+      descriptionText = titleCase(description || hint);
       if (note) {
         descriptionText = descriptionText + ` - ${ note }`;
       }
