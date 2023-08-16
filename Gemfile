@@ -7,23 +7,23 @@ end
 
 ruby '3.2.2'
 
-gem 'rails', '7.0.5'
+gem 'rails'
 gem 'pg'
 
-gem 'activerecord_json_validator', '2.1.3'
+gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
 gem 'clearance', '~> 2.5'
 gem 'dotenv'
-gem 'filestack-rails', '5.5.2'
+gem 'filestack-rails'
 gem 'httparty'
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'pry-rails'
 gem 'puma'
 gem 'sassc-rails'
-gem 'sidekiq', '7.1.1'
-gem 'uglifier', '>= 1.3.0'
+gem 'sidekiq'
+gem 'uglifier'
 
 group :development, :test do
   gem 'byebug', platform: :mri
@@ -32,8 +32,8 @@ group :development, :test do
 end
 
 group :development do
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '~> 3.0.5'
+  gem 'web-console'
+  gem 'listen'
   gem 'spring'
   gem 'spring-watcher-listen'
 end
