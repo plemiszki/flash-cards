@@ -300,7 +300,6 @@ export default class QuizRun extends React.Component {
       entityName: 'cardTag',
       entity: {
         tagId: needsAttentionTagId,
-        cardtagableId: question.wordId,
         cardtagableType: pascalCase(entityName),
       }
     }).then(() => {
@@ -312,17 +311,17 @@ export default class QuizRun extends React.Component {
   }
 
   setUpMatching() {
-    let question = this.state.quiz.questions[this.state.questionNumber];
-    if (!question) {
+    const currentQuestion = this.currentQuestion();
+    if (!currentQuestion) {
       return;
     }
-    if (question.matchBins) {
-      let matchBinNames = Object.keys(question.matchBinsShuffled);
+    if (currentQuestion.matchBins) {
+      let matchBinNames = Object.keys(currentQuestion.matchBinsShuffled);
       let matchedItems = {};
       let unmatchedItems = [];
       matchBinNames.forEach((binName) => {
         matchedItems[binName] = [];
-        unmatchedItems = unmatchedItems.concat(question.matchBinsShuffled[binName]);
+        unmatchedItems = unmatchedItems.concat(currentQuestion.matchBinsShuffled[binName]);
       })
       this.setState({
         matchedItems,
@@ -425,11 +424,9 @@ export default class QuizRun extends React.Component {
     const isRegEx = correctAnswerCharacters[0] === '/' && correctAnswerCharacters[correctAnswerCharacters.length - 1] === '/';
 
     if (isMatchingQuestion) {
-      console.log('is matching question')
       return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
     }
     if (isChemicalEquation) {
-      console.log('is chemical equation')
       const userAnswerSides = userAnswer.split('→');
       const userAnswerLeft = userAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
       const userAnswerRight = userAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
@@ -464,6 +461,11 @@ export default class QuizRun extends React.Component {
     return 'incorrect';
   }
 
+  currentQuestion() {
+    const { currentRotation, questionNumber } = this.state;
+    return currentRotation ? currentRotation[questionNumber] : null;
+  }
+
   render() {
     const {
       errors,
@@ -493,7 +495,7 @@ export default class QuizRun extends React.Component {
     }
 
     const statusCorrect = status === 'correct';
-    const currentQuestion = currentRotation ? currentRotation[questionNumber] : null;
+    const currentQuestion = this.currentQuestion();
     let descriptionText;
     if (currentQuestion) {
       const { description, hint, note } = currentQuestion
