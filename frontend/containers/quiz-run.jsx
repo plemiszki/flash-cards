@@ -1,8 +1,7 @@
 import React from 'react'
-import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity, createEntity } from 'handy-components'
+import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity, createEntity, titleCase } from 'handy-components'
 import { shuffle } from 'lodash';
 import { pascalCase, snakeCase } from 'change-case'
-import { titleCase } from 'title-case'
 
 const COLORS = {
   red: '#FF0000',
@@ -60,7 +59,11 @@ export default class QuizRun extends React.Component {
   }
 
   changeAnswer(e) {
-    const answer = e.target.value;
+    let answer = e.target.value;
+    const currentQuestion = this.currentQuestion();
+    if (currentQuestion.screamingSnake) {
+      answer = answer.replace(" ", "_").toUpperCase();
+    }
     this.setState({
       answer,
       status: 'question',

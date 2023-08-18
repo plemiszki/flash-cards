@@ -169,6 +169,7 @@ export default class CardDetails extends React.Component {
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'inconsolata'], columnHeader: 'Inconsolata' }) }
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'lineCount'], columnHeader: 'Line Count' }) }
               { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'card', property: 'config', nestedKeys: ['options', 'noRepeat'], columnHeader: 'Do Not Repeat' }) }
+              { Details.renderSwitch.bind(this)({ columnWidth: 3, entity: 'card', property: 'config', nestedKeys: ['options', 'screamingSnake'], columnHeader: 'Screaming Snake Case' }) }
             </div>
             <BottomButtons
               entityName="card"

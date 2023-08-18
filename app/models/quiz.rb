@@ -54,6 +54,7 @@ class Quiz < ActiveRecord::Base
             lineCount: card.config.dig("options", "line_count"),
             inconsolata: card.config.dig("options", "inconsolata"),
             noRepeat: card.config.dig("options", "no_repeat"),
+            screamingSnake: card.config.dig("options", "screaming_snake"),
             editLink: "/cards/#{card.id}",
             editLinkText: "Edit Card",
           }
