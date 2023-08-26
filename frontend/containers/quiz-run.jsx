@@ -502,7 +502,7 @@ export default class QuizRun extends React.Component {
     let descriptionText;
     if (currentQuestion) {
       const { description, hint, note } = currentQuestion
-      descriptionText = titleCase(description || hint);
+      descriptionText = titleCase(description || hint || "");
       if (note) {
         descriptionText = descriptionText + ` - ${ note }`;
       }

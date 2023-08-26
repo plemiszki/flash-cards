@@ -981,6 +981,7 @@ class Quiz < ActiveRecord::Base
           spanish_subject_pronoun = Spanish.random_subject
           english_subject_pronoun, female_only, is_formal = English.subject_pronoun(spanish_pronoun: spanish_subject_pronoun).values_at(:pronoun, :female_only, :is_formal)
           answers = verb.synonyms.map do |synonym|
+            next if synonym.forms['present'].nil?
             spanish_verb_conjugation = synonym.forms['present'][Spanish.verb_forms_key(spanish_subject_pronoun)]
             [
               "#{spanish_subject_pronoun} #{spanish_verb_conjugation}.".capitalize,
