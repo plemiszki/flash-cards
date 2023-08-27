@@ -67,7 +67,7 @@ class Quiz < ActiveRecord::Base
             obj["choices"] = ([card.answer] + other_answers)
           end
           result << obj
-        when 'French - Single Noun'
+        when 'French - Single Noun with Article, Singular or Plural'
           noun = French::get_noun(quiz_question, @french_nouns)
           synonyms = noun.synonyms
           plural = (rand(2) == 1)
@@ -88,7 +88,7 @@ class Quiz < ActiveRecord::Base
             tags: noun.tags.pluck(:name),
             note: noun.note
           }
-        when 'French - Single Verb'
+        when 'French - Single Verb, Infinitive'
           verb = French::get_verb(quiz_question, @french_verbs)
           synonyms = verb.synonyms
           result << {
@@ -108,7 +108,7 @@ class Quiz < ActiveRecord::Base
             tags: verb.tags.pluck(:name),
             note: verb.note
           }
-        when 'French - Single Adjective'
+        when 'French - Single Adjective, Any Agreement'
           adjective = French::get_adjective(quiz_question, @french_adjectives)
           synonyms = adjective.synonyms
           result << {
