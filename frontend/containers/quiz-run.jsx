@@ -291,9 +291,9 @@ export default class QuizRun extends React.Component {
   }
 
   clickHighlight() {
-    const { quiz, questionNumber, needsAttentionTagId, highlightQuestionIds } = this.state;
-    let question = quiz.questions[questionNumber];
-    let entityName = question.entity;
+    const { needsAttentionTagId, highlightQuestionIds } = this.state;
+    const currentQuestion = this.currentQuestion();
+    const { wordId, entity: entityName } = currentQuestion;
     this.setState({
       spinner: true,
       showHighlightButton: false,
@@ -303,12 +303,13 @@ export default class QuizRun extends React.Component {
       entityName: 'cardTag',
       entity: {
         tagId: needsAttentionTagId,
+        cardtagableId: wordId,
         cardtagableType: pascalCase(entityName),
       }
     }).then(() => {
       this.setState({
         spinner: false,
-        highlightQuestionIds: [...new Set(highlightQuestionIds + [question.id])],
+        highlightQuestionIds: [...new Set(highlightQuestionIds + [currentQuestion.id])],
       });
     });
   }
