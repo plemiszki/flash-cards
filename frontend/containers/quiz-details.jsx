@@ -8,9 +8,9 @@ const USE_ALL_ENABLED = [
   'Spanish - Single Verb',
   'Spanish - Single Adjective',
   'Spanish - Misc Word',
-  'French - Single Noun',
-  'French - Single Verb',
-  'French - Single Adjective',
+  'French - Single Noun with Article, Singular or Plural',
+  'French - Single Verb, Infinitive',
+  'French - Single Adjective, Any Agreement',
   'French - Misc Word',
   'Card',
 ];
@@ -167,6 +167,7 @@ export default class QuizDetails extends React.Component {
                     this.updateQuizQuestion(quizQuestion);
                   },
                   displayIf: row => USE_ALL_ENABLED.includes(row.questionName),
+                  centered: true,
                 },
                 {
                   name: 'amount',
@@ -219,6 +220,18 @@ export default class QuizDetails extends React.Component {
                   width: 100,
                   centered: true,
                   displayIf: row => row.questionName === 'Card',
+                },
+                {
+                  name: 'chain',
+                  include: true,
+                  header: 'Chain',
+                  sortable: false,
+                  isSwitch: true,
+                  clickSwitch: (row, checked) => {
+                    console.log('click')
+                  },
+                  displayIf: row => true,
+                  centered: true,
                 },
               ]
             }
