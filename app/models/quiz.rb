@@ -5,7 +5,7 @@ class Quiz < ActiveRecord::Base
   validates :name, presence: true
   validates_numericality_of :max_questions, greater_than_or_equal_to: 0, only_integer: true
 
-  has_many :quiz_questions, -> { order(:id) }
+  has_many :quiz_questions, -> { order(:position) }
   has_many :questions, through: :quiz_questions
 
   def run
