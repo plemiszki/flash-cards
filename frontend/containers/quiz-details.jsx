@@ -150,6 +150,9 @@ export default class QuizDetails extends React.Component {
             columns={
               [
                 {
+                  name: 'position', header: '#',
+                },
+                {
                   name: 'questionName', header: 'Question',
                 },
                 {
@@ -159,7 +162,6 @@ export default class QuizDetails extends React.Component {
                   name: 'useAllAvailable',
                   include: includesUseAllSwitchQuestion,
                   header: 'Use All',
-                  sortable: false,
                   isSwitch: true,
                   clickSwitch: (row, checked) => {
                     const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === row.id)
@@ -174,7 +176,6 @@ export default class QuizDetails extends React.Component {
                   sortDir: 'desc',
                   centered: true,
                   totalRow: true,
-                  sortable: false,
                   width: 150,
                   displayFunction: row => row.useAllAvailable ? (row.questionName === 'Card' ? row.unarchived : row.available) : row.amount,
                   totalFunction: row => row.useAllAvailable ? (row.questionName === 'Card' ? row.unarchived : row.available) : row.amount,
@@ -196,7 +197,6 @@ export default class QuizDetails extends React.Component {
                   name: 'available',
                   include: includesAvailableQuestion,
                   sortDir: 'desc',
-                  sortable: false,
                   width: 100,
                   centered: true,
                   totalRow: true,
@@ -207,7 +207,6 @@ export default class QuizDetails extends React.Component {
                   include: includesCardsQuestion,
                   header: 'Active',
                   sortDir: 'desc',
-                  sortable: false,
                   width: 100,
                   centered: true,
                   displayIf: row => row.questionName === 'Card',
@@ -216,7 +215,6 @@ export default class QuizDetails extends React.Component {
                   name: 'archived',
                   include: includesCardsQuestion,
                   sortDir: 'desc',
-                  sortable: false,
                   width: 100,
                   centered: true,
                   displayIf: row => row.questionName === 'Card',
@@ -225,7 +223,6 @@ export default class QuizDetails extends React.Component {
                   name: 'chain',
                   include: true,
                   header: 'Chain',
-                  sortable: false,
                   isSwitch: true,
                   clickSwitch: (row, checked) => {
                     console.log('click')
@@ -237,7 +234,7 @@ export default class QuizDetails extends React.Component {
             }
             rows={ quizQuestions }
             links={ false }
-            sortable={ includesQuestionWithTag }
+            sortable={ false }
             styleIf={[
               {
                 func: row => row.unarchived > 0,
