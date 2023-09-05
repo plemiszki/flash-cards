@@ -276,7 +276,13 @@ export default class QuizDetails extends React.Component {
           <NewEntity
             entityName="quizQuestion"
             entityNamePlural="quizQuestions"
-            initialEntity={ { quizId: quiz.id, questionId: Common.firstElementPropertyOrBlank(questions, 'id'), tagId: '', amount: '1' } }
+            initialEntity={{
+              quizId: quiz.id,
+              questionId: Common.firstElementPropertyOrBlank(questions, 'id'),
+              tagId: '',
+              amount: '1',
+              position: quizQuestions.length,
+            }}
             callback={ this.updateQuizQuestions.bind(this) }
             buttonText="Add Question"
             passData={{
