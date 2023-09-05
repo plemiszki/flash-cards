@@ -163,6 +163,8 @@ export default class QuizDetails extends React.Component {
                   include: includesUseAllSwitchQuestion,
                   header: 'Use All',
                   isSwitch: true,
+                  switchChecked: row => row.useAllAvailable,
+                  switchDisabled: row => false,
                   clickSwitch: (row, checked) => {
                     const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === row.id)
                     quizQuestion.useAllAvailable = checked;
@@ -225,9 +227,12 @@ export default class QuizDetails extends React.Component {
                   header: 'Chain',
                   isSwitch: true,
                   clickSwitch: (row, checked) => {
-                    console.log('click')
+                    const quizQuestion = quizQuestions.find(quizQuestion => quizQuestion.id === row.id)
+                    quizQuestion.chained = checked;
+                    this.updateQuizQuestion(quizQuestion);
                   },
-                  displayIf: row => true,
+                  switchChecked: row => row.chained,
+                  switchDisabled: row => false,
                   centered: true,
                 },
               ]

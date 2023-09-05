@@ -13,6 +13,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.available @available_questions[quiz_question.id][:available]
   json.useAllAvailable quiz_question.use_all_available
   json.position quiz_question.position
+  json.chained quiz_question.chained
 end
 json.questions @questions do |question|
   json.id question.id
