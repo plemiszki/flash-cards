@@ -232,7 +232,7 @@ export default class QuizDetails extends React.Component {
                     this.updateQuizQuestion(quizQuestion);
                   },
                   switchChecked: row => row.chained,
-                  switchDisabled: row => false,
+                  displayIf: row => row.position > 0,
                   centered: true,
                 },
               ]
