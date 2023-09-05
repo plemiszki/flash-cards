@@ -223,7 +223,7 @@ export default class QuizDetails extends React.Component {
                 },
                 {
                   name: 'chain',
-                  include: true,
+                  include: quizQuestions.length > 1,
                   header: 'Chain',
                   isSwitch: true,
                   clickSwitch: (row, checked) => {
