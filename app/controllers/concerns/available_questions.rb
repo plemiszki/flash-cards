@@ -9,9 +9,9 @@ module AvailableQuestions
     'Spanish - Single Verb': 'SpanishVerb',
     'Spanish - Single Adjective': 'SpanishAdjective',
     'Spanish - Misc Word': 'SpanishMisc',
-    'French - Single Noun': 'FrenchNoun',
-    'French - Single Verb': 'FrenchVerb',
-    'French - Single Adjective': 'FrenchAdjective',
+    'French - Single Noun with Article, Singular or Plural': 'FrenchNoun',
+    'French - Single Verb, Infinitive': 'FrenchVerb',
+    'French - Single Adjective, Any Agreement': 'FrenchAdjective',
     'French - Misc Word': 'FrenchMisc',
   }
 
@@ -43,9 +43,9 @@ module AvailableQuestions
       'Spanish - Single Verb',
       'Spanish - Single Adjective',
       'Spanish - Misc Word',
-      'French - Single Noun',
-      'French - Single Verb',
-      'French - Single Adjective',
+      'French - Single Noun with Article, Singular or Plural',
+      'French - Single Verb, Infinitive',
+      'French - Single Adjective, Any Agreement',
       'French - Misc Word'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
         if quiz_question.tag_id
