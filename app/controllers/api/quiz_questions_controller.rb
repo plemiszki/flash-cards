@@ -1,6 +1,7 @@
 class Api::QuizQuestionsController < AdminController
 
   include AvailableQuestions
+  include Reorderable
 
   def create
     quiz_question = QuizQuestion.new(quiz_question_params)
@@ -25,6 +26,7 @@ class Api::QuizQuestionsController < AdminController
   def destroy
     quiz_question = QuizQuestion.find(params[:id])
     quiz_question.destroy
+    reorder(QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:position))
     query_response_data(quiz_question)
     render 'index', formats: [:json], handlers: [:jbuilder]
   end
@@ -32,7 +34,7 @@ class Api::QuizQuestionsController < AdminController
   private
 
   def query_response_data(quiz_question)
-    @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:id)
+    @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:position)
     @available_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz_question.quiz)
   end
 
