@@ -27,6 +27,8 @@ class Api::QuizQuestionsController < AdminController
     quiz_question = QuizQuestion.find(params[:id])
     quiz_question.destroy
     reorder(QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:position))
+    first_question = QuizQuestion.where(quiz_id: quiz_question.quiz_id, position: 0).first
+    first_question.update!(chained: false) if first_question.chained
     query_response_data(quiz_question)
     render 'index', formats: [:json], handlers: [:jbuilder]
   end
