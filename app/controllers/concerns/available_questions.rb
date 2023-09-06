@@ -17,8 +17,15 @@ module AvailableQuestions
 
   def get_chained_amounts(quiz_questions:)
     quiz_questions.each do |quiz_question|
-      quiz_question.chained_amount = 0
+      if quiz_question.chained
+        chain_root_position = quiz_question.chain_root.position
+        chain_root = quiz_questions[chain_root_position]
+        quiz_question.chained_amount = chain_root.use_all_available ? chain_root.available : chain_root.amount
+      else
+        quiz_question.chained_amount = 0
+      end
     end
+    quiz_questions
   end
 
   def get_available_questions(quiz_questions:, quiz:)
