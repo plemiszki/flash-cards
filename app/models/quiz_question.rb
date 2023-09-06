@@ -21,4 +21,15 @@ class QuizQuestion < ActiveRecord::Base
     @reordering
   end
 
+  def chain_root
+    return nil if chained == false
+    map = Quiz.find(quiz_id).quiz_questions.order(:position).pluck(:chained)
+    index = position
+    until index == 0
+      break if map[index] == false
+      index -= 1
+    end
+    QuizQuestion.find_by(quiz_id: quiz_id, position: index)
+  end
+
 end
