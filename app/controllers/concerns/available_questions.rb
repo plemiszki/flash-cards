@@ -15,6 +15,12 @@ module AvailableQuestions
     'French - Misc Word': 'FrenchMisc',
   }
 
+  def get_chained_amounts(quiz_questions:)
+    quiz_questions.each do |quiz_question|
+      quiz_question.chained_amount = 0
+    end
+  end
+
   def get_available_questions(quiz_questions:, quiz:)
     archived_tag_id = Tag.find_by_name('Archived').id
     needs_attention_tag_id = Tag.find_by_name('Needs Attention').id

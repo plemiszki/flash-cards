@@ -14,6 +14,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.useAllAvailable quiz_question.use_all_available
   json.position quiz_question.position
   json.chained quiz_question.chained
+  json.chainedAmount quiz_question.chained_amount
 end
 json.questions @questions do |question|
   json.id question.id

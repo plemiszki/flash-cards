@@ -7,6 +7,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.archived quiz_question.archived
   json.available quiz_question.available
   json.useAllAvailable quiz_question.use_all_available
-  json.chained quiz_question.chained
   json.position quiz_question.position
+  json.chained quiz_question.chained
+  json.chainedAmount quiz_question.chained_amount
 end

@@ -9,7 +9,7 @@ class QuizQuestion < ActiveRecord::Base
   belongs_to :question
   belongs_to :tag, optional: true
 
-  attr_accessor :unarchived, :archived, :available, :reordering
+  attr_accessor :unarchived, :archived, :available, :chained_amount, :reordering
 
   def first_question_no_chain
     if position.zero? && chained

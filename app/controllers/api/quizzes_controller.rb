@@ -21,6 +21,7 @@ class Api::QuizzesController < AdminController
     @quiz = Quiz.find(params[:id])
     @quiz_questions = @quiz.quiz_questions.includes(:question, :tag)
     @quiz_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: @quiz)
+    @quiz_questions = get_chained_amounts(quiz_questions: @quiz_questions)
     @questions = Question.all.order(:name)
     @tags = Tag.all.order(:name)
     render 'show', formats: [:json], handlers: [:jbuilder]
