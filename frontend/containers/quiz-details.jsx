@@ -170,7 +170,7 @@ export default class QuizDetails extends React.Component {
                     quizQuestion.useAllAvailable = checked;
                     this.updateQuizQuestion(quizQuestion);
                   },
-                  displayIf: row => USE_ALL_ENABLED.includes(row.questionName),
+                  displayIf: row => USE_ALL_ENABLED.includes(row.questionName) && !row.chained,
                   centered: true,
                 },
                 {
@@ -232,7 +232,7 @@ export default class QuizDetails extends React.Component {
                     this.updateQuizQuestion(quizQuestion);
                   },
                   switchChecked: row => row.chained,
-                  displayIf: row => row.position > 0,
+                  displayIf: row => row.position > 0 && !row.useAllAvailable,
                   centered: true,
                 },
               ]
