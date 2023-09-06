@@ -16,58 +16,49 @@ module AvailableQuestions
   }
 
   def get_available_questions(quiz_questions:, quiz:)
-    result = {}
     archived_tag_id = Tag.find_by_name('Archived').id
     needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
 
     archived_card_ids = CardTag.where(tag_id: archived_tag_id, cardtagable_type: 'Card').map(&:cardtagable_id)
+
     quiz_questions.each do |quiz_question|
       case quiz_question.question.name
       when 'Card'
         if quiz_question.tag_id
           tagged_card_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: 'Card').includes(:cardtagable).map(&:cardtagable).pluck(:id)
-          result[quiz_question.id] = {
-            unarchived: (tagged_card_ids - archived_card_ids).count,
-            archived: (tagged_card_ids & archived_card_ids).count,
-            available: tagged_card_ids.count,
-          }
+          quiz_question.unarchived = (tagged_card_ids - archived_card_ids).count
+          quiz_question.archived = (tagged_card_ids & archived_card_ids).count
+          quiz_question.available = tagged_card_ids.count
         else
           card_count = Card.count
-          result[quiz_question.id] = {
-            unarchived: card_count - archived_card_ids.count,
-            archived: archived_card_ids.count,
-            available: card_count,
-          }
+          quiz_question.unarchived = card_count - archived_card_ids.count
+          quiz_question.archived = archived_card_ids.count
+          quiz_question.available = card_count
         end
       when 'Spanish - Single Noun',
-      'Spanish - Single Verb',
-      'Spanish - Single Adjective',
-      'Spanish - Misc Word',
-      'French - Single Noun with Article, Singular or Plural',
-      'French - Single Verb, Infinitive',
-      'French - Single Adjective, Any Agreement',
-      'French - Misc Word'
+        'Spanish - Single Verb',
+        'Spanish - Single Adjective',
+        'Spanish - Misc Word',
+        'French - Single Noun with Article, Singular or Plural',
+        'French - Single Verb, Infinitive',
+        'French - Single Adjective, Any Agreement',
+        'French - Misc Word'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
         if quiz_question.tag_id
           available_count = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).count
         else
           available_count = model_name.constantize.count
         end
-        result[quiz_question.id] = {
-          available: available_count,
-          unarchived: 0,
-          archived: 0,
-        }
+        quiz_question.available = available_count
+        quiz_question.unarchived = 0
+        quiz_question.archived = 0
       else
-        result[quiz_question.id] = {
-          unarchived: 0,
-          archived: 0,
-          available: 0,
-        }
+        quiz_question.unarchived = 0
+        quiz_question.archived = 0
+        quiz_question.available = 0
       end
     end
 
-    result
+    quiz_questions
   end
-
 end

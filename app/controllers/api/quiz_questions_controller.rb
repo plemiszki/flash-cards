@@ -37,7 +37,7 @@ class Api::QuizQuestionsController < AdminController
 
   def query_response_data(quiz_question)
     @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:position)
-    @available_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz_question.quiz)
+    @quiz_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz_question.quiz)
   end
 
   def quiz_question_params
