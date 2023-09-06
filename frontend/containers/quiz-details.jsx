@@ -153,9 +153,6 @@ export default class QuizDetails extends React.Component {
             columns={
               [
                 {
-                  name: 'position', header: '#',
-                },
-                {
                   name: 'questionName', header: 'Question',
                 },
                 {
