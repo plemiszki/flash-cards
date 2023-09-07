@@ -122,6 +122,82 @@ class Quiz < ActiveRecord::Base
             tags: noun.tags.pluck(:name),
             note: noun.note
           }
+        when 'French - Adjective Masculine Singular'
+          adjective = French::get_adjective(quiz_question, @french_adjectives)
+          synonyms = adjective.synonyms
+          result << {
+            wordId: adjective.id,
+            entity: 'frenchAdjective',
+            streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: adjective.english.capitalize,
+            answers: [
+              adjective.masculine,
+            ],
+            indeterminate: adjective.just_synonyms.map do |adjective|
+              [ adjective.masculine ]
+            end.flatten,
+            description: 'adjective masculine singular',
+            highlightButton: true,
+            tags: adjective.tags.pluck(:name)
+          }
+        when 'French - Adjective Feminine Singular'
+          adjective = French::get_adjective(quiz_question, @french_adjectives)
+          synonyms = adjective.synonyms
+          result << {
+            wordId: adjective.id,
+            entity: 'frenchAdjective',
+            streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: adjective.english.capitalize,
+            answers: [
+              adjective.feminine,
+            ],
+            indeterminate: adjective.just_synonyms.map do |adjective|
+              [ adjective.feminine ]
+            end.flatten,
+            description: 'adjective feminine singular',
+            highlightButton: true,
+            tags: adjective.tags.pluck(:name)
+          }
+        when 'French - Adjective Masculine Plural'
+          adjective = French::get_adjective(quiz_question, @french_adjectives)
+          synonyms = adjective.synonyms
+          result << {
+            wordId: adjective.id,
+            entity: 'frenchAdjective',
+            streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: adjective.english.capitalize,
+            answers: [
+              adjective.masculine_plural,
+            ],
+            indeterminate: adjective.just_synonyms.map do |adjective|
+              [ adjective.masculine_plural ]
+            end.flatten,
+            description: 'adjective masculine plural',
+            highlightButton: true,
+            tags: adjective.tags.pluck(:name)
+          }
+        when 'French - Adjective Feminine Plural'
+          adjective = French::get_adjective(quiz_question, @french_adjectives)
+          synonyms = adjective.synonyms
+          result << {
+            wordId: adjective.id,
+            entity: 'frenchAdjective',
+            streak: adjective.streak,
+            lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: adjective.english.capitalize,
+            answers: [
+              adjective.feminine_plural,
+            ],
+            indeterminate: adjective.just_synonyms.map do |adjective|
+              [ adjective.feminine_plural ]
+            end.flatten,
+            description: 'adjective feminine plural',
+            highlightButton: true,
+            tags: adjective.tags.pluck(:name)
+          }
         when 'French - Single Noun with Article, Singular or Plural'
           noun = French::get_noun(quiz_question, @french_nouns)
           synonyms = noun.synonyms
