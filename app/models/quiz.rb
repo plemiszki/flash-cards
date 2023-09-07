@@ -67,6 +67,61 @@ class Quiz < ActiveRecord::Base
             obj["choices"] = ([card.answer] + other_answers)
           end
           result << obj
+        when 'French - Noun Singular'
+          noun = French::get_noun(quiz_question, @french_nouns)
+          result << {
+            wordId: noun.id,
+            entity: 'frenchNoun',
+            streak: noun.streak,
+            lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: noun.english.capitalize,
+            answers: [
+              noun.french,
+            ],
+            indeterminate: noun.just_synonyms.map do |noun|
+              noun.french
+            end,
+            description: 'noun singular',
+            highlightButton: true,
+            tags: noun.tags.pluck(:name),
+            note: noun.note
+          }
+        when 'French - Noun Plural'
+          noun = French::get_noun(quiz_question, @french_nouns)
+          result << {
+            wordId: noun.id,
+            entity: 'frenchNoun',
+            streak: noun.streak,
+            lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: noun.english_plural.capitalize,
+            answers: [
+              noun.french_plural,
+            ],
+            indeterminate: noun.just_synonyms.map do |noun|
+              noun.french_plural
+            end,
+            description: 'noun plural',
+            highlightButton: true,
+            tags: noun.tags.pluck(:name),
+            note: noun.note
+          }
+        when 'French - Noun Gender'
+          noun = French::get_noun(quiz_question, @french_nouns)
+          result << {
+            wordId: noun.id,
+            entity: 'frenchNoun',
+            streak: noun.streak,
+            lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+            question: noun.english.capitalize,
+            answers: [
+              noun.male? ? 'm' : 'f',
+            ],
+            indeterminate: [],
+            description: 'noun gender',
+            highlightButton: true,
+            tags: noun.tags.pluck(:name),
+            note: noun.note
+          }
         when 'French - Single Noun with Article, Singular or Plural'
           noun = French::get_noun(quiz_question, @french_nouns)
           synonyms = noun.synonyms
