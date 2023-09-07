@@ -32,8 +32,8 @@ class QuizQuestion < ActiveRecord::Base
     QuizQuestion.find_by(quiz_id: quiz_id, position: index)
   end
 
-  def get_amount
-    return chained_amount if chained
+  def get_quiz_run_amount
+    return 0 if chained
     use_all_available ? (question.name == 'Card' ? unarchived : available) : amount
   end
 
