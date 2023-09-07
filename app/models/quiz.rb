@@ -27,11 +27,11 @@ class Quiz < ActiveRecord::Base
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
 
     my_quiz_questions = quiz_questions
-    available_questions = get_available_questions(quiz_questions: my_quiz_questions, quiz: self)
+    my_quiz_questions = get_available_questions(quiz_questions: my_quiz_questions, quiz: self)
 
     my_quiz_questions.each do |quiz_question|
       question = quiz_question.question
-      number_of_questions = quiz_question.use_all_available ? available_questions[quiz_question.id][(quiz_question.question.name == 'Card' ? :unarchived : :available)] : quiz_question.amount
+      number_of_questions = quiz_question.use_all_available ? quiz_question.send(quiz_question.question.name == 'Card' ? :unarchived : :available) : quiz_question.amount
       number_of_questions.times do
         check_if_anything_empty
         case question.name
