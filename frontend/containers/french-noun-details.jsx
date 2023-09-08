@@ -82,48 +82,60 @@ export default class FrenchNounDetails extends React.Component {
   render() {
     const { spinner, justSaved, changesToSave, frenchNounTags, tags, frenchNoun } = this.state;
     return (
-      <div className="handy-component">
-        <h1>French Noun Details</h1>
-        <div className="white-box">
-          <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'englishPlural' }) }
-            <div className="col-xs-2">
-              <h2>Gender</h2>
-              <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ frenchNoun.gender } data-entity="frenchNoun" data-field="gender">
-                <option value={ "1" }>Male</option>
-                <option value={ "2" }>Female</option>
-              </select>
-              { Details.renderFieldError([], []) }
+      <>
+        <div className="handy-component">
+          <h1>French Noun Details</h1>
+          <div className="white-box">
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'english' }) }
+              { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'englishPlural' }) }
+              <div className="col-xs-2">
+                <h2>Gender</h2>
+                <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ frenchNoun.gender } data-entity="frenchNoun" data-field="gender">
+                  <option value={ "1" }>Male</option>
+                  <option value={ "2" }>Female</option>
+                </select>
+                { Details.renderFieldError([], []) }
+              </div>
             </div>
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'french' }) }
+              { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'frenchPlural' }) }
+              { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'note' }) }
+            </div>
+            <BottomButtons
+              entityName="FrenchNoun"
+              confirmDelete={ Details.confirmDelete.bind(this) }
+              justSaved={ justSaved }
+              changesToSave={ changesToSave }
+              disabled={ spinner }
+              clickSave={ () => { this.clickSave() } }
+              marginBottom
+            />
+            <div className="row streak-row">
+              <div className="col-xs-12">
+                The streak was last updated on { frenchNoun.lastStreakAdd }.
+              </div>
+            </div>
+            <hr />
+            <TagsSection
+              entity={ frenchNoun }
+              entityName="FrenchNoun"
+              entityTags={ frenchNounTags }
+              tags={ tags }
+              setSpinner={ bool => this.setState({ spinner: bool }) }
+              setTags={ (entityTags, tags) => this.setState({ frenchNounTags: entityTags, tags }) }
+            />
+            <Spinner visible={ spinner } />
+            <GrayedOut visible={ spinner } />
           </div>
-          <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'french' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'frenchPlural' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'note' }) }
-          </div>
-          <BottomButtons
-            entityName="FrenchNoun"
-            confirmDelete={ Details.confirmDelete.bind(this) }
-            justSaved={ justSaved }
-            changesToSave={ changesToSave }
-            disabled={ spinner }
-            clickSave={ () => { this.clickSave() } }
-            marginBottom
-          />
-          <hr />
-          <TagsSection
-            entity={ frenchNoun }
-            entityName="FrenchNoun"
-            entityTags={ frenchNounTags }
-            tags={ tags }
-            setSpinner={ bool => this.setState({ spinner: bool }) }
-            setTags={ (entityTags, tags) => this.setState({ frenchNounTags: entityTags, tags }) }
-          />
-          <Spinner visible={ spinner } />
-          <GrayedOut visible={ spinner } />
         </div>
-      </div>
+        <style jsx>{`
+          .streak-row {
+            margin-bottom: 30px;
+          }
+        `}</style>
+      </>
     );
   }
 }
