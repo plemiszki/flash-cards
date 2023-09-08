@@ -35,17 +35,27 @@ class Quiz < ActiveRecord::Base
     my_quiz_questions.each do |quiz_question|
       quiz_question.get_quiz_run_amount.times do
         obj = generate_question_data(quiz_question)
-        result << obj
+        children = quiz_question.children
+        if children.empty?
+          result << obj
+        else
+          current_chain = [obj]
+          quiz_question.children.each do |quiz_question|
+            current_chain << generate_question_data(quiz_question)
+          end
+          result << current_chain
+        end
+        current_chain = []
       end
     end
     if max_questions > 0 && result.length > max_questions
       result = result.sample(max_questions)
     end
-    result.map!.with_index do |question, index|
+
+    result.shuffle.flatten.map!.with_index do |question, index|
       question[:id] = index
       question
     end
-    result.shuffle
   end
 
   def generate_question_data(quiz_question)
