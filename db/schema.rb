@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_08_211657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.string "answer_placeholder", default: ""
     t.string "hint", default: ""
     t.jsonb "config", default: {}
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "french_adjectives", force: :cascade do |t|
@@ -61,6 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.date "last_streak_add"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "french_miscs", force: :cascade do |t|
@@ -70,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.date "last_streak_add"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "french_nouns", id: :serial, force: :cascade do |t|
@@ -83,6 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.string "note", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "french_verbs", force: :cascade do |t|
@@ -94,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.jsonb "forms", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -163,6 +168,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.string "feminine_plural", null: false
     t.integer "streak", default: 0
     t.date "last_streak_add"
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "spanish_miscs", force: :cascade do |t|
@@ -170,6 +176,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.string "english", null: false
     t.integer "streak", default: 0
     t.date "last_streak_add"
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "spanish_nouns", force: :cascade do |t|
@@ -181,6 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.integer "streak", default: 0
     t.date "last_streak_add"
     t.string "note", default: ""
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "spanish_verbs", force: :cascade do |t|
@@ -190,6 +198,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_002520) do
     t.date "last_streak_add"
     t.string "note", default: ""
     t.jsonb "forms", default: {}
+    t.datetime "streak_freeze_expiration", precision: nil
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
