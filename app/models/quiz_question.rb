@@ -32,6 +32,16 @@ class QuizQuestion < ActiveRecord::Base
     QuizQuestion.find_by(quiz_id: quiz_id, position: index)
   end
 
+  def children
+    result = []
+    quiz_questions = QuizQuestion.where(quiz_id: quiz_id).where("position > #{position}").order(:position)
+    quiz_questions.each do |quiz_question|
+      break if quiz_question.chained == false
+      result << quiz_question
+    end
+    result
+  end
+
   def get_quiz_run_amount
     return 0 if chained
     use_all_available ? (question.name == 'Card' ? unarchived : available) : amount
