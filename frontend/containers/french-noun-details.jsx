@@ -1,6 +1,7 @@
 import React from 'react'
-import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, Table, updateEntity, BottomButtons, Spinner, GrayedOut, OutlineButton, createEntity, deleteEntity } from 'handy-components'
+import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, updateEntity, BottomButtons, Spinner, GrayedOut } from 'handy-components'
 import TagsSection from './tags-section';
+import StreakInfo from './streak-info';
 
 export default class FrenchNounDetails extends React.Component {
   constructor(props) {
@@ -112,11 +113,7 @@ export default class FrenchNounDetails extends React.Component {
               clickSave={ () => { this.clickSave() } }
               marginBottom
             />
-            <div className="row streak-row">
-              <div className="col-xs-12">
-                The streak was last updated on { frenchNoun.lastStreakAdd }.
-              </div>
-            </div>
+            <StreakInfo entity={ frenchNoun } />
             <hr />
             <TagsSection
               entity={ frenchNoun }
@@ -130,11 +127,6 @@ export default class FrenchNounDetails extends React.Component {
             <GrayedOut visible={ spinner } />
           </div>
         </div>
-        <style jsx>{`
-          .streak-row {
-            margin-bottom: 30px;
-          }
-        `}</style>
       </>
     );
   }
