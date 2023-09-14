@@ -6,6 +6,8 @@ json.spanishNoun do
   json.spanishPlural @spanish_noun.spanish_plural
   json.gender @spanish_noun.gender.to_s
   json.note @spanish_noun.note
+  json.streak @spanish_noun.streak
+  json.streakFreezeExpiration @spanish_noun.streak_freeze_expiration.to_i || ''
 end
 json.spanishNounTags @spanish_noun_tags do |spanish_noun_tag|
   json.id spanish_noun_tag.id

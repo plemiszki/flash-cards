@@ -3,6 +3,7 @@ import Modal from 'react-modal'
 import { setUpNiceSelect, Common, Details, Spinner, GrayedOut, fetchEntity, updateEntity, deleteEntity, BottomButtons, objectsAreEqual, deepCopy, OutlineButton, Table, Button } from 'handy-components'
 import NewEntity from './new-entity.jsx'
 import TagsSection from './tags-section';
+import StreakInfo from './streak-info';
 
 export default class CardDetails extends React.Component {
   constructor(props) {
@@ -245,24 +246,25 @@ export default class CardDetails extends React.Component {
               setSpinner={ bool => this.setState({ spinner: bool }) }
               setTags={ (entityTags, tags) => this.setState({ cardTags: entityTags, tags }) }
             />
-            <Modal isOpen={ newMatchBinModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
-              <NewEntity
-                entityName="matchBin"
-                initialEntity={ { cardId: card.id, name: '' } }
-                callback={ this.updateMatchBins.bind(this) }
-              />
-            </Modal>
-            <Modal isOpen={ newMatchItemModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
-              <NewEntity
-                entityName="matchItem"
-                initialEntity={ { matchBinId: selectedMatchBinId, name: '' } }
-                callback={ this.updateMatchBins.bind(this) }
-                responseKey="matchBins"
-              />
-            </Modal>
             <Spinner visible={ spinner } />
             <GrayedOut visible={ spinner } />
           </div>
+          <StreakInfo entity={ card } />
+          <Modal isOpen={ newMatchBinModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
+            <NewEntity
+              entityName="matchBin"
+              initialEntity={ { cardId: card.id, name: '' } }
+              callback={ this.updateMatchBins.bind(this) }
+            />
+          </Modal>
+          <Modal isOpen={ newMatchItemModalOpen } onRequestClose={ Common.closeModals.bind(this) } contentLabel="Modal" style={ Common.newEntityModalStyles({ width: 500 }, 1) }>
+            <NewEntity
+              entityName="matchItem"
+              initialEntity={ { matchBinId: selectedMatchBinId, name: '' } }
+              callback={ this.updateMatchBins.bind(this) }
+              responseKey="matchBins"
+            />
+          </Modal>
           <Modal
             isOpen={ newEntityModalOpen }
             onRequestClose={ () => { this.setState({ newEntityModalOpen: false }) } }

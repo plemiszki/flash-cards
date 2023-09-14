@@ -4,6 +4,8 @@ json.frenchVerb do
   json.french @french_verb.french
   json.note @french_verb.note
   json.forms @french_verb.forms
+  json.streak @french_verb.streak
+  json.streakFreezeExpiration @french_verb.streak_freeze_expiration.to_i || ''
 end
 json.frenchVerbTags @french_verb_tags do |french_verb_tag|
   json.id french_verb_tag.id

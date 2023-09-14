@@ -6,7 +6,7 @@ export default function StreakInfo(props) {
   const currentTimestamp = new Date().getTime()
   return (
     <>
-      <div className="row streak-row">
+      <div className="row">
         <div className="col-xs-6">
           Current streak: { entity.streak }
         </div>
@@ -21,8 +21,8 @@ export default function StreakInfo(props) {
         )}
       </div>
       <style jsx>{`
-        .streak-row {
-          margin-bottom: 30px;
+        .row {
+          margin-top: 15px;
         }
       `}</style>
     </>

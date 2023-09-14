@@ -113,7 +113,6 @@ export default class FrenchNounDetails extends React.Component {
               clickSave={ () => { this.clickSave() } }
               marginBottom
             />
-            <StreakInfo entity={ frenchNoun } />
             <hr />
             <TagsSection
               entity={ frenchNoun }
@@ -126,6 +125,7 @@ export default class FrenchNounDetails extends React.Component {
             <Spinner visible={ spinner } />
             <GrayedOut visible={ spinner } />
           </div>
+          <StreakInfo entity={ frenchNoun } />
         </div>
       </>
     );

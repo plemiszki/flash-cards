@@ -5,6 +5,8 @@ json.frenchAdjective do
   json.feminine @french_adjective.feminine
   json.masculinePlural @french_adjective.masculine_plural
   json.femininePlural @french_adjective.feminine_plural
+  json.streak @french_adjective.streak
+  json.streakFreezeExpiration @french_adjective.streak_freeze_expiration.to_i || ''
 end
 json.frenchAdjectiveTags @french_adjective_tags do |french_adjective_tag|
   json.id french_adjective_tag.id

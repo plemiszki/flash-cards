@@ -1,6 +1,7 @@
 import React from 'react'
 import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, Table, updateEntity, BottomButtons, Spinner, GrayedOut, OutlineButton, createEntity, deleteEntity } from 'handy-components'
 import TagsSection from './tags-section';
+import StreakInfo from './streak-info';
 
 export default class SpanishMiscDetails extends React.Component {
   constructor(props) {
@@ -108,6 +109,7 @@ export default class SpanishMiscDetails extends React.Component {
           <Spinner visible={ spinner } />
           <GrayedOut visible={ spinner } />
         </div>
+        <StreakInfo entity={ spanishMisc } />
       </div>
     );
   }

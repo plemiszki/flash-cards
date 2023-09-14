@@ -5,6 +5,8 @@ json.spanishAdjective do
   json.feminine @spanish_adjective.feminine
   json.masculinePlural @spanish_adjective.masculine_plural
   json.femininePlural @spanish_adjective.feminine_plural
+  json.streak @spanish_adjective.streak
+  json.streakFreezeExpiration @spanish_adjective.streak_freeze_expiration.to_i || ''
 end
 json.spanishAdjectiveTags @spanish_adjective_tags do |spanish_adjective_tag|
   json.id spanish_adjective_tag.id

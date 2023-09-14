@@ -10,6 +10,8 @@ json.card do
   json.multipleChoice @card.multiple_choice
   json.hint @card.hint
   json.config @card.config
+  json.streak @card.streak
+  json.streakFreezeExpiration @card.streak_freeze_expiration.to_i || ''
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id
