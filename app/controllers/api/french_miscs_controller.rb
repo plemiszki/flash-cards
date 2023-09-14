@@ -48,8 +48,15 @@ class Api::FrenchMiscsController < AdminController
   private
 
   def french_misc_params
-    result = params[:french_misc].permit(:english, :french, :streak, :last_streak_add)
+    result = params[:french_misc].permit(
+      :english,
+      :french,
+      :streak,
+      :last_streak_add,
+      :streak_freeze_expiration,
+    )
     result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result.merge!({ streak_freeze_expiration: Time.at(result[:streak_freeze_expiration].to_i) }) if result[:streak_freeze_expiration]
     result
   end
 

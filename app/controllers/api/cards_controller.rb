@@ -50,8 +50,20 @@ class Api::CardsController < AdminController
   private
 
   def card_params
-    result = params[:card].permit(:question, :answer, :answer_placeholder, :image_url, :multiple_choice, :streak, :last_streak_add, :hint, :config)
+    result = params[:card].permit(
+      :question,
+      :answer,
+      :answer_placeholder,
+      :image_url,
+      :multiple_choice,
+      :streak,
+      :last_streak_add,
+      :hint,
+      :config,
+      :streak_freeze_expiration,
+    )
     result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
+    result.merge!({ streak_freeze_expiration: Time.at(result[:streak_freeze_expiration].to_i) }) if result[:streak_freeze_expiration]
     result
   end
 

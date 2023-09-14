@@ -3,6 +3,8 @@ import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, upda
 import { shuffle } from 'lodash';
 import { pascalCase, snakeCase } from 'change-case'
 
+const SECONDS_IN_DAY = 86400;
+
 const COLORS = {
   red: '#FF0000',
   redHover: '#B40404',
@@ -118,12 +120,14 @@ export default class QuizRun extends React.Component {
     }
 
     this.setState({ streak: newStreak });
-    entity.lastStreakAdd = (new Date().setHours(0, 0, 0, 0) / 1000);
+    const currentUnixTimestamp = (new Date().setHours(0, 0, 0, 0) / 1000);
+    entity.lastStreakAdd = currentUnixTimestamp;
+    entity.streakFreezeExpiration = currentUnixTimestamp + SECONDS_IN_DAY;
     updateEntity({
       directory,
       id,
       entityName,
-      entity
+      entity,
     });
   }
 
