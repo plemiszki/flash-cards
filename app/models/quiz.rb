@@ -113,6 +113,8 @@ class Quiz < ActiveRecord::Base
         highlightButton: true,
         tags: @noun.tags.pluck(:name),
         note: @noun.note,
+        editLink: "/french_nouns/#{@noun.id}",
+        editLinkText: "Edit Noun",
       }
     when 'French - Noun Plural'
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
@@ -132,7 +134,9 @@ class Quiz < ActiveRecord::Base
         description: 'noun plural',
         highlightButton: true,
         tags: @noun.tags.pluck(:name),
-        note: @noun.note
+        note: @noun.note,
+        editLink: "/french_nouns/#{@noun.id}",
+        editLinkText: "Edit Noun",
       }
     when 'French - Noun Gender'
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
@@ -153,6 +157,8 @@ class Quiz < ActiveRecord::Base
         highlightButton: true,
         tags: @noun.tags.pluck(:name),
         note: @noun.note,
+        editLink: "/french_nouns/#{@noun.id}",
+        editLinkText: "Edit Noun",
       }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -172,7 +178,9 @@ class Quiz < ActiveRecord::Base
         end.flatten,
         description: 'adjective masculine singular',
         highlightButton: true,
-        tags: @adjective.tags.pluck(:name)
+        tags: @adjective.tags.pluck(:name),
+        editLink: "/french_adjectives/#{@adjective.id}",
+        editLinkText: "Edit Adjective",
       }
     when 'French - Adjective Feminine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -192,7 +200,9 @@ class Quiz < ActiveRecord::Base
         end.flatten,
         description: 'adjective feminine singular',
         highlightButton: true,
-        tags: @adjective.tags.pluck(:name)
+        tags: @adjective.tags.pluck(:name),
+        editLink: "/french_adjectives/#{@adjective.id}",
+        editLinkText: "Edit Adjective",
       }
     when 'French - Adjective Masculine Plural'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -212,7 +222,9 @@ class Quiz < ActiveRecord::Base
         end.flatten,
         description: 'adjective masculine plural',
         highlightButton: true,
-        tags: @adjective.tags.pluck(:name)
+        tags: @adjective.tags.pluck(:name),
+        editLink: "/french_adjectives/#{@adjective.id}",
+        editLinkText: "Edit Adjective",
       }
     when 'French - Adjective Feminine Plural'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -232,7 +244,9 @@ class Quiz < ActiveRecord::Base
         end.flatten,
         description: 'adjective feminine plural',
         highlightButton: true,
-        tags: @adjective.tags.pluck(:name)
+        tags: @adjective.tags.pluck(:name),
+        editLink: "/french_adjectives/#{@adjective.id}",
+        editLinkText: "Edit Adjective",
       }
     when 'French - Single Noun with Article, Singular or Plural'
       noun = French::get_noun(quiz_question, @french_nouns)
@@ -254,7 +268,9 @@ class Quiz < ActiveRecord::Base
         description: 'noun',
         highlightButton: true,
         tags: noun.tags.pluck(:name),
-        note: noun.note
+        note: noun.note,
+        editLink: "/french_nouns/#{noun.id}",
+        editLinkText: "Edit Noun",
       }
     when 'French - Single Verb, Infinitive'
       verb = French::get_verb(quiz_question, @french_verbs)
@@ -275,7 +291,9 @@ class Quiz < ActiveRecord::Base
         description: 'verb',
         highlightButton: true,
         tags: verb.tags.pluck(:name),
-        note: verb.note
+        note: verb.note,
+        editLink: "/french_verbs/#{verb.id}",
+        editLinkText: "Edit Verb",
       }
     when 'French - Single Adjective, Any Agreement'
       adjective = French::get_adjective(quiz_question, @french_adjectives)
@@ -296,7 +314,9 @@ class Quiz < ActiveRecord::Base
         end.flatten,
         description: 'adjective',
         highlightButton: true,
-        tags: adjective.tags.pluck(:name)
+        tags: adjective.tags.pluck(:name),
+        editLink: "/french_adjectives/#{adjective.id}",
+        editLinkText: "Edit Adjective",
       }
     when 'French - Misc Word'
       word = French::get_misc_word(quiz_question, @french_miscs)
@@ -309,7 +329,9 @@ class Quiz < ActiveRecord::Base
         question: word.english.capitalize,
         answers: [ word.french ],
         highlightButton: true,
-        tags: word.tags.pluck(:name)
+        tags: word.tags.pluck(:name),
+        editLink: "/french_miscs/#{word.id}",
+        editLinkText: "Edit Word",
       }
     when 'Hindi - Subject can Verb'
       english_subject = English::get_random_english_subject

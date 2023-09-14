@@ -132,12 +132,12 @@ export default class QuizRun extends React.Component {
   }
 
   clickCheckAnswer() {
-    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, wrongAnswerCount } = this.state;
+    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation } = this.state;
     let matchingQuestion = Object.keys(matchedItems).length > 0;
     if (!matchingQuestion && answer === '') {
       return;
     }
-    if (status === 'correct') { // next question
+    if (status === 'correct') { // proceed to next question
       const finishedAllQuestions = (questionNumber + 1) === currentRotation.length;
       if (finishedAllQuestions) {
         if (repeatQuestions.length > 0) {
@@ -204,14 +204,12 @@ export default class QuizRun extends React.Component {
       });
       if (answerStatus === 'correct') {
         this.setState({
-          status: 'correct'
+          status: 'correct',
         }, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
-            const lastStreakUpdateTimestamp = quizQuestion.lastStreakAdd && (quizQuestion.lastStreakAdd * 1000);
-            const beginningOfTodayTimestamp = new Date().setHours(0, 0, 0, 0);
-            const streakAlreadyUpdatedToday = quizQuestion.lastStreakAdd && (lastStreakUpdateTimestamp > beginningOfTodayTimestamp);
-            if (!gotCorrectAfterFailing && !streakAlreadyUpdatedToday) {
+            const streakFreezeExpired = quizQuestion.streakFreezeExpiration < (Date.now() / 1000);
+            if (!gotCorrectAfterFailing && streakFreezeExpired) {
               const { status } = this.state;
               this.updateStreak.call(this, status);
             }
