@@ -6,7 +6,6 @@ json.frenchNoun do
   json.frenchPlural @french_noun.french_plural
   json.gender @french_noun.gender.to_s
   json.note @french_noun.note
-  json.lastStreakAdd @french_noun.last_streak_add
   json.streak @french_noun.streak
   json.streakFreezeExpiration @french_noun.streak_freeze_expiration.to_i || ''
 end

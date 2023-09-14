@@ -13,6 +13,30 @@ const COLORS = {
   blue: 'blue',
 }
 
+function Streak(props) {
+  const GREEN = '#04B404';
+  const GRAY = 'gray';
+  const RED = 'red';
+  const { currentQuestion, streakFrozen } = props;
+  return currentQuestion ? (
+    <>
+      <div>Streak: { currentQuestion.streak }</div>
+      <style jsx>{`
+        div {
+          display: block;
+          padding: 5px 10px;
+          position: absolute;
+          right: 32px;
+          background-color: ${streakFrozen ? GRAY : GREEN};
+          color: white;
+          border-radius: 5px;
+          font-family: 'TeachableSans-Bold';
+        }
+      `}</style>
+    </>
+  ) : null;
+}
+
 export default class QuizRun extends React.Component {
 
   constructor(props) {
@@ -38,6 +62,8 @@ export default class QuizRun extends React.Component {
       wrongAnswerCount: 0,
       showHighlightButton: true,
       showArchiveButton: true,
+      showStreak: true,
+      streakSpinner: false,
     };
   }
 
@@ -45,11 +71,12 @@ export default class QuizRun extends React.Component {
     const id = window.location.pathname.split('/')[2];
     sendRequest(`/api/quizzes/${id}/run`).then((response) => {
       const { quiz, needsAttentionTagId } = response;
+      const firstQuestion = quiz.questions[0];
       this.setState({
         needsAttentionTagId,
         spinner: false,
         quiz,
-        answer: (quiz.questions[0] && quiz.questions[0].answerPlaceholder) || '',
+        answer: (firstQuestion && firstQuestion.answerPlaceholder) || '',
         currentRotation: quiz.questions,
       }, this.setUpMatching.bind(this));
     }, (response) => {
@@ -95,43 +122,39 @@ export default class QuizRun extends React.Component {
   }
 
   updateStreak(status) {
-    let question = this.state.quiz.questions[this.state.questionNumber];
-    let directory;
-    let id;
-    let entityName;
 
-    if (question.cardId) {
-      directory = 'cards';
-      id = question.cardId;
-      entityName = 'card';
-    } else if (question.wordId) {
-      directory = `${snakeCase(question.entity)}s`;
-      id = question.wordId;
-      entityName = question.entity;
-    }
+    // determine what type of record needs its streak info updated
+    const currentQuestion = this.currentQuestion();
+    const entityName = currentQuestion.cardId ? 'card' : currentQuestion.entity;
 
+    // determine the new streak info
     let entity = {};
-    let newStreak;
-    if (status === 'correct') {
-      newStreak = +question.streak + 1;
-      entity.streak = newStreak;
-    } else {
-      entity.streak = 0;
-    }
-
-    this.setState({ streak: newStreak });
+    entity.streak = (status === 'correct' ? (+currentQuestion.streak + 1) : 0);
     const currentUnixTimestamp = (new Date().setHours(0, 0, 0, 0) / 1000);
-    entity.lastStreakAdd = currentUnixTimestamp;
     entity.streakFreezeExpiration = currentUnixTimestamp + SECONDS_IN_DAY;
+
+    // update streak and streak freeze expiration for all relevant questions
+    let currentRotation = this.state.currentRotation;
+    currentRotation.forEach(question => {
+      if ((question.wordId && question.wordId === currentQuestion.wordId && question.entity === currentQuestion.entity) || (question.cardId && question.cardId === currentQuestion.cardId)) {
+        question.streak = entity.streak;
+        question.streakFreezeExpiration = entity.streakFreezeExpiration;
+      }
+    })
+    this.setState({
+      currentRotation,
+    });
+
+    // update the database
     updateEntity({
-      directory,
-      id,
+      directory: currentQuestion.cardId ? 'cards' : `${snakeCase(currentQuestion.entity)}s`,
+      id: currentQuestion.cardId ? currentQuestion.cardId : currentQuestion.wordId,
       entityName,
       entity,
     });
   }
 
-  clickCheckAnswer() {
+  clickCheckAnswer(streakFrozen) {
     const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation } = this.state;
     let matchingQuestion = Object.keys(matchedItems).length > 0;
     if (!matchingQuestion && answer === '') {
@@ -208,8 +231,7 @@ export default class QuizRun extends React.Component {
         }, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
-            const streakFreezeExpired = quizQuestion.streakFreezeExpiration < (Date.now() / 1000);
-            if (!gotCorrectAfterFailing && streakFreezeExpired) {
+            if (!gotCorrectAfterFailing && !streakFrozen) {
               const { status } = this.state;
               this.updateStreak.call(this, status);
             }
@@ -486,6 +508,7 @@ export default class QuizRun extends React.Component {
       wrongAnswerCount,
       currentRotation,
       highlightQuestionIds,
+      showStreak,
     } = this.state;
 
     let buttonColor;
@@ -515,6 +538,8 @@ export default class QuizRun extends React.Component {
     const renderUnarchiveButton = currentQuestion && this.state.renderUnarchiveButton && currentQuestion.unarchiveButton && currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' }) && !highlightQuestionIds.includes(currentQuestion.id.toString());
     const renderHighlightButton = currentQuestion && showHighlightButton && currentQuestion.highlightButton && currentQuestion.tags.indexOf('Needs Attention') === -1 && !highlightQuestionIds.includes(currentQuestion.id.toString());
 
+    const streakFrozen = (currentQuestion && new Date(currentQuestion.streakFreezeExpiration)) > (Date.now() / 1000);
+
     if (errors.length > 0) {
       return (
         <>
@@ -539,14 +564,14 @@ export default class QuizRun extends React.Component {
         </>
       );
     } else {
-      const imageUrl = (currentRotation && currentRotation[questionNumber] && currentRotation[questionNumber].imageUrl) || null;
+      const imageUrl = (currentQuestion && currentQuestion.imageUrl) || null;
       return (
         <>
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
             { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
             <div className="white-box">
-              { (0 < streak && streak <= 5) && <div className="streak-notification">Streak: { streak }</div> }
+              { showStreak && <Streak currentQuestion={ currentQuestion } streakFrozen={ streakFrozen } /> }
               <p className="question">{ currentQuestion && currentQuestion.question }</p>
               { descriptionText && <p className="description">{ descriptionText }</p> }
               { imageUrl && <img src={ imageUrl } /> }
@@ -559,7 +584,7 @@ export default class QuizRun extends React.Component {
                   submit
                   disabled={ spinner }
                   text={ statusCorrect ? "Next Question" : "Check Answer" }
-                  onClick={ () => { this.clickCheckAnswer() } }
+                  onClick={ () => { this.clickCheckAnswer(streakFrozen) } }
                   color={ buttonColor }
                   hoverColor={ buttonHoverColor }
                 />
@@ -617,16 +642,6 @@ export default class QuizRun extends React.Component {
               display: inline-block;
               float: right;
               color: red;
-            }
-            .streak-notification {
-              display: block;
-              padding: 5px 10px;
-              position: absolute;
-              right: 32px;
-              background-color: #04B404;
-              color: white;
-              border-radius: 5px;
-              font-family: 'TeachableSans-Bold';
             }
             img {
               height: 200px;
