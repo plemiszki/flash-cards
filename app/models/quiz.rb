@@ -162,7 +162,7 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
-      synonyms = adjective.synonyms
+      synonyms = @adjective.synonyms
       obj = {
         wordId: @adjective.id,
         entity: 'frenchAdjective',
