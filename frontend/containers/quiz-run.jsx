@@ -76,7 +76,6 @@ export default class QuizRun extends React.Component {
       wrongAnswerCount: 0,
       showHighlightButton: true,
       showArchiveButton: true,
-      showStreak: true,
       streakSpinner: false,
       justIncrementedStreak: false,
       justResetStreak: false,
@@ -536,7 +535,6 @@ export default class QuizRun extends React.Component {
       wrongAnswerCount,
       currentRotation,
       highlightQuestionIds,
-      showStreak,
       justIncrementedStreak,
       justResetStreak,
     } = this.state;
@@ -555,6 +553,8 @@ export default class QuizRun extends React.Component {
 
     const statusCorrect = status === 'correct';
     const currentQuestion = this.currentQuestion();
+    const showStreakNotification = justIncrementedStreak || justResetStreak;
+
     let descriptionText;
     if (currentQuestion) {
       const { description, hint, note } = currentQuestion
@@ -601,7 +601,7 @@ export default class QuizRun extends React.Component {
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
             { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
             <div className="white-box">
-              { showStreak && <Streak
+              { showStreakNotification && <Streak
                 currentQuestion={ currentQuestion }
                 streakFrozen={ streakFrozen }
                 justIncrementedStreak={ justIncrementedStreak }
