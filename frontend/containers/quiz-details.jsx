@@ -29,7 +29,7 @@ export default class QuizDetails extends React.Component {
     super(props);
 
     let emptyQuiz = {
-      name: ''
+      name: '',
     };
 
     this.state = {
@@ -40,7 +40,7 @@ export default class QuizDetails extends React.Component {
       quizQuestions: [],
       questions: [],
       tags: [],
-      newQuizQuestionModalOpen: false
+      newQuizQuestionModalOpen: false,
     };
   }
 

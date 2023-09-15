@@ -15,9 +15,23 @@ const COLORS = {
 
 function Streak(props) {
   const GREEN = '#04B404';
+  const BLUE = '#013adf';
   const GRAY = 'gray';
   const RED = 'red';
-  const { currentQuestion, streakFrozen } = props;
+
+  const { currentQuestion, streakFrozen, justIncrementedStreak, justResetStreak } = props;
+
+  let color = BLUE;
+  if (streakFrozen) {
+    color = GRAY;
+  }
+  if (justIncrementedStreak) {
+    color = GREEN;
+  }
+  if (justResetStreak) {
+    color = RED;
+  }
+
   return currentQuestion ? (
     <>
       <div>Streak: { currentQuestion.streak }</div>
@@ -27,7 +41,7 @@ function Streak(props) {
           padding: 5px 10px;
           position: absolute;
           right: 32px;
-          background-color: ${streakFrozen ? GRAY : GREEN};
+          background-color: ${color};
           color: white;
           border-radius: 5px;
           font-family: 'TeachableSans-Bold';
@@ -64,6 +78,8 @@ export default class QuizRun extends React.Component {
       showArchiveButton: true,
       showStreak: true,
       streakSpinner: false,
+      justIncrementedStreak: false,
+      justResetStreak: false,
     };
   }
 
@@ -123,15 +139,25 @@ export default class QuizRun extends React.Component {
 
   updateStreak(status) {
 
+    const incrementStreak = status === 'correct';
+    const resetStreak = !incrementStreak;
+
     // determine what type of record needs its streak info updated
     const currentQuestion = this.currentQuestion();
     const entityName = currentQuestion.cardId ? 'card' : currentQuestion.entity;
 
     // determine the new streak info
     let entity = {};
-    entity.streak = (status === 'correct' ? (+currentQuestion.streak + 1) : 0);
+    entity.streak = (incrementStreak ? (+currentQuestion.streak + 1) : 0);
     const currentUnixTimestamp = (new Date().setHours(0, 0, 0, 0) / 1000);
     entity.streakFreezeExpiration = currentUnixTimestamp + SECONDS_IN_DAY;
+
+    let newState = {};
+    if (incrementStreak) {
+      newState.justIncrementedStreak = true;
+    } else {
+      newState.justResetStreak = true;
+    }
 
     // update streak and streak freeze expiration for all relevant questions
     let currentRotation = this.state.currentRotation;
@@ -141,9 +167,8 @@ export default class QuizRun extends React.Component {
         question.streakFreezeExpiration = entity.streakFreezeExpiration;
       }
     })
-    this.setState({
-      currentRotation,
-    });
+    newState.currentRotation = currentRotation;
+    this.setState(newState);
 
     // update the database
     updateEntity({
@@ -178,6 +203,8 @@ export default class QuizRun extends React.Component {
             rotationNumber: rotationNumber + 1,
             repeatQuestions: [],
             wrongAnswerCount: 0,
+            justIncrementedStreak: false,
+            justResetStreak: false,
           }, this.setUpMatching.bind(this));
         } else {
           const totalIncorrectAnswers = incorrectQuestionIds.length;
@@ -216,7 +243,9 @@ export default class QuizRun extends React.Component {
           answer: (currentRotation[nextQuestionNumber].answerPlaceholder || ''),
           status: 'question',
           showAnswers: false,
-          renderUnarchiveButton: true
+          renderUnarchiveButton: true,
+          justIncrementedStreak: false,
+          justResetStreak: false,
         }, this.setUpMatching.bind(this));
       }
     } else {
@@ -502,13 +531,14 @@ export default class QuizRun extends React.Component {
       showArchiveButton,
       showHighlightButton,
       status,
-      streak,
       quiz,
       questionNumber,
       wrongAnswerCount,
       currentRotation,
       highlightQuestionIds,
       showStreak,
+      justIncrementedStreak,
+      justResetStreak,
     } = this.state;
 
     let buttonColor;
@@ -571,7 +601,12 @@ export default class QuizRun extends React.Component {
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
             { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
             <div className="white-box">
-              { showStreak && <Streak currentQuestion={ currentQuestion } streakFrozen={ streakFrozen } /> }
+              { showStreak && <Streak
+                currentQuestion={ currentQuestion }
+                streakFrozen={ streakFrozen }
+                justIncrementedStreak={ justIncrementedStreak }
+                justResetStreak={ justResetStreak }
+              /> }
               <p className="question">{ currentQuestion && currentQuestion.question }</p>
               { descriptionText && <p className="description">{ descriptionText }</p> }
               { imageUrl && <img src={ imageUrl } /> }
