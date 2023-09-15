@@ -76,7 +76,7 @@ class Quiz < ActiveRecord::Base
         unarchiveButton: true,
         cardId: card.id,
         streak: card.streak,
-        streakFreezeExpiration: card.streak_freeze_expiration,
+        streakFreezeExpiration: card.streak_freeze_expiration.to_i,
         lastStreakAdd: card.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } },
         lineCount: card.config.dig("options", "line_count"),
@@ -100,7 +100,7 @@ class Quiz < ActiveRecord::Base
         wordId: @noun.id,
         entity: 'frenchNoun',
         streak: @noun.streak,
-        streakFreezeExpiration: @noun.streak_freeze_expiration,
+        streakFreezeExpiration: @noun.streak_freeze_expiration.to_i,
         lastStreakAdd: @noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @noun.english.capitalize,
         answers: [
@@ -122,7 +122,7 @@ class Quiz < ActiveRecord::Base
         wordId: @noun.id,
         entity: 'frenchNoun',
         streak: @noun.streak,
-        streakFreezeExpiration: @noun.streak_freeze_expiration,
+        streakFreezeExpiration: @noun.streak_freeze_expiration.to_i,
         lastStreakAdd: @noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @noun.english_plural.capitalize,
         answers: [
@@ -144,7 +144,7 @@ class Quiz < ActiveRecord::Base
         wordId: @noun.id,
         entity: 'frenchNoun',
         streak: @noun.streak,
-        streakFreezeExpiration: @noun.streak_freeze_expiration,
+        streakFreezeExpiration: @noun.streak_freeze_expiration.to_i,
         lastStreakAdd: @noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @noun.english.capitalize,
         answers: [
@@ -167,7 +167,7 @@ class Quiz < ActiveRecord::Base
         wordId: @adjective.id,
         entity: 'frenchAdjective',
         streak: @adjective.streak,
-        streakFreezeExpiration: @adjective.streak_freeze_expiration,
+        streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @adjective.english.capitalize,
         answers: [
@@ -189,7 +189,7 @@ class Quiz < ActiveRecord::Base
         wordId: @adjective.id,
         entity: 'frenchAdjective',
         streak: @adjective.streak,
-        streakFreezeExpiration: @adjective.streak_freeze_expiration,
+        streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @adjective.english.capitalize,
         answers: [
@@ -211,7 +211,7 @@ class Quiz < ActiveRecord::Base
         wordId: @adjective.id,
         entity: 'frenchAdjective',
         streak: @adjective.streak,
-        streakFreezeExpiration: @adjective.streak_freeze_expiration,
+        streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @adjective.english.capitalize,
         answers: [
@@ -233,7 +233,7 @@ class Quiz < ActiveRecord::Base
         wordId: @adjective.id,
         entity: 'frenchAdjective',
         streak: @adjective.streak,
-        streakFreezeExpiration: @adjective.streak_freeze_expiration,
+        streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: @adjective.english.capitalize,
         answers: [
@@ -256,7 +256,7 @@ class Quiz < ActiveRecord::Base
         wordId: noun.id,
         entity: 'frenchNoun',
         streak: noun.streak,
-        streakFreezeExpiration: noun.streak_freeze_expiration,
+        streakFreezeExpiration: noun.streak_freeze_expiration.to_i,
         lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: French::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
         answers: [
@@ -279,7 +279,7 @@ class Quiz < ActiveRecord::Base
         wordId: verb.id,
         entity: 'frenchVerb',
         streak: verb.streak,
-        streakFreezeExpiration: verb.streak_freeze_expiration,
+        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
         lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: verb.english.capitalize,
         indeterminate: verb.just_synonyms.map do |verb|
@@ -302,7 +302,7 @@ class Quiz < ActiveRecord::Base
         wordId: adjective.id,
         entity: 'frenchAdjective',
         streak: adjective.streak,
-        streakFreezeExpiration: adjective.streak_freeze_expiration,
+        streakFreezeExpiration: adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: adjective.english.capitalize,
         answers: [
@@ -324,7 +324,7 @@ class Quiz < ActiveRecord::Base
         wordId: word.id,
         entity: 'frenchMisc',
         streak: word.streak,
-        streakFreezeExpiration: word.streak_freeze_expiration,
+        streakFreezeExpiration: word.streak_freeze_expiration.to_i,
         lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: word.english.capitalize,
         answers: [ word.french ],
@@ -1021,7 +1021,7 @@ class Quiz < ActiveRecord::Base
         wordId: noun.id,
         entity: 'spanishNoun',
         streak: noun.streak,
-        streakFreezeExpiration: noun.streak_freeze_expiration,
+        streakFreezeExpiration: noun.streak_freeze_expiration.to_i,
         lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: Spanish::display_plural_with_notification({ noun: noun, use_plural: plural }).capitalize,
         answers: [
@@ -1042,7 +1042,7 @@ class Quiz < ActiveRecord::Base
         wordId: verb.id,
         entity: 'spanishVerb',
         streak: verb.streak,
-        streakFreezeExpiration: verb.streak_freeze_expiration,
+        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
         lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: verb.english.capitalize,
         indeterminate: verb.just_synonyms.map do |verb|
@@ -1063,7 +1063,7 @@ class Quiz < ActiveRecord::Base
         wordId: adjective.id,
         entity: 'spanishAdjective',
         streak: adjective.streak,
-        streakFreezeExpiration: adjective.streak_freeze_expiration,
+        streakFreezeExpiration: adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: adjective.english.capitalize,
         answers: [
@@ -1083,7 +1083,7 @@ class Quiz < ActiveRecord::Base
         wordId: word.id,
         entity: 'spanishMisc',
         streak: word.streak,
-        streakFreezeExpiration: word.streak_freeze_expiration,
+        streakFreezeExpiration: word.streak_freeze_expiration.to_i,
         lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: word.english.capitalize,
         answers: [ word.spanish ],
