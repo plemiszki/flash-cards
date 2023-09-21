@@ -14,13 +14,17 @@ const COLORS = {
 }
 
 function Diagram(props) {
-  const { data } = props;
+  const { data, questionNumber } = props;
   return (
     <>
       <div className="diagram">
-        { data.map(question => {
+        { data.map((question, index) => {
+          let classes = ["square"];
+          if (index === questionNumber) {
+            classes.push("current");
+          }
           return (
-            <div className="square"></div>
+            <div className={ classes.join(" ") }></div>
           );
         })}
       </div>
@@ -38,6 +42,15 @@ function Diagram(props) {
           margin-right: 10px;
           border-radius: 2px;
           box-shadow: 1px 2px 3px 0px #e6e9ec;
+        }
+        .current {
+          background: yellow;
+          animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+          50% {
+            opacity: 0;
+          }
         }
       `}</style>
     </>
@@ -639,6 +652,7 @@ export default class QuizRun extends React.Component {
         <>
           <Diagram
             data={ this.generateDiagramData() }
+            questionNumber={ questionNumber }
           />
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
