@@ -19,7 +19,7 @@
         <div id="admin-framework">
           <div id="admin-row" class="row">
             <div id="admin-sidebar-background" class="col-xs-2"></div>
-            <div id="admin-sidebar" class="col-xs-2 match-height-layout">
+            <div id="admin-sidebar" class="col-xs-2">
               <%= button_to "Sign out", sign_out_path, { method: :delete, class: "sidebar-button" } %>
               <div id="admin-sidebar-body">
                 <ul>
@@ -44,7 +44,7 @@
                 </ul>
               </div>
             </div>
-            <div id="admin-right-column" class="col-xs-10 match-height-layout">
+            <div id="admin-right-column" class="col-xs-10">
               <div id="admin-right-column-content">
                 <%= yield %>
               </div>

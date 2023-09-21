@@ -13,6 +13,37 @@ const COLORS = {
   blue: 'blue',
 }
 
+function Diagram(props) {
+  const { data } = props;
+  return (
+    <>
+      <div className="diagram">
+        { data.map(question => {
+          return (
+            <div className="square"></div>
+          );
+        })}
+      </div>
+      <style jsx>{`
+        .diagram {
+          position: absolute;
+          bottom: 0%;
+          margin-bottom: 40px;
+        }
+        .square {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: white;
+          margin-right: 10px;
+          border-radius: 2px;
+          box-shadow: 1px 2px 3px 0px #e6e9ec;
+        }
+      `}</style>
+    </>
+  )
+}
+
 function Streak(props) {
   const GREEN = '#04B404';
   const BLUE = '#013adf';
@@ -522,6 +553,15 @@ export default class QuizRun extends React.Component {
     return currentRotation ? currentRotation[questionNumber] : null;
   }
 
+  generateDiagramData() {
+    const { currentRotation } = this.state;
+    let result = [];
+    currentRotation.forEach(question => {
+      result.push({ id: question.id });
+    })
+    return result;
+  }
+
   render() {
     const {
       errors,
@@ -597,6 +637,9 @@ export default class QuizRun extends React.Component {
       const imageUrl = (currentQuestion && currentQuestion.imageUrl) || null;
       return (
         <>
+          <Diagram
+            data={ this.generateDiagramData() }
+          />
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
             { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
