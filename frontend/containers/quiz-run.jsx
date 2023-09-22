@@ -23,8 +23,14 @@ function Diagram(props) {
           if (index === questionNumber) {
             classes.push("current");
           }
+          if (question.result === 'correct') {
+            classes.push("correct");
+          }
+          if (question.result === 'wrong') {
+            classes.push("wrong");
+          }
           return (
-            <div className={ classes.join(" ") }></div>
+            <div key={ index } className={ classes.join(" ") }></div>
           );
         })}
       </div>
@@ -46,6 +52,12 @@ function Diagram(props) {
         .current {
           background: yellow;
           animation: blinker 1s linear infinite;
+        }
+        .correct {
+          background: ${COLORS.green};
+        }
+        .wrong {
+          background: ${COLORS.red};
         }
         @keyframes blinker {
           50% {
@@ -112,7 +124,6 @@ export default class QuizRun extends React.Component {
       matchedItems: {},
       unmatchedItems: [],
       status: 'question',
-      streak: 0,
       showAnswers: false,
       incorrectQuestionIds: [],
       highlightQuestionIds: [],
@@ -120,10 +131,10 @@ export default class QuizRun extends React.Component {
       wrongAnswerCount: 0,
       showHighlightButton: true,
       showArchiveButton: true,
-      streakSpinner: false,
       justIncrementedStreak: false,
       justResetStreak: false,
       diagram: [],
+      gotQuestionWrongThisRound: false,
     };
   }
 
@@ -191,10 +202,18 @@ export default class QuizRun extends React.Component {
     });
   }
 
+  updateDiagram(args) {
+    const { questionNumber, rotationNumber, obj } = args;
+    let { diagram } = this.state;
+    let existing = diagram[rotationNumber - 1][questionNumber];
+    let modified = Object.assign(existing, obj);
+    diagram[rotationNumber - 1][questionNumber] = modified;
+    return diagram;
+  }
+
   updateStreak(status) {
 
     const incrementStreak = status === 'correct';
-    const resetStreak = !incrementStreak;
 
     // determine what type of record needs its streak info updated
     const currentQuestion = this.currentQuestion();
@@ -234,7 +253,7 @@ export default class QuizRun extends React.Component {
   }
 
   clickCheckAnswer(streakFrozen) {
-    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram } = this.state;
+    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram, gotQuestionWrongThisRound } = this.state;
     let matchingQuestion = Object.keys(matchedItems).length > 0;
     if (!matchingQuestion && answer === '') {
       return;
@@ -249,7 +268,6 @@ export default class QuizRun extends React.Component {
             showHighlightButton: true,
             showArchiveButton: true,
             questionNumber: 0,
-            streak: 0,
             answer: (repeatQuestions[0].answerPlaceholder || ''),
             status: 'question',
             showAnswers: false,
@@ -261,6 +279,7 @@ export default class QuizRun extends React.Component {
             justIncrementedStreak: false,
             justResetStreak: false,
             diagram,
+            gotQuestionWrongThisRound: false,
           }, this.setUpMatching.bind(this));
         } else {
           const totalIncorrectAnswers = incorrectQuestionIds.length;
@@ -295,13 +314,13 @@ export default class QuizRun extends React.Component {
           showHighlightButton: true,
           showArchiveButton: true,
           questionNumber: nextQuestionNumber,
-          streak: 0,
           answer: (currentRotation[nextQuestionNumber].answerPlaceholder || ''),
           status: 'question',
           showAnswers: false,
           renderUnarchiveButton: true,
           justIncrementedStreak: false,
           justResetStreak: false,
+          gotQuestionWrongThisRound: false,
         }, this.setUpMatching.bind(this));
       }
     } else {
@@ -311,9 +330,18 @@ export default class QuizRun extends React.Component {
         answer,
       });
       if (answerStatus === 'correct') {
-        this.setState({
-          status: 'correct',
-        }, () => {
+        let newState = { status: 'correct' };
+        if (!gotQuestionWrongThisRound) {
+          const diagram = this.updateDiagram({
+            questionNumber,
+            rotationNumber,
+            obj: {
+              result: 'correct',
+            },
+          });
+          newState.diagram = diagram;
+        }
+        this.setState(newState, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
             if (!gotCorrectAfterFailing && !streakFrozen) {
@@ -334,11 +362,20 @@ export default class QuizRun extends React.Component {
         }
         incorrectQuestionIds.push(quizQuestion.id);
         incorrectQuestionIds = [...new Set(incorrectQuestionIds)];
+        const diagram = this.updateDiagram({
+          questionNumber,
+          rotationNumber,
+          obj: {
+            result: 'wrong',
+          },
+        });
         this.setState({
           status: 'wrong',
           incorrectQuestionIds,
           repeatQuestions,
           wrongAnswerCount,
+          gotQuestionWrongThisRound: true,
+          diagram,
         }, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             this.updateStreak.call(this, status);
