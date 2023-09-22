@@ -14,11 +14,11 @@ const COLORS = {
 }
 
 function Diagram(props) {
-  const { data, questionNumber } = props;
-  return (
+  const { data, questionNumber, rotationNumber } = props;
+  return data.length ? (
     <>
       <div className="diagram">
-        { data.map((question, index) => {
+        { data[rotationNumber - 1].map((question, index) => {
           let classes = ["square"];
           if (index === questionNumber) {
             classes.push("current");
@@ -54,7 +54,7 @@ function Diagram(props) {
         }
       `}</style>
     </>
-  )
+  ) : null
 }
 
 function Streak(props) {
@@ -123,6 +123,7 @@ export default class QuizRun extends React.Component {
       streakSpinner: false,
       justIncrementedStreak: false,
       justResetStreak: false,
+      diagram: [],
     };
   }
 
@@ -131,12 +132,14 @@ export default class QuizRun extends React.Component {
     sendRequest(`/api/quizzes/${id}/run`).then((response) => {
       const { quiz, needsAttentionTagId } = response;
       const firstQuestion = quiz.questions[0];
+      const diagram = [this.generateDiagramFromQuestions(quiz.questions)];
       this.setState({
         needsAttentionTagId,
         spinner: false,
         quiz,
         answer: (firstQuestion && firstQuestion.answerPlaceholder) || '',
         currentRotation: quiz.questions,
+        diagram,
       }, this.setUpMatching.bind(this));
     }, (response) => {
       const { errors } = response;
@@ -178,6 +181,14 @@ export default class QuizRun extends React.Component {
       }
     })
     return included;
+  }
+
+  generateDiagramFromQuestions(questions) {
+    return questions.map(question => {
+      return (
+        { id: question.id }
+      )
+    });
   }
 
   updateStreak(status) {
@@ -223,7 +234,7 @@ export default class QuizRun extends React.Component {
   }
 
   clickCheckAnswer(streakFrozen) {
-    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation } = this.state;
+    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram } = this.state;
     let matchingQuestion = Object.keys(matchedItems).length > 0;
     if (!matchingQuestion && answer === '') {
       return;
@@ -232,6 +243,7 @@ export default class QuizRun extends React.Component {
       const finishedAllQuestions = (questionNumber + 1) === currentRotation.length;
       if (finishedAllQuestions) {
         if (repeatQuestions.length > 0) {
+          diagram.push(this.generateDiagramFromQuestions(repeatQuestions));
           this.setState({
             quiz,
             showHighlightButton: true,
@@ -248,6 +260,7 @@ export default class QuizRun extends React.Component {
             wrongAnswerCount: 0,
             justIncrementedStreak: false,
             justResetStreak: false,
+            diagram,
           }, this.setUpMatching.bind(this));
         } else {
           const totalIncorrectAnswers = incorrectQuestionIds.length;
@@ -566,30 +579,23 @@ export default class QuizRun extends React.Component {
     return currentRotation ? currentRotation[questionNumber] : null;
   }
 
-  generateDiagramData() {
-    const { currentRotation } = this.state;
-    let result = [];
-    currentRotation.forEach(question => {
-      result.push({ id: question.id });
-    })
-    return result;
-  }
-
   render() {
     const {
-      errors,
-      spinner,
-      showAnswers,
-      showArchiveButton,
-      showHighlightButton,
-      status,
-      quiz,
-      questionNumber,
-      wrongAnswerCount,
       currentRotation,
+      diagram,
+      errors,
       highlightQuestionIds,
       justIncrementedStreak,
       justResetStreak,
+      questionNumber,
+      quiz,
+      rotationNumber,
+      showAnswers,
+      showArchiveButton,
+      showHighlightButton,
+      spinner,
+      status,
+      wrongAnswerCount,
     } = this.state;
 
     let buttonColor;
@@ -651,8 +657,9 @@ export default class QuizRun extends React.Component {
       return (
         <>
           <Diagram
-            data={ this.generateDiagramData() }
+            data={ diagram }
             questionNumber={ questionNumber }
+            rotationNumber={ rotationNumber }
           />
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
