@@ -13,6 +13,30 @@ const COLORS = {
   blue: 'blue',
 }
 
+function HighlightedModalButton(props) {
+  const { spinner } = props;
+  return spinner ? null : (
+    <>
+      <div
+        className="highlight-button"
+        onClick={ () => console.log('click!') }
+      ></div>
+      <style jsx>{`
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        cursor: pointer;
+        cursor: pointer;
+        float: right;
+        background-position: center;
+        background-color: white;
+        background-size: 20px;
+      `}</style>
+    </>
+  );
+}
+
 function Diagram(props) {
   const { data, questionNumber, rotationNumber, wrongAnswerCount } = props;
   return data.length ? (
@@ -706,6 +730,7 @@ export default class QuizRun extends React.Component {
           />
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
+            <HighlightedModalButton spinner={ spinner } />
             <div className="white-box">
               { showStreakNotification && <Streak
                 currentQuestion={ currentQuestion }
