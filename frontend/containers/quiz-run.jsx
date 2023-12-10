@@ -14,10 +14,11 @@ const COLORS = {
 }
 
 function Diagram(props) {
-  const { data, questionNumber, rotationNumber } = props;
+  const { data, questionNumber, rotationNumber, wrongAnswerCount } = props;
   return data.length ? (
     <>
       <div className="diagram">
+        { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
         { data[rotationNumber - 1].map((question, index) => {
           let classes = ["square"];
           if (index === questionNumber) {
@@ -63,6 +64,10 @@ function Diagram(props) {
           50% {
             opacity: 0;
           }
+        }
+        p.wrong-count {
+          margin-bottom: 10px;
+          color: red;
         }
       `}</style>
     </>
@@ -697,10 +702,10 @@ export default class QuizRun extends React.Component {
             data={ diagram }
             questionNumber={ questionNumber }
             rotationNumber={ rotationNumber }
+            wrongAnswerCount={ wrongAnswerCount }
           />
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
-            { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
             <div className="white-box">
               { showStreakNotification && <Streak
                 currentQuestion={ currentQuestion }
