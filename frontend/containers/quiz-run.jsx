@@ -1,5 +1,19 @@
 import React from 'react'
-import { Spinner, GrayedOut, sendRequest, removeFromArray, objectsAreEqual, updateEntity, Button, OutlineButton, deleteEntity, createEntity, titleCase } from 'handy-components'
+import Modal from 'react-modal'
+import {
+  Button,
+  Common,
+  createEntity,
+  deleteEntity,
+  GrayedOut,
+  objectsAreEqual,
+  OutlineButton,
+  removeFromArray,
+  sendRequest,
+  Spinner,
+  titleCase,
+  updateEntity,
+} from 'handy-components'
 import { shuffle } from 'lodash';
 import { pascalCase, snakeCase } from 'change-case'
 
@@ -14,12 +28,12 @@ const COLORS = {
 }
 
 function HighlightedModalButton(props) {
-  const { spinner } = props;
+  const { spinner, showModal } = props;
   return spinner ? null : (
     <>
       <div
         className="highlight-button"
-        onClick={ () => console.log('click!') }
+        onClick={ () => showModal() }
       ></div>
       <style jsx>{`
         display: inline-block;
@@ -164,6 +178,7 @@ export default class QuizRun extends React.Component {
       justResetStreak: false,
       diagram: [],
       gotQuestionWrongThisRound: false,
+      highlightedModalOpen: false,
     };
   }
 
@@ -650,6 +665,7 @@ export default class QuizRun extends React.Component {
       currentRotation,
       diagram,
       errors,
+      highlightedModalOpen,
       highlightQuestionIds,
       justIncrementedStreak,
       justResetStreak,
@@ -730,7 +746,10 @@ export default class QuizRun extends React.Component {
           />
           <div className="handy-component">
             <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
-            <HighlightedModalButton spinner={ spinner } />
+            <HighlightedModalButton
+              spinner={ spinner }
+              showModal={ () => this.setState({ highlightedModalOpen: true }) }
+            />
             <div className="white-box">
               { showStreakNotification && <Streak
                 currentQuestion={ currentQuestion }
@@ -783,6 +802,12 @@ export default class QuizRun extends React.Component {
               <GrayedOut visible={ spinner } />
             </div>
             { currentQuestion && currentQuestion.editLink && <a className="card-link" href={ currentQuestion.editLink } target="_blank">{ currentQuestion.editLinkText }</a> }
+            <Modal
+              isOpen={ highlightedModalOpen }
+              style={ Common.newEntityModalStyles({ width: 500, height: 500 }) }
+              onRequestClose={ () => this.setState({ highlightedModalOpen: false }) }
+            >
+            </Modal>
           </div>
           <style jsx>{`
             a.card-link {
