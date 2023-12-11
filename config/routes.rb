@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   resources :french_nouns, only: [:index, :show]
   resources :french_verbs, only: [:index, :show]
   resources :french_adjectives, only: [:index, :show]
+  resources :french_countries, only: [:index, :show]
+  resources :french_cities, only: [:index, :show]
   resources :french_miscs, only: [:index, :show]
   resources :vocabulary, only: [:index]
 
