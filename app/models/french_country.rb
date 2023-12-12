@@ -1,4 +1,4 @@
-class FrenchCity < ActiveRecord::Base
+class FrenchCountry < ActiveRecord::Base
 
   validates_presence_of :english, :french, :gender
   validates_uniqueness_of :english, scope: :french, message: '/ French combo already used'
