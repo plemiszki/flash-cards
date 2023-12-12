@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_08_211657) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -63,6 +63,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_211657) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "streak_freeze_expiration", precision: nil
+  end
+
+  create_table "french_cities", force: :cascade do |t|
+    t.string "english", null: false
+    t.string "french", null: false
+    t.integer "streak", default: 0
+    t.datetime "streak_freeze_expiration", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "french_countries", force: :cascade do |t|
+    t.string "english", null: false
+    t.string "french", null: false
+    t.integer "gender", null: false
+    t.integer "streak", default: 0
+    t.datetime "streak_freeze_expiration", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "french_miscs", force: :cascade do |t|
