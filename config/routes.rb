@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     resources :french_nouns, only: [:index, :show, :create, :update, :destroy]
     resources :french_verbs, only: [:index, :show, :create, :update, :destroy]
     resources :french_adjectives, only: [:index, :show, :create, :update, :destroy]
+    resources :french_countries, only: [:index, :show, :create, :update, :destroy]
+    resources :french_cities, only: [:index, :show, :create, :update, :destroy]
     resources :french_miscs, only: [:index, :show, :create, :update, :destroy]
     resources :match_bins, only: [:create, :destroy]
     resources :match_items, only: [:create, :destroy]
