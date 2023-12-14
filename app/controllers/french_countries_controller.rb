@@ -5,7 +5,7 @@ class FrenchCountriesController < AdminController
   end
 
   def show
-    @country = Country.find_by(id: params[:id])
+    @french_country = FrenchCountry.find_by(id: params[:id])
     render 'show', formats: [:html], handlers: [:erb]
   end
 

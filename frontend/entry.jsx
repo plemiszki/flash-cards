@@ -325,6 +325,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', french: '', needsAttention: true },
   }});
 
+  renderFullIndex('french-countries-index', {
+    entityName: 'frenchCountry',
+    entityNamePlural: 'frenchCountries',
+    columns: ['french', 'english', 'gender'],
+    modalRows: 1,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+    directory: 'french_countries',
+    header: 'French Countries',
+  }, { newEntity: {
+    initialEntity: { english: '', french: '', needsAttention: true, gender: 1 },
+    buttonText: 'Add French Country',
+  }});
+
   renderSimpleDetails('tag-details', {
     entityName: 'tag',
     initialEntity: { name: '' },

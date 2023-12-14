@@ -51,6 +51,7 @@ class Api::FrenchCountriesController < AdminController
     result = params[:french_country].permit(
       :english,
       :french,
+      :gender,
       :streak,
       :last_streak_add,
       :streak_freeze_expiration,

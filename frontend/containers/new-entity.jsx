@@ -75,7 +75,7 @@ export default class NewEntity extends React.Component {
     const entityNamePlural = entityNamePluralProps || `${entityName}s`;
     const directory = snakeCase(entityNamePlural);
     this.setState({
-      spinner: true
+      spinner: true,
     });
     createEntity({
       directory,
@@ -325,6 +325,22 @@ export default class NewEntity extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchMisc', property: 'french' }) }
             { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchMisc', property: 'english' }) }
             { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchMisc', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
+          </div>
+        ]);
+      case 'frenchCountry':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchCountry', property: 'french' }) }
+            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchCountry', property: 'english' }) }
+            <div className="col-xs-2">
+              <h2>Gender</h2>
+              <select onChange={ Details.changeField.bind(this, this.changeFieldArgs()) } value={ this.state.frenchCountry.gender } data-entity="frenchCountry" data-field="gender">
+                <option value={ "1" }>Male</option>
+                <option value={ "2" }>Female</option>
+              </select>
+              { Details.renderDropdownFieldError([], []) }
+            </div>
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchCountry', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>
         ]);
       case 'matchBin':
