@@ -5,7 +5,7 @@ class FrenchCitiesController < AdminController
   end
 
   def show
-    @city = City.find_by(id: params[:id])
+    @french_city = FrenchCity.find_by(id: params[:id])
     render 'show', formats: [:html], handlers: [:erb]
   end
 

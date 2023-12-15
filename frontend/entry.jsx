@@ -357,6 +357,22 @@ document.addEventListener('DOMContentLoaded', () => {
     buttonText: 'Add French Country',
   }});
 
+  renderFullIndex('french-cities-index', {
+    entityName: 'frenchCity',
+    entityNamePlural: 'frenchCities',
+    columns: ['french', 'english'],
+    modalRows: 1,
+    modalDimensions: { width: 900 },
+    includeLinks: true,
+    includeHover: true,
+    includeNewButton: true,
+    directory: 'french_cities',
+    header: 'French Cities',
+  }, { newEntity: {
+    initialEntity: { english: '', french: '', needsAttention: true },
+    buttonText: 'Add French City',
+  }});
+
   renderSimpleDetails('tag-details', {
     entityName: 'tag',
     initialEntity: { name: '' },

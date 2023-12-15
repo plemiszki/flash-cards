@@ -343,6 +343,14 @@ export default class NewEntity extends React.Component {
             { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchCountry', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
           </div>
         ]);
+      case 'frenchCity':
+        return([
+          <div key="1" className="row">
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchCity', property: 'french' }) }
+            { Details.renderField.bind(this)({ columnWidth: 5, entity: 'frenchCity', property: 'english' }) }
+            { Details.renderSwitch.bind(this)({ columnWidth: 2, entity: 'frenchCity', property: 'needsAttention', columnHeader: 'Needs Attention' }) }
+          </div>
+        ]);
       case 'matchBin':
         return([
           <div key="1" className="row">
