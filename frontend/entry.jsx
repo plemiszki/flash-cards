@@ -11,6 +11,7 @@ import SpanishMiscDetails from './containers/spanish-misc-details'
 import FrenchNounDetails from './containers/french-noun-details'
 import FrenchVerbDetails from './containers/french-verb-details'
 import FrenchAdjectiveDetails from './containers/french-adjective-details'
+import FrenchCityDetails from './containers/french-city-details'
 import FrenchMiscDetails from './containers/french-misc-details'
 import CardDetails from './containers/card-details'
 import QuizDetails from './containers/quiz-details'
@@ -123,6 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (frenchAdjectiveNode) {
     createRoot(frenchAdjectiveNode).render(
       <FrenchAdjectiveDetails />
+    );
+  }
+
+  const frenchCityNode = document.getElementById('french-city-details');
+  if (frenchCityNode) {
+    createRoot(frenchCityNode).render(
+      <FrenchCityDetails />
     );
   }
 
