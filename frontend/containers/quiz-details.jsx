@@ -20,6 +20,8 @@ const USE_ALL_ENABLED = [
   'French - Single Adjective, Any Agreement',
   'French - Misc Word',
   'French - City',
+  'French - Country',
+  'French - Country Gender',
   'Card',
 ];
 

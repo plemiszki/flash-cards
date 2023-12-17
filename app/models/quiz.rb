@@ -26,6 +26,7 @@ class Quiz < ActiveRecord::Base
     @french_adjectives = []
     @french_miscs = []
     @french_cities = []
+    @french_countries = []
     @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
 
@@ -346,6 +347,38 @@ class Quiz < ActiveRecord::Base
         highlightButton: true,
         tags: word.tags.pluck(:name),
         editLink: "/french_cities/#{word.id}",
+        editLinkText: "Edit Word",
+      }
+    when 'French - Country'
+      @country = French::get_country(quiz_question, @french_countries)
+      obj = {
+        wordId: @country.id,
+        entity: 'frenchCountry',
+        streak: @country.streak,
+        streakFreezeExpiration: @country.streak_freeze_expiration.to_i,
+        question: @country.english.capitalize,
+        answers: [ @country.french ],
+        highlightButton: true,
+        tags: @country.tags.pluck(:name),
+        editLink: "/french_countries/#{@country.id}",
+        editLinkText: "Edit Word",
+      }
+    when 'French - Country Gender'
+      @country = French::get_country(quiz_question, @french_countries) unless quiz_question.chained
+      obj = {
+        wordId: @country.id,
+        entity: 'frenchCountry',
+        streak: @country.streak,
+        streakFreezeExpiration: @country.streak_freeze_expiration.to_i,
+        question: @country.english.capitalize,
+        answers: [
+          @country.male? ? 'm' : 'f',
+        ],
+        indeterminate: [],
+        description: 'country gender',
+        highlightButton: true,
+        tags: @country.tags.pluck(:name),
+        editLink: "/french_countries/#{@country.id}",
         editLinkText: "Edit Word",
       }
     when 'Hindi - Subject can Verb'
@@ -1353,6 +1386,7 @@ class Quiz < ActiveRecord::Base
     @french_adjectives = FrenchAdjective.all.to_a.shuffle if @french_adjectives.empty?
     @french_miscs = FrenchMisc.all.to_a.shuffle if @french_miscs.empty?
     @french_cities = FrenchCity.all.to_a.shuffle if @french_cities.empty?
+    @french_countries = FrenchCountry.all.to_a.shuffle if @french_countries.empty?
   end
 
   def get_noun(quiz_question)

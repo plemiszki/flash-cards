@@ -212,6 +212,25 @@ module French
     word
   end
 
+  def self.get_country(quiz_question, words)
+    if quiz_question.tag_id
+      tagged_words = []
+      until !tagged_words.empty? do
+        tagged_words = words.select { |word| word.tags.map(&:id).include?(quiz_question.tag_id) }
+        if tagged_words.empty?
+          new_tagged_words = FrenchCountry.includes(:tags).where(tags: { id: Tag.find(quiz_question.tag_id) })
+          raise "No French Countries with Tag: #{Tag.find(quiz_question.tag_id).name}" if new_tagged_words.empty?
+          words += new_tagged_words
+        end
+      end
+      word = tagged_words.sample
+      words.reject! { |v| v == word }
+    else
+      word = words.pop
+    end
+    word
+  end
+
   def self.display_plural_with_notification(args)
     noun = args[:noun]
     english_single_plural_same = (noun.english == noun.english_plural)

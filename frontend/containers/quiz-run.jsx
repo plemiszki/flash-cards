@@ -263,7 +263,17 @@ export default class QuizRun extends React.Component {
     const currentQuestion = this.currentQuestion();
     const { cardId } = currentQuestion;
     const entityName = cardId ? 'card' : currentQuestion.entity;
-    const entityNamePlural = entityName === 'frenchCity' ? 'frenchCities' : `${entityName}s`;
+    let entityNamePlural;
+    switch (entityName) {
+      case 'frenchCity':
+        entityNamePlural = 'frenchCities';
+        break;
+      case 'frenchCountry':
+        entityNamePlural = 'frenchCountries';
+        break;
+      default:
+        entityNamePlural = `${entityName}s`;
+    }
 
     // determine the new streak info
     let entity = {};
