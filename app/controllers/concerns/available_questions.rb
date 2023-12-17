@@ -20,6 +20,7 @@ module AvailableQuestions
     'French - Single Verb, Infinitive': 'FrenchVerb',
     'French - Single Adjective, Any Agreement': 'FrenchAdjective',
     'French - Misc Word': 'FrenchMisc',
+    'French - City': 'FrenchCity',
   }
 
   def get_chained_amounts(quiz_questions:)
@@ -69,7 +70,8 @@ module AvailableQuestions
         'French - Single Noun with Article, Singular or Plural',
         'French - Single Verb, Infinitive',
         'French - Single Adjective, Any Agreement',
-        'French - Misc Word'
+        'French - Misc Word',
+        'French - City'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
         if quiz_question.tag_id
           available_count = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).count

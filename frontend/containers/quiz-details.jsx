@@ -19,6 +19,7 @@ const USE_ALL_ENABLED = [
   'French - Single Verb, Infinitive',
   'French - Single Adjective, Any Agreement',
   'French - Misc Word',
+  'French - City',
   'Card',
 ];
 

@@ -341,7 +341,6 @@ class Quiz < ActiveRecord::Base
         entity: 'frenchCity',
         streak: word.streak,
         streakFreezeExpiration: word.streak_freeze_expiration.to_i,
-        # lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: word.english.capitalize,
         answers: [ word.french ],
         highlightButton: true,
