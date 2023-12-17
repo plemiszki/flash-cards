@@ -257,20 +257,22 @@ export default class QuizRun extends React.Component {
 
   updateStreak(status) {
 
-    const incrementStreak = status === 'correct';
+    const shouldIncrementStreak = status === 'correct';
 
     // determine what type of record needs its streak info updated
     const currentQuestion = this.currentQuestion();
-    const entityName = currentQuestion.cardId ? 'card' : currentQuestion.entity;
+    const { cardId } = currentQuestion;
+    const entityName = cardId ? 'card' : currentQuestion.entity;
+    const entityNamePlural = entityName === 'frenchCity' ? 'frenchCities' : `${entityName}s`;
 
     // determine the new streak info
     let entity = {};
-    entity.streak = (incrementStreak ? (+currentQuestion.streak + 1) : 0);
+    entity.streak = (shouldIncrementStreak ? (+currentQuestion.streak + 1) : 0);
     const currentUnixTimestamp = (new Date().setHours(0, 0, 0, 0) / 1000);
     entity.streakFreezeExpiration = currentUnixTimestamp + SECONDS_IN_DAY;
 
     let newState = {};
-    if (incrementStreak) {
+    if (shouldIncrementStreak) {
       newState.justIncrementedStreak = true;
     } else {
       newState.justResetStreak = true;
@@ -289,7 +291,7 @@ export default class QuizRun extends React.Component {
 
     // update the database
     updateEntity({
-      directory: currentQuestion.cardId ? 'cards' : `${snakeCase(currentQuestion.entity)}s`,
+      directory: snakeCase(entityNamePlural),
       id: currentQuestion.cardId ? currentQuestion.cardId : currentQuestion.wordId,
       entityName,
       entity,

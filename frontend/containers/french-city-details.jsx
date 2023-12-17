@@ -85,7 +85,7 @@ export default class FrenchCityDetails extends React.Component {
     return (
       <>
         <div className="handy-component">
-          <h1>French Noun Details</h1>
+          <h1>French City Details</h1>
           <div className="white-box">
             <div className="row">
               { Details.renderField.bind(this)({ columnWidth: 6, entity: 'frenchCity', property: 'english' }) }

@@ -25,6 +25,7 @@ class Quiz < ActiveRecord::Base
     @french_verbs = []
     @french_adjectives = []
     @french_miscs = []
+    @french_cities = []
     @cards = get_cards(quiz_questions.select { |qq| qq.question.name == 'Card' })
     @other_answers_cache = Hash.new { |h, k| h[k] = [] }
 
@@ -331,6 +332,21 @@ class Quiz < ActiveRecord::Base
         highlightButton: true,
         tags: word.tags.pluck(:name),
         editLink: "/french_miscs/#{word.id}",
+        editLinkText: "Edit Word",
+      }
+    when 'French - City'
+      word = French::get_city(quiz_question, @french_cities)
+      obj = {
+        wordId: word.id,
+        entity: 'frenchCity',
+        streak: word.streak,
+        streakFreezeExpiration: word.streak_freeze_expiration.to_i,
+        # lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: word.english.capitalize,
+        answers: [ word.french ],
+        highlightButton: true,
+        tags: word.tags.pluck(:name),
+        editLink: "/french_cities/#{word.id}",
         editLinkText: "Edit Word",
       }
     when 'Hindi - Subject can Verb'
@@ -1337,6 +1353,7 @@ class Quiz < ActiveRecord::Base
     @french_verbs = FrenchVerb.all.to_a.shuffle if @french_verbs.empty?
     @french_adjectives = FrenchAdjective.all.to_a.shuffle if @french_adjectives.empty?
     @french_miscs = FrenchMisc.all.to_a.shuffle if @french_miscs.empty?
+    @french_cities = FrenchCity.all.to_a.shuffle if @french_cities.empty?
   end
 
   def get_noun(quiz_question)
