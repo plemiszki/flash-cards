@@ -27,6 +27,81 @@ const COLORS = {
   blue: 'blue',
 }
 
+const DATA = [
+  {
+    entityName: 'card',
+    entityId: 1,
+    text: 'What time is it?',
+    header: 'Card',
+  },
+  {
+    entityName: 'card',
+    entityId: 1,
+    text: 'What time is it?',
+    header: 'Card',
+  },
+  {
+    entityName: 'frenchNoun',
+    entityId: 1,
+    header: 'Noun',
+    text: 'Homme',
+  },
+];
+
+function HighlightedModal(props) {
+  const { isOpen, onRequestClose } = props;
+  return (
+    <>
+      <Modal
+        isOpen={ isOpen }
+        style={ Common.newEntityModalStyles({ width: 500, height: 500 }) }
+        onRequestClose={ onRequestClose }
+      >
+        <div className="padding">
+          { DATA.map((datum, index) => {
+            return (
+              <React.Fragment key={ index}>
+                <div className="card">
+                  <p className="header">{ datum.header }</p>
+                  <div className="body">
+                    { datum.text }
+                  </div>
+                </div>
+              </React.Fragment>
+            );
+          }) }
+        </div>
+      </Modal>
+      <style jsx>{`
+        div.padding {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 20px;
+          padding: 30px;
+        }
+        .header {
+          border: solid 1px gray;
+          border-bottom: none;
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
+          padding: 5px;
+          background: gray;
+          color: white;
+          font-family: 'TeachableSans-SemiBold';
+        }
+        .body {
+          border: solid 1px gray;
+          border-top: none;
+          border-bottom-right-radius: 5px;
+          border-bottom-left-radius: 5px;
+          padding: 5px;
+        }
+      `}</style>
+    </>
+  );
+}
+
 function HighlightedModalButton(props) {
   const { spinner, showModal } = props;
   return spinner ? null : (
@@ -814,12 +889,10 @@ export default class QuizRun extends React.Component {
               <GrayedOut visible={ spinner } />
             </div>
             { currentQuestion && currentQuestion.editLink && <a className="card-link" href={ currentQuestion.editLink } target="_blank">{ currentQuestion.editLinkText }</a> }
-            <Modal
+            <HighlightedModal
               isOpen={ highlightedModalOpen }
-              style={ Common.newEntityModalStyles({ width: 500, height: 500 }) }
               onRequestClose={ () => this.setState({ highlightedModalOpen: false }) }
-            >
-            </Modal>
+            />
           </div>
           <style jsx>{`
             a.card-link {
