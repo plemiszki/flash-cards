@@ -46,15 +46,41 @@ const DATA = [
     header: 'Noun',
     text: 'Homme',
   },
+  {
+    entityName: 'frenchNoun',
+    entityId: 1,
+    header: 'Noun',
+    text: 'Homme',
+  },
+  {
+    entityName: 'frenchNoun',
+    entityId: 1,
+    header: 'Noun',
+    text: 'Homme',
+  },
+  {
+    entityName: 'frenchNoun',
+    entityId: 1,
+    header: 'Noun',
+    text: 'Homme',
+  },
+  {
+    entityName: 'frenchNoun',
+    entityId: 1,
+    header: 'Noun',
+    text: 'Homme',
+  },
 ];
 
 function HighlightedModal(props) {
   const { isOpen, onRequestClose } = props;
+  const style = Common.newEntityModalStyles({ width: 500, height: 500 });
+  style.content.padding = 30;
   return (
     <>
       <Modal
         isOpen={ isOpen }
-        style={ Common.newEntityModalStyles({ width: 500, height: 500 }) }
+        style={ style }
         onRequestClose={ onRequestClose }
       >
         <div className="padding">
@@ -78,7 +104,6 @@ function HighlightedModal(props) {
           flex-direction: column;
           justify-content: space-between;
           gap: 20px;
-          padding: 30px;
         }
         .header {
           border: solid 1px gray;
