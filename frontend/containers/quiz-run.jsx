@@ -831,7 +831,12 @@ export default class QuizRun extends React.Component {
 
     const renderArchiveButton = currentQuestion && showArchiveButton && currentQuestion.archiveButton && !currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' });
     const renderUnarchiveButton = currentQuestion && this.state.renderUnarchiveButton && currentQuestion.unarchiveButton && currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' }) && !highlightQuestionIds.includes(currentQuestion.id.toString());
-    const renderHighlightButton = currentQuestion && showHighlightButton && currentQuestion.highlightButton && currentQuestion.tags.indexOf('Needs Attention') === -1 && !highlightQuestionIds.includes(currentQuestion.id.toString());
+    const renderHighlightButton =
+      currentQuestion
+      && showHighlightButton
+      && currentQuestion.highlightButton
+      && currentQuestion.tags.indexOf('Needs Attention') === -1
+      && highlightData.map(datum => datum.entityId).includes(currentQuestion.wordId) === false
 
     const streakFrozen = (currentQuestion && currentQuestion.streakFreezeExpiration) > (Date.now() / 1000);
 
