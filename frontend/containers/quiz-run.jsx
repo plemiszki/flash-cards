@@ -588,9 +588,17 @@ export default class QuizRun extends React.Component {
       directory: 'card_tags',
       id: currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' }).id,
     }).then(() => {
+      const { highlightData } = this.state;
+      highlightData.push({
+        entityName: 'Card',
+        entityId: currentQuestion.cardId,
+        header: 'Card',
+        text: currentQuestion.question,
+      });
       this.setState({
         spinner: false,
         highlightQuestionIds: [...new Set(highlightQuestionIds + [currentQuestion.id])],
+        highlightData,
       });
     });
   }
