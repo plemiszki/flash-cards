@@ -73,7 +73,7 @@ const DATA = [
 ];
 
 function HighlightedModal(props) {
-  const { isOpen, onRequestClose } = props;
+  const { isOpen, onRequestClose, data } = props;
   const style = Common.newEntityModalStyles({ width: 500, height: 500 });
   style.content.padding = 30;
   return (
@@ -84,7 +84,7 @@ function HighlightedModal(props) {
         onRequestClose={ onRequestClose }
       >
         <div className="padding">
-          { DATA.map((datum, index) => {
+          { data.map((datum, index) => {
             return (
               <React.Fragment key={ index}>
                 <div className="card">
@@ -279,6 +279,7 @@ export default class QuizRun extends React.Component {
       diagram: [],
       gotQuestionWrongThisRound: false,
       highlightedModalOpen: false,
+      highlightData: [],
     };
   }
 
@@ -399,10 +400,12 @@ export default class QuizRun extends React.Component {
     newState.currentRotation = currentRotation;
     this.setState(newState);
 
+    const entityId = currentQuestion.cardId ? currentQuestion.cardId : currentQuestion.wordId;
+
     // update the database
     updateEntity({
       directory: snakeCase(entityNamePlural),
-      id: currentQuestion.cardId ? currentQuestion.cardId : currentQuestion.wordId,
+      id: entityId,
       entityName,
       entity,
     });
@@ -609,9 +612,17 @@ export default class QuizRun extends React.Component {
         cardtagableType: pascalCase(entityName),
       }
     }).then(() => {
+      const { highlightData } = this.state;
+      highlightData.push({
+        entityName,
+        entityId: wordId,
+        header: titleCase(entityName),
+        text: currentQuestion.question,
+      });
       this.setState({
         spinner: false,
         highlightQuestionIds: [...new Set(highlightQuestionIds + [currentQuestion.id])],
+        highlightData,
       });
     });
   }
@@ -777,6 +788,7 @@ export default class QuizRun extends React.Component {
       currentRotation,
       diagram,
       errors,
+      highlightData,
       highlightedModalOpen,
       highlightQuestionIds,
       justIncrementedStreak,
@@ -917,6 +929,7 @@ export default class QuizRun extends React.Component {
             <HighlightedModal
               isOpen={ highlightedModalOpen }
               onRequestClose={ () => this.setState({ highlightedModalOpen: false }) }
+              data={ highlightData }
             />
           </div>
           <style jsx>{`
