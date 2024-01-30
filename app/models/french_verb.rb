@@ -17,4 +17,11 @@ class FrenchVerb < ActiveRecord::Base
     synonyms - [self]
   end
 
+  def english_present_continuous
+    words = english.split(' ')
+    first_word = words[0]
+    first_word = first_word.ends_with?('e') && !first_word.ends_with?('ee') && first_word != 'be' ? "#{first_word[0..-2]}ing" : "#{first_word}ing"
+    ([first_word] + words[1..-1]).join(' ')
+  end
+
 end

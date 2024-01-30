@@ -162,6 +162,53 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_nouns/#{@noun.id}",
         editLinkText: "Edit Noun",
       }
+    when 'French - Single Verb - Infinitive'
+      verb = French::get_verb(quiz_question, @french_verbs)
+      synonyms = verb.synonyms
+      obj = {
+        wordId: verb.id,
+        entity: 'frenchVerb',
+        streak: verb.streak,
+        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: verb.english.capitalize,
+        indeterminate: verb.just_synonyms.map do |verb|
+          verb.french
+        end,
+        answers: [
+          verb.french
+        ],
+        description: 'verb',
+        highlightButton: true,
+        tags: verb.tags.pluck(:name),
+        note: verb.note,
+        editLink: "/french_verbs/#{verb.id}",
+        editLinkText: "Edit Verb",
+      }
+    when 'French - Single Verb - Present Tense - First Person Singular'
+      verb = French::get_verb(quiz_question, @french_verbs)
+      synonyms = verb.synonyms
+      verb_form = verb.forms["present"]["je"]
+      obj = {
+        wordId: verb.id,
+        entity: 'frenchVerb',
+        streak: verb.streak,
+        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "I am #{verb.english_present_continuous}.".capitalize,
+        indeterminate: verb.just_synonyms.map do |verb|
+          verb.french
+        end,
+        answers: [
+          English.vowel?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
+        ],
+        description: 'verb',
+        highlightButton: true,
+        tags: verb.tags.pluck(:name),
+        note: verb.note,
+        editLink: "/french_verbs/#{verb.id}",
+        editLinkText: "Edit Verb",
+      }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
       synonyms = @adjective.synonyms
@@ -273,29 +320,6 @@ class Quiz < ActiveRecord::Base
         note: noun.note,
         editLink: "/french_nouns/#{noun.id}",
         editLinkText: "Edit Noun",
-      }
-    when 'French - Single Verb, Infinitive'
-      verb = French::get_verb(quiz_question, @french_verbs)
-      synonyms = verb.synonyms
-      obj = {
-        wordId: verb.id,
-        entity: 'frenchVerb',
-        streak: verb.streak,
-        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
-        lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: verb.english.capitalize,
-        indeterminate: verb.just_synonyms.map do |verb|
-          verb.french
-        end,
-        answers: [
-          verb.french
-        ],
-        description: 'verb',
-        highlightButton: true,
-        tags: verb.tags.pluck(:name),
-        note: verb.note,
-        editLink: "/french_verbs/#{verb.id}",
-        editLinkText: "Edit Verb",
       }
     when 'French - Single Adjective, Any Agreement'
       adjective = French::get_adjective(quiz_question, @french_adjectives)
