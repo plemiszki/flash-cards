@@ -163,50 +163,74 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Noun",
       }
     when 'French - Single Verb - Infinitive'
-      verb = French::get_verb(quiz_question, @french_verbs)
-      synonyms = verb.synonyms
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
       obj = {
-        wordId: verb.id,
+        wordId: @verb.id,
         entity: 'frenchVerb',
-        streak: verb.streak,
-        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
-        lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: verb.english.capitalize,
-        indeterminate: verb.just_synonyms.map do |verb|
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: @verb.english.capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
           verb.french
         end,
         answers: [
-          verb.french
+          @verb.french
         ],
         description: 'verb',
         highlightButton: true,
-        tags: verb.tags.pluck(:name),
-        note: verb.note,
-        editLink: "/french_verbs/#{verb.id}",
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
       }
     when 'French - Single Verb - Present Tense - First Person Singular'
-      verb = French::get_verb(quiz_question, @french_verbs)
-      synonyms = verb.synonyms
-      verb_form = verb.forms["present"]["je"]
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["present"]["je"]
       obj = {
-        wordId: verb.id,
+        wordId: @verb.id,
         entity: 'frenchVerb',
-        streak: verb.streak,
-        streakFreezeExpiration: verb.streak_freeze_expiration.to_i,
-        lastStreakAdd: verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: "I am #{verb.english_present_continuous}.".capitalize,
-        indeterminate: verb.just_synonyms.map do |verb|
-          verb.french
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "I am #{@verb.english_present_continuous}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          synonym_verb_form = verb.forms["present"]["je"]
+          English.vowel?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
         end,
         answers: [
           English.vowel?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
         ],
-        description: 'verb',
         highlightButton: true,
-        tags: verb.tags.pluck(:name),
-        note: verb.note,
-        editLink: "/french_verbs/#{verb.id}",
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+      }
+    when 'French - Single Verb - Present Tense - Second Person Singular (Informal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["present"]["tu"]
+      obj = {
+        wordId: @verb.id,
+        entity: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You are #{@verb.english_present_continuous}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Tu #{verb.forms["present"]["tu"]}."
+        end,
+        answers: [
+          "Tu #{verb_form}.",
+        ],
+        description: 'informal',
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
       }
     when 'French - Adjective Masculine Singular'
