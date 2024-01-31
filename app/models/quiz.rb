@@ -233,6 +233,102 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
       }
+    when 'French - Single Verb - Present Tense - Second Person Singular (Formal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["present"]["vous"]
+      obj = {
+        wordId: @verb.id,
+        entity: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You are #{@verb.english_present_continuous}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Vous #{verb.forms["present"]["vous"]}."
+        end,
+        answers: [
+          "Vous #{verb_form}.",
+        ],
+        description: 'formal',
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+      }
+    when 'French - Single Verb - Present Tense - First Person Plural'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["present"]["nous"]
+      obj = {
+        wordId: @verb.id,
+        entity: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "We are #{@verb.english_present_continuous}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Nous #{verb.forms["present"]["nous"]}."
+        end,
+        answers: [
+          "Nous #{verb_form}.",
+        ],
+        description: nil,
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+      }
+    when 'French - Single Verb - Present Tense - Third Person Singular'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["present"]["il"]
+      obj = {
+        wordId: @verb.id,
+        entity: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "He is #{@verb.english_present_continuous}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Il #{verb.forms["present"]["il"]}."
+        end,
+        answers: [
+          "Il #{verb_form}.",
+        ],
+        description: nil,
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+      }
+    when 'French - Single Verb - Present Tense - Third Person Plural'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["present"]["ils"]
+      obj = {
+        wordId: @verb.id,
+        entity: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "They are #{@verb.english_present_continuous}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Ils #{verb.forms["present"]["ils"]}."
+        end,
+        answers: [
+          "Ils #{verb_form}.",
+        ],
+        description: nil,
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+      }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
       synonyms = @adjective.synonyms
