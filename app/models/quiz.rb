@@ -198,10 +198,10 @@ class Quiz < ActiveRecord::Base
         question: "I am #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
           synonym_verb_form = verb.forms["present"]["je"]
-          English.vowel?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
+          French.vowel?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
         end,
         answers: [
-          English.vowel?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
+          French.vowel?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
