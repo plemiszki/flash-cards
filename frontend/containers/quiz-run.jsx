@@ -741,8 +741,7 @@ export default class QuizRun extends React.Component {
     if (isRegEx) {
       const regexString = question.answers[0];
       const regex = new RegExp(regexString.slice(1, -1));
-      const matchData = userAnswer.match(regex);
-      if (matchData && matchData[0] === userAnswer) {
+      if (regex.test(userAnswer)) {
         return 'correct';
       }
     }
