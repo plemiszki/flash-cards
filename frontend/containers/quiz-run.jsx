@@ -600,7 +600,7 @@ export default class QuizRun extends React.Component {
         entityName,
         entityId: wordId,
         header: titleCase(entityName),
-        text: currentQuestion.question,
+        text: currentQuestion.highlightText || currentQuestion.question,
       });
       this.setState({
         spinner: false,
