@@ -202,10 +202,10 @@ class Quiz < ActiveRecord::Base
         question: "I am #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
           synonym_verb_form = verb.forms["present"]["je"]
-          French.vowel?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
+          French.vowel_sound?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
         end,
         answers: [
-          French.vowel?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
+          French.vowel_sound?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
@@ -213,6 +213,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        answerPlaceholder: "Je ",
       }
     when 'French - Single Verb - Present Tense - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -238,6 +239,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        answerPlaceholder: "Tu ",
       }
     when 'French - Single Verb - Present Tense - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -263,6 +265,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        answerPlaceholder: "Vous ",
       }
     when 'French - Single Verb - Present Tense - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -288,6 +291,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        answerPlaceholder: "Nous ",
       }
     when 'French - Single Verb - Present Tense - Third Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -313,6 +317,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        answerPlaceholder: "Il ",
       }
     when 'French - Single Verb - Present Tense - Third Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -338,6 +343,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        answerPlaceholder: "Ils ",
       }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained

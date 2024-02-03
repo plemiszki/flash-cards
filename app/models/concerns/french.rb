@@ -1,11 +1,11 @@
 module French
 
-  VOWELS = 'aeéèiou'.split('')
+  VOWEL_SOUNDS = 'aeéèhiou'.split('')
 
   class << self
 
-    def vowel?(input)
-      input.downcase.in?(VOWELS)
+    def vowel_sound?(input)
+      input.downcase.in?(VOWEL_SOUNDS)
     end
 
     def random_subject(override: nil)
