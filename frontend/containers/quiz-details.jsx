@@ -16,7 +16,7 @@ const USE_ALL_ENABLED = [
   'French - Adjective Feminine Singular',
   'French - Adjective Feminine Plural',
   'French - Single Noun with Article, Singular or Plural',
-  'French - Single Verb, Infinitive',
+  'French - Single Verb - Infinitive',
   'French - Single Adjective, Any Agreement',
   'French - Misc Word',
   'French - City',

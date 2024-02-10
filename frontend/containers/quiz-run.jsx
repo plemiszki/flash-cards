@@ -27,51 +27,6 @@ const COLORS = {
   blue: 'blue',
 }
 
-const DATA = [
-  {
-    entityName: 'card',
-    entityId: 1,
-    text: 'What time is it?',
-    header: 'Card',
-  },
-  {
-    entityName: 'card',
-    entityId: 1,
-    text: 'What time is it?',
-    header: 'Card',
-  },
-  {
-    entityName: 'frenchNoun',
-    entityId: 1,
-    header: 'Noun',
-    text: 'Homme',
-  },
-  {
-    entityName: 'frenchNoun',
-    entityId: 1,
-    header: 'Noun',
-    text: 'Homme',
-  },
-  {
-    entityName: 'frenchNoun',
-    entityId: 1,
-    header: 'Noun',
-    text: 'Homme',
-  },
-  {
-    entityName: 'frenchNoun',
-    entityId: 1,
-    header: 'Noun',
-    text: 'Homme',
-  },
-  {
-    entityName: 'frenchNoun',
-    entityId: 1,
-    header: 'Noun',
-    text: 'Homme',
-  },
-];
-
 function HighlightedModal(props) {
   const { isOpen, onRequestClose, data } = props;
   const style = Common.newEntityModalStyles({ width: 500, height: 500 });
