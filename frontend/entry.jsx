@@ -257,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     includeNewButton: true,
   }, { newEntity: {
     initialEntity: { english: '', englishPlural: '', french: '', frenchPlural: '', gender: 1, needsAttention: true },
+    buttonText: 'Add French Noun',
   }});
 
   renderFullIndex('spanish-verbs-index', {
@@ -281,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     includeNewButton: true,
   }, { newEntity: {
     initialEntity: { english: '', french: '', needsAttention: true },
+    buttonText: 'Add French Verb',
   }});
 
   renderFullIndex('spanish-adjectives-index', {
@@ -313,6 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     includeNewButton: true,
   }, { newEntity: {
     initialEntity: { english: '', masculine: '', masculinePlural: '', feminine: '', femininePlural: '', needsAttention: true },
+    buttonText: 'Add French Adjective',
   }});
 
   renderFullIndex('spanish-miscs-index', {
@@ -339,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
     header: 'French Miscellaneous Words',
   }, { newEntity: {
     initialEntity: { english: '', french: '', needsAttention: true },
+    buttonText: 'Add French Misc Word',
   }});
 
   renderFullIndex('french-countries-index', {
