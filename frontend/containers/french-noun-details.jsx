@@ -104,6 +104,9 @@ export default class FrenchNounDetails extends React.Component {
               { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'frenchPlural' }) }
               { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchNoun', property: 'note' }) }
             </div>
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchNoun', property: 'url', columnHeader: 'Link' }) }
+            </div>
             <BottomButtons
               entityName="FrenchNoun"
               confirmDelete={ Details.confirmDelete.bind(this) }

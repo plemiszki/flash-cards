@@ -99,6 +99,9 @@ export default class FrenchCountryDetails extends React.Component {
                 { Details.renderFieldError([], []) }
               </div>
             </div>
+            <div className="row">
+              { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchCountry', property: 'url', columnHeader: 'Link' }) }
+            </div>
             <BottomButtons
               entityName="FrenchCountry"
               confirmDelete={ Details.confirmDelete.bind(this) }

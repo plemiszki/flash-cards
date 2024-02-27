@@ -54,6 +54,7 @@ class Api::FrenchMiscsController < AdminController
       :streak,
       :last_streak_add,
       :streak_freeze_expiration,
+      :url,
     )
     result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
     result.merge!({ streak_freeze_expiration: Time.at(result[:streak_freeze_expiration].to_i) }) if result[:streak_freeze_expiration]

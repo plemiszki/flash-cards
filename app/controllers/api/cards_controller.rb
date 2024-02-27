@@ -61,6 +61,7 @@ class Api::CardsController < AdminController
       :hint,
       :config,
       :streak_freeze_expiration,
+      :notes,
     )
     result.merge!({ last_streak_add: Time.at(result[:last_streak_add].to_i).to_date }) if result[:last_streak_add]
     result.merge!({ streak_freeze_expiration: Time.at(result[:streak_freeze_expiration].to_i) }) if result[:streak_freeze_expiration]

@@ -4,6 +4,7 @@ json.frenchCountry do
   json.french @french_country.french
   json.streak @french_country.streak
   json.streakFreezeExpiration @french_country.streak_freeze_expiration.to_i || ''
+  json.url @french_country.url
 end
 json.frenchCountryTags @french_country_tags do |french_country_tag|
   json.id french_country_tag.id

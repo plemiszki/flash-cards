@@ -88,6 +88,9 @@ export default class FrenchMiscDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'frenchMisc', property: 'french' }) }
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'frenchMisc', property: 'english' }) }
           </div>
+          <div className="row">
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchMisc', property: 'url', columnHeader: 'Link' }) }
+          </div>
           <BottomButtons
             entityName="FrenchMisc"
             confirmDelete={ Details.confirmDelete.bind(this) }

@@ -91,6 +91,9 @@ export default class FrenchVerbDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchVerb', property: 'note' }) }
             { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchVerb', property: 'forms', type: 'json', rows: 8 }) }
           </div>
+          <div className="row">
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchVerb', property: 'url', columnHeader: 'Link' }) }
+          </div>
           <BottomButtons
             entityName="FrenchVerb"
             confirmDelete={ Details.confirmDelete.bind(this) }

@@ -12,6 +12,7 @@ json.card do
   json.config @card.config
   json.streak @card.streak
   json.streakFreezeExpiration @card.streak_freeze_expiration.to_i || ''
+  json.notes @card.notes
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id

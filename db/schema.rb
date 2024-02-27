@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_27_193051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.string "hint", default: ""
     t.jsonb "config", default: {}
     t.datetime "streak_freeze_expiration", precision: nil
+    t.string "notes", default: ""
   end
 
   create_table "french_adjectives", force: :cascade do |t|
@@ -63,6 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "streak_freeze_expiration", precision: nil
+    t.string "url", default: ""
   end
 
   create_table "french_cities", force: :cascade do |t|
@@ -72,6 +74,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.datetime "streak_freeze_expiration", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "url", default: ""
   end
 
   create_table "french_countries", force: :cascade do |t|
@@ -82,6 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.datetime "streak_freeze_expiration", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "url", default: ""
   end
 
   create_table "french_miscs", force: :cascade do |t|
@@ -92,6 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "streak_freeze_expiration", precision: nil
+    t.string "url", default: ""
   end
 
   create_table "french_nouns", id: :serial, force: :cascade do |t|
@@ -106,6 +111,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "streak_freeze_expiration", precision: nil
+    t.string "url", default: ""
   end
 
   create_table "french_verbs", force: :cascade do |t|
@@ -118,6 +124,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_013203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "streak_freeze_expiration", precision: nil
+    t.string "url", default: ""
   end
 
   create_table "jobs", force: :cascade do |t|

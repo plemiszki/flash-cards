@@ -146,7 +146,8 @@ export default class CardDetails extends React.Component {
               { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'hint' }) }
             </div>
             <div className="row">
-              { Details.renderField.bind(this)({ columnWidth: 9, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }
+              { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'imageUrl', uploadLinkFunction: this.clickUploadImage.bind(this) }) }
+              { Details.renderField.bind(this)({ columnWidth: 6, entity: 'card', property: 'notes', columnHeader: 'Note' }) }
               <div className="col-xs-3">
                 <img src={ cardSaved.imageUrl } />
               </div>

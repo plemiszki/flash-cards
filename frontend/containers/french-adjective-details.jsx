@@ -94,6 +94,9 @@ export default class FrenchAdjectiveDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'frenchAdjective', property: 'feminine' }) }
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'frenchAdjective', property: 'femininePlural' }) }
           </div>
+          <div className="row">
+            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchAdjective', property: 'url', columnHeader: 'Link' }) }
+          </div>
           <BottomButtons
             entityName="FrenchAdjective"
             confirmDelete={ Details.confirmDelete.bind(this) }

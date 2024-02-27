@@ -4,6 +4,7 @@ json.frenchCity do
   json.french @french_city.french
   json.streak @french_city.streak
   json.streakFreezeExpiration @french_city.streak_freeze_expiration.to_i || ''
+  json.url @french_city.url
 end
 json.frenchCityTags @french_city_tags do |french_city_tag|
   json.id french_city_tag.id
