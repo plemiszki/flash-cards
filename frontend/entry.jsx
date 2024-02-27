@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFullIndex('french-nouns-index', {
     entityName: 'frenchNoun',
     columns: ['french', 'english', 'streak'],
-    modalRows: 2,
+    modalRows: 3,
     modalDimensions: { width: 900 },
     includeLinks: true,
     includeHover: true,
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFullIndex('french-verbs-index', {
     entityName: 'frenchVerb',
     columns: ['french', 'english', 'streak', 'forms'],
-    modalRows: 1,
+    modalRows: 2,
     modalDimensions: { width: 900 },
     includeLinks: true,
     includeHover: true,
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { name: 'english' },
       { name: 'streak' },
     ],
-    modalRows: 2,
+    modalRows: 3,
     modalDimensions: { width: 900 },
     includeLinks: true,
     includeHover: true,
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFullIndex('french-miscs-index', {
     entityName: 'frenchMisc',
     columns: ['french', 'english'],
-    modalRows: 1,
+    modalRows: 2,
     modalDimensions: { width: 900 },
     includeLinks: true,
     includeHover: true,
