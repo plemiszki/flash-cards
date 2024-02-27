@@ -272,16 +272,25 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEntity: { english: '', spanish: '', needsAttention: true },
   }});
 
+  const FRENCH_VERB_FORMS_PLACEHOLDER = {
+    "present": {"je": "", "tu": "", "il": "", "nous": "", "vous": "", "ils": ""},
+  }
+
   renderFullIndex('french-verbs-index', {
     entityName: 'frenchVerb',
     columns: ['french', 'english', 'streak', 'forms'],
-    modalRows: 2,
-    modalDimensions: { width: 900 },
+    modalDimensions: { width: 900, height: 602 },
     includeLinks: true,
     includeHover: true,
     includeNewButton: true,
   }, { newEntity: {
-    initialEntity: { english: '', french: '', needsAttention: true },
+    initialEntity: {
+      english: '',
+      french: '',
+      url: '',
+      needsAttention: true,
+      forms: JSON.stringify(FRENCH_VERB_FORMS_PLACEHOLDER, null, 2),
+    },
     buttonText: 'Add French Verb',
   }});
 
