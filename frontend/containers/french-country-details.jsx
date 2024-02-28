@@ -81,7 +81,7 @@ export default class FrenchCountryDetails extends React.Component {
   }
 
   render() {
-    const { spinner, justSaved, changesToSave, frenchCountryTags, tags, frenchCountry } = this.state;
+    const { spinner, justSaved, changesToSave, frenchCountryTags, tags, frenchCountry, frenchCountrySaved } = this.state;
     return (
       <>
         <div className="handy-component">
@@ -100,7 +100,14 @@ export default class FrenchCountryDetails extends React.Component {
               </div>
             </div>
             <div className="row">
-              { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchCountry', property: 'url', columnHeader: 'Link' }) }
+              { Details.renderField.bind(this)({
+                columnWidth: 12,
+                entity: 'frenchCountry',
+                property: 'url',
+                columnHeader: 'Link',
+                linkText: frenchCountrySaved.url ? 'Visit Link' : null,
+                linkUrl: frenchCountrySaved.url,
+              }) }
             </div>
             <BottomButtons
               entityName="FrenchCountry"

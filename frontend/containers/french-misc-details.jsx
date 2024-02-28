@@ -79,7 +79,7 @@ export default class FrenchMiscDetails extends React.Component {
   }
 
   render() {
-    const { spinner, justSaved, changesToSave, frenchMiscTags, tags, frenchMisc } = this.state;
+    const { spinner, justSaved, changesToSave, frenchMiscTags, tags, frenchMisc, frenchMiscSaved } = this.state;
     return (
       <div className="handy-component">
         <h1>French Miscellaneous Word Details</h1>
@@ -89,7 +89,14 @@ export default class FrenchMiscDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 6, entity: 'frenchMisc', property: 'english' }) }
           </div>
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchMisc', property: 'url', columnHeader: 'Link' }) }
+            { Details.renderField.bind(this)({
+              columnWidth: 12,
+              entity: 'frenchMisc',
+              property: 'url',
+              columnHeader: 'Link',
+              linkText: frenchMiscSaved.url ? 'Visit Link' : null,
+              linkUrl: frenchMiscSaved.url,
+            }) }
           </div>
           <BottomButtons
             entityName="FrenchMisc"

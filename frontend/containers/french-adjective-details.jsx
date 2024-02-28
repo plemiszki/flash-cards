@@ -78,7 +78,7 @@ export default class FrenchAdjectiveDetails extends React.Component {
   }
 
   render() {
-    const { spinner, justSaved, changesToSave, frenchAdjectiveTags, tags, frenchAdjective } = this.state;
+    const { spinner, justSaved, changesToSave, frenchAdjectiveTags, tags, frenchAdjective, frenchAdjectiveSaved } = this.state;
     return (
       <div className="handy-component">
         <h1>French Noun Details</h1>
@@ -95,7 +95,14 @@ export default class FrenchAdjectiveDetails extends React.Component {
             { Details.renderField.bind(this)({ columnWidth: 3, entity: 'frenchAdjective', property: 'femininePlural' }) }
           </div>
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchAdjective', property: 'url', columnHeader: 'Link' }) }
+            { Details.renderField.bind(this)({
+              columnWidth: 12,
+              entity: 'frenchAdjective',
+              property: 'url',
+              columnHeader: 'Link',
+              linkText: frenchAdjectiveSaved.url ? 'Visit Link' : null,
+              linkUrl: frenchAdjectiveSaved.url,
+            }) }
           </div>
           <BottomButtons
             entityName="FrenchAdjective"
