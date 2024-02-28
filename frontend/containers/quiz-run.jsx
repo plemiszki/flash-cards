@@ -862,6 +862,7 @@ export default class QuizRun extends React.Component {
               <Spinner visible={ spinner } />
               <GrayedOut visible={ spinner } />
             </div>
+            { currentQuestion && currentQuestion.linkUrl && <a className="card-link" href={ currentQuestion.linkUrl } target="_blank">Reference</a> }
             { currentQuestion && currentQuestion.editLink && <a className="card-link" href={ currentQuestion.editLink } target="_blank">{ currentQuestion.editLinkText }</a> }
             <HighlightedModal
               isOpen={ highlightedModalOpen }
@@ -873,9 +874,9 @@ export default class QuizRun extends React.Component {
             a.card-link {
               margin-top: 10px;
               display: inline-block;
-              position: absolute;
-              right: 40px;
+              float: right;
               color: gray;
+              margin-left: 20px;
             }
             p.question {
               font-family: 'TeachableSans-ExtraBold';

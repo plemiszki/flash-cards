@@ -118,6 +118,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_nouns/#{@noun.id}",
         editLinkText: "Edit Noun",
         highlightText: @noun.french,
+        linkUrl: @noun.url,
       }
     when 'French - Noun Plural'
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
@@ -141,6 +142,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_nouns/#{@noun.id}",
         editLinkText: "Edit Noun",
         highlightText: @noun.french,
+        linkUrl: @noun.url,
       }
     when 'French - Noun Gender'
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
@@ -164,6 +166,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_nouns/#{@noun.id}",
         editLinkText: "Edit Noun",
         highlightText: @noun.french,
+        linkUrl: @noun.url,
       }
     when 'French - Single Verb - Infinitive'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -188,6 +191,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_verbs/#{@verb.id}",
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
+        linkUrl: @verb.url,
       }
     when 'French - Single Verb - Present Tense - First Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -214,6 +218,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
         answerPlaceholder: "Je ",
+        linkUrl: @verb.url,
       }
     when 'French - Single Verb - Present Tense - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -240,6 +245,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
         answerPlaceholder: "Tu ",
+        linkUrl: @verb.url,
       }
     when 'French - Single Verb - Present Tense - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -266,6 +272,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
         answerPlaceholder: "Vous ",
+        linkUrl: @verb.url,
       }
     when 'French - Single Verb - Present Tense - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -292,6 +299,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
         answerPlaceholder: "Nous ",
+        linkUrl: @verb.url,
       }
     when 'French - Single Verb - Present Tense - Third Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -318,6 +326,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
         answerPlaceholder: "Il ",
+        linkUrl: @verb.url,
       }
     when 'French - Single Verb - Present Tense - Third Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -344,6 +353,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Verb",
         highlightText: @verb.french,
         answerPlaceholder: "Ils ",
+        linkUrl: @verb.url,
       }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -367,6 +377,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_adjectives/#{@adjective.id}",
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
+        linkUrl: @adjective.url,
       }
     when 'French - Adjective Feminine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -390,6 +401,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_adjectives/#{@adjective.id}",
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
+        linkUrl: @adjective.url,
       }
     when 'French - Adjective Masculine Plural'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -413,6 +425,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_adjectives/#{@adjective.id}",
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
+        linkUrl: @adjective.url,
       }
     when 'French - Adjective Feminine Plural'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -436,6 +449,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_adjectives/#{@adjective.id}",
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
+        linkUrl: @adjective.url,
       }
     when 'French - Single Noun with Article, Singular or Plural'
       noun = French::get_noun(quiz_question, @french_nouns)
@@ -461,6 +475,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_nouns/#{noun.id}",
         editLinkText: "Edit Noun",
         highlightText: @adjective.masculine,
+        linkUrl: @adjective.url,
       }
     when 'French - Single Adjective, Any Agreement'
       adjective = French::get_adjective(quiz_question, @french_adjectives)
@@ -485,6 +500,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_adjectives/#{adjective.id}",
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
+        linkUrl: @adjective.url,
       }
     when 'French - Misc Word'
       word = French::get_misc_word(quiz_question, @french_miscs)
@@ -501,6 +517,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_miscs/#{word.id}",
         editLinkText: "Edit Word",
         highlightText: word.french,
+        linkUrl: word.url,
       }
     when 'French - City'
       word = French::get_city(quiz_question, @french_cities)
@@ -516,6 +533,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_cities/#{word.id}",
         editLinkText: "Edit Word",
         highlightText: word.french.capitalize,
+        linkUrl: word.url,
       }
     when 'French - Country'
       @country = French::get_country(quiz_question, @french_countries)
@@ -531,6 +549,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_countries/#{@country.id}",
         editLinkText: "Edit Word",
         highlightText: @country.french.capitalize,
+        linkUrl: @country.url,
       }
     when 'French - Country Gender'
       @country = French::get_country(quiz_question, @french_countries) unless quiz_question.chained
@@ -550,6 +569,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/french_countries/#{@country.id}",
         editLinkText: "Edit Word",
         highlightText: @country.french.capitalize,
+        linkUrl: @country.url,
       }
     when 'Hindi - Subject can Verb'
       english_subject = English::get_random_english_subject
