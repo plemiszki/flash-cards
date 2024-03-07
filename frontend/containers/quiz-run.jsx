@@ -316,8 +316,7 @@ export default class QuizRun extends React.Component {
 
     // determine what type of record needs its streak info updated
     const currentQuestion = this.currentQuestion();
-    const { cardId } = currentQuestion;
-    const entityName = cardId ? 'card' : currentQuestion.entity;
+    const { entityName } = currentQuestion;
     let entityNamePlural;
     switch (entityName) {
       case 'frenchCity':
@@ -366,7 +365,7 @@ export default class QuizRun extends React.Component {
   }
 
   answerIsInvalid(answer, quizQuestion) {
-    const { entity: entityName } = quizQuestion;
+    const { entityName } = quizQuestion;
     if (answer === '') {
       return true;
     }

@@ -67,6 +67,7 @@ class Quiz < ActiveRecord::Base
     when 'Card'
       card = @cards.pop
       obj = {
+        entityName: 'card',
         question: card.question,
         hint: card.hint,
         answers: (card.match_bins.present? ? [card.match_answer] : [card.answer]),
@@ -100,7 +101,7 @@ class Quiz < ActiveRecord::Base
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
       obj = {
         wordId: @noun.id,
-        entity: 'frenchNoun',
+        entityName: 'frenchNoun',
         streak: @noun.streak,
         streakFreezeExpiration: @noun.streak_freeze_expiration.to_i,
         lastStreakAdd: @noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -124,7 +125,7 @@ class Quiz < ActiveRecord::Base
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
       obj = {
         wordId: @noun.id,
-        entity: 'frenchNoun',
+        entityName: 'frenchNoun',
         streak: @noun.streak,
         streakFreezeExpiration: @noun.streak_freeze_expiration.to_i,
         lastStreakAdd: @noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -148,7 +149,7 @@ class Quiz < ActiveRecord::Base
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
       obj = {
         wordId: @noun.id,
-        entity: 'frenchNoun',
+        entityName: 'frenchNoun',
         streak: @noun.streak,
         streakFreezeExpiration: @noun.streak_freeze_expiration.to_i,
         lastStreakAdd: @noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -173,7 +174,7 @@ class Quiz < ActiveRecord::Base
       synonyms = @verb.synonyms
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -199,7 +200,7 @@ class Quiz < ActiveRecord::Base
       verb_form = @verb.forms["present"]["je"]
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -226,7 +227,7 @@ class Quiz < ActiveRecord::Base
       verb_form = @verb.forms["present"]["tu"]
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -253,7 +254,7 @@ class Quiz < ActiveRecord::Base
       verb_form = @verb.forms["present"]["vous"]
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -280,7 +281,7 @@ class Quiz < ActiveRecord::Base
       verb_form = @verb.forms["present"]["nous"]
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -307,7 +308,7 @@ class Quiz < ActiveRecord::Base
       verb_form = @verb.forms["present"]["il"]
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -334,7 +335,7 @@ class Quiz < ActiveRecord::Base
       verb_form = @verb.forms["present"]["ils"]
       obj = {
         wordId: @verb.id,
-        entity: 'frenchVerb',
+        entityName: 'frenchVerb',
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -360,7 +361,7 @@ class Quiz < ActiveRecord::Base
       synonyms = @adjective.synonyms
       obj = {
         wordId: @adjective.id,
-        entity: 'frenchAdjective',
+        entityName: 'frenchAdjective',
         streak: @adjective.streak,
         streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -384,7 +385,7 @@ class Quiz < ActiveRecord::Base
       synonyms = @adjective.synonyms
       obj = {
         wordId: @adjective.id,
-        entity: 'frenchAdjective',
+        entityName: 'frenchAdjective',
         streak: @adjective.streak,
         streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -408,7 +409,7 @@ class Quiz < ActiveRecord::Base
       synonyms = @adjective.synonyms
       obj = {
         wordId: @adjective.id,
-        entity: 'frenchAdjective',
+        entityName: 'frenchAdjective',
         streak: @adjective.streak,
         streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -432,7 +433,7 @@ class Quiz < ActiveRecord::Base
       synonyms = @adjective.synonyms
       obj = {
         wordId: @adjective.id,
-        entity: 'frenchAdjective',
+        entityName: 'frenchAdjective',
         streak: @adjective.streak,
         streakFreezeExpiration: @adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: @adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -457,7 +458,7 @@ class Quiz < ActiveRecord::Base
       plural = (rand(2) == 1)
       obj = {
         wordId: noun.id,
-        entity: 'frenchNoun',
+        entityName: 'frenchNoun',
         streak: noun.streak,
         streakFreezeExpiration: noun.streak_freeze_expiration.to_i,
         lastStreakAdd: noun.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -482,7 +483,7 @@ class Quiz < ActiveRecord::Base
       synonyms = adjective.synonyms
       obj = {
         wordId: adjective.id,
-        entity: 'frenchAdjective',
+        entityName: 'frenchAdjective',
         streak: adjective.streak,
         streakFreezeExpiration: adjective.streak_freeze_expiration.to_i,
         lastStreakAdd: adjective.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -506,7 +507,7 @@ class Quiz < ActiveRecord::Base
       word = French::get_misc_word(quiz_question, @french_miscs)
       obj = {
         wordId: word.id,
-        entity: 'frenchMisc',
+        entityName: 'frenchMisc',
         streak: word.streak,
         streakFreezeExpiration: word.streak_freeze_expiration.to_i,
         lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
@@ -523,7 +524,7 @@ class Quiz < ActiveRecord::Base
       word = French::get_city(quiz_question, @french_cities)
       obj = {
         wordId: word.id,
-        entity: 'frenchCity',
+        entityName: 'frenchCity',
         streak: word.streak,
         streakFreezeExpiration: word.streak_freeze_expiration.to_i,
         question: word.english.capitalize,
@@ -539,7 +540,7 @@ class Quiz < ActiveRecord::Base
       @country = French::get_country(quiz_question, @french_countries)
       obj = {
         wordId: @country.id,
-        entity: 'frenchCountry',
+        entityName: 'frenchCountry',
         streak: @country.streak,
         streakFreezeExpiration: @country.streak_freeze_expiration.to_i,
         question: @country.english.capitalize,
@@ -555,7 +556,7 @@ class Quiz < ActiveRecord::Base
       @country = French::get_country(quiz_question, @french_countries) unless quiz_question.chained
       obj = {
         wordId: @country.id,
-        entity: 'frenchCountry',
+        entityName: 'frenchCountry',
         streak: @country.streak,
         streakFreezeExpiration: @country.streak_freeze_expiration.to_i,
         question: @country.english.capitalize,
