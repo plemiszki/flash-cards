@@ -365,12 +365,30 @@ export default class QuizRun extends React.Component {
     });
   }
 
-  clickCheckAnswer(streakFrozen) {
-    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram, gotQuestionWrongThisRound } = this.state;
-    let matchingQuestion = Object.keys(matchedItems).length > 0;
-    if (!matchingQuestion && answer === '') {
-      return;
+  answerIsInvalid(answer, quizQuestion) {
+    const { entity: entityName } = quizQuestion;
+    if (answer === '') {
+      return true;
     }
+    if (entityName !== 'card' && /\d/.test(answer)) {
+      return true;
+    }
+    return false;
+  }
+
+  clickCheckAnswer(streakFrozen) {
+
+    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram, gotQuestionWrongThisRound } = this.state;
+    const quizQuestion = currentRotation[questionNumber];
+    const matchingQuestion = Object.keys(matchedItems).length > 0;
+
+    if (!matchingQuestion) {
+      const invalidAnswer = this.answerIsInvalid(answer, quizQuestion);
+      if (invalidAnswer) {
+        return;
+      }
+    }
+
     if (status === 'correct') { // proceed to next question
       const finishedAllQuestions = (questionNumber + 1) === currentRotation.length;
       if (finishedAllQuestions) {
@@ -437,7 +455,6 @@ export default class QuizRun extends React.Component {
         }, this.setUpMatching.bind(this));
       }
     } else {
-      let quizQuestion = currentRotation[questionNumber];
       let answerStatus = this.checkAnswer({
         question: quizQuestion,
         answer,
