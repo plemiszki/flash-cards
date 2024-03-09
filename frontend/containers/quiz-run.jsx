@@ -552,7 +552,7 @@ export default class QuizRun extends React.Component {
   clickHighlight() {
     const { needsAttentionTagId } = this.state;
     const currentQuestion = this.currentQuestion();
-    const { wordId, entity: entityName } = currentQuestion;
+    const { wordId, entityName } = currentQuestion;
     this.setState({
       spinner: true,
       showHighlightButton: false,
