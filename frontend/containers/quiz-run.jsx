@@ -238,6 +238,8 @@ export default class QuizRun extends React.Component {
   }
 
   componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown.bind(this));
+
     const id = window.location.pathname.split('/')[2];
     sendRequest(`/api/quizzes/${id}/run`).then((response) => {
       const { quiz, needsAttentionTagId } = response;
@@ -257,6 +259,13 @@ export default class QuizRun extends React.Component {
         errors,
       })
     });
+  }
+
+  onKeyDown(e) {
+    if (e.shiftKey && e.key === 'Enter') {
+      e.preventDefault();
+      this.clickCheckAnswer();
+    }
   }
 
   changeAnswer(e) {
@@ -375,7 +384,9 @@ export default class QuizRun extends React.Component {
     return false;
   }
 
-  clickCheckAnswer(streakFrozen) {
+  clickCheckAnswer() {
+
+    const streakIsFrozen = this.streakIsFrozen();
 
     const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram, gotQuestionWrongThisRound } = this.state;
     const quizQuestion = currentRotation[questionNumber];
@@ -473,7 +484,7 @@ export default class QuizRun extends React.Component {
         this.setState(newState, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
-            if (!gotCorrectAfterFailing && !streakFrozen) {
+            if (!gotCorrectAfterFailing && !streakIsFrozen) {
               const { status } = this.state;
               this.updateStreak.call(this, status);
             }
@@ -735,6 +746,12 @@ export default class QuizRun extends React.Component {
     return currentRotation ? currentRotation[questionNumber] : null;
   }
 
+  streakIsFrozen() {
+    const currentQuestion = this.currentQuestion();
+    const streakIsFrozen = (currentQuestion && currentQuestion.streakFreezeExpiration) > (Date.now() / 1000);
+    return streakIsFrozen;
+  }
+
   render() {
     const {
       currentRotation,
@@ -792,7 +809,7 @@ export default class QuizRun extends React.Component {
       && currentQuestion.tags.indexOf('Needs Attention') === -1
       && highlightData.map(datum => datum.entityId).includes(currentQuestion.wordId) === false;
 
-    const streakFrozen = (currentQuestion && currentQuestion.streakFreezeExpiration) > (Date.now() / 1000);
+    const streakIsFrozen = this.streakIsFrozen();
 
     if (errors.length > 0) {
       return (
@@ -836,7 +853,7 @@ export default class QuizRun extends React.Component {
             <div className="white-box">
               { showStreakNotification && <Streak
                 currentQuestion={ currentQuestion }
-                streakFrozen={ streakFrozen }
+                streakFrozen={ streakIsFrozen }
                 justIncrementedStreak={ justIncrementedStreak }
                 justResetStreak={ justResetStreak }
               /> }
@@ -852,7 +869,7 @@ export default class QuizRun extends React.Component {
                   submit
                   disabled={ spinner }
                   text={ statusCorrect ? "Next Question" : "Check Answer" }
-                  onClick={ () => { this.clickCheckAnswer(streakFrozen) } }
+                  onClick={ () => { this.clickCheckAnswer() } }
                   color={ buttonColor }
                   hoverColor={ buttonHoverColor }
                 />

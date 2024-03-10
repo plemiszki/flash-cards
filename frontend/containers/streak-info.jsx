@@ -12,7 +12,7 @@ export default function StreakInfo(props) {
         </div>
         { entity.streakFreezeExpiration ? (
           <div className="col-xs-6">
-            The streak freeze { streakFreezeExpirationDate > currentTimestamp ? 'will expire' : 'expired' } on {streakFreezeExpirationDate.getMonth()}/{streakFreezeExpirationDate.getDate()}/{streakFreezeExpirationDate.getFullYear()}.
+            The streak freeze { streakFreezeExpirationDate > currentTimestamp ? 'will expire' : 'expired' } on { streakFreezeExpirationDate.getMonth() + 1 }/{ streakFreezeExpirationDate.getDate() }/{ streakFreezeExpirationDate.getFullYear() }.
           </div>
         ) : (
           <div className="col-xs-6">
