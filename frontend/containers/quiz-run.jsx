@@ -252,13 +252,23 @@ export default class QuizRun extends React.Component {
         answer: (firstQuestion && firstQuestion.answerPlaceholder) || '',
         currentRotation: quiz.questions,
         diagram,
-      }, this.setUpMatching.bind(this));
+      }, () => {
+        this.setUpMatching.call(this);
+        this.focusAnswerField();
+      });
     }, (response) => {
       const { errors } = response;
       this.setState({
         errors,
       })
     });
+  }
+
+  focusAnswerField() {
+    const answerField = document.getElementById("answer-field");
+    if (answerField) {
+      answerField.focus();
+    }
   }
 
   onKeyDown(e) {
@@ -462,7 +472,10 @@ export default class QuizRun extends React.Component {
           justIncrementedStreak: false,
           justResetStreak: false,
           gotQuestionWrongThisRound: false,
-        }, this.setUpMatching.bind(this));
+        }, () => {
+          this.setUpMatching.call(this);
+          this.focusAnswerField();
+        });
       }
     } else {
       let answerStatus = this.checkAnswer({
@@ -1077,6 +1090,7 @@ export default class QuizRun extends React.Component {
       return (
         <>
           <textarea
+            id="answer-field"
             rows="6"
             columns="12"
             className={ status === 'wrong' ? 'error' : null }
@@ -1109,6 +1123,7 @@ export default class QuizRun extends React.Component {
       }
       return (
         <input
+          id="answer-field"
           style={ style }
           className={ status === 'wrong' ? 'error' : null }
           onKeyPress={ this.checkKey.bind(this) }
