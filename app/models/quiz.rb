@@ -50,14 +50,16 @@ class Quiz < ActiveRecord::Base
         current_chain = []
       end
     end
-    if max_questions > 0 && result.length > max_questions
-      result = result.sample(max_questions)
-    end
 
-    result.shuffle.flatten.map!.with_index do |question, index|
+    flattened_result = result.shuffle.flatten.map!.with_index do |question, index|
       question[:id] = index
       question
     end
+
+    if max_questions > 0 && flattened_result.length > max_questions
+      flattened_result = flattened_result[0...max_questions]
+    end
+    flattened_result
   end
 
   def generate_question_data(quiz_question)
