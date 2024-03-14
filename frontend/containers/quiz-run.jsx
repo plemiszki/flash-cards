@@ -497,7 +497,7 @@ export default class QuizRun extends React.Component {
         this.setState(newState, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
-            console.log(quizQuestion)
+            console.log(JSON.stringify(quizQuestion))
             console.log('got correct after failing', gotCorrectAfterFailing);
             console.log('streak is frozen', streakIsFrozen);
             if (!gotCorrectAfterFailing && !streakIsFrozen) {
