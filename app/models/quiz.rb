@@ -8,6 +8,8 @@ class Quiz < ActiveRecord::Base
   has_many :quiz_questions, -> { order(:position) }
   has_many :questions, through: :quiz_questions
 
+  class NoVerbFormError < RuntimeError; end
+
   def run
     result = []
     current_chain = []
@@ -43,7 +45,11 @@ class Quiz < ActiveRecord::Base
         else
           current_chain = [obj]
           quiz_question.children.each do |quiz_question|
-            current_chain << generate_question_data(quiz_question)
+            begin
+              current_chain << generate_question_data(quiz_question)
+            rescue NoVerbFormError
+              next
+            end
           end
           result << current_chain
         end
@@ -200,6 +206,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["je"]
+      raise NoVerbFormError if verb_form.nil?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -227,6 +234,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["tu"]
+      raise NoVerbFormError if verb_form.nil?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -254,6 +262,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["vous"]
+      raise NoVerbFormError if verb_form.nil?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -281,6 +290,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["nous"]
+      raise NoVerbFormError if verb_form.nil?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -308,6 +318,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["il"]
+      raise NoVerbFormError if verb_form.nil?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -335,6 +346,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["ils"]
+      raise NoVerbFormError if verb_form.nil?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
