@@ -1,5 +1,5 @@
-import React from 'react'
-import Modal from 'react-modal'
+import React from "react";
+import Modal from "react-modal";
 import {
   Button,
   Common,
@@ -13,19 +13,19 @@ import {
   Spinner,
   titleCase,
   updateEntity,
-} from 'handy-components'
-import { shuffle } from 'lodash';
-import { pascalCase, snakeCase } from 'change-case'
+} from "handy-components";
+import { shuffle } from "lodash";
+import { pascalCase, snakeCase } from "change-case";
 
 const SECONDS_IN_DAY = 86400;
 
 const COLORS = {
-  red: '#FF0000',
-  redHover: '#B40404',
-  green: '#04B404',
-  greenHover: '088A08',
-  blue: 'blue',
-}
+  red: "#FF0000",
+  redHover: "#B40404",
+  green: "#04B404",
+  greenHover: "088A08",
+  blue: "blue",
+};
 
 function HighlightedModal(props) {
   const { isOpen, onRequestClose, data } = props;
@@ -33,24 +33,18 @@ function HighlightedModal(props) {
   style.content.padding = 30;
   return (
     <>
-      <Modal
-        isOpen={ isOpen }
-        style={ style }
-        onRequestClose={ onRequestClose }
-      >
+      <Modal isOpen={isOpen} style={style} onRequestClose={onRequestClose}>
         <div className="padding">
-          { data.map((datum, index) => {
+          {data.map((datum, index) => {
             return (
-              <React.Fragment key={ index}>
+              <React.Fragment key={index}>
                 <div className="card">
-                  <p className="header">{ datum.header }</p>
-                  <div className="body">
-                    { datum.text }
-                  </div>
+                  <p className="header">{datum.header}</p>
+                  <div className="body">{datum.text}</div>
                 </div>
               </React.Fragment>
             );
-          }) }
+          })}
         </div>
       </Modal>
       <style jsx>{`
@@ -68,7 +62,7 @@ function HighlightedModal(props) {
           padding: 5px;
           background: gray;
           color: white;
-          font-family: 'TeachableSans-SemiBold';
+          font-family: "TeachableSans-SemiBold";
         }
         .body {
           border: solid 1px gray;
@@ -86,10 +80,7 @@ function HighlightedModalButton(props) {
   const { spinner, showModal } = props;
   return spinner ? null : (
     <>
-      <div
-        className="highlight-button"
-        onClick={ () => showModal() }
-      ></div>
+      <div className="highlight-button" onClick={() => showModal()}></div>
       <style jsx>{`
         display: inline-block;
         width: 40px;
@@ -111,21 +102,21 @@ function Diagram(props) {
   return data.length ? (
     <>
       <div className="diagram">
-        { !!wrongAnswerCount && <p className="wrong-count">Wrong: { wrongAnswerCount }</p> }
-        { data[rotationNumber - 1].map((question, index) => {
+        {!!wrongAnswerCount && (
+          <p className="wrong-count">Wrong: {wrongAnswerCount}</p>
+        )}
+        {data[rotationNumber - 1].map((question, index) => {
           let classes = ["square"];
           if (index === questionNumber) {
             classes.push("current");
           }
-          if (question.result === 'correct') {
+          if (question.result === "correct") {
             classes.push("correct");
           }
-          if (question.result === 'wrong') {
+          if (question.result === "wrong") {
             classes.push("wrong");
           }
-          return (
-            <div key={ index } className={ classes.join(" ") }></div>
-          );
+          return <div key={index} className={classes.join(" ")}></div>;
         })}
       </div>
       <style jsx>{`
@@ -164,16 +155,21 @@ function Diagram(props) {
         }
       `}</style>
     </>
-  ) : null
+  ) : null;
 }
 
 function Streak(props) {
-  const GREEN = '#04B404';
-  const BLUE = '#013adf';
-  const GRAY = 'gray';
-  const RED = 'red';
+  const GREEN = "#04B404";
+  const BLUE = "#013adf";
+  const GRAY = "gray";
+  const RED = "red";
 
-  const { currentQuestion, streakFrozen, justIncrementedStreak, justResetStreak } = props;
+  const {
+    currentQuestion,
+    streakFrozen,
+    justIncrementedStreak,
+    justResetStreak,
+  } = props;
 
   let color = BLUE;
   if (streakFrozen) {
@@ -188,7 +184,7 @@ function Streak(props) {
 
   return currentQuestion ? (
     <>
-      <div>Streak: { currentQuestion.streak }</div>
+      <div>Streak: {currentQuestion.streak}</div>
       <style jsx>{`
         div {
           display: block;
@@ -198,7 +194,7 @@ function Streak(props) {
           background-color: ${color};
           color: white;
           border-radius: 5px;
-          font-family: 'TeachableSans-Bold';
+          font-family: "TeachableSans-Bold";
         }
       `}</style>
     </>
@@ -206,7 +202,6 @@ function Streak(props) {
 }
 
 export default class QuizRun extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -218,10 +213,10 @@ export default class QuizRun extends React.Component {
       currentRotation: [],
       rotationNumber: 1,
       repeatQuestions: [],
-      answer: '',
+      answer: "",
       matchedItems: {},
       unmatchedItems: [],
-      status: 'question',
+      status: "question",
       showAnswers: false,
       incorrectQuestionIds: [],
       renderUnarchiveButton: true,
@@ -238,30 +233,36 @@ export default class QuizRun extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.onKeyDown.bind(this));
+    document.addEventListener("keydown", this.onKeyDown.bind(this));
 
-    const id = window.location.pathname.split('/')[2];
-    sendRequest(`/api/quizzes/${id}/run`).then((response) => {
-      const { quiz, needsAttentionTagId } = response;
-      const firstQuestion = quiz.questions[0];
-      const diagram = [this.generateDiagramFromQuestions(quiz.questions)];
-      this.setState({
-        needsAttentionTagId,
-        spinner: false,
-        quiz,
-        answer: (firstQuestion && firstQuestion.answerPlaceholder) || '',
-        currentRotation: quiz.questions,
-        diagram,
-      }, () => {
-        this.setUpMatching.call(this);
-        this.focusAnswerField();
-      });
-    }, (response) => {
-      const { errors } = response;
-      this.setState({
-        errors,
-      })
-    });
+    const id = window.location.pathname.split("/")[2];
+    sendRequest(`/api/quizzes/${id}/run`).then(
+      (response) => {
+        const { quiz, needsAttentionTagId } = response;
+        const firstQuestion = quiz.questions[0];
+        const diagram = [this.generateDiagramFromQuestions(quiz.questions)];
+        this.setState(
+          {
+            needsAttentionTagId,
+            spinner: false,
+            quiz,
+            answer: (firstQuestion && firstQuestion.answerPlaceholder) || "",
+            currentRotation: quiz.questions,
+            diagram,
+          },
+          () => {
+            this.setUpMatching.call(this);
+            this.focusAnswerField();
+          }
+        );
+      },
+      (response) => {
+        const { errors } = response;
+        this.setState({
+          errors,
+        });
+      }
+    );
   }
 
   focusAnswerField() {
@@ -272,7 +273,7 @@ export default class QuizRun extends React.Component {
   }
 
   onKeyDown(e) {
-    if (e.shiftKey && e.key === 'Enter') {
+    if (e.shiftKey && e.key === "Enter") {
       e.preventDefault();
       this.clickCheckAnswer();
     }
@@ -286,7 +287,7 @@ export default class QuizRun extends React.Component {
     }
     this.setState({
       answer,
-      status: 'question',
+      status: "question",
     });
   }
 
@@ -305,18 +306,16 @@ export default class QuizRun extends React.Component {
     const question = this.state.quiz.questions[this.state.questionNumber];
     let included = false;
     question.answers.forEach((answer) => {
-      if (answer.indexOf('`') >= 0) {
+      if (answer.indexOf("`") >= 0) {
         included = true;
       }
-    })
+    });
     return included;
   }
 
   generateDiagramFromQuestions(questions) {
-    return questions.map(question => {
-      return (
-        { id: question.id }
-      )
+    return questions.map((question) => {
+      return { id: question.id };
     });
   }
 
@@ -330,19 +329,19 @@ export default class QuizRun extends React.Component {
   }
 
   updateStreak(status) {
-
-    const shouldIncrementStreak = status === 'correct';
+    console.log("updating streak...");
+    const shouldIncrementStreak = status === "correct";
 
     // determine what type of record needs its streak info updated
     const currentQuestion = this.currentQuestion();
     const { entityName } = currentQuestion;
     let entityNamePlural;
     switch (entityName) {
-      case 'frenchCity':
-        entityNamePlural = 'frenchCities';
+      case "frenchCity":
+        entityNamePlural = "frenchCities";
         break;
-      case 'frenchCountry':
-        entityNamePlural = 'frenchCountries';
+      case "frenchCountry":
+        entityNamePlural = "frenchCountries";
         break;
       default:
         entityNamePlural = `${entityName}s`;
@@ -350,8 +349,8 @@ export default class QuizRun extends React.Component {
 
     // determine the new streak info
     let entity = {};
-    entity.streak = (shouldIncrementStreak ? (+currentQuestion.streak + 1) : 0);
-    const currentUnixTimestamp = (new Date().setHours(0, 0, 0, 0) / 1000);
+    entity.streak = shouldIncrementStreak ? +currentQuestion.streak + 1 : 0;
+    const currentUnixTimestamp = new Date().setHours(0, 0, 0, 0) / 1000;
     entity.streakFreezeExpiration = currentUnixTimestamp + SECONDS_IN_DAY;
 
     let newState = {};
@@ -363,16 +362,22 @@ export default class QuizRun extends React.Component {
 
     // update streak and streak freeze expiration for all relevant questions
     let currentRotation = this.state.currentRotation;
-    currentRotation.forEach(question => {
-      if ((question.wordId && question.wordId === currentQuestion.wordId && question.entity === currentQuestion.entity) || (question.cardId && question.cardId === currentQuestion.cardId)) {
+    currentRotation.forEach((question) => {
+      console.log(question);
+      if (
+        (question.wordId &&
+          question.wordId === currentQuestion.wordId &&
+          question.entity === currentQuestion.entity) ||
+        (question.cardId && question.cardId === currentQuestion.cardId)
+      ) {
         question.streak = entity.streak;
         question.streakFreezeExpiration = entity.streakFreezeExpiration;
       }
-    })
+    });
     newState.currentRotation = currentRotation;
     this.setState(newState);
 
-    const entityId = currentQuestion.cardId ? currentQuestion.cardId : currentQuestion.wordId;
+    const entityId = currentQuestion.cardId || currentQuestion.wordId;
 
     // update the database
     updateEntity({
@@ -385,20 +390,31 @@ export default class QuizRun extends React.Component {
 
   answerIsInvalid(answer, quizQuestion) {
     const { entityName } = quizQuestion;
-    if (answer === '') {
+    if (answer === "") {
       return true;
     }
-    if (entityName !== 'card' && /\d/.test(answer)) {
+    if (entityName !== "card" && /\d/.test(answer)) {
       return true;
     }
     return false;
   }
 
   clickCheckAnswer() {
-
     const streakIsFrozen = this.streakIsFrozen();
 
-    const { matchedItems, quiz, status, questionNumber, answer, incorrectQuestionIds, repeatQuestions, rotationNumber, currentRotation, diagram, gotQuestionWrongThisRound } = this.state;
+    const {
+      matchedItems,
+      quiz,
+      status,
+      questionNumber,
+      answer,
+      incorrectQuestionIds,
+      repeatQuestions,
+      rotationNumber,
+      currentRotation,
+      diagram,
+      gotQuestionWrongThisRound,
+    } = this.state;
     const quizQuestion = currentRotation[questionNumber];
     const matchingQuestion = Object.keys(matchedItems).length > 0;
 
@@ -409,29 +425,34 @@ export default class QuizRun extends React.Component {
       }
     }
 
-    if (status === 'correct') { // proceed to next question
-      const finishedAllQuestions = (questionNumber + 1) === currentRotation.length;
+    if (status === "correct") {
+      // proceed to next question
+      const finishedAllQuestions =
+        questionNumber + 1 === currentRotation.length;
       if (finishedAllQuestions) {
         if (repeatQuestions.length > 0) {
           diagram.push(this.generateDiagramFromQuestions(repeatQuestions));
-          this.setState({
-            quiz,
-            showHighlightButton: true,
-            showArchiveButton: true,
-            questionNumber: 0,
-            answer: (repeatQuestions[0].answerPlaceholder || ''),
-            status: 'question',
-            showAnswers: false,
-            renderUnarchiveButton: true,
-            currentRotation: repeatQuestions,
-            rotationNumber: rotationNumber + 1,
-            repeatQuestions: [],
-            wrongAnswerCount: 0,
-            justIncrementedStreak: false,
-            justResetStreak: false,
-            diagram,
-            gotQuestionWrongThisRound: false,
-          }, this.setUpMatching.bind(this));
+          this.setState(
+            {
+              quiz,
+              showHighlightButton: true,
+              showArchiveButton: true,
+              questionNumber: 0,
+              answer: repeatQuestions[0].answerPlaceholder || "",
+              status: "question",
+              showAnswers: false,
+              renderUnarchiveButton: true,
+              currentRotation: repeatQuestions,
+              rotationNumber: rotationNumber + 1,
+              repeatQuestions: [],
+              wrongAnswerCount: 0,
+              justIncrementedStreak: false,
+              justResetStreak: false,
+              diagram,
+              gotQuestionWrongThisRound: false,
+            },
+            this.setUpMatching.bind(this)
+          );
         } else {
           const totalIncorrectAnswers = incorrectQuestionIds.length;
           if (totalIncorrectAnswers > 0) {
@@ -441,78 +462,93 @@ export default class QuizRun extends React.Component {
             let firstLine = `${totalIncorrectAnswers} wrong answers - ${percentage}% correct`;
             let messageLines = [firstLine];
             incorrectQuestionIds.forEach((id) => {
-              messageLines.push(quiz.questions.find(question => question.id === id).question);
+              messageLines.push(
+                quiz.questions.find((question) => question.id === id).question
+              );
             });
             let color;
             if (percentage >= 80) {
-              color = 'light-green';
+              color = "light-green";
             } else if (percentage >= 70) {
-              color = 'yellow';
+              color = "yellow";
             } else {
-              color = 'red';
+              color = "red";
             }
-            localStorage.setItem('message', messageLines.join("\n"));
-            localStorage.setItem('message-color', color);
+            localStorage.setItem("message", messageLines.join("\n"));
+            localStorage.setItem("message-color", color);
           } else {
-            localStorage.setItem('message', 'No incorrect answers.');
-            localStorage.setItem('message-color', 'green');
+            localStorage.setItem("message", "No incorrect answers.");
+            localStorage.setItem("message-color", "green");
           }
-          window.location.pathname = '/quizzes';
+          window.location.pathname = "/quizzes";
         }
       } else {
         let nextQuestionNumber = questionNumber + 1;
-        this.setState({
-          showHighlightButton: true,
-          showArchiveButton: true,
-          questionNumber: nextQuestionNumber,
-          answer: (currentRotation[nextQuestionNumber].answerPlaceholder || ''),
-          status: 'question',
-          showAnswers: false,
-          renderUnarchiveButton: true,
-          justIncrementedStreak: false,
-          justResetStreak: false,
-          gotQuestionWrongThisRound: false,
-        }, () => {
-          this.setUpMatching.call(this);
-          this.focusAnswerField();
-        });
+        this.setState(
+          {
+            showHighlightButton: true,
+            showArchiveButton: true,
+            questionNumber: nextQuestionNumber,
+            answer: currentRotation[nextQuestionNumber].answerPlaceholder || "",
+            status: "question",
+            showAnswers: false,
+            renderUnarchiveButton: true,
+            justIncrementedStreak: false,
+            justResetStreak: false,
+            gotQuestionWrongThisRound: false,
+          },
+          () => {
+            this.setUpMatching.call(this);
+            this.focusAnswerField();
+          }
+        );
       }
     } else {
       let answerStatus = this.checkAnswer({
         question: quizQuestion,
         answer,
       });
-      if (answerStatus === 'correct') {
-        let newState = { status: 'correct' };
+      if (answerStatus === "correct") {
+        let newState = { status: "correct" };
         if (!gotQuestionWrongThisRound) {
           const diagram = this.updateDiagram({
             questionNumber,
             rotationNumber,
             obj: {
-              result: 'correct',
+              result: "correct",
             },
           });
           newState.diagram = diagram;
         }
         this.setState(newState, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
-            const gotCorrectAfterFailing = incorrectQuestionIds.includes(quizQuestion.id);
-            console.log(JSON.stringify(quizQuestion))
-            console.log('got correct after failing', gotCorrectAfterFailing);
-            console.log('streak is frozen', streakIsFrozen);
+            const gotCorrectAfterFailing = incorrectQuestionIds.includes(
+              quizQuestion.id
+            );
+            if (streakIsFrozen) {
+              console.log("streak was not updated because streak is frozen!");
+              console.log("expiration", quizQuestion.streakFreezeExpiration);
+              console.log("word id", quizQuestion.wordId);
+            }
             if (!gotCorrectAfterFailing && !streakIsFrozen) {
               const { status } = this.state;
               this.updateStreak.call(this, status);
             }
           }
         });
-      } else if (answerStatus === 'indeterminate') {
+      } else if (answerStatus === "indeterminate") {
         this.setState({
-          status: 'indeterminate',
+          status: "indeterminate",
         });
       } else {
-        let { incorrectQuestionIds, repeatQuestions, wrongAnswerCount } = this.state;
-        if (!quizQuestion.noRepeat && !repeatQuestions.map(question => question.id).includes(quizQuestion.id)) {
+        let { incorrectQuestionIds, repeatQuestions, wrongAnswerCount } =
+          this.state;
+        if (
+          !quizQuestion.noRepeat &&
+          !repeatQuestions
+            .map((question) => question.id)
+            .includes(quizQuestion.id)
+        ) {
           repeatQuestions.push(quizQuestion);
           wrongAnswerCount += 1;
         }
@@ -522,34 +558,37 @@ export default class QuizRun extends React.Component {
           questionNumber,
           rotationNumber,
           obj: {
-            result: 'wrong',
+            result: "wrong",
           },
         });
-        this.setState({
-          status: 'wrong',
-          incorrectQuestionIds,
-          repeatQuestions,
-          wrongAnswerCount,
-          gotQuestionWrongThisRound: true,
-          diagram,
-        }, () => {
-          if (quizQuestion.cardId || quizQuestion.wordId) {
-            this.updateStreak.call(this, status);
+        this.setState(
+          {
+            status: "wrong",
+            incorrectQuestionIds,
+            repeatQuestions,
+            wrongAnswerCount,
+            gotQuestionWrongThisRound: true,
+            diagram,
+          },
+          () => {
+            if (quizQuestion.cardId || quizQuestion.wordId) {
+              this.updateStreak.call(this, status);
+            }
           }
-        });
+        );
       }
     }
   }
 
   objectsAreEqual(obj1, obj2) {
-    let result = 'correct';
+    let result = "correct";
     Object.keys(obj1).forEach((binName) => {
       let items1 = obj1[binName].sort();
       let items2 = obj2[binName].sort();
       if (JSON.stringify(items1) !== JSON.stringify(items2)) {
-        result = 'incorrect';
+        result = "incorrect";
       }
-    })
+    });
     return result;
   }
 
@@ -559,14 +598,16 @@ export default class QuizRun extends React.Component {
       spinner: true,
     });
     deleteEntity({
-      directory: 'card_tags',
-      id: currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' }).id,
+      directory: "card_tags",
+      id: currentQuestion.tags.find((tag) => {
+        return tag["name"] === "Archived";
+      }).id,
     }).then(() => {
       const { highlightData } = this.state;
       highlightData.push({
-        entityName: 'Card',
+        entityName: "Card",
         entityId: currentQuestion.cardId,
-        header: 'Card',
+        header: "Card",
         text: currentQuestion.question,
       });
       this.setState({
@@ -585,13 +626,13 @@ export default class QuizRun extends React.Component {
       showHighlightButton: false,
     });
     createEntity({
-      directory: 'card_tags',
-      entityName: 'cardTag',
+      directory: "card_tags",
+      entityName: "cardTag",
       entity: {
         tagId: needsAttentionTagId,
         cardtagableId: wordId,
         cardtagableType: pascalCase(entityName),
-      }
+      },
     }).then(() => {
       const { highlightData } = this.state;
       highlightData.push({
@@ -618,62 +659,69 @@ export default class QuizRun extends React.Component {
       let unmatchedItems = [];
       matchBinNames.forEach((binName) => {
         matchedItems[binName] = [];
-        unmatchedItems = unmatchedItems.concat(currentQuestion.matchBinsShuffled[binName]);
-      })
-      this.setState({
-        matchedItems,
-        unmatchedItems: shuffle(unmatchedItems),
-      }, this.setUpDragAndDrop.bind(this));
+        unmatchedItems = unmatchedItems.concat(
+          currentQuestion.matchBinsShuffled[binName]
+        );
+      });
+      this.setState(
+        {
+          matchedItems,
+          unmatchedItems: shuffle(unmatchedItems),
+        },
+        this.setUpDragAndDrop.bind(this)
+      );
     } else {
       this.setState({
         matchedItems: {},
         unmatchedItems: [],
-      })
+      });
     }
   }
 
   setUpDragAndDrop() {
-    $('.unmatched-items-container li').draggable({
-      cursor: '-webkit-grabbing',
-      helper: () => { return '<div></div>'; },
-      stop: this.dragEndHandler
+    $(".unmatched-items-container li").draggable({
+      cursor: "-webkit-grabbing",
+      helper: () => {
+        return "<div></div>";
+      },
+      stop: this.dragEndHandler,
     });
-    $('.bins-container li').droppable({
-      tolerance: 'pointer',
+    $(".bins-container li").droppable({
+      tolerance: "pointer",
       over: this.dragOverHandler,
       out: this.dragOutHandler,
-      drop: this.dropHandler.bind(this)
+      drop: this.dropHandler.bind(this),
     });
   }
 
   selectOption(e) {
     this.setState({
-      status: 'question',
-      answer: e.target.value
+      status: "question",
+      answer: e.target.value,
     });
   }
 
   mouseDownHandler(e) {
-    $('input, a, ul, li, .white-box').addClass('grabbing');
-    e.target.classList.add('selected');
+    $("input, a, ul, li, .white-box").addClass("grabbing");
+    e.target.classList.add("selected");
   }
 
   mouseUpHandler(e) {
-    $('input, a, ul, li, .white-box').removeClass('grabbing');
-    e.target.classList.remove('selected');
+    $("input, a, ul, li, .white-box").removeClass("grabbing");
+    e.target.classList.remove("selected");
   }
 
   dragOverHandler(e) {
-    e.target.classList.add('selected');
+    e.target.classList.add("selected");
   }
 
   dragOutHandler(e) {
-    e.target.classList.remove('selected');
+    e.target.classList.remove("selected");
   }
 
   dragEndHandler() {
-    $('input, a, ul, li, .white-box').removeClass('grabbing');
-    $('li.selected').removeClass('selected');
+    $("input, a, ul, li, .white-box").removeClass("grabbing");
+    $("li.selected").removeClass("selected");
   }
 
   dropHandler(e, ui) {
@@ -683,7 +731,7 @@ export default class QuizRun extends React.Component {
     } else {
       return;
     }
-    let itemName = ui.draggable.attr('data-name');
+    let itemName = ui.draggable.attr("data-name");
     let unmatchedItems = this.state.unmatchedItems;
     unmatchedItems = removeFromArray(unmatchedItems, itemName);
     let matchedItems = this.state.matchedItems;
@@ -694,7 +742,7 @@ export default class QuizRun extends React.Component {
     this.setState({
       matchedItems,
       unmatchedItems,
-      status: 'question'
+      status: "question",
     });
   }
 
@@ -705,56 +753,78 @@ export default class QuizRun extends React.Component {
     let matchedItems = this.state.matchedItems;
     removeFromArray(matchedItems[binName], itemName);
     unmatchedItems.push(itemName);
-    this.setState({
-      status: 'question',
-      unmatchedItems,
-      matchedItems
-    }, this.setUpDragAndDrop.bind(this));
+    this.setState(
+      {
+        status: "question",
+        unmatchedItems,
+        matchedItems,
+      },
+      this.setUpDragAndDrop.bind(this)
+    );
   }
 
   checkAnswer(args) {
     const { answer: userAnswer, question } = args;
-    const correctAnswerCharacters = question.answers[0].split('');
+    const correctAnswerCharacters = question.answers[0].split("");
 
     const isMatchingQuestion = Object.keys(this.state.matchedItems).length > 0;
-    const isChemicalEquation = userAnswer.indexOf('→') > -1;
-    const isRegEx = correctAnswerCharacters[0] === '/' && correctAnswerCharacters[correctAnswerCharacters.length - 1] === '/';
+    const isChemicalEquation = userAnswer.indexOf("→") > -1;
+    const isRegEx =
+      correctAnswerCharacters[0] === "/" &&
+      correctAnswerCharacters[correctAnswerCharacters.length - 1] === "/";
 
     if (isMatchingQuestion) {
       return this.objectsAreEqual(this.state.matchedItems, question.matchBins);
     }
     if (isChemicalEquation) {
-      const userAnswerSides = userAnswer.split('→');
-      const userAnswerLeft = userAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
-      const userAnswerRight = userAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
-      const correctAnswerSides = question.answers[0].split('→');
-      const correctAnswerLeft = correctAnswerSides[0].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
-      const correctAnswerRight = correctAnswerSides[1].split(' ').filter((element) => ['', '+'].indexOf(element) === -1);
-      if (objectsAreEqual(userAnswerLeft.sort(), correctAnswerLeft.sort()) && objectsAreEqual(userAnswerRight.sort(), correctAnswerRight.sort())) {
-        return 'correct'
+      const userAnswerSides = userAnswer.split("→");
+      const userAnswerLeft = userAnswerSides[0]
+        .split(" ")
+        .filter((element) => ["", "+"].indexOf(element) === -1);
+      const userAnswerRight = userAnswerSides[1]
+        .split(" ")
+        .filter((element) => ["", "+"].indexOf(element) === -1);
+      const correctAnswerSides = question.answers[0].split("→");
+      const correctAnswerLeft = correctAnswerSides[0]
+        .split(" ")
+        .filter((element) => ["", "+"].indexOf(element) === -1);
+      const correctAnswerRight = correctAnswerSides[1]
+        .split(" ")
+        .filter((element) => ["", "+"].indexOf(element) === -1);
+      if (
+        objectsAreEqual(userAnswerLeft.sort(), correctAnswerLeft.sort()) &&
+        objectsAreEqual(userAnswerRight.sort(), correctAnswerRight.sort())
+      ) {
+        return "correct";
       } else {
-        return 'incorrect'
+        return "incorrect";
       }
     }
     if (isRegEx) {
       const regexString = question.answers[0];
       const regex = new RegExp(regexString.slice(1, -1));
       if (regex.test(userAnswer)) {
-        return 'correct';
+        return "correct";
       }
     }
     if (question.answers.indexOf(userAnswer) > -1) {
-      return 'correct';
+      return "correct";
     }
-    if (question.indeterminate && question.indeterminate.indexOf(userAnswer) > -1) {
-      return 'indeterminate';
+    if (
+      question.indeterminate &&
+      question.indeterminate.indexOf(userAnswer) > -1
+    ) {
+      return "indeterminate";
     }
-    const sortedQuestionAnswer = question.answers[0].split("\n").sort().join("\n");
+    const sortedQuestionAnswer = question.answers[0]
+      .split("\n")
+      .sort()
+      .join("\n");
     const sortedUserAnswer = userAnswer.split("\n").sort().join("\n");
     if (sortedQuestionAnswer === sortedUserAnswer) {
-      return 'correct';
+      return "correct";
     }
-    return 'incorrect';
+    return "incorrect";
   }
 
   currentQuestion() {
@@ -764,7 +834,9 @@ export default class QuizRun extends React.Component {
 
   streakIsFrozen() {
     const currentQuestion = this.currentQuestion();
-    const streakIsFrozen = (currentQuestion && currentQuestion.streakFreezeExpiration) > (Date.now() / 1000);
+    const streakIsFrozen =
+      (currentQuestion && currentQuestion.streakFreezeExpiration) >
+      Date.now() / 1000;
     return streakIsFrozen;
   }
 
@@ -789,41 +861,47 @@ export default class QuizRun extends React.Component {
 
     let buttonColor;
     let buttonHoverColor;
-    switch(status) {
-      case 'correct':
+    switch (status) {
+      case "correct":
         buttonColor = COLORS.green;
         buttonHoverColor = COLORS.greenHover;
         break;
-      case 'wrong':
+      case "wrong":
         buttonColor = COLORS.red;
         buttonHoverColor = COLORS.redHover;
     }
 
-    const statusCorrect = status === 'correct';
+    const statusCorrect = status === "correct";
     const currentQuestion = this.currentQuestion();
     const showStreakNotification = justIncrementedStreak || justResetStreak;
 
     let descriptionText;
     if (currentQuestion) {
-      const { description, hint, note } = currentQuestion
+      const { description, hint, note } = currentQuestion;
       descriptionText = titleCase(description || hint || "");
       if (note) {
-        descriptionText = descriptionText + ` - ${ note }`;
+        descriptionText = descriptionText + ` - ${note}`;
       }
     }
 
     const renderUnarchiveButton =
-      currentQuestion
-      && this.state.renderUnarchiveButton
-      && currentQuestion.unarchiveButton
-      && currentQuestion.tags.find((tag) => { return tag['name'] === 'Archived' })
-      && highlightData.map(datum => datum.entityId).includes(currentQuestion.cardId) === false;
+      currentQuestion &&
+      this.state.renderUnarchiveButton &&
+      currentQuestion.unarchiveButton &&
+      currentQuestion.tags.find((tag) => {
+        return tag["name"] === "Archived";
+      }) &&
+      highlightData
+        .map((datum) => datum.entityId)
+        .includes(currentQuestion.cardId) === false;
     const renderHighlightButton =
-      currentQuestion
-      && showHighlightButton
-      && currentQuestion.highlightButton
-      && currentQuestion.tags.indexOf('Needs Attention') === -1
-      && highlightData.map(datum => datum.entityId).includes(currentQuestion.wordId) === false;
+      currentQuestion &&
+      showHighlightButton &&
+      currentQuestion.highlightButton &&
+      currentQuestion.tags.indexOf("Needs Attention") === -1 &&
+      highlightData
+        .map((datum) => datum.entityId)
+        .includes(currentQuestion.wordId) === false;
 
     const streakIsFrozen = this.streakIsFrozen();
 
@@ -831,8 +909,17 @@ export default class QuizRun extends React.Component {
       return (
         <>
           <div className="handy-component">
-            { errors.map((error, index) => <p key={ index } className="quiz-run-error">{ error }</p>) }
-            <a className="edit-quiz" href={ `/quizzes/${window.location.pathname.split('/')[2]}` }>Edit Quiz</a>
+            {errors.map((error, index) => (
+              <p key={index} className="quiz-run-error">
+                {error}
+              </p>
+            ))}
+            <a
+              className="edit-quiz"
+              href={`/quizzes/${window.location.pathname.split("/")[2]}`}
+            >
+              Edit Quiz
+            </a>
           </div>
           <style jsx>{`
             .quiz-run-error {
@@ -840,7 +927,7 @@ export default class QuizRun extends React.Component {
               background-color: #fbe2e2;
               color: #c74a47;
               font-size: 14px;
-              font-family: 'TeachableSans-SemiBold';
+              font-family: "TeachableSans-SemiBold";
               margin-bottom: 20px;
             }
 
@@ -855,68 +942,107 @@ export default class QuizRun extends React.Component {
       return (
         <>
           <Diagram
-            data={ diagram }
-            questionNumber={ questionNumber }
-            rotationNumber={ rotationNumber }
-            wrongAnswerCount={ wrongAnswerCount }
+            data={diagram}
+            questionNumber={questionNumber}
+            rotationNumber={rotationNumber}
+            wrongAnswerCount={wrongAnswerCount}
           />
           <div className="handy-component">
-            <h1>{ quiz && quiz.name && `${quiz.name} - ${questionNumber + 1}/${currentRotation.length}` }</h1>
+            <h1>
+              {quiz &&
+                quiz.name &&
+                `${quiz.name} - ${questionNumber + 1}/${
+                  currentRotation.length
+                }`}
+            </h1>
             <HighlightedModalButton
-              spinner={ spinner }
-              showModal={ () => this.setState({ highlightedModalOpen: true }) }
+              spinner={spinner}
+              showModal={() => this.setState({ highlightedModalOpen: true })}
             />
             <div className="white-box">
-              { showStreakNotification && <Streak
-                currentQuestion={ currentQuestion }
-                streakFrozen={ streakIsFrozen }
-                justIncrementedStreak={ justIncrementedStreak }
-                justResetStreak={ justResetStreak }
-              /> }
-              <p className="question">{ currentQuestion && currentQuestion.question }</p>
-              { descriptionText && <p className="description">{ descriptionText }</p> }
-              { imageUrl && <img src={ imageUrl } /> }
+              {showStreakNotification && (
+                <Streak
+                  currentQuestion={currentQuestion}
+                  streakFrozen={streakIsFrozen}
+                  justIncrementedStreak={justIncrementedStreak}
+                  justResetStreak={justResetStreak}
+                />
+              )}
+              <p className="question">
+                {currentQuestion && currentQuestion.question}
+              </p>
+              {descriptionText && (
+                <p className="description">{descriptionText}</p>
+              )}
+              {imageUrl && <img src={imageUrl} />}
               <form>
                 <div className="input-container">
-                  { this.renderInput(currentQuestion) }
+                  {this.renderInput(currentQuestion)}
                 </div>
-                { this.renderAnswers(currentQuestion) }
+                {this.renderAnswers(currentQuestion)}
                 <Button
                   submit
-                  disabled={ spinner }
-                  text={ statusCorrect ? "Next Question" : "Check Answer" }
-                  onClick={ () => { this.clickCheckAnswer() } }
-                  color={ buttonColor }
-                  hoverColor={ buttonHoverColor }
+                  disabled={spinner}
+                  text={statusCorrect ? "Next Question" : "Check Answer"}
+                  onClick={() => {
+                    this.clickCheckAnswer();
+                  }}
+                  color={buttonColor}
+                  hoverColor={buttonHoverColor}
                 />
                 <OutlineButton
-                  text={ showAnswers ? 'Hide Answers' : 'Show Answers' }
-                  onClick={ () => { this.setState({ showAnswers: !showAnswers }); } }
-                  color='#5F5F5F'
+                  text={showAnswers ? "Hide Answers" : "Show Answers"}
+                  onClick={() => {
+                    this.setState({ showAnswers: !showAnswers });
+                  }}
+                  color="#5F5F5F"
                   float
                 />
-                { renderUnarchiveButton && (
+                {renderUnarchiveButton && (
                   <div className="unarchive-button-container">
-                    <div className="unarchive-button" onClick={ () => this.clickUnarchive(currentQuestion) }></div>
+                    <div
+                      className="unarchive-button"
+                      onClick={() => this.clickUnarchive(currentQuestion)}
+                    ></div>
                     <div className="archive-button"></div>
                   </div>
-                ) }
-                { renderHighlightButton && (
+                )}
+                {renderHighlightButton && (
                   <div
                     className="highlight-button"
-                    onClick={ () => { this.clickHighlight() } }
+                    onClick={() => {
+                      this.clickHighlight();
+                    }}
                   />
-                ) }
+                )}
               </form>
-              <Spinner visible={ spinner } />
-              <GrayedOut visible={ spinner } />
+              <Spinner visible={spinner} />
+              <GrayedOut visible={spinner} />
             </div>
-            { currentQuestion && currentQuestion.linkUrl && <a className="card-link" href={ currentQuestion.linkUrl } target="_blank">Reference</a> }
-            { currentQuestion && currentQuestion.editLink && <a className="card-link" href={ currentQuestion.editLink } target="_blank">{ currentQuestion.editLinkText }</a> }
+            {currentQuestion && currentQuestion.linkUrl && (
+              <a
+                className="card-link"
+                href={currentQuestion.linkUrl}
+                target="_blank"
+              >
+                Reference
+              </a>
+            )}
+            {currentQuestion && currentQuestion.editLink && (
+              <a
+                className="card-link"
+                href={currentQuestion.editLink}
+                target="_blank"
+              >
+                {currentQuestion.editLinkText}
+              </a>
+            )}
             <HighlightedModal
-              isOpen={ highlightedModalOpen }
-              onRequestClose={ () => this.setState({ highlightedModalOpen: false }) }
-              data={ highlightData }
+              isOpen={highlightedModalOpen}
+              onRequestClose={() =>
+                this.setState({ highlightedModalOpen: false })
+              }
+              data={highlightData}
             />
           </div>
           <style jsx>{`
@@ -928,7 +1054,7 @@ export default class QuizRun extends React.Component {
               margin-left: 20px;
             }
             p.question {
-              font-family: 'TeachableSans-ExtraBold';
+              font-family: "TeachableSans-ExtraBold";
               font-size: 30px;
               line-height: 42px;
               color: black;
@@ -994,27 +1120,39 @@ export default class QuizRun extends React.Component {
 
   renderInput(currentQuestion) {
     const { answer, unmatchedItems, status } = this.state;
-    if (currentQuestion && currentQuestion.matchBins && Object.keys(currentQuestion.matchBins).length > 0) {
+    if (
+      currentQuestion &&
+      currentQuestion.matchBins &&
+      Object.keys(currentQuestion.matchBins).length > 0
+    ) {
       return (
         <>
           <ul key="1" className="bins-container">
-            { Object.keys(currentQuestion.matchBinsShuffled).map((binName, index) => {
-              return(
-                <li key={ index } className="bin" data-name={ binName }>
-                  { binName }
-                  { this.renderMatchedItems(binName) }
-                </li>
-              );
-            }) }
+            {Object.keys(currentQuestion.matchBinsShuffled).map(
+              (binName, index) => {
+                return (
+                  <li key={index} className="bin" data-name={binName}>
+                    {binName}
+                    {this.renderMatchedItems(binName)}
+                  </li>
+                );
+              }
+            )}
           </ul>
           <ul key="2" className="unmatched-items-container">
-            { unmatchedItems.map((itemName, index) => {
+            {unmatchedItems.map((itemName, index) => {
               return (
-                <li key={ index } className="unmatched-item" onMouseDown={ this.mouseDownHandler } onMouseUp={ this.mouseUpHandler } data-name={ itemName } >
-                  { itemName }
+                <li
+                  key={index}
+                  className="unmatched-item"
+                  onMouseDown={this.mouseDownHandler}
+                  onMouseUp={this.mouseUpHandler}
+                  data-name={itemName}
+                >
+                  {itemName}
                 </li>
               );
-            }) }
+            })}
           </ul>
           <style jsx>{`
             .bins-container {
@@ -1032,7 +1170,7 @@ export default class QuizRun extends React.Component {
               margin-bottom: 15px;
             }
             .bin.selected {
-              background-color: #CEECF5;
+              background-color: #ceecf5;
             }
             .bin:not(:last-of-type) {
               margin-right: 30px;
@@ -1046,7 +1184,7 @@ export default class QuizRun extends React.Component {
               user-select: none;
             }
             .unmatched-item.selected {
-              background-color: #CEECF5;
+              background-color: #ceecf5;
             }
             .unmatched-item:not(:last-of-type) {
               margin-right: 10px;
@@ -1058,12 +1196,19 @@ export default class QuizRun extends React.Component {
     } else if (currentQuestion && currentQuestion.choices) {
       return (
         <div>
-          { currentQuestion.choices.sort().map((choice, index) => {
+          {currentQuestion.choices.sort().map((choice, index) => {
             return (
-              <React.Fragment key={ index }>
+              <React.Fragment key={index}>
                 <div className="choice-container">
-                  <input id={ `option-${index}` } onChange={ this.selectOption.bind(this) } checked={ answer === choice } type="radio" name="choice" value={ choice } />
-                  <label htmlFor={`option-${index}`}>{ choice }</label>
+                  <input
+                    id={`option-${index}`}
+                    onChange={this.selectOption.bind(this)}
+                    checked={answer === choice}
+                    type="radio"
+                    name="choice"
+                    value={choice}
+                  />
+                  <label htmlFor={`option-${index}`}>{choice}</label>
                 </div>
                 <style jsx>{`
                   div:not(:last-of-type) {
@@ -1096,16 +1241,19 @@ export default class QuizRun extends React.Component {
             id="answer-field"
             rows="6"
             columns="12"
-            className={ status === 'wrong' ? 'error' : null }
-            onChange={ this.changeAnswer.bind(this) } value={ answer }
-            style={ currentQuestion.inconsolata ? {
-              fontSize: 16,
-              fontFamily: 'Inconsolata',
-            } : {} }
+            className={status === "wrong" ? "error" : null}
+            onChange={this.changeAnswer.bind(this)}
+            value={answer}
+            style={
+              currentQuestion.inconsolata
+                ? {
+                    fontSize: 16,
+                    fontFamily: "Inconsolata",
+                  }
+                : {}
+            }
           />
-          { currentQuestion.lineCount && (
-            <p>Line Count: { lineCount }</p>
-          ) }
+          {currentQuestion.lineCount && <p>Line Count: {lineCount}</p>}
           <style jsx>{`
             p {
               margin-top: 5px;
@@ -1115,23 +1263,23 @@ export default class QuizRun extends React.Component {
       );
     } else {
       let style = {
-        border: status === 'indeterminate' ? `solid 1px ${COLORS.blue}` : null,
-      }
+        border: status === "indeterminate" ? `solid 1px ${COLORS.blue}` : null,
+      };
       if (currentQuestion && currentQuestion.inconsolata) {
         style = {
           ...style,
           fontSize: 16,
-          fontFamily: 'Inconsolata',
-        }
+          fontFamily: "Inconsolata",
+        };
       }
       return (
         <input
           id="answer-field"
-          style={ style }
-          className={ status === 'wrong' ? 'error' : null }
-          onKeyPress={ this.checkKey.bind(this) }
-          onChange={ this.changeAnswer.bind(this) }
-          value={ answer || "" }
+          style={style}
+          className={status === "wrong" ? "error" : null}
+          onKeyPress={this.checkKey.bind(this)}
+          onChange={this.changeAnswer.bind(this)}
+          value={answer || ""}
         />
       );
     }
@@ -1143,11 +1291,17 @@ export default class QuizRun extends React.Component {
       return (
         <>
           <ul className="bin-items-container">
-            { matchedItems.map((itemName) => {
+            {matchedItems.map((itemName) => {
               return (
-                <li key={ itemName } className="bin-item" onClick={ this.removeMatchItem.bind(this) }>{ itemName }</li>
+                <li
+                  key={itemName}
+                  className="bin-item"
+                  onClick={this.removeMatchItem.bind(this)}
+                >
+                  {itemName}
+                </li>
               );
-            }) }
+            })}
           </ul>
           <style jsx>{`
             .bin-item {
@@ -1174,7 +1328,7 @@ export default class QuizRun extends React.Component {
         return (
           <>
             <div className="answers-container">
-              <pre>{ answer }</pre>
+              <pre>{answer}</pre>
             </div>
             <style jsx>{`
               .answers-container {
@@ -1190,17 +1344,19 @@ export default class QuizRun extends React.Component {
           if (/\n/.test(answer)) {
             answers = answers.concat(answer.split("\n"));
           } else {
-            answers.push(answer)
+            answers.push(answer);
           }
         });
         return (
           <>
             <div className="answers-container">
-              { answers.map((answer, index) => {
+              {answers.map((answer, index) => {
                 return (
-                  <p key={ index } className="answer">{ answer }</p>
+                  <p key={index} className="answer">
+                    {answer}
+                  </p>
                 );
-              }) }
+              })}
             </div>
             <style jsx>{`
               .answers-container {
