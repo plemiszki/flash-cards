@@ -363,13 +363,13 @@ export default class QuizRun extends React.Component {
     // update streak and streak freeze expiration for all relevant questions
     let currentRotation = this.state.currentRotation;
     currentRotation.forEach((question) => {
-      console.log(question);
       if (
         (question.wordId &&
           question.wordId === currentQuestion.wordId &&
-          question.entity === currentQuestion.entity) ||
+          question.entityName === currentQuestion.entityName) ||
         (question.cardId && question.cardId === currentQuestion.cardId)
       ) {
+        console.log(question);
         question.streak = entity.streak;
         question.streakFreezeExpiration = entity.streakFreezeExpiration;
       }
@@ -527,7 +527,10 @@ export default class QuizRun extends React.Component {
             );
             if (streakIsFrozen) {
               console.log("streak was not updated because streak is frozen!");
-              console.log("expiration", quizQuestion.streakFreezeExpiration);
+              console.log(
+                "expiration",
+                new Date(quizQuestion.streakFreezeExpiration * 1000)
+              );
               console.log("word id", quizQuestion.wordId);
             }
             if (!gotCorrectAfterFailing && !streakIsFrozen) {
