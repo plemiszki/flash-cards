@@ -329,7 +329,6 @@ export default class QuizRun extends React.Component {
   }
 
   updateStreak(status) {
-    console.log("updating streak...");
     const shouldIncrementStreak = status === "correct";
 
     // determine what type of record needs its streak info updated
@@ -369,7 +368,6 @@ export default class QuizRun extends React.Component {
           question.entityName === currentQuestion.entityName) ||
         (question.cardId && question.cardId === currentQuestion.cardId)
       ) {
-        console.log(question);
         question.streak = entity.streak;
         question.streakFreezeExpiration = entity.streakFreezeExpiration;
       }
@@ -525,14 +523,6 @@ export default class QuizRun extends React.Component {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(
               quizQuestion.id
             );
-            if (streakIsFrozen) {
-              console.log("streak was not updated because streak is frozen!");
-              console.log(
-                "expiration",
-                new Date(quizQuestion.streakFreezeExpiration * 1000)
-              );
-              console.log("word id", quizQuestion.wordId);
-            }
             if (!gotCorrectAfterFailing && !streakIsFrozen) {
               const { status } = this.state;
               this.updateStreak.call(this, status);
@@ -881,7 +871,7 @@ export default class QuizRun extends React.Component {
     let descriptionText;
     if (currentQuestion) {
       const { description, hint, note } = currentQuestion;
-      descriptionText = titleCase(description || hint || "");
+      descriptionText = description || hint || "";
       if (note) {
         descriptionText = descriptionText + ` - ${note}`;
       }
