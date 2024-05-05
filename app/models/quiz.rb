@@ -533,6 +533,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Word",
         highlightText: word.french,
         linkUrl: word.url,
+        description: word.note,
       }
     when 'French - City'
       word = French::get_city(quiz_question, @french_cities)
