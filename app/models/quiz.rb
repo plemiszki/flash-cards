@@ -519,6 +519,7 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Misc Word'
       word = French::get_misc_word(quiz_question, @french_miscs)
+      synonyms = word.synonyms
       obj = {
         wordId: word.id,
         entityName: 'frenchMisc',
@@ -526,6 +527,9 @@ class Quiz < ActiveRecord::Base
         streakFreezeExpiration: word.streak_freeze_expiration.to_i,
         lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: word.english.capitalize,
+        indeterminate: word.just_synonyms.map do |synonym|
+          synonym.french
+        end,
         answers: [ word.french ],
         highlightButton: true,
         tags: word.tags.pluck(:name),
