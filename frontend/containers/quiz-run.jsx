@@ -277,6 +277,14 @@ export default class QuizRun extends React.Component {
       e.preventDefault();
       this.clickCheckAnswer();
     }
+    if (e.metaKey && e.key === "h") {
+      if (this.renderHighlightButton()) {
+        this.clickHighlight();
+      }
+      if (this.renderUnarchiveButton()) {
+        this.clickUnarchive(this.currentQuestion());
+      }
+    }
   }
 
   changeAnswer(e) {
@@ -833,6 +841,36 @@ export default class QuizRun extends React.Component {
     return streakIsFrozen;
   }
 
+  renderHighlightButton() {
+    const currentQuestion = this.currentQuestion();
+    const { showHighlightButton, highlightData } = this.state;
+    return (
+      currentQuestion &&
+      showHighlightButton &&
+      currentQuestion.highlightButton &&
+      currentQuestion.tags.indexOf("Needs Attention") === -1 &&
+      highlightData
+        .map((datum) => datum.entityId)
+        .includes(currentQuestion.wordId) === false
+    );
+  }
+
+  renderUnarchiveButton() {
+    const currentQuestion = this.currentQuestion();
+    const { renderUnarchiveButton, highlightData } = this.state;
+    return (
+      currentQuestion &&
+      renderUnarchiveButton &&
+      currentQuestion.unarchiveButton &&
+      currentQuestion.tags.find((tag) => {
+        return tag["name"] === "Archived";
+      }) &&
+      highlightData
+        .map((datum) => datum.entityId)
+        .includes(currentQuestion.cardId) === false
+    );
+  }
+
   render() {
     const {
       currentRotation,
@@ -876,25 +914,6 @@ export default class QuizRun extends React.Component {
         descriptionText = descriptionText + ` - ${note}`;
       }
     }
-
-    const renderUnarchiveButton =
-      currentQuestion &&
-      this.state.renderUnarchiveButton &&
-      currentQuestion.unarchiveButton &&
-      currentQuestion.tags.find((tag) => {
-        return tag["name"] === "Archived";
-      }) &&
-      highlightData
-        .map((datum) => datum.entityId)
-        .includes(currentQuestion.cardId) === false;
-    const renderHighlightButton =
-      currentQuestion &&
-      showHighlightButton &&
-      currentQuestion.highlightButton &&
-      currentQuestion.tags.indexOf("Needs Attention") === -1 &&
-      highlightData
-        .map((datum) => datum.entityId)
-        .includes(currentQuestion.wordId) === false;
 
     const streakIsFrozen = this.streakIsFrozen();
 
@@ -991,7 +1010,7 @@ export default class QuizRun extends React.Component {
                   color="#5F5F5F"
                   float
                 />
-                {renderUnarchiveButton && (
+                {this.renderUnarchiveButton() && (
                   <div className="unarchive-button-container">
                     <div
                       className="unarchive-button"
@@ -1000,7 +1019,7 @@ export default class QuizRun extends React.Component {
                     <div className="archive-button"></div>
                   </div>
                 )}
-                {renderHighlightButton && (
+                {this.renderHighlightButton() && (
                   <div
                     className="highlight-button"
                     onClick={() => {
