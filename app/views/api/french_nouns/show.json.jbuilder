@@ -9,6 +9,7 @@ json.frenchNoun do
   json.streak @french_noun.streak
   json.streakFreezeExpiration @french_noun.streak_freeze_expiration.to_i || ''
   json.url @french_noun.url
+  json.uncountable @french_noun.uncountable
 end
 json.frenchNounTags @french_noun_tags do |french_noun_tag|
   json.id french_noun_tag.id
