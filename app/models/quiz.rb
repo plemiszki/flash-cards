@@ -9,6 +9,7 @@ class Quiz < ActiveRecord::Base
   has_many :questions, through: :quiz_questions
 
   class NoVerbFormError < RuntimeError; end
+  class UncountableNounError < RuntimeError; end
 
   def run
     result = []
@@ -48,6 +49,8 @@ class Quiz < ActiveRecord::Base
             begin
               current_chain << generate_question_data(quiz_question)
             rescue NoVerbFormError
+              next
+            rescue UncountableNounError
               next
             end
           end
@@ -131,6 +134,7 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Noun Plural'
       @noun = French::get_noun(quiz_question, @french_nouns) unless quiz_question.chained
+      raise UncountableNounError if @noun.uncountable
       obj = {
         wordId: @noun.id,
         entityName: 'frenchNoun',
