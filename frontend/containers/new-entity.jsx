@@ -340,6 +340,10 @@ export default class NewEntity extends React.Component {
           </div>,
         ];
       case "card":
+        const answerCharacters = this.state.card.answer.split("");
+        const answerIsRegEx =
+          answerCharacters[0] === "/" &&
+          answerCharacters[answerCharacters.length - 1] === "/";
         return [
           <div key="1" className="row">
             {Details.renderField.bind(this)({
@@ -355,6 +359,12 @@ export default class NewEntity extends React.Component {
               columnWidth: 12,
               entity: "card",
               property: "answer",
+              styles: answerIsRegEx
+                ? {
+                    fontSize: 16,
+                    fontFamily: "Inconsolata",
+                  }
+                : {},
             })}
           </div>,
           <div key="3" className="row">
