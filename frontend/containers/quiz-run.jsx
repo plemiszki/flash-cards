@@ -395,8 +395,11 @@ export default class QuizRun extends React.Component {
   }
 
   answerIsInvalid(answer, quizQuestion) {
-    const { entityName } = quizQuestion;
+    const { entityName, validIf } = quizQuestion;
     if (answer === "") {
+      return true;
+    }
+    if (validIf && new RegExp(validIf).test(answer) === false) {
       return true;
     }
     if (entityName !== "card" && /\d/.test(answer)) {

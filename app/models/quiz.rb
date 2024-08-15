@@ -169,9 +169,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @noun.male? ? 'm' : 'f',
         ],
-        indeterminate: @noun.synonyms.map do |noun|
-          noun.french
-        end,
+        validIf: '^(m|f)$',
         description: 'noun gender',
         highlightButton: true,
         tags: @noun.tags.pluck(:name),
