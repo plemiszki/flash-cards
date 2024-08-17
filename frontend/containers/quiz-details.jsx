@@ -401,7 +401,7 @@ export default class QuizDetails extends React.Component {
               position: quizQuestions.length,
             }}
             callback={this.updateQuizQuestions.bind(this)}
-            buttonText={`${selectedQuizQuestionId ? "Edit" : "Add"} Question`}
+            buttonText={`${selectedQuizQuestionId ? "Update" : "Add"} Question`}
             passData={{
               questions,
               tags,

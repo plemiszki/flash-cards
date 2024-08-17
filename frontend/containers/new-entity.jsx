@@ -7,6 +7,7 @@ import {
   setUpNiceSelect,
   resetNiceSelect,
   createEntity,
+  updateEntity,
   sendRequest,
   GrayedOut,
   Spinner,
@@ -147,6 +148,65 @@ export default class NewEntity extends React.Component {
     );
   }
 
+  clickUpdate(id) {
+    const {
+      entityNamePlural: entityNamePluralProps,
+      responseKey,
+      entityName,
+      redirectAfterCreate,
+      callback,
+      callbackFullProps,
+    } = this.props;
+    const { tag } = this.state;
+    const entityNamePlural = entityNamePluralProps || `${entityName}s`;
+    const directory = snakeCase(entityNamePlural);
+    this.setState({
+      spinner: true,
+    });
+    updateEntity({
+      directory,
+      entityName,
+      entity: this.state[entityName],
+      id,
+      additionalData:
+        entityName === "card"
+          ? {
+              tagId: tag.tagId,
+            }
+          : null,
+    }).then(
+      (response) => {
+        if (redirectAfterCreate) {
+          window.location.href = `/${directory}/${response[entityName].id}`;
+        } else {
+          if (callback) {
+            callback(
+              response[responseKey || entityNamePlural],
+              entityNamePlural
+            );
+          }
+          if (callbackFullProps) {
+            callbackFullProps(response, entityNamePlural);
+          }
+        }
+      },
+      (response) => {
+        this.setState(
+          {
+            spinner: false,
+            errors: response.errors,
+          },
+          () => {
+            resetNiceSelect({
+              selector: ".admin-modal select",
+              func: Details.changeField.bind(this, this.changeFieldArgs()),
+            });
+          }
+        );
+      }
+    );
+  }
+
   changeFieldArgs() {
     return {
       callback: () => {
@@ -169,10 +229,10 @@ export default class NewEntity extends React.Component {
             disabled={spinner}
             text={
               buttonText ||
-              `${entity ? "Edit" : "Add"} ${titleCase(entityName)}`
+              `${entity ? "Update" : "Add"} ${titleCase(entityName)}`
             }
             onClick={() => {
-              this.clickAdd();
+              entity ? this.clickUpdate(entity.id) : this.clickAdd();
             }}
           />
           <GrayedOut visible={spinner} />
