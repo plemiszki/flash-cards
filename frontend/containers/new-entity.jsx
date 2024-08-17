@@ -20,13 +20,14 @@ export default class NewEntity extends React.Component {
   constructor(props) {
     super(props);
 
-    const { entityName, fetchData, initialEntity, passData } = this.props;
+    const { entityName, fetchData, entity, initialEntity, passData } =
+      this.props;
 
     entityNamePlural = this.props.entityNamePlural || `${entityName}s`;
     directory = snakeCase(entityNamePlural);
     let state_obj = {
       spinner: !!fetchData,
-      [entityName]: deepCopy(initialEntity),
+      [entityName]: deepCopy(entity || initialEntity),
       errors: {},
     };
 
@@ -157,7 +158,7 @@ export default class NewEntity extends React.Component {
   }
 
   render() {
-    const { buttonText, entityName } = this.props;
+    const { buttonText, entityName, entity } = this.props;
     const { spinner } = this.state;
     return (
       <div className="new-entity handy-component admin-modal">
@@ -166,7 +167,10 @@ export default class NewEntity extends React.Component {
           <Button
             submit
             disabled={spinner}
-            text={buttonText || `Add ${titleCase(entityName)}`}
+            text={
+              buttonText ||
+              `${entity ? "Edit" : "Add"} ${titleCase(entityName)}`
+            }
             onClick={() => {
               this.clickAdd();
             }}
