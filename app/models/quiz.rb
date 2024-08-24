@@ -231,6 +231,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "Je ",
         linkUrl: @verb.url,
+        validIf: '.*\.$',
       }
     when 'French - Single Verb - Present Tense - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -259,6 +260,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "Tu ",
         linkUrl: @verb.url,
+        validIf: '.*\.$',
       }
     when 'French - Single Verb - Present Tense - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -287,6 +289,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "Vous ",
         linkUrl: @verb.url,
+        validIf: '.*\.$',
       }
     when 'French - Single Verb - Present Tense - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -315,6 +318,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "Nous ",
         linkUrl: @verb.url,
+        validIf: '.*\.$',
       }
     when 'French - Single Verb - Present Tense - Third Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -343,6 +347,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "Il ",
         linkUrl: @verb.url,
+        validIf: '.*\.$',
       }
     when 'French - Single Verb - Present Tense - Third Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
@@ -371,6 +376,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "Ils ",
         linkUrl: @verb.url,
+        validIf: '.*\.$',
       }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
