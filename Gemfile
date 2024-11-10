@@ -7,7 +7,7 @@ end
 
 ruby '3.3.5'
 
-gem 'rails'
+gem 'rails', '7.2.2'
 gem 'pg'
 
 gem 'activerecord_json_validator'
@@ -22,7 +22,7 @@ gem 'jquery-ui-rails'
 gem 'pry-rails'
 gem 'puma'
 gem 'sassc-rails'
-gem 'sidekiq'
+gem 'sidekiq', '7.3.5'
 gem 'uglifier'
 
 group :development, :test do
