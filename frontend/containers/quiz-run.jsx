@@ -460,7 +460,10 @@ export default class QuizRun extends React.Component {
               diagram,
               gotQuestionWrongThisRound: false,
             },
-            this.setUpMatching.bind(this)
+            () => {
+              this.setUpMatching.bind(this);
+              this.focusAnswerField();
+            }
           );
         } else {
           const totalIncorrectAnswers = incorrectQuestionIds.length;
