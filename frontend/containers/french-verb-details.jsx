@@ -1,17 +1,28 @@
-import React from 'react'
-import { deepCopy, objectsAreEqual, Details, setUpNiceSelect, fetchEntity, updateEntity, BottomButtons, Spinner, GrayedOut, stringifyJSONFields } from 'handy-components'
-import TagsSection from './tags-section';
-import StreakInfo from './streak-info';
+import React from "react";
+import {
+  deepCopy,
+  objectsAreEqual,
+  Details,
+  setUpNiceSelect,
+  fetchEntity,
+  updateEntity,
+  BottomButtons,
+  Spinner,
+  GrayedOut,
+  stringifyJSONFields,
+} from "handy-components";
+import TagsSection from "./tags-section";
+import StreakInfo from "./streak-info";
 
 export default class FrenchVerbDetails extends React.Component {
   constructor(props) {
     super(props);
 
     let emptyFrenchVerb = {
-      english: '',
-      englishSaved: '',
-      french: '',
-      frenchSaved: '',
+      english: "",
+      englishSaved: "",
+      french: "",
+      frenchSaved: "",
     };
 
     this.state = {
@@ -27,17 +38,26 @@ export default class FrenchVerbDetails extends React.Component {
   componentDidMount() {
     fetchEntity().then((response) => {
       const { frenchVerb: rawfrenchVerb, frenchVerbTags, tags } = response;
-      const frenchVerb = stringifyJSONFields({ entity: rawfrenchVerb, jsonFields: ['forms'] });
-      this.setState({
-        spinner: false,
-        frenchVerb,
-        frenchVerbSaved: deepCopy(frenchVerb),
-        tags,
-        frenchVerbTags,
-        changesToSave: false
-      }, () => {
-        setUpNiceSelect({ selector: 'select', func: Details.changeDropdownField.bind(this) });
+      const frenchVerb = stringifyJSONFields({
+        entity: rawfrenchVerb,
+        jsonFields: ["forms"],
       });
+      this.setState(
+        {
+          spinner: false,
+          frenchVerb,
+          frenchVerbSaved: deepCopy(frenchVerb),
+          tags,
+          frenchVerbTags,
+          changesToSave: false,
+        },
+        () => {
+          setUpNiceSelect({
+            selector: "select",
+            func: Details.changeDropdownField.bind(this),
+          });
+        }
+      );
     });
   }
 
@@ -45,8 +65,8 @@ export default class FrenchVerbDetails extends React.Component {
     return {
       allErrors: Errors,
       errorsArray: this.state.errors,
-      changesFunction: this.checkForChanges.bind(this)
-    }
+      changesFunction: this.checkForChanges.bind(this),
+    };
   }
 
   checkForChanges() {
@@ -54,75 +74,114 @@ export default class FrenchVerbDetails extends React.Component {
   }
 
   clickSave() {
-    this.setState({
-      spinner: true,
-      justSaved: true
-    }, () => {
-      updateEntity({
-        entityName: 'frenchVerb',
-        entity: this.state.frenchVerb,
-      }).then((response) => {
-        const frenchVerb = stringifyJSONFields({ entity: response.frenchVerb, jsonFields: ['forms'] });
-        this.setState({
-          spinner: false,
-          frenchVerb,
-          frenchVerbSaved: deepCopy(frenchVerb),
-          changesToSave: false
-        });
-      }, (response) => {
-        const { errors } = response;
-        this.setState({
-          spinner: false,
-          errors,
-        });
-      });
-    });
+    this.setState(
+      {
+        spinner: true,
+        justSaved: true,
+      },
+      () => {
+        updateEntity({
+          entityName: "frenchVerb",
+          entity: this.state.frenchVerb,
+        }).then(
+          (response) => {
+            const frenchVerb = stringifyJSONFields({
+              entity: response.frenchVerb,
+              jsonFields: ["forms"],
+            });
+            this.setState({
+              spinner: false,
+              frenchVerb,
+              frenchVerbSaved: deepCopy(frenchVerb),
+              changesToSave: false,
+            });
+          },
+          (response) => {
+            const { errors } = response;
+            this.setState({
+              spinner: false,
+              errors,
+            });
+          }
+        );
+      }
+    );
   }
 
   render() {
-    const { spinner, justSaved, changesToSave, frenchVerbTags, tags, frenchVerb, frenchVerbSaved } = this.state;
+    const {
+      spinner,
+      justSaved,
+      changesToSave,
+      frenchVerbTags,
+      tags,
+      frenchVerb,
+      frenchVerbSaved,
+    } = this.state;
     return (
       <div className="handy-component">
         <h1>French Verb Details</h1>
         <div className="white-box">
           <div className="row">
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchVerb', property: 'english' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchVerb', property: 'french' }) }
-            { Details.renderField.bind(this)({ columnWidth: 4, entity: 'frenchVerb', property: 'note' }) }
-            { Details.renderField.bind(this)({ columnWidth: 12, entity: 'frenchVerb', property: 'forms', type: 'json', rows: 8 }) }
+            {Details.renderField.bind(this)({
+              columnWidth: 4,
+              entity: "frenchVerb",
+              property: "english",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 4,
+              entity: "frenchVerb",
+              property: "french",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 4,
+              entity: "frenchVerb",
+              property: "note",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 12,
+              entity: "frenchVerb",
+              property: "forms",
+              type: "json",
+              rows: 14,
+            })}
           </div>
           <div className="row">
-            { Details.renderField.bind(this)({
+            {Details.renderField.bind(this)({
               columnWidth: 12,
-              entity: 'frenchVerb',
-              property: 'url',
-              columnHeader: 'Link',
-              linkText: frenchVerbSaved.url ? 'Visit Link' : null,
+              entity: "frenchVerb",
+              property: "url",
+              columnHeader: "Link",
+              linkText: frenchVerbSaved.url ? "Visit Link" : null,
               linkUrl: frenchVerbSaved.url,
-            }) }
+            })}
           </div>
           <BottomButtons
             entityName="FrenchVerb"
-            confirmDelete={ Details.confirmDelete.bind(this) }
-            justSaved={ justSaved }
-            changesToSave={ changesToSave }
-            disabled={ spinner }
-            clickSave={ () => { this.clickSave() } }
+            confirmDelete={Details.confirmDelete.bind(this)}
+            justSaved={justSaved}
+            changesToSave={changesToSave}
+            disabled={spinner}
+            clickSave={() => {
+              this.clickSave();
+            }}
             marginBottom
           />
           <hr />
           <TagsSection
-            entity={ frenchVerb }
+            entity={frenchVerb}
             entityName="FrenchVerb"
-            entityTags={ frenchVerbTags }
-            tags={ tags }
-            setSpinner={ bool => this.setState({ spinner: bool }) }
-            setTags={ (entityTags, tags) => this.setState({ frenchVerbTags: entityTags, tags }) }
+            entityTags={frenchVerbTags}
+            tags={tags}
+            setSpinner={(bool) => this.setState({ spinner: bool })}
+            setTags={(entityTags, tags) =>
+              this.setState({ frenchVerbTags: entityTags, tags })
+            }
           />
-          <Spinner visible={ spinner } />
-          <GrayedOut visible={ spinner } />
+          <Spinner visible={spinner} />
+          <GrayedOut visible={spinner} />
         </div>
-        <StreakInfo entity={ frenchVerb } />
+        <StreakInfo entity={frenchVerb} />
       </div>
     );
   }
