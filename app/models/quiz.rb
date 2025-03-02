@@ -237,7 +237,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["tu"]
-      raise NoVerbFormError if verb_form.nil?
+      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -266,7 +266,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["vous"]
-      raise NoVerbFormError if verb_form.nil?
+      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -295,7 +295,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["nous"]
-      raise NoVerbFormError if verb_form.nil?
+      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -324,7 +324,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["il"]
-      raise NoVerbFormError if verb_form.nil?
+      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -353,7 +353,7 @@ class Quiz < ActiveRecord::Base
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["ils"]
-      raise NoVerbFormError if verb_form.nil?
+      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
