@@ -459,6 +459,8 @@ export default class QuizRun extends React.Component {
               justResetStreak: false,
               diagram,
               gotQuestionWrongThisRound: false,
+              matchedItems: {},
+              unmatchedItems: [],
             },
             () => {
               this.setUpMatching.bind(this);
