@@ -26,8 +26,6 @@ gem 'sidekiq', '~> 8'
 gem 'uglifier'
 
 group :development, :test do
-  gem 'byebug', platform: :mri
-  gem 'better_errors'
   gem 'dotenv-rails'
 end
 
