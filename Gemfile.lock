@@ -305,10 +305,6 @@ GEM
       rack (>= 3.1.0)
       redis-client (>= 0.23.2)
     simpleidn (0.2.3)
-    spring (4.3.0)
-    spring-watcher-listen (2.1.0)
-      listen (>= 2.7, < 4.0)
-      spring (>= 4)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -371,8 +367,6 @@ DEPENDENCIES
   rails_12factor
   sassc-rails
   sidekiq (~> 8)
-  spring
-  spring-watcher-listen
   tzinfo-data
   uglifier
   web-console
