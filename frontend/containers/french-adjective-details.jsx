@@ -17,12 +17,13 @@ export default class FrenchAdjectiveDetails extends React.Component {
   constructor(props) {
     super(props);
 
-    let emptyFrenchAdjective = {
+    const emptyFrenchAdjective = {
       english: "",
       masculine: "",
       masculinePlural: "",
       feminine: "",
       femininePlural: "",
+      note: "",
     };
 
     this.state = {
@@ -122,6 +123,11 @@ export default class FrenchAdjectiveDetails extends React.Component {
               entity: "frenchAdjective",
               property: "english",
             })}
+            {Details.renderField.bind(this)({
+              columnWidth: 4,
+              entity: "frenchAdjective",
+              property: "note",
+            })}
           </div>
           <div className="row">
             {Details.renderField.bind(this)({
@@ -134,8 +140,6 @@ export default class FrenchAdjectiveDetails extends React.Component {
               entity: "frenchAdjective",
               property: "masculinePlural",
             })}
-          </div>
-          <div className="row">
             {Details.renderField.bind(this)({
               columnWidth: 3,
               entity: "frenchAdjective",

@@ -401,6 +401,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
         linkUrl: @adjective.url,
+        note: @adjective.note,
       }
     when 'French - Adjective Feminine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -425,6 +426,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
         linkUrl: @adjective.url,
+        note: @adjective.note,
       }
     when 'French - Adjective Masculine Plural'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -449,6 +451,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
         linkUrl: @adjective.url,
+        note: @adjective.note,
       }
     when 'French - Adjective Feminine Plural'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
@@ -473,6 +476,7 @@ class Quiz < ActiveRecord::Base
         editLinkText: "Edit Adjective",
         highlightText: @adjective.masculine,
         linkUrl: @adjective.url,
+        note: @adjective.note,
       }
     when 'French - Single Noun with Article, Singular or Plural'
       noun = French::get_noun(quiz_question, @french_nouns)

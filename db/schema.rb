@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_15_001624) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_174025) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
-  enable_extension "plpgsql"
 
   create_table "adjectives", id: :serial, force: :cascade do |t|
     t.string "english", null: false
@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_001624) do
     t.datetime "updated_at", null: false
     t.datetime "streak_freeze_expiration", precision: nil
     t.string "url", default: ""
+    t.string "note", default: ""
   end
 
   create_table "french_cities", force: :cascade do |t|
@@ -267,5 +268,4 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_001624) do
     t.integer "streak", default: 0
     t.date "last_streak_add"
   end
-
 end

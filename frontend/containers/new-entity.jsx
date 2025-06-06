@@ -740,10 +740,15 @@ export default class NewEntity extends React.Component {
           </div>,
           <div key="3" className="row">
             {Details.renderField.bind(this)({
-              columnWidth: 12,
+              columnWidth: 8,
               entity: "frenchAdjective",
               property: "url",
               columnHeader: "Link",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 4,
+              entity: "frenchAdjective",
+              property: "note",
             })}
           </div>,
         ];
