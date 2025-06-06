@@ -22,7 +22,7 @@ gem 'jquery-ui-rails'
 gem 'pry-rails'
 gem 'puma'
 gem 'sassc-rails'
-gem 'sidekiq', '7.3.8'
+gem 'sidekiq', '~> 8'
 gem 'uglifier'
 
 group :development, :test do
