@@ -154,6 +154,7 @@ export default class FrenchVerbDetails extends React.Component {
               columnHeader: "Link",
               linkText: frenchVerbSaved.url ? "Visit Link" : null,
               linkUrl: frenchVerbSaved.url,
+              linkNewWindow: true,
             })}
           </div>
           <BottomButtons
