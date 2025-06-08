@@ -378,6 +378,30 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
+    when 'French - Single Verb - Past Participle'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      past_participle = @verb.forms["past_perfect"]["participle"]
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "(Past participle)",
+        answers: [
+          past_participle,
+        ],
+        description: nil,
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
       synonyms = @adjective.synonyms
