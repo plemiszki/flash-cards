@@ -400,7 +400,6 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         answerPlaceholder: "",
         linkUrl: @verb.url,
-        validIf: '.*\.$',
       }
     when 'French - Adjective Masculine Singular'
       @adjective = French::get_adjective(quiz_question, @french_adjectives) unless quiz_question.chained
