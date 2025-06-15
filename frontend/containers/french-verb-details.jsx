@@ -149,6 +149,15 @@ export default class FrenchVerbDetails extends React.Component {
             {Details.renderField.bind(this)({
               columnWidth: 12,
               entity: "frenchVerb",
+              property: "forms",
+              type: "json",
+              rows: 14,
+            })}
+          </div>
+          <div className="row">
+            {Details.renderField.bind(this)({
+              columnWidth: 12,
+              entity: "frenchVerb",
               property: "url",
               columnHeader: "Link",
               linkText: frenchVerbSaved.url ? "Visit Link" : null,
