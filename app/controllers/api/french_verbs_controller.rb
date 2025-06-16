@@ -46,6 +46,14 @@ class Api::FrenchVerbsController < AdminController
     render json: french_verb
   end
 
+  def fetch
+    @french_verb = FrenchVerb.find(params[:id])
+    @french_verb.fetch_missing_data!
+    @french_verb_tags = @french_verb.card_tags
+    @tags = Tag.all.order(:name)
+    render 'show', formats: [:json], handlers: [:jbuilder]
+  end
+
   private
 
   def french_verb_params

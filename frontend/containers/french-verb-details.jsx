@@ -1,15 +1,17 @@
 import React from "react";
 import {
-  deepCopy,
-  objectsAreEqual,
-  Details,
-  setUpNiceSelect,
-  fetchEntity,
-  updateEntity,
   BottomButtons,
-  Spinner,
+  Button,
+  deepCopy,
+  Details,
+  fetchEntity,
   GrayedOut,
+  objectsAreEqual,
+  sendRequest,
+  setUpNiceSelect,
+  Spinner,
   stringifyJSONFields,
+  updateEntity,
 } from "handy-components";
 import TagsSection from "./tags-section";
 import StreakInfo from "./streak-info";
@@ -175,7 +177,38 @@ export default class FrenchVerbDetails extends React.Component {
               this.clickSave();
             }}
             marginBottom
-          />
+          >
+            <Button
+              text="Fetch"
+              float
+              marginRight
+              onClick={() => {
+                this.setState({
+                  spinner: true,
+                });
+                sendRequest(`/api/french_verbs/${frenchVerb.id}/fetch`).then(
+                  (response) => {
+                    const frenchVerb = stringifyJSONFields({
+                      entity: response.frenchVerb,
+                      jsonFields: ["forms"],
+                    });
+                    this.setState({
+                      spinner: false,
+                      frenchVerb,
+                      frenchVerbSaved: deepCopy(frenchVerb),
+                      changesToSave: false,
+                    });
+                  },
+                  (response) => {
+                    const { errors } = response;
+                    this.setState({
+                      errors,
+                    });
+                  }
+                );
+              }}
+            />
+          </BottomButtons>
           <hr />
           <TagsSection
             entity={frenchVerb}

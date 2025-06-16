@@ -39,6 +39,7 @@ Rails.application.routes.draw do
     resources :spanish_adjectives, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_miscs, only: [:index, :show, :create, :update, :destroy]
     resources :french_nouns, only: [:index, :show, :create, :update, :destroy]
+    get '/french_verbs/:id/fetch' => 'french_verbs#fetch'
     resources :french_verbs, only: [:index, :show, :create, :update, :destroy]
     resources :french_adjectives, only: [:index, :show, :create, :update, :destroy]
     resources :french_countries, only: [:index, :show, :create, :update, :destroy]
