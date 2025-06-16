@@ -14,6 +14,18 @@
       },
       "additionalProperties": false
     },
+    "future": {
+      "type": "object",
+      "properties": {
+        "je": { "type": "string" },
+        "tu": { "type": "string" },
+        "il": { "type": "string" },
+        "nous": { "type": "string" },
+        "vous": { "type": "string" },
+        "ils": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "imperfect": {
       "type": "object",
       "properties": {

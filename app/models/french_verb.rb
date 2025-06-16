@@ -85,6 +85,16 @@ class FrenchVerb < ActiveRecord::Base
       end
       td = td.next_element
     end
+
+    future_row_header = table.at_css('span[title="futur simple"]').parent
+    td = future_row_header.next_element
+    [:je, :tu, :il, :nous, :vous, :ils].each do |subject|
+      link_tags = td.css('a')
+      if link_tags.count
+        data[:future][subject] = link_tags.last.attributes['title'].value
+      end
+      td = td.next_element
+    end
     p data if verbose
 
     update!(url: "https://en.wiktionary.org/wiki/#{self.french}#French", forms: data)
