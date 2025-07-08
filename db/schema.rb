@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_15_005048) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_08_135326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -52,6 +52,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_15_005048) do
     t.jsonb "config", default: {}
     t.datetime "streak_freeze_expiration", precision: nil
     t.string "notes", default: ""
+    t.string "cloudinary_url", default: ""
   end
 
   create_table "french_adjectives", force: :cascade do |t|
