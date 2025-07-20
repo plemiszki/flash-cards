@@ -43,6 +43,9 @@ class FrenchVerb < ActiveRecord::Base
     if forms.keys.include?("present")
       return true if (["je", "tu", "il", "nous", "vous", "ils"] - forms["present"].keys).present?
     end
+    if forms.keys.include?("conditional")
+      return true if (["je", "tu", "il", "nous", "vous", "ils"] - forms["conditional"].keys).present?
+    end
     if forms.keys.include?("imperative")
       return true if (["tu", "nous", "vous"] - forms["present"].keys).present?
     end
@@ -68,7 +71,11 @@ class FrenchVerb < ActiveRecord::Base
     doc = Nokogiri::HTML(html)
 
     french_section = FrenchVerb.find_french_section(doc, self.french)
-    throw "missing french section" if french_section.nil?
+
+    if french_section.nil?
+      p "missing french section for #{self.french}" if verbose
+      throw "missing french section"
+    end
 
     table = french_section
       .map { |el| el.at_css('table.roa-inflection-table') }
@@ -98,6 +105,16 @@ class FrenchVerb < ActiveRecord::Base
       link_tags = td.css('a')
       if link_tags.count
         data[:future][subject] = link_tags.last.attributes['title'].value
+      end
+      td = td.next_element
+    end
+
+    conditional_row_header = table.at_css('span[title="conditionnel présent"]').parent
+    td = conditional_row_header.next_element
+    [:je, :tu, :il, :nous, :vous, :ils].each do |subject|
+      link_tags = td.css('a')
+      if link_tags.count
+        data[:conditional][subject] = link_tags.last.attributes['title'].value
       end
       td = td.next_element
     end
