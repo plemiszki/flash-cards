@@ -98,6 +98,17 @@ class FrenchVerb < ActiveRecord::Base
       end
       td = td.next_element
     end
+
+    imperative_row_header = table.css('span').find { |node| node.text.strip == 'simple' }.parent
+    td_je = imperative_row_header.next_element
+    td_tu = td_je.next_element
+    data[:imperative][:tu] = td_tu.css('a').last.attributes['title'].value
+    td_il = td_tu.next_element
+    td_nous = td_il.next_element
+    data[:imperative][:nous] = td_nous.css('a').last.attributes['title'].value
+    td_vous = td_nous.next_element
+    data[:imperative][:vous] = td_vous.css('a').last.attributes['title'].value
+
     p data if verbose
 
     update!(url: "https://en.wiktionary.org/wiki/#{self.french}#French", forms: data)

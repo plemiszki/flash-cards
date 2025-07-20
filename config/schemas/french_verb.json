@@ -14,6 +14,15 @@
       },
       "additionalProperties": false
     },
+    "imperative": {
+      "type": "object",
+      "properties": {
+        "tu": { "type": "string" },
+        "nous": { "type": "string" },
+        "vous": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "future": {
       "type": "object",
       "properties": {
