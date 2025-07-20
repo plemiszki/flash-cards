@@ -38,7 +38,7 @@ class FrenchVerb < ActiveRecord::Base
   end
 
   def missing_data?
-    missing_keys = ["present", "past_perfect", "future", "imperative"] - forms.keys
+    missing_keys = ["present", "past_perfect", "future", "imperative", "conditional"] - forms.keys
     return true if missing_keys.present?
     if forms.keys.include?("present")
       return true if (["je", "tu", "il", "nous", "vous", "ils"] - forms["present"].keys).present?
