@@ -465,6 +465,177 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
+    when 'French - Single Verb - Future Tense - First Person Singular'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["future"]["je"]
+      raise NoVerbFormError unless verb_form.present?
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "I will #{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          synonym_verb_form = verb.forms["future"]["je"]
+          French.vowel_sound?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
+        end,
+        answers: [
+          French.vowel_sound?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
+        ],
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Je ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Single Verb - Future Tense - Second Person Singular (Informal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["future"]["tu"]
+      raise NoVerbFormError unless verb_form.present?
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You will #{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Tu #{verb.forms["future"]["tu"]}."
+        end,
+        answers: [
+          "Tu #{verb_form}.",
+        ],
+        description: 'informal',
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Tu ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Single Verb - Future Tense - Third Person Singular'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["future"]["il"]
+      raise NoVerbFormError unless verb_form.present?
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You will #{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Il #{verb.forms["future"]["il"]}."
+        end,
+        answers: [
+          "Il #{verb_form}.",
+        ],
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Il ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Single Verb - Future Tense - First Person Plural'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["future"]["nous"]
+      raise NoVerbFormError unless verb_form.present?
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You will #{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Nous #{verb.forms["future"]["nous"]}."
+        end,
+        answers: [
+          "Nous #{verb_form}.",
+        ],
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Nous ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Single Verb - Future Tense - Second Person Singular (Formal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["future"]["vous"]
+      raise NoVerbFormError unless verb_form.present?
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You will #{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Vous #{verb.forms["future"]["vous"]}."
+        end,
+        answers: [
+          "Vous #{verb_form}.",
+        ],
+        description: 'formal',
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Vous ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Single Verb - Future Tense - Third Person Plural'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      verb_form = @verb.forms["future"]["ils"]
+      raise NoVerbFormError unless verb_form.present?
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You will #{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "Ils #{verb.forms["future"]["ils"]}."
+        end,
+        answers: [
+          "Ils #{verb_form}.",
+        ],
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Ils ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
     when 'French - Single Verb - Past Participle'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       past_participle = @verb.forms["past_perfect"]["participle"]
