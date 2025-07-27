@@ -449,7 +449,7 @@ class Quiz < ActiveRecord::Base
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: "#{@verb.english}.".capitalize,
+        question: "Let's #{@verb.english}.",
         indeterminate: @verb.just_synonyms.map do |verb|
           "#{verb.forms["imperative"]["nous"]}.".capitalize
         end,
