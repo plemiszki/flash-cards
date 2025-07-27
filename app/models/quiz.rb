@@ -39,7 +39,11 @@ class Quiz < ActiveRecord::Base
 
     my_quiz_questions.each do |quiz_question|
       quiz_question.get_quiz_run_amount.times do
-        obj = generate_question_data(quiz_question)
+        begin
+          obj = generate_question_data(quiz_question)
+        rescue NoVerbFormError
+          next
+        end
         children = quiz_question.children
         if children.empty?
           result << obj
@@ -397,6 +401,34 @@ class Quiz < ActiveRecord::Base
           "#{verb_form}.".capitalize,
         ],
         description: 'informal',
+        highlightButton: true,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Single Verb - Imperative Tense - Second Person Singular (Formal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      synonyms = @verb.synonyms
+      raise NoVerbFormError if @verb.forms["imperative"].nil? || @verb.forms["imperative"]["vous"].nil?
+      verb_form = @verb.forms["imperative"]["vous"]
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "#{@verb.english}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          "#{verb.forms["imperative"]["vous"]}.".capitalize
+        end,
+        answers: [
+          "#{verb_form}.".capitalize,
+        ],
+        description: 'formal',
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -1521,6 +1553,8 @@ class Quiz < ActiveRecord::Base
         answers: answers.flatten,
         description: female_only.present? ? 'Only Females' : nil
       }
+    else
+      raise "No logic for #{question.name}"
     end
     obj
   end
