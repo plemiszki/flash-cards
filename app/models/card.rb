@@ -1,3 +1,5 @@
+require 'open-uri'
+
 class Card < ActiveRecord::Base
 
   SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'card.json')).to_s
@@ -49,6 +51,16 @@ class Card < ActiveRecord::Base
       result += "\n"
     end
     result
+  end
+
+  def migrate_image_to_cloudinary!
+    raise "no image url for card #{id}" if !image_url.present?
+
+    tempfile = URI.open(image_url)
+    response = Cloudinary::Uploader.upload(tempfile)
+    update!(cloudinary_url: response["secure_url"])
+  rescue => error
+    Rails.logger.error "Failed to migrate image for card #{id}: #{error.message}"
   end
 
 end
