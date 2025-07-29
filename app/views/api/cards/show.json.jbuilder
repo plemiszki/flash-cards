@@ -7,6 +7,7 @@ json.card do
   json.answer @card.answer
   json.answerPlaceholder @card.answer_placeholder
   json.imageUrl @card.image_url
+  json.cloudinaryUrl @card.cloudinary_url
   json.multipleChoice @card.multiple_choice
   json.hint @card.hint
   json.config @card.config
