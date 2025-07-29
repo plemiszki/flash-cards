@@ -61,6 +61,21 @@ class Card < ActiveRecord::Base
     update!(cloudinary_url: response["secure_url"])
   rescue => error
     Rails.logger.error "Failed to migrate image for card #{id}: #{error.message}"
+    raise
+  end
+
+  def self.migrate_all_images_to_cloudinary!
+    error_card_ids = []
+    cards_with_inages = Card.where.not(image_url: "")
+    cards_with_images.each do |card|
+      begin
+        card.migrate_image_to_cloudinary!
+      rescue
+        error_card_ids << card.id
+      end
+    end
+
+    error_card_ids
   end
 
 end
