@@ -43,6 +43,11 @@ export default class CardDetails extends React.Component {
   }
 
   componentDidMount() {
+    const script = document.createElement("script");
+    script.src = "https://upload-widget.cloudinary.com/global/all.js";
+    script.async = true;
+    document.body.appendChild(script);
+
     fetchEntity().then((response) => {
       const { card, cardTags, tags, matchBins } = response;
       this.setState(
@@ -63,6 +68,15 @@ export default class CardDetails extends React.Component {
         }
       );
     });
+  }
+
+  componentWillUnmount() {
+    const script = document.querySelector(
+      'script[src="https://upload-widget.cloudinary.com/global/all.js"]'
+    );
+    if (script) {
+      script.remove();
+    }
   }
 
   changeFieldArgs() {
@@ -110,28 +124,25 @@ export default class CardDetails extends React.Component {
   }
 
   clickUploadImage() {
-    const client = filestack.init(
-      document.getElementById("filestack-api-key").innerHTML
-    );
-    const options = {
-      onUploadDone: (response) => {
-        let url = response.filesUploaded[0].url;
-        let card = this.state.card;
-        card.imageUrl = url;
-        this.setState(
-          {
-            card,
-          },
-          () => {
-            this.setState({
-              changesToSave: this.checkForChanges(),
-            });
-          }
-        );
+    const { card } = this.state;
+    window.cloudinary.openUploadWidget(
+      {
+        cloudName: "duzqplbgf",
+        uploadPreset: "flashcards",
+        sources: ["local"],
       },
-      fromSources: ["local_file_system"],
-    };
-    client.picker(options).open();
+      (error, result) => {
+        if (!error && result.event === "success") {
+          const url = result.info.secure_url;
+          card.cloudinaryUrl = url;
+          console.log("card", card);
+          this.setState({
+            card,
+            changesToSave: true,
+          });
+        }
+      }
+    );
   }
 
   updateMatchBins(response) {
@@ -205,7 +216,7 @@ export default class CardDetails extends React.Component {
                 columnWidth: 6,
                 entity: "card",
                 property: "cloudinaryUrl",
-                // uploadLinkFunction: this.clickUploadImage.bind(this),
+                uploadLinkFunction: this.clickUploadImage.bind(this),
               })}
               {Details.renderField.bind(this)({
                 columnWidth: 6,
@@ -216,7 +227,7 @@ export default class CardDetails extends React.Component {
             </div>
             <div className="row">
               <div className="col-xs-3">
-                <img src={cardSaved.cloudinaryUrl} />
+                <img src={card.cloudinaryUrl} />
               </div>
             </div>
             <div className="row">
