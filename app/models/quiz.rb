@@ -534,7 +534,7 @@ class Quiz < ActiveRecord::Base
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: "You will #{@verb.english}.".capitalize,
+        question: "He will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
           "Il #{verb.forms["future"]["il"]}."
         end,
@@ -562,7 +562,7 @@ class Quiz < ActiveRecord::Base
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: "You will #{@verb.english}.".capitalize,
+        question: "We will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
           "Nous #{verb.forms["future"]["nous"]}."
         end,
@@ -619,7 +619,7 @@ class Quiz < ActiveRecord::Base
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: "You will #{@verb.english}.".capitalize,
+        question: "They will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
           "Ils #{verb.forms["future"]["ils"]}."
         end,
