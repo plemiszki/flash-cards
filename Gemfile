@@ -5,9 +5,9 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '3.4.4'
+ruby '3.4.5'
 
-gem 'rails', '8.0.2'
+gem 'rails', '8.0.2.1'
 gem 'pg'
 
 gem 'activerecord_json_validator'
@@ -23,7 +23,7 @@ gem 'jquery-ui-rails'
 gem 'pry-rails'
 gem 'puma'
 gem 'sassc-rails'
-gem 'sidekiq', '~> 8'
+gem 'sidekiq'
 gem 'uglifier'
 
 group :development, :test do
