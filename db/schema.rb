@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_08_135326) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_04_162703) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -131,6 +131,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_08_135326) do
     t.datetime "streak_freeze_expiration", precision: nil
     t.string "url", default: ""
     t.boolean "use_etre", default: false
+    t.boolean "reflexive", default: false, null: false
   end
 
   create_table "jobs", force: :cascade do |t|

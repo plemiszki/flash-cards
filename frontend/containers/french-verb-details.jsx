@@ -126,12 +126,12 @@ export default class FrenchVerbDetails extends React.Component {
         <div className="white-box">
           <div className="row">
             {Details.renderField.bind(this)({
-              columnWidth: 3,
+              columnWidth: 4,
               entity: "frenchVerb",
               property: "english",
             })}
             {Details.renderField.bind(this)({
-              columnWidth: 3,
+              columnWidth: 4,
               entity: "frenchVerb",
               property: "french",
             })}
@@ -139,6 +139,13 @@ export default class FrenchVerbDetails extends React.Component {
               columnWidth: 4,
               entity: "frenchVerb",
               property: "note",
+            })}
+          </div>
+          <div className="row" style={{ marginBottom: 30 }}>
+            {Details.renderSwitch.bind(this)({
+              columnWidth: 2,
+              entity: "frenchVerb",
+              property: "reflexive",
             })}
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,

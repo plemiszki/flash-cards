@@ -8,6 +8,7 @@ json.frenchVerb do
   json.streakFreezeExpiration @french_verb.streak_freeze_expiration.to_i || ''
   json.url @french_verb.url
   json.useEtre @french_verb.use_etre
+  json.reflexive @french_verb.reflexive
 end
 json.frenchVerbTags @french_verb_tags do |french_verb_tag|
   json.id french_verb_tag.id
