@@ -645,23 +645,6 @@ export default class NewEntity extends React.Component {
               columnHeader: "Needs Attention",
             })}
           </div>,
-          <div key="2" className="row">
-            {Details.renderField.bind(this)({
-              columnWidth: 12,
-              entity: "frenchVerb",
-              property: "forms",
-              type: "json",
-              rows: 8,
-            })}
-          </div>,
-          <div key="3" className="row">
-            {Details.renderField.bind(this)({
-              columnWidth: 12,
-              entity: "frenchVerb",
-              property: "url",
-              columnHeader: "Link",
-            })}
-          </div>,
         ];
       case "spanishAdjective":
         return [

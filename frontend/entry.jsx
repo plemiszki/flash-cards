@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       entityName: "frenchVerb",
       columns: ["french", "english", "streak", "forms"],
-      modalDimensions: { width: 900, height: 602 },
+      modalDimensions: { width: 900, rows: 1 },
       includeLinks: true,
       includeHover: true,
       includeNewButton: true,
