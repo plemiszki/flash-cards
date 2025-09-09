@@ -17,8 +17,7 @@ class Api::FrenchVerbsController < AdminController
         tag_id = Tag.find_by_name('Needs Attention').id
         CardTag.create(cardtagable_type: 'FrenchVerb', cardtagable_id: @french_verb.id, tag_id: tag_id)
       end
-      @french_verbs = FrenchVerb.all
-      render 'index', formats: [:json], handlers: [:jbuilder]
+      render 'show', formats: [:json], handlers: [:jbuilder]
     else
       render_errors(@french_verb)
     end

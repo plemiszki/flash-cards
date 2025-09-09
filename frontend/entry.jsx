@@ -343,6 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
           forms: JSON.stringify(FRENCH_VERB_FORMS_PLACEHOLDER, null, 2),
         },
         buttonText: "Add French Verb",
+        redirectAfterCreate: true,
       },
     }
   );
