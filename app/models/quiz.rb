@@ -221,11 +221,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "I am #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          synonym_verb_form = verb.forms["present"]["je"]
-          French.vowel_sound?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
+          verb.present(subject: "je")
         end,
         answers: [
-          French.vowel_sound?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
+          @verb.present(subject: "je"),
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
@@ -250,10 +249,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "You are #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Tu #{verb.forms["present"]["tu"]}."
+          verb.present(subject: "tu")
         end,
         answers: [
-          "Tu #{verb_form}.",
+          @verb.present(subject: "tu")
         ],
         description: 'informal',
         highlightButton: true,
@@ -279,10 +278,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "You are #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Vous #{verb.forms["present"]["vous"]}."
+          verb.present(subject: "vous")
         end,
         answers: [
-          "Vous #{verb_form}.",
+          @verb.present(subject: "vous")
         ],
         description: 'formal',
         highlightButton: true,
@@ -308,10 +307,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "We are #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Nous #{verb.forms["present"]["nous"]}."
+          verb.present(subject: "nous")
         end,
         answers: [
-          "Nous #{verb_form}.",
+          @verb.present(subject: "nous")
         ],
         description: nil,
         highlightButton: true,
@@ -337,10 +336,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "He is #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Il #{verb.forms["present"]["il"]}."
+          verb.present(subject: "il")
         end,
         answers: [
-          "Il #{verb_form}.",
+          @verb.present(subject: "il")
         ],
         description: nil,
         highlightButton: true,
@@ -366,10 +365,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "They are #{@verb.english_present_continuous}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Ils #{verb.forms["present"]["ils"]}."
+          verb.present(subject: "ils")
         end,
         answers: [
-          "Ils #{verb_form}.",
+          @verb.present(subject: "ils")
         ],
         description: nil,
         highlightButton: true,

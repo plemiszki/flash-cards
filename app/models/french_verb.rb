@@ -2,6 +2,15 @@ class FrenchVerb < ActiveRecord::Base
 
   SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'french_verb.json')).to_s
 
+  REFLEXIVE_PRONOUN_MAP = {
+    "je" => "me",
+    "tu" => "te",
+    "il" => "se",
+    "nous" => "nous",
+    "vous" => "vous",
+    "ils" => "se"
+  }
+
   validates_presence_of :english, :french
   validates_uniqueness_of :english, scope: :french, message: '/ French combo already used'
   validates :forms, json: { schema: JSON.parse(File.read(SCHEMA)) }
@@ -35,6 +44,25 @@ class FrenchVerb < ActiveRecord::Base
     first_word = words[0]
     first_word = first_word.ends_with?('e') && !first_word.ends_with?('ee') && first_word != 'be' ? "#{first_word[0..-2]}ing" : "#{first_word}ing"
     ([first_word] + words[1..-1]).join(' ')
+  end
+
+  def present(subject:)
+    form = forms["present"][subject]
+    vowel_sound = French.vowel_sound?(form[0])
+    if reflexive?
+      reflexive_pronoun = REFLEXIVE_PRONOUN_MAP[subject]
+      if vowel_sound
+        "#{subject} #{reflexive_pronoun[0]}'#{form}.".capitalize
+      else
+        "#{subject} #{reflexive_pronoun} #{form}.".capitalize
+      end
+    else
+      if vowel_sound
+        "#{subject[0]}'#{form}.".capitalize
+      else
+        "#{subject} #{form}.".capitalize
+      end
+    end
   end
 
   def missing_data?
