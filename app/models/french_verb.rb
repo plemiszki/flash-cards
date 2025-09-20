@@ -51,13 +51,15 @@ class FrenchVerb < ActiveRecord::Base
     vowel_sound = French.vowel_sound?(form[0])
     if reflexive?
       reflexive_pronoun = REFLEXIVE_PRONOUN_MAP[subject]
-      if vowel_sound
+      reflexive_pronoun_elides = reflexive_pronoun.ends_with?('e')
+      if vowel_sound && reflexive_pronoun_elides
         "#{subject} #{reflexive_pronoun[0]}'#{form}.".capitalize
       else
         "#{subject} #{reflexive_pronoun} #{form}.".capitalize
       end
     else
-      if vowel_sound
+      subject_elides = (subject == 'je')
+      if vowel_sound && subject_elides
         "#{subject[0]}'#{form}.".capitalize
       else
         "#{subject} #{form}.".capitalize
