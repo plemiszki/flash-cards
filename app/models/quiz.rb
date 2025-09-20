@@ -394,10 +394,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "#{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "#{verb.forms["imperative"]["tu"]}.".capitalize
+          verb.imperative(subject: "tu")
         end,
         answers: [
-          "#{verb_form}.".capitalize,
+          @verb.imperative(subject: "tu")
         ],
         description: 'informal',
         highlightButton: true,
@@ -422,10 +422,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "#{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "#{verb.forms["imperative"]["vous"]}.".capitalize
+          verb.imperative(subject: "vous")
         end,
         answers: [
-          "#{verb_form}.".capitalize,
+          @verb.imperative(subject: "vous")
         ],
         description: 'formal',
         highlightButton: true,
@@ -450,10 +450,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "Let's #{@verb.english}.",
         indeterminate: @verb.just_synonyms.map do |verb|
-          "#{verb.forms["imperative"]["nous"]}.".capitalize
+          verb.imperative(subject: "nous")
         end,
         answers: [
-          "#{verb_form}.".capitalize,
+          @verb.imperative(subject: "nous")
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),

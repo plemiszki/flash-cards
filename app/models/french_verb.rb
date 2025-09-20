@@ -67,6 +67,16 @@ class FrenchVerb < ActiveRecord::Base
     end
   end
 
+  def imperative(subject:)
+    verb_form = forms["imperative"][subject]
+    if reflexive?
+      reflexive_pronoun = subject == "tu" ? "toi" : REFLEXIVE_PRONOUN_MAP[subject]
+      "#{verb_form}-#{reflexive_pronoun}.".capitalize
+    else
+      "#{verb_form}.".capitalize
+    end
+  end
+
   def missing_data?
     missing_keys = ["present", "past_perfect", "future", "imperative", "conditional"] - forms.keys
     return true if missing_keys.present?
