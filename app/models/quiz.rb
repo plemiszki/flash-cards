@@ -477,11 +477,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "I will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          synonym_verb_form = verb.forms["future"]["je"]
-          French.vowel_sound?(synonym_verb_form[0]) ? "J'#{synonym_verb_form}." : "Je #{synonym_verb_form}."
+          verb.future(subject: "je")
         end,
         answers: [
-          French.vowel_sound?(verb_form[0]) ? "J'#{verb_form}." : "Je #{verb_form}.",
+          @verb.future(subject: "je")
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
@@ -506,10 +505,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "You will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Tu #{verb.forms["future"]["tu"]}."
+          verb.future(subject: "tu")
         end,
         answers: [
-          "Tu #{verb_form}.",
+          @verb.future(subject: "tu")
         ],
         description: 'informal',
         highlightButton: true,
@@ -535,10 +534,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "He will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Il #{verb.forms["future"]["il"]}."
+          verb.future(subject: "il")
         end,
         answers: [
-          "Il #{verb_form}.",
+          @verb.future(subject: "il")
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
@@ -563,10 +562,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "We will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Nous #{verb.forms["future"]["nous"]}."
+          verb.future(subject: "nous")
         end,
         answers: [
-          "Nous #{verb_form}.",
+          @verb.future(subject: "nous")
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),
@@ -591,10 +590,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "You will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Vous #{verb.forms["future"]["vous"]}."
+          verb.future(subject: "vous")
         end,
         answers: [
-          "Vous #{verb_form}.",
+          @verb.future(subject: "vous")
         ],
         description: 'formal',
         highlightButton: true,
@@ -620,10 +619,10 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: "They will #{@verb.english}.".capitalize,
         indeterminate: @verb.just_synonyms.map do |verb|
-          "Ils #{verb.forms["future"]["ils"]}."
+          verb.future(subject: "ils")
         end,
         answers: [
-          "Ils #{verb_form}.",
+          @verb.future(subject: "ils")
         ],
         highlightButton: true,
         tags: @verb.tags.pluck(:name),

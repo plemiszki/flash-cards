@@ -77,6 +77,26 @@ class FrenchVerb < ActiveRecord::Base
     end
   end
 
+  def future(subject:)
+    verb_form = forms["future"][subject]
+    if reflexive?
+      reflexive_pronoun = REFLEXIVE_PRONOUN_MAP[subject]
+      reflexive_pronoun_elides = reflexive_pronoun.ends_with?('e')
+      if vowel_sound && reflexive_pronoun_elides
+        "#{subject} #{reflexive_pronoun[0]}'#{verb_form}.".capitalize
+      else
+        "#{subject} #{reflexive_pronoun} #{verb_form}.".capitalize
+      end
+    else
+      subject_elides = (subject == 'je')
+      if vowel_sound && subject_elides
+        "#{subject[0]}'#{verb_form}.".capitalize
+      else
+        "#{subject} #{verb_form}.".capitalize
+      end
+    end
+  end
+
   def missing_data?
     missing_keys = ["present", "past_perfect", "future", "imperative", "conditional"] - forms.keys
     return true if missing_keys.present?
