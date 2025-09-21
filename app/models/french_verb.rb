@@ -79,6 +79,7 @@ class FrenchVerb < ActiveRecord::Base
 
   def future(subject:)
     verb_form = forms["future"][subject]
+    vowel_sound = French.vowel_sound?(verb_form[0])
     if reflexive?
       reflexive_pronoun = REFLEXIVE_PRONOUN_MAP[subject]
       reflexive_pronoun_elides = reflexive_pronoun.ends_with?('e')
