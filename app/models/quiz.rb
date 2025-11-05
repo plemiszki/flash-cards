@@ -466,9 +466,8 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Future Tense - First Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      check_for_future_form(@verb, "je")
       synonyms = @verb.synonyms
-      verb_form = @verb.forms["future"]["je"]
-      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -494,9 +493,8 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Future Tense - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      check_for_future_form(@verb, "tu")
       synonyms = @verb.synonyms
-      verb_form = @verb.forms["future"]["tu"]
-      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -523,9 +521,8 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Future Tense - Third Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      check_for_future_form(@verb, "il")
       synonyms = @verb.synonyms
-      verb_form = @verb.forms["future"]["il"]
-      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -551,9 +548,8 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Future Tense - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      check_for_future_form(@verb, "nous")
       synonyms = @verb.synonyms
-      verb_form = @verb.forms["future"]["nous"]
-      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -579,9 +575,8 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Future Tense - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      check_for_future_form(@verb, "vous")
       synonyms = @verb.synonyms
-      verb_form = @verb.forms["future"]["vous"]
-      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -608,9 +603,8 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Future Tense - Third Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      check_for_future_form(@verb, "ils")
       synonyms = @verb.synonyms
-      verb_form = @verb.forms["future"]["ils"]
-      raise NoVerbFormError unless verb_form.present?
       obj = {
         wordId: @verb.id,
         entityName: 'frenchVerb',
@@ -636,6 +630,7 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Single Verb - Past Participle'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms["past_perfect"].nil?
       past_participle = @verb.forms["past_perfect"]["participle"]
       obj = {
         wordId: @verb.id,
@@ -1756,6 +1751,13 @@ class Quiz < ActiveRecord::Base
   end
 
   private
+
+  def check_for_future_form(verb, pronoun)
+    future_forms = verb.forms["future"]
+    raise NoVerbFormError if future_forms.nil?
+    verb_form = future_forms["je"]
+    raise NoVerbFormError unless verb_form.present?
+  end
 
   def set_past_symbols
     use_past = random_boolean
