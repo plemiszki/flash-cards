@@ -638,7 +638,7 @@ class Quiz < ActiveRecord::Base
         streak: @verb.streak,
         streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
         lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        question: "(Past participle)",
+        question: "(Past participle - #{@verb.french})",
         answers: [
           past_participle,
         ],
