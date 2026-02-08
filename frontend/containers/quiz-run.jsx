@@ -253,7 +253,7 @@ export default class QuizRun extends React.Component {
           () => {
             this.setUpMatching.call(this);
             this.focusAnswerField();
-          }
+          },
         );
       },
       (response) => {
@@ -261,7 +261,7 @@ export default class QuizRun extends React.Component {
         this.setState({
           errors,
         });
-      }
+      },
     );
   }
 
@@ -463,9 +463,9 @@ export default class QuizRun extends React.Component {
               unmatchedItems: [],
             },
             () => {
-              this.setUpMatching.bind(this);
+              this.setUpMatching.call(this);
               this.focusAnswerField();
-            }
+            },
           );
         } else {
           const totalIncorrectAnswers = incorrectQuestionIds.length;
@@ -477,7 +477,7 @@ export default class QuizRun extends React.Component {
             let messageLines = [firstLine];
             incorrectQuestionIds.forEach((id) => {
               messageLines.push(
-                quiz.questions.find((question) => question.id === id).question
+                quiz.questions.find((question) => question.id === id).question,
               );
             });
             let color;
@@ -514,7 +514,7 @@ export default class QuizRun extends React.Component {
           () => {
             this.setUpMatching.call(this);
             this.focusAnswerField();
-          }
+          },
         );
       }
     } else {
@@ -537,7 +537,7 @@ export default class QuizRun extends React.Component {
         this.setState(newState, () => {
           if (quizQuestion.cardId || quizQuestion.wordId) {
             const gotCorrectAfterFailing = incorrectQuestionIds.includes(
-              quizQuestion.id
+              quizQuestion.id,
             );
             if (!gotCorrectAfterFailing && !streakIsFrozen) {
               const { status } = this.state;
@@ -583,7 +583,7 @@ export default class QuizRun extends React.Component {
             if (quizQuestion.cardId || quizQuestion.wordId) {
               this.updateStreak.call(this, status);
             }
-          }
+          },
         );
       }
     }
@@ -669,7 +669,7 @@ export default class QuizRun extends React.Component {
       matchBinNames.forEach((binName) => {
         matchedItems[binName] = [];
         unmatchedItems = unmatchedItems.concat(
-          currentQuestion.matchBinsShuffled[binName]
+          currentQuestion.matchBinsShuffled[binName],
         );
       });
       this.setState(
@@ -677,7 +677,7 @@ export default class QuizRun extends React.Component {
           matchedItems,
           unmatchedItems: shuffle(unmatchedItems),
         },
-        this.setUpDragAndDrop.bind(this)
+        this.setUpDragAndDrop.bind(this),
       );
     } else {
       this.setState({
@@ -768,7 +768,7 @@ export default class QuizRun extends React.Component {
         unmatchedItems,
         matchedItems,
       },
-      this.setUpDragAndDrop.bind(this)
+      this.setUpDragAndDrop.bind(this),
     );
   }
 
@@ -1156,7 +1156,7 @@ export default class QuizRun extends React.Component {
                     {this.renderMatchedItems(binName)}
                   </li>
                 );
-              }
+              },
             )}
           </ul>
           <ul key="2" className="unmatched-items-container">
