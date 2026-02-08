@@ -5,14 +5,14 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '4.0.0'
+ruby '4.0.1'
 
-gem 'rails', '8.1.1'
+gem 'rails'
 gem 'pg'
 
 gem 'activerecord_json_validator'
 gem 'bootstrap-sass'
-gem 'clearance', '~> 2.5'
+gem 'clearance'
 gem 'cloudinary'
 gem 'dotenv'
 gem 'httparty'
