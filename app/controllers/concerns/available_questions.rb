@@ -40,8 +40,6 @@ module AvailableQuestions
 
   def get_available_questions(quiz_questions:, quiz:)
     archived_tag_id = Tag.find_by_name('Archived').id
-    needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
-
     archived_card_ids = CardTag.where(tag_id: archived_tag_id, cardtagable_type: 'Card').map(&:cardtagable_id)
 
     quiz_questions.each do |quiz_question|

@@ -1,7 +1,21 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+QuizQuestionTag.delete_all
+QuizQuestion.delete_all
+Tag.delete_all
+Quiz.delete_all
+Card.delete_all
+
+quiz = Quiz.create!(name: "General", max_questions: 0)
+
+Tag.create!(name: "Archived")
+chemistry_tag = Tag.create!(name: "Chemistry")
+biology_tag = Tag.create!(name: "Biology")
+physics_tag = Tag.create!(name: "Physics")
+needs_attention_tag = Tag.create!(name: "Needs Attention")
+
+card_question = Question.find_by!(name: "Card")
+quiz_question = QuizQuestion.create!(quiz: quiz, question: card_question, amount: 10, position: 0)
+
+QuizQuestionTag.create!(quiz_question: quiz_question, tag: chemistry_tag)
+QuizQuestionTag.create!(quiz_question: quiz_question, tag: biology_tag)
+QuizQuestionTag.create!(quiz_question: quiz_question, tag: physics_tag)
+QuizQuestionTag.create!(quiz_question: quiz_question, tag: needs_attention_tag)

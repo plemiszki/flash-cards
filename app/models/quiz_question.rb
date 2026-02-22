@@ -9,6 +9,8 @@ class QuizQuestion < ActiveRecord::Base
   belongs_to :question
   belongs_to :tag, optional: true
 
+  has_many :quiz_question_tags, dependent: :destroy
+
   attr_accessor :unarchived, :archived, :available, :chained_amount, :reordering
 
   def first_question_no_chain
