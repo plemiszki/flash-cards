@@ -11,6 +11,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.available quiz_question.available
   json.useAllAvailable quiz_question.use_all_available
   json.position quiz_question.position
+  json.quizQuestionType quiz_question.quiz_question_type
   json.chained quiz_question.chained
   json.chainedAmount quiz_question.chained_amount
   json.quizQuestionTags quiz_question.quiz_question_tags.map { |qqt| { id: qqt.id, name: qqt.tag.name } }

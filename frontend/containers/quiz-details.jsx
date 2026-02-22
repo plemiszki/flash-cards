@@ -18,29 +18,12 @@ import {
 } from "handy-components";
 import QuizQuestionNew from "./quiz-question-new.jsx";
 
-const USE_ALL_ENABLED = [
-  "Spanish - Single Noun",
-  "Spanish - Single Verb",
-  "Spanish - Single Adjective",
-  "Spanish - Misc Word",
-  "French - Noun Singular",
-  "French - Noun Plural",
-  "French - Noun Gender",
-  "French - Adjective Masculine Singular",
-  "French - Adjective Masculine Plural",
-  "French - Adjective Feminine Singular",
-  "French - Adjective Feminine Plural",
-  "French - Single Noun with Article, Singular or Plural",
-  "French - Single Verb - Infinitive",
-  "French - Single Adjective, Any Agreement",
-  "French - Misc Word",
-  "French - City",
-  "French - Country",
-  "French - Country Gender",
-  "Card",
-];
-
-const AVAILABLE_ENABLED = USE_ALL_ENABLED;
+const QUIZ_QUESTION_TYPE_LABELS = {
+  manual_amount: "Manual Amount",
+  all_highlighted: "All Highlighted",
+  all_non_archived: "All Non-Archived",
+  everything: "Everything",
+};
 
 export default class QuizDetails extends React.Component {
   constructor(props) {
@@ -167,19 +150,6 @@ export default class QuizDetails extends React.Component {
 
     const modalHeight = currentModalTagCount === 0 ? 340 : 335 + currentModalTagCount * 32;
 
-    const includesCardsQuestion = quizQuestions.some(
-      (quizQuestion) => quizQuestion.questionName === "Card",
-    );
-    const includesQuestionWithTag = quizQuestions.some(
-      (quizQuestion) => quizQuestion.tagName,
-    );
-    const includesAvailableQuestion = quizQuestions.some((quizQuestion) =>
-      AVAILABLE_ENABLED.includes(quizQuestion.questionName),
-    );
-    const includesUseAllSwitchQuestion = quizQuestions.some((quizQuestion) =>
-      USE_ALL_ENABLED.includes(quizQuestion.questionName),
-    );
-
     return (
       <div className="handy-component">
         <h1>Quiz Details</h1>
@@ -224,33 +194,15 @@ export default class QuizDetails extends React.Component {
                 header: "Question",
               },
               {
-                name: "tagName",
-                header: "Tag",
-                include: includesQuestionWithTag,
-              },
-              {
                 name: "tagNames",
                 header: "Tags",
                 displayFunction: (row) =>
                   row.quizQuestionTags ? row.quizQuestionTags.map((t) => t.name).join(", ") : "",
               },
               {
-                name: "useAllAvailable",
-                include: includesUseAllSwitchQuestion,
-                header: "Use All",
-                isSwitch: true,
-                switchChecked: (row) => row.useAllAvailable,
-                switchDisabled: (row) => false,
-                clickSwitch: (row, checked) => {
-                  const quizQuestion = quizQuestions.find(
-                    (quizQuestion) => quizQuestion.id === row.id,
-                  );
-                  quizQuestion.useAllAvailable = checked;
-                  this.updateQuizQuestion(quizQuestion);
-                },
-                displayIf: (row) =>
-                  USE_ALL_ENABLED.includes(row.questionName) && !row.chained,
-                centered: true,
+                name: "quizQuestionType",
+                header: "Type",
+                displayFunction: (row) => QUIZ_QUESTION_TYPE_LABELS[row.quizQuestionType] || row.quizQuestionType,
               },
               {
                 name: "amount",
@@ -274,7 +226,7 @@ export default class QuizDetails extends React.Component {
                         ? row.unarchived
                         : row.available
                       : row.amount,
-                arrowsIf: (row) => !row.useAllAvailable && !row.chained,
+                arrowsIf: (row) => row.quizQuestionType === "manual_amount" && !row.chained,
                 clickLeft: (row) => {
                   const { id, amount } = row;
                   const quizQuestion = quizQuestions.find(
@@ -291,33 +243,6 @@ export default class QuizDetails extends React.Component {
                   quizQuestion.amount = amount + 1;
                   this.updateQuizQuestion(quizQuestion);
                 },
-              },
-              {
-                name: "available",
-                include: includesAvailableQuestion,
-                sortDir: "desc",
-                width: 100,
-                centered: true,
-                totalRow: true,
-                displayIf: (row) =>
-                  AVAILABLE_ENABLED.includes(row.questionName),
-              },
-              {
-                name: "unarchived",
-                include: includesCardsQuestion,
-                header: "Active",
-                sortDir: "desc",
-                width: 100,
-                centered: true,
-                displayIf: (row) => row.questionName === "Card",
-              },
-              {
-                name: "archived",
-                include: includesCardsQuestion,
-                sortDir: "desc",
-                width: 100,
-                centered: true,
-                displayIf: (row) => row.questionName === "Card",
               },
               {
                 name: "chain",
@@ -342,15 +267,6 @@ export default class QuizDetails extends React.Component {
             rows={quizQuestions}
             links={false}
             sortable={false}
-            styleIf={[
-              {
-                func: (row) => row.unarchived > 0,
-                style: {
-                  color: "green",
-                  fontFamily: "TeachableSans-SemiBold",
-                },
-              },
-            ]}
             clickDelete={(row) => {
               this.setState({ spinner: true });
               deleteEntity({
