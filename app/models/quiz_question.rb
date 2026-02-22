@@ -5,6 +5,8 @@ class QuizQuestion < ActiveRecord::Base
   validates_numericality_of :amount, greater_than_or_equal_to: 0, only_integer: true
   validate :first_question_no_chain, unless: :reordering?
 
+  enum :quiz_question_type, { manual_amount: 0, all_highlighted: 1, all_non_archived: 2, all: 3 }
+
   belongs_to :quiz
   belongs_to :tag, optional: true
 
