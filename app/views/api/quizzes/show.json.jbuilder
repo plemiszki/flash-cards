@@ -18,7 +18,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.position quiz_question.position
   json.chained quiz_question.chained
   json.chainedAmount quiz_question.chained_amount
-  json.tagNames quiz_question.quiz_question_tags.map { |qqt| qqt.tag.name }
+  json.quizQuestionTags quiz_question.quiz_question_tags.map { |qqt| { id: qqt.id, name: qqt.tag.name } }
 end
 json.questions @questions do |question|
   json.id question.id

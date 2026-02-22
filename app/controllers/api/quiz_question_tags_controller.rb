@@ -10,6 +10,13 @@ class Api::QuizQuestionTagsController < AdminController
     end
   end
 
+  def destroy
+    quiz_question_tag = QuizQuestionTag.find(params[:id])
+    quiz_question_tag.destroy
+    @quiz_question = quiz_question_tag.quiz_question
+    render 'show', formats: [:json], handlers: [:jbuilder]
+  end
+
   private
 
   def quiz_question_tag_params

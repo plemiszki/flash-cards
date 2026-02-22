@@ -166,7 +166,7 @@ export default class QuizDetails extends React.Component {
     const selectedQuizQuestion = selectedQuizQuestionId
       ? quizQuestions.find((qq) => qq.id === selectedQuizQuestionId)
       : null;
-    const tagCount = selectedQuizQuestion?.tagNames?.length ?? 0;
+    const tagCount = selectedQuizQuestion?.quizQuestionTags?.length ?? 0;
     const modalHeight = tagCount === 0 ? 340 : 335 + tagCount * 32;
 
     const includesCardsQuestion = quizQuestions.some(
@@ -234,7 +234,7 @@ export default class QuizDetails extends React.Component {
                 name: "tagNames",
                 header: "Tags",
                 displayFunction: (row) =>
-                  row.tagNames ? row.tagNames.join(", ") : "",
+                  row.quizQuestionTags ? row.quizQuestionTags.map((t) => t.name).join(", ") : "",
               },
               {
                 name: "useAllAvailable",

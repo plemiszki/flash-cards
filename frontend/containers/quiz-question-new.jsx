@@ -6,6 +6,7 @@ import {
   resetNiceSelect,
   createEntity,
   updateEntity,
+  deleteEntity,
   GrayedOut,
   Spinner,
   Button,
@@ -23,7 +24,7 @@ export default class QuizQuestionNew extends React.Component {
     this.state = {
       spinner: false,
       quizQuestion: deepCopy(entity || initialEntity),
-      quizQuestionTagNames: entity ? deepCopy(entity.tagNames) : [],
+      quizQuestionTags: entity ? deepCopy(entity.quizQuestionTags) : [],
       addTagModalOpen: false,
       questions,
       tags,
@@ -60,7 +61,16 @@ export default class QuizQuestionNew extends React.Component {
       entityName: "quizQuestionTag",
       entity: { quizQuestionId: quizQuestion.id, tagId: tag.id },
     }).then((response) => {
-      this.setState({ quizQuestionTagNames: response.tagNames });
+      this.setState({ quizQuestionTags: response.quizQuestionTags });
+    });
+  }
+
+  deleteTag(quizQuestionTag) {
+    deleteEntity({
+      directory: "quiz_question_tags",
+      id: quizQuestionTag.id,
+    }).then((response) => {
+      this.setState({ quizQuestionTags: response.quizQuestionTags });
     });
   }
 
@@ -92,8 +102,10 @@ export default class QuizQuestionNew extends React.Component {
 
   render() {
     const { entity } = this.props;
-    const { spinner, quizQuestionTagNames, addTagModalOpen, tags } = this.state;
-    const availableTags = tags.filter((tag) => !quizQuestionTagNames.includes(tag.name));
+    const { spinner, quizQuestionTags, addTagModalOpen, tags } = this.state;
+    const availableTags = tags.filter(
+      (tag) => !quizQuestionTags.some((qqt) => qqt.name === tag.name),
+    );
     return (
       <div className="new-entity handy-component admin-modal">
         <form className="white-box">
@@ -125,9 +137,10 @@ export default class QuizQuestionNew extends React.Component {
           </div>
           <ListBox
             entityName="tag"
-            entities={quizQuestionTagNames.map((name) => ({ name }))}
+            entities={quizQuestionTags}
             displayProperty="name"
             clickAdd={() => this.setState({ addTagModalOpen: true })}
+            clickDelete={(qqt) => this.deleteTag(qqt)}
             style={{ marginBottom: 30 }}
           />
           <Button

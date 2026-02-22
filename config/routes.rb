@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     resources :quizzes, only: [:index, :show, :create, :update, :destroy]
     resources :questions, only: [:index, :show, :create, :update, :destroy]
     resources :quiz_questions, only: [:create, :update, :destroy]
-    resources :quiz_question_tags, only: [:create]
+    resources :quiz_question_tags, only: [:create, :destroy]
     get '/quizzes/:id/run' => 'quizzes#run'
     resources :spanish_nouns, only: [:index, :show, :create, :update, :destroy]
     resources :spanish_verbs, only: [:index, :show, :create, :update, :destroy]
