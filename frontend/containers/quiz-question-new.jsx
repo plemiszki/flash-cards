@@ -9,6 +9,7 @@ import {
   GrayedOut,
   Spinner,
   Button,
+  ListBox,
   objectsAreEqual,
 } from "handy-components";
 
@@ -21,6 +22,7 @@ export default class QuizQuestionNew extends React.Component {
     this.state = {
       spinner: false,
       quizQuestion: deepCopy(entity || initialEntity),
+      quizQuestionTagNames: entity ? deepCopy(entity.tagNames) : [],
       questions,
       tags,
       errors: {},
@@ -76,7 +78,7 @@ export default class QuizQuestionNew extends React.Component {
 
   render() {
     const { entity } = this.props;
-    const { spinner } = this.state;
+    const { spinner, quizQuestionTagNames } = this.state;
     return (
       <div className="new-entity handy-component admin-modal">
         <form className="white-box">
@@ -106,6 +108,11 @@ export default class QuizQuestionNew extends React.Component {
               property: "amount",
             })}
           </div>
+          <ListBox
+            entityName="tag"
+            entities={quizQuestionTagNames.map((name) => ({ name }))}
+            displayProperty="name"
+          />
           <Button
             submit
             disabled={spinner}

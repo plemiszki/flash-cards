@@ -163,6 +163,12 @@ export default class QuizDetails extends React.Component {
       newQuizQuestionModalOpen,
     } = this.state;
 
+    const selectedQuizQuestion = selectedQuizQuestionId
+      ? quizQuestions.find((qq) => qq.id === selectedQuizQuestionId)
+      : null;
+    const tagCount = selectedQuizQuestion?.tagNames?.length ?? 0;
+    const modalHeight = tagCount === 0 ? 292 : 287 + tagCount * 32;
+
     const includesCardsQuestion = quizQuestions.some(
       (quizQuestion) => quizQuestion.questionName === "Card",
     );
@@ -385,7 +391,7 @@ export default class QuizDetails extends React.Component {
           isOpen={newQuizQuestionModalOpen}
           onRequestClose={Common.closeModals.bind(this)}
           contentLabel="Modal"
-          style={Common.newEntityModalStyles({ width: 900 }, 1)}
+          style={Common.newEntityModalStyles({ width: 900, height: modalHeight })}
         >
           <QuizQuestionNew
             entity={
