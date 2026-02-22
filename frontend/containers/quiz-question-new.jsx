@@ -112,6 +112,8 @@ export default class QuizQuestionNew extends React.Component {
             entityName="tag"
             entities={quizQuestionTagNames.map((name) => ({ name }))}
             displayProperty="name"
+            clickAdd={() => {}}
+            style={{ marginBottom: 30 }}
           />
           <Button
             submit

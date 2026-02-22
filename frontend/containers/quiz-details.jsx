@@ -167,7 +167,7 @@ export default class QuizDetails extends React.Component {
       ? quizQuestions.find((qq) => qq.id === selectedQuizQuestionId)
       : null;
     const tagCount = selectedQuizQuestion?.tagNames?.length ?? 0;
-    const modalHeight = tagCount === 0 ? 292 : 287 + tagCount * 32;
+    const modalHeight = tagCount === 0 ? 340 : 335 + tagCount * 32;
 
     const includesCardsQuestion = quizQuestions.some(
       (quizQuestion) => quizQuestion.questionName === "Card",
