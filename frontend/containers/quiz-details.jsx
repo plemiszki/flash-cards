@@ -16,7 +16,7 @@ import {
   deleteEntity,
   Button,
 } from "handy-components";
-import NewEntity from "./new-entity.jsx";
+import QuizQuestionNew from "./quiz-question-new.jsx";
 
 const USE_ALL_ENABLED = [
   "Spanish - Single Noun",
@@ -387,9 +387,7 @@ export default class QuizDetails extends React.Component {
           contentLabel="Modal"
           style={Common.newEntityModalStyles({ width: 900 }, 1)}
         >
-          <NewEntity
-            entityName="quizQuestion"
-            entityNamePlural="quizQuestions"
+          <QuizQuestionNew
             entity={
               selectedQuizQuestionId
                 ? quizQuestions.find(
@@ -405,12 +403,9 @@ export default class QuizDetails extends React.Component {
               amount: "1",
               position: quizQuestions.length,
             }}
+            questions={questions}
+            tags={tags}
             callback={this.updateQuizQuestions.bind(this)}
-            buttonText={`${selectedQuizQuestionId ? "Update" : "Add"} Question`}
-            passData={{
-              questions,
-              tags,
-            }}
           />
         </Modal>
       </div>
