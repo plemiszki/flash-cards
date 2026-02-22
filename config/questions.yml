@@ -1,31 +1,45 @@
 - id: 9
   name: Card
+  entity: Card
 - id: 66
   name: French - Adjective Feminine Plural
+  entity: FrenchAdjective
 - id: 65
   name: French - Adjective Feminine Singular
+  entity: FrenchAdjective
 - id: 64
   name: French - Adjective Masculine Plural
+  entity: FrenchAdjective
 - id: 63
   name: French - Adjective Masculine Singular
+  entity: FrenchAdjective
 - id: 67
   name: French - City
+  entity: FrenchCity
 - id: 68
   name: French - Country
+  entity: FrenchCountry
 - id: 69
   name: French - Country Gender
+  entity: FrenchCountry
 - id: 56
   name: French - Misc Word
+  entity: FrenchMisc
 - id: 62
   name: French - Noun Gender
+  entity: FrenchNoun
 - id: 61
   name: French - Noun Plural
+  entity: FrenchNoun
 - id: 60
   name: French - Noun Singular
+  entity: FrenchNoun
 - id: 59
   name: French - Single Adjective, Any Agreement
+  entity: FrenchAdjective
 - id: 57
   name: French - Single Noun with Article, Singular or Plural
+  entity: FrenchNoun
 - id: 112
   name: French - Single Verb - Conditional Tense - First Person Plural
 - id: 113
@@ -70,6 +84,7 @@
   name: French - Single Verb - Imperfect Tense - Third Person Singular
 - id: 58
   name: French - Single Verb - Infinitive
+  entity: FrenchVerb
 - id: 139
   name: French - Single Verb - Past Participle
 - id: 105
@@ -116,10 +131,13 @@
   name: Hindi - Noun's Noun
 - id: 3
   name: Hindi - Single Adjective
+  entity: Adjective
 - id: 1
   name: Hindi - Single Noun
+  entity: Noun
 - id: 2
   name: Hindi - Single Verb
+  entity: Verb
 - id: 40
   name: Hindi - Subject can Verb
 - id: 13
@@ -152,6 +170,7 @@
   name: Hindi - Where is Subject's Noun?
 - id: 50
   name: Spanish - Misc Word
+  entity: SpanishMisc
 - id: 51
   name: Spanish - Month
 - id: 43
@@ -164,10 +183,13 @@
   name: Spanish - Present Simple Tense
 - id: 28
   name: Spanish - Single Adjective
+  entity: SpanishAdjective
 - id: 26
   name: Spanish - Single Noun
+  entity: SpanishNoun
 - id: 27
   name: Spanish - Single Verb
+  entity: SpanishVerb
 - id: 42
   name: Spanish - Subject is Adjective
 - id: 52
