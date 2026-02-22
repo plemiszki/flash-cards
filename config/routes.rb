@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   resources :adverbs, only: [:index, :show]
   resources :tags, only: [:index, :show]
   resources :quizzes, only: [:index, :show]
-  resources :questions, only: [:index, :show]
   get '/quizzes/:id/run' => 'quizzes#run'
   resources :spanish_nouns, only: [:index, :show]
   resources :spanish_verbs, only: [:index, :show]
@@ -31,7 +30,6 @@ Rails.application.routes.draw do
     resources :tags, only: [:index, :show, :create, :update, :destroy]
     resources :card_tags, only: [:create, :destroy]
     resources :quizzes, only: [:index, :show, :create, :update, :destroy]
-    resources :questions, only: [:index, :show, :create, :update, :destroy]
     resources :quiz_questions, only: [:create, :update, :destroy]
     resources :quiz_question_tags, only: [:create, :destroy]
     get '/quizzes/:id/run' => 'quizzes#run'

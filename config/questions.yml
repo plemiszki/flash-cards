@@ -1,0 +1,176 @@
+- id: 9
+  name: Card
+- id: 66
+  name: French - Adjective Feminine Plural
+- id: 65
+  name: French - Adjective Feminine Singular
+- id: 64
+  name: French - Adjective Masculine Plural
+- id: 63
+  name: French - Adjective Masculine Singular
+- id: 67
+  name: French - City
+- id: 68
+  name: French - Country
+- id: 69
+  name: French - Country Gender
+- id: 56
+  name: French - Misc Word
+- id: 62
+  name: French - Noun Gender
+- id: 61
+  name: French - Noun Plural
+- id: 60
+  name: French - Noun Singular
+- id: 59
+  name: French - Single Adjective, Any Agreement
+- id: 57
+  name: French - Single Noun with Article, Singular or Plural
+- id: 112
+  name: French - Single Verb - Conditional Tense - First Person Plural
+- id: 113
+  name: French - Single Verb - Conditional Tense - First Person Singular
+- id: 114
+  name: French - Single Verb - Conditional Tense - Second Person Singular (Formal)
+- id: 115
+  name: French - Single Verb - Conditional Tense - Second Person Singular (Informal)
+- id: 116
+  name: French - Single Verb - Conditional Tense - Third Person Plural
+- id: 117
+  name: French - Single Verb - Conditional Tense - Third Person Singular
+- id: 176
+  name: French - Single Verb - Future Tense - First Person Plural
+- id: 175
+  name: French - Single Verb - Future Tense - First Person Singular
+- id: 177
+  name: French - Single Verb - Future Tense - Second Person Singular (Formal)
+- id: 178
+  name: French - Single Verb - Future Tense - Second Person Singular (Informal)
+- id: 180
+  name: French - Single Verb - Future Tense - Third Person Plural
+- id: 179
+  name: French - Single Verb - Future Tense - Third Person Singular
+- id: 174
+  name: French - Single Verb - Imperative Tense - First Person Plural
+- id: 172
+  name: French - Single Verb - Imperative Tense - Second Person Singular (Formal)
+- id: 173
+  name: French - Single Verb - Imperative Tense - Second Person Singular (Informal)
+- id: 106
+  name: French - Single Verb - Imperfect Tense - First Person Plural
+- id: 107
+  name: French - Single Verb - Imperfect Tense - First Person Singular
+- id: 108
+  name: French - Single Verb - Imperfect Tense - Second Person Singular (Formal)
+- id: 109
+  name: French - Single Verb - Imperfect Tense - Second Person Singular (Informal)
+- id: 110
+  name: French - Single Verb - Imperfect Tense - Third Person Plural
+- id: 111
+  name: French - Single Verb - Imperfect Tense - Third Person Singular
+- id: 58
+  name: French - Single Verb - Infinitive
+- id: 139
+  name: French - Single Verb - Past Participle
+- id: 105
+  name: French - Single Verb - Present Tense - First Person Plural
+- id: 100
+  name: French - Single Verb - Present Tense - First Person Singular
+- id: 102
+  name: French - Single Verb - Present Tense - Second Person Singular (Formal)
+- id: 101
+  name: French - Single Verb - Present Tense - Second Person Singular (Informal)
+- id: 104
+  name: French - Single Verb - Present Tense - Third Person Plural
+- id: 103
+  name: French - Single Verb - Present Tense - Third Person Singular
+- id: 39
+  name: Hindi - Age
+- id: 34
+  name: Hindi - Availability
+- id: 37
+  name: Hindi - Does Subject know that...?
+- id: 30
+  name: Hindi - Does Subject like Noun?
+- id: 32
+  name: Hindi - Does Subject want a Noun?
+- id: 33
+  name: Hindi - General Statement
+- id: 20
+  name: Hindi - Imperative
+- id: 23
+  name: Hindi - Imperfective Present
+- id: 24
+  name: Hindi - Imperfective Present Question
+- id: 25
+  name: Hindi - Imperfective Present Yes/No Question
+- id: 41
+  name: Hindi - Let Subject Verb
+- id: 12
+  name: Hindi - Noun Gender
+- id: 7
+  name: Hindi - Noun is Adjective
+- id: 19
+  name: Hindi - Noun Plural
+- id: 38
+  name: Hindi - Noun's Noun
+- id: 3
+  name: Hindi - Single Adjective
+- id: 1
+  name: Hindi - Single Noun
+- id: 2
+  name: Hindi - Single Verb
+- id: 40
+  name: Hindi - Subject can Verb
+- id: 13
+  name: Hindi - Subject has a Noun
+- id: 15
+  name: Hindi - Subject has an Adjective Noun
+- id: 6
+  name: Hindi - Subject is a Noun
+- id: 5
+  name: Hindi - Subject is Adjective
+- id: 8
+  name: Hindi - Subject is an Adjective Noun
+- id: 36
+  name: Hindi - Subject knows that...
+- id: 45
+  name: Hindi - Subject lets Subject Verb
+- id: 29
+  name: Hindi - Subject likes Noun
+- id: 31
+  name: Hindi - Subject wants a Noun
+- id: 17
+  name: Hindi - The Noun is Preposition the Adjective Noun
+- id: 18
+  name: Hindi - There is a Noun Preposition the Adjective Noun
+- id: 48
+  name: Hindi - Weekdays
+- id: 35
+  name: Hindi - Where can you get Adjective Nouns?
+- id: 16
+  name: Hindi - Where is Subject's Noun?
+- id: 50
+  name: Spanish - Misc Word
+- id: 51
+  name: Spanish - Month
+- id: 43
+  name: Spanish - Noun is Adjective
+- id: 44
+  name: Spanish - Number
+- id: 54
+  name: Spanish - Present Continuous Tense
+- id: 53
+  name: Spanish - Present Simple Tense
+- id: 28
+  name: Spanish - Single Adjective
+- id: 26
+  name: Spanish - Single Noun
+- id: 27
+  name: Spanish - Single Verb
+- id: 42
+  name: Spanish - Subject is Adjective
+- id: 52
+  name: Spanish - Verb Forms
+- id: 49
+  name: Spanish - Weekdays

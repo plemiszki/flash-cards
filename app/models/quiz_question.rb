@@ -6,10 +6,13 @@ class QuizQuestion < ActiveRecord::Base
   validate :first_question_no_chain, unless: :reordering?
 
   belongs_to :quiz
-  belongs_to :question
   belongs_to :tag, optional: true
 
   has_many :quiz_question_tags, dependent: :destroy
+
+  def question
+    Question.find(question_id)
+  end
 
   attr_accessor :unarchived, :archived, :available, :chained_amount, :reordering
 

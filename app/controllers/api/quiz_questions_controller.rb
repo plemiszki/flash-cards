@@ -36,7 +36,7 @@ class Api::QuizQuestionsController < AdminController
   private
 
   def query_response_data(quiz_question)
-    @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:position).includes(:question, :tag, quiz_question_tags: :tag)
+    @quiz_questions = QuizQuestion.where(quiz_id: quiz_question.quiz_id).order(:position).includes(:tag, quiz_question_tags: :tag)
     @quiz_questions = get_available_questions(quiz_questions: @quiz_questions, quiz: quiz_question.quiz)
     @quiz_questions = get_chained_amounts(quiz_questions: @quiz_questions)
   end
