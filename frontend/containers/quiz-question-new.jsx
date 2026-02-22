@@ -104,7 +104,8 @@ export default class QuizQuestionNew extends React.Component {
 
   render() {
     const { entity } = this.props;
-    const { spinner, quizQuestionTags, addTagModalOpen, tags } = this.state;
+    const { spinner, quizQuestion, quizQuestionTags, addTagModalOpen, tags } =
+      this.state;
     const availableTags = tags.filter(
       (tag) => !quizQuestionTags.some((qqt) => qqt.name === tag.name),
     );
@@ -121,21 +122,25 @@ export default class QuizQuestionNew extends React.Component {
               optionsArrayName: "questions",
               optionDisplayProperty: "name",
             })}
-            {Details.renderField.bind(this)({
+            {Details.renderDropDown.bind(this)({
               columnWidth: 4,
               entity: "quizQuestion",
-              property: "tagId",
-              columnHeader: "Tag",
-              type: "modal",
-              optionsArrayName: "tags",
-              optionDisplayProperty: "name",
-              noneOption: true,
+              property: "quizQuestionType",
+              columnHeader: "Type",
+              options: [
+                { value: "manual_amount", label: "Manual Amount" },
+                { value: "all_highlighted", label: "All Highlighted" },
+                { value: "all_non_archived", label: "All Non-Archived" },
+                { value: "everything", label: "All" },
+              ],
+              optionDisplayProperty: "label",
             })}
-            {Details.renderField.bind(this)({
-              columnWidth: 2,
-              entity: "quizQuestion",
-              property: "amount",
-            })}
+            {quizQuestion.quizQuestionType === "manual_amount" &&
+              Details.renderField.bind(this)({
+                columnWidth: 2,
+                entity: "quizQuestion",
+                property: "amount",
+              })}
           </div>
           <ListBox
             entityName="tag"

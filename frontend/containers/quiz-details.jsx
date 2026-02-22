@@ -22,7 +22,7 @@ const QUIZ_QUESTION_TYPE_LABELS = {
   manual_amount: "Manual Amount",
   all_highlighted: "All Highlighted",
   all_non_archived: "All Non-Archived",
-  everything: "Everything",
+  everything: "All",
 };
 
 export default class QuizDetails extends React.Component {
@@ -148,7 +148,8 @@ export default class QuizDetails extends React.Component {
       currentModalTagCount,
     } = this.state;
 
-    const modalHeight = currentModalTagCount === 0 ? 340 : 335 + currentModalTagCount * 32;
+    const modalHeight =
+      currentModalTagCount === 0 ? 340 : 335 + currentModalTagCount * 32;
 
     return (
       <div className="handy-component">
@@ -197,12 +198,16 @@ export default class QuizDetails extends React.Component {
                 name: "tagNames",
                 header: "Tags",
                 displayFunction: (row) =>
-                  row.quizQuestionTags ? row.quizQuestionTags.map((t) => t.name).join(", ") : "",
+                  row.quizQuestionTags
+                    ? row.quizQuestionTags.map((t) => t.name).join(", ")
+                    : "",
               },
               {
                 name: "quizQuestionType",
                 header: "Type",
-                displayFunction: (row) => QUIZ_QUESTION_TYPE_LABELS[row.quizQuestionType] || row.quizQuestionType,
+                displayFunction: (row) =>
+                  QUIZ_QUESTION_TYPE_LABELS[row.quizQuestionType] ||
+                  row.quizQuestionType,
               },
               {
                 name: "amount",
@@ -226,7 +231,8 @@ export default class QuizDetails extends React.Component {
                         ? row.unarchived
                         : row.available
                       : row.amount,
-                arrowsIf: (row) => row.quizQuestionType === "manual_amount" && !row.chained,
+                arrowsIf: (row) =>
+                  row.quizQuestionType === "manual_amount" && !row.chained,
                 clickLeft: (row) => {
                   const { id, amount } = row;
                   const quizQuestion = quizQuestions.find(
@@ -307,7 +313,10 @@ export default class QuizDetails extends React.Component {
           isOpen={newQuizQuestionModalOpen}
           onRequestClose={Common.closeModals.bind(this)}
           contentLabel="Modal"
-          style={Common.newEntityModalStyles({ width: 900, height: modalHeight })}
+          style={Common.newEntityModalStyles({
+            width: 900,
+            height: modalHeight,
+          })}
         >
           <QuizQuestionNew
             entity={
@@ -321,14 +330,16 @@ export default class QuizDetails extends React.Component {
             initialEntity={{
               quizId: quiz.id,
               questionId: Common.firstElementPropertyOrBlank(questions, "id"),
-              tagId: "",
+              quizQuestionType: "manual_amount",
               amount: "1",
               position: quizQuestions.length,
             }}
             questions={questions}
             tags={tags}
             callback={this.updateQuizQuestions.bind(this)}
-            onTagsChange={(count) => this.setState({ currentModalTagCount: count })}
+            onTagsChange={(count) =>
+              this.setState({ currentModalTagCount: count })
+            }
           />
         </Modal>
       </div>
