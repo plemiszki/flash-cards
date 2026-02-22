@@ -80,7 +80,7 @@ export default class QuizDetails extends React.Component {
             selector: "select",
             func: Details.changeField.bind(this, this.changeFieldArgs()),
           });
-        }
+        },
       );
     });
   }
@@ -122,9 +122,9 @@ export default class QuizDetails extends React.Component {
               spinner: false,
               errors,
             });
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -159,23 +159,21 @@ export default class QuizDetails extends React.Component {
       tags,
       changesToSave,
       justSaved,
-      entity,
-      entityName,
       selectedQuizQuestionId,
       newQuizQuestionModalOpen,
     } = this.state;
 
     const includesCardsQuestion = quizQuestions.some(
-      (quizQuestion) => quizQuestion.questionName === "Card"
+      (quizQuestion) => quizQuestion.questionName === "Card",
     );
     const includesQuestionWithTag = quizQuestions.some(
-      (quizQuestion) => quizQuestion.tagName
+      (quizQuestion) => quizQuestion.tagName,
     );
     const includesAvailableQuestion = quizQuestions.some((quizQuestion) =>
-      AVAILABLE_ENABLED.includes(quizQuestion.questionName)
+      AVAILABLE_ENABLED.includes(quizQuestion.questionName),
     );
     const includesUseAllSwitchQuestion = quizQuestions.some((quizQuestion) =>
-      USE_ALL_ENABLED.includes(quizQuestion.questionName)
+      USE_ALL_ENABLED.includes(quizQuestion.questionName),
     );
 
     return (
@@ -227,6 +225,12 @@ export default class QuizDetails extends React.Component {
                 include: includesQuestionWithTag,
               },
               {
+                name: "tagNames",
+                header: "Tags",
+                displayFunction: (row) =>
+                  row.tagNames ? row.tagNames.join(", ") : "",
+              },
+              {
                 name: "useAllAvailable",
                 include: includesUseAllSwitchQuestion,
                 header: "Use All",
@@ -235,7 +239,7 @@ export default class QuizDetails extends React.Component {
                 switchDisabled: (row) => false,
                 clickSwitch: (row, checked) => {
                   const quizQuestion = quizQuestions.find(
-                    (quizQuestion) => quizQuestion.id === row.id
+                    (quizQuestion) => quizQuestion.id === row.id,
                   );
                   quizQuestion.useAllAvailable = checked;
                   this.updateQuizQuestion(quizQuestion);
@@ -254,23 +258,23 @@ export default class QuizDetails extends React.Component {
                   row.chained
                     ? row.chainedAmount
                     : row.useAllAvailable
-                    ? row.questionName === "Card"
-                      ? row.unarchived
-                      : row.available
-                    : row.amount,
+                      ? row.questionName === "Card"
+                        ? row.unarchived
+                        : row.available
+                      : row.amount,
                 totalFunction: (row) =>
                   row.chained
                     ? row.chainedAmount
                     : row.useAllAvailable
-                    ? row.questionName === "Card"
-                      ? row.unarchived
-                      : row.available
-                    : row.amount,
+                      ? row.questionName === "Card"
+                        ? row.unarchived
+                        : row.available
+                      : row.amount,
                 arrowsIf: (row) => !row.useAllAvailable && !row.chained,
                 clickLeft: (row) => {
                   const { id, amount } = row;
                   const quizQuestion = quizQuestions.find(
-                    (quizQuestion) => quizQuestion.id === id
+                    (quizQuestion) => quizQuestion.id === id,
                   );
                   quizQuestion.amount = Math.max(amount - 1, 0);
                   this.updateQuizQuestion(quizQuestion);
@@ -278,7 +282,7 @@ export default class QuizDetails extends React.Component {
                 clickRight: (row) => {
                   const { id, amount } = row;
                   const quizQuestion = quizQuestions.find(
-                    (quizQuestion) => quizQuestion.id === id
+                    (quizQuestion) => quizQuestion.id === id,
                   );
                   quizQuestion.amount = amount + 1;
                   this.updateQuizQuestion(quizQuestion);
@@ -318,7 +322,7 @@ export default class QuizDetails extends React.Component {
                 isSwitch: true,
                 clickSwitch: (row, checked) => {
                   const quizQuestion = quizQuestions.find(
-                    (quizQuestion) => quizQuestion.id === row.id
+                    (quizQuestion) => quizQuestion.id === row.id,
                   );
                   quizQuestion.chained = checked;
                   this.updateQuizQuestion(quizQuestion);
@@ -389,7 +393,8 @@ export default class QuizDetails extends React.Component {
             entity={
               selectedQuizQuestionId
                 ? quizQuestions.find(
-                    (quizQuestion) => quizQuestion.id === selectedQuizQuestionId
+                    (quizQuestion) =>
+                      quizQuestion.id === selectedQuizQuestionId,
                   )
                 : null
             }
