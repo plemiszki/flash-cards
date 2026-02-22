@@ -10,6 +10,7 @@ import {
   Spinner,
   Button,
   ListBox,
+  ModalSelect,
   objectsAreEqual,
 } from "handy-components";
 
@@ -23,6 +24,7 @@ export default class QuizQuestionNew extends React.Component {
       spinner: false,
       quizQuestion: deepCopy(entity || initialEntity),
       quizQuestionTagNames: entity ? deepCopy(entity.tagNames) : [],
+      addTagModalOpen: false,
       questions,
       tags,
       errors: {},
@@ -48,6 +50,18 @@ export default class QuizQuestionNew extends React.Component {
 
   checkForChanges() {
     return !objectsAreEqual(this.state.quiz, this.state.quizSaved);
+  }
+
+  addTag(tag) {
+    const { quizQuestion } = this.state;
+    this.setState({ addTagModalOpen: false });
+    createEntity({
+      directory: "quiz_question_tags",
+      entityName: "quizQuestionTag",
+      entity: { quizQuestionId: quizQuestion.id, tagId: tag.id },
+    }).then((response) => {
+      this.setState({ quizQuestionTagNames: response.tagNames });
+    });
   }
 
   clickSave() {
@@ -78,7 +92,8 @@ export default class QuizQuestionNew extends React.Component {
 
   render() {
     const { entity } = this.props;
-    const { spinner, quizQuestionTagNames } = this.state;
+    const { spinner, quizQuestionTagNames, addTagModalOpen, tags } = this.state;
+    const availableTags = tags.filter((tag) => !quizQuestionTagNames.includes(tag.name));
     return (
       <div className="new-entity handy-component admin-modal">
         <form className="white-box">
@@ -112,7 +127,7 @@ export default class QuizQuestionNew extends React.Component {
             entityName="tag"
             entities={quizQuestionTagNames.map((name) => ({ name }))}
             displayProperty="name"
-            clickAdd={() => {}}
+            clickAdd={() => this.setState({ addTagModalOpen: true })}
             style={{ marginBottom: 30 }}
           />
           <Button
@@ -124,6 +139,14 @@ export default class QuizQuestionNew extends React.Component {
           <GrayedOut visible={spinner} />
           <Spinner visible={spinner} />
         </form>
+        <ModalSelect
+          isOpen={addTagModalOpen}
+          onClose={() => this.setState({ addTagModalOpen: false })}
+          options={availableTags}
+          property="name"
+          func={(tag) => this.addTag(tag)}
+          zIndex={1000}
+        />
       </div>
     );
   }
