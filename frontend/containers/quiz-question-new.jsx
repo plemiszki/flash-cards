@@ -62,6 +62,7 @@ export default class QuizQuestionNew extends React.Component {
       entity: { quizQuestionId: quizQuestion.id, tagId: tag.id },
     }).then((response) => {
       this.setState({ quizQuestionTags: response.quizQuestionTags });
+      this.props.onTagsChange(response.quizQuestionTags.length);
     });
   }
 
@@ -71,6 +72,7 @@ export default class QuizQuestionNew extends React.Component {
       id: quizQuestionTag.id,
     }).then((response) => {
       this.setState({ quizQuestionTags: response.quizQuestionTags });
+      this.props.onTagsChange(response.quizQuestionTags.length);
     });
   }
 

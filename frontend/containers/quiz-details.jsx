@@ -59,6 +59,7 @@ export default class QuizDetails extends React.Component {
       questions: [],
       tags: [],
       newQuizQuestionModalOpen: false,
+      currentModalTagCount: 0,
     };
   }
 
@@ -161,13 +162,10 @@ export default class QuizDetails extends React.Component {
       justSaved,
       selectedQuizQuestionId,
       newQuizQuestionModalOpen,
+      currentModalTagCount,
     } = this.state;
 
-    const selectedQuizQuestion = selectedQuizQuestionId
-      ? quizQuestions.find((qq) => qq.id === selectedQuizQuestionId)
-      : null;
-    const tagCount = selectedQuizQuestion?.quizQuestionTags?.length ?? 0;
-    const modalHeight = tagCount === 0 ? 340 : 335 + tagCount * 32;
+    const modalHeight = currentModalTagCount === 0 ? 340 : 335 + currentModalTagCount * 32;
 
     const includesCardsQuestion = quizQuestions.some(
       (quizQuestion) => quizQuestion.questionName === "Card",
@@ -370,6 +368,7 @@ export default class QuizDetails extends React.Component {
               this.setState({
                 selectedQuizQuestionId: row.id,
                 newQuizQuestionModalOpen: true,
+                currentModalTagCount: row.quizQuestionTags?.length ?? 0,
               });
             }}
             marginBottom
@@ -381,6 +380,7 @@ export default class QuizDetails extends React.Component {
               this.setState({
                 selectedQuizQuestionId: null,
                 newQuizQuestionModalOpen: true,
+                currentModalTagCount: 0,
               });
             }}
           />
@@ -412,6 +412,7 @@ export default class QuizDetails extends React.Component {
             questions={questions}
             tags={tags}
             callback={this.updateQuizQuestions.bind(this)}
+            onTagsChange={(count) => this.setState({ currentModalTagCount: count })}
           />
         </Modal>
       </div>
