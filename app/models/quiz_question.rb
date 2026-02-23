@@ -54,4 +54,31 @@ class QuizQuestion < ActiveRecord::Base
     use_all_available ? (question.name == 'Card' ? unarchived : available) : amount
   end
 
+  def get_amount
+    return amount if manual_amount?
+    return count_tagged_entities if everything?
+    if all_highlighted?
+      needs_attention_tag_id = Tag.find_by_name('Needs Attention')&.id
+      return 0 unless needs_attention_tag_id
+      highlighted_ids = CardTag.where(tag_id: needs_attention_tag_id, cardtagable_type: question.entity).pluck(:cardtagable_id)
+      count_tagged_entities(intersect_with: highlighted_ids)
+    elsif all_non_archived?
+      archived_tag_id = Tag.find_by_name('Archived')&.id
+      archived_ids = archived_tag_id ? CardTag.where(tag_id: archived_tag_id, cardtagable_type: question.entity).pluck(:cardtagable_id) : []
+      count_tagged_entities(exclude: archived_ids)
+    end
+  end
+
+  private
+
+  def count_tagged_entities(intersect_with: nil, exclude: nil)
+    return 0 unless question.entity
+    tag_ids = quiz_question_tags.map(&:tag_id)
+    return 0 if tag_ids.empty?
+    entity_ids = CardTag.where(tag_id: tag_ids, cardtagable_type: question.entity).pluck(:cardtagable_id).uniq
+    entity_ids &= intersect_with if intersect_with
+    entity_ids -= exclude if exclude
+    entity_ids.count
+  end
+
 end
