@@ -54,8 +54,15 @@ export default class QuizQuestionNew extends React.Component {
   }
 
   addTag(tag) {
-    const { quizQuestion } = this.state;
+    const { entity } = this.props;
+    const { quizQuestion, quizQuestionTags } = this.state;
     this.setState({ addTagModalOpen: false });
+    if (!entity) {
+      const updated = [...quizQuestionTags, { id: tag.id, name: tag.name }];
+      this.setState({ quizQuestionTags: updated });
+      this.props.onTagsChange(updated.length);
+      return;
+    }
     createEntity({
       directory: "quiz_question_tags",
       entityName: "quizQuestionTag",
@@ -67,6 +74,14 @@ export default class QuizQuestionNew extends React.Component {
   }
 
   deleteTag(quizQuestionTag) {
+    const { entity } = this.props;
+    const { quizQuestionTags } = this.state;
+    if (!entity) {
+      const updated = quizQuestionTags.filter((t) => t.id !== quizQuestionTag.id);
+      this.setState({ quizQuestionTags: updated });
+      this.props.onTagsChange(updated.length);
+      return;
+    }
     deleteEntity({
       directory: "quiz_question_tags",
       id: quizQuestionTag.id,
@@ -78,7 +93,7 @@ export default class QuizQuestionNew extends React.Component {
 
   clickSave() {
     const { entity, callback } = this.props;
-    const { quizQuestion } = this.state;
+    const { quizQuestion, quizQuestionTags } = this.state;
     this.setState({ spinner: true });
     const action = entity
       ? updateEntity({
@@ -94,7 +109,34 @@ export default class QuizQuestionNew extends React.Component {
         });
     action.then(
       (response) => {
-        callback(response.quizQuestions);
+        if (entity || quizQuestionTags.length === 0) {
+          callback(response.quizQuestions);
+          return;
+        }
+        const newQQ = response.quizQuestions.find(
+          (qq) => qq.position === quizQuestion.position,
+        );
+        let updatedQuizQuestions = response.quizQuestions;
+        const createNextTag = (remaining) => {
+          if (remaining.length === 0) {
+            callback(updatedQuizQuestions);
+            return;
+          }
+          const [tag, ...rest] = remaining;
+          createEntity({
+            directory: "quiz_question_tags",
+            entityName: "quizQuestionTag",
+            entity: { quizQuestionId: newQQ.id, tagId: tag.id },
+          }).then((tagResponse) => {
+            updatedQuizQuestions = updatedQuizQuestions.map((qq) =>
+              qq.id === newQQ.id
+                ? { ...qq, quizQuestionTags: tagResponse.quizQuestionTags }
+                : qq,
+            );
+            createNextTag(rest);
+          });
+        };
+        createNextTag(quizQuestionTags);
       },
       (response) => {
         this.setState({ spinner: false, errors: response.errors });
