@@ -20,8 +20,8 @@ import QuizQuestionNew from "./quiz-question-new.jsx";
 
 const QUIZ_QUESTION_TYPE_LABELS = {
   manual_amount: "Manual Amount",
-  all_highlighted: "All Highlighted",
-  all_non_archived: "All Non-Archived",
+  all_highlighted: "Highlighted",
+  all_non_archived: "Non-Archived",
   everything: "All",
 };
 
@@ -198,16 +198,20 @@ export default class QuizDetails extends React.Component {
                 name: "tagNames",
                 header: "Tags",
                 displayFunction: (row) =>
-                  row.quizQuestionTags
-                    ? row.quizQuestionTags.map((t) => t.name).join(", ")
-                    : "",
+                  row.chained
+                    ? ""
+                    : row.quizQuestionTags
+                      ? row.quizQuestionTags.map((t) => t.name).join(", ")
+                      : "",
               },
               {
                 name: "quizQuestionType",
                 header: "Type",
                 displayFunction: (row) =>
-                  QUIZ_QUESTION_TYPE_LABELS[row.quizQuestionType] ||
-                  row.quizQuestionType,
+                  row.chained
+                    ? ""
+                    : QUIZ_QUESTION_TYPE_LABELS[row.quizQuestionType] ||
+                      row.quizQuestionType,
               },
               {
                 name: "amount",
