@@ -5,7 +5,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.questionId quiz_question.question.id
   json.tagName quiz_question.tag ? quiz_question.tag.name : ''
   json.tagId quiz_question.tag ? quiz_question.tag.id : ''
-  json.amount quiz_question.amount
+  json.amount quiz_question.get_amount
   json.unarchived quiz_question.unarchived
   json.archived quiz_question.archived
   json.available quiz_question.available
