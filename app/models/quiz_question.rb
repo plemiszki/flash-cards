@@ -55,6 +55,7 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def get_amount
+    return chain_root.get_amount if chained
     return amount if manual_amount?
     return count_tagged_entities if everything?
     if all_highlighted?

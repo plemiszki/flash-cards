@@ -215,10 +215,8 @@ export default class QuizDetails extends React.Component {
                 centered: true,
                 totalRow: true,
                 width: 150,
-                displayFunction: (row) =>
-                  row.chained ? row.chainedAmount : row.amount,
-                totalFunction: (row) =>
-                  row.chained ? row.chainedAmount : row.amount,
+                displayFunction: (row) => row.amount,
+                totalFunction: (row) => row.amount,
                 arrowsIf: (row) =>
                   row.quizQuestionType === "manual_amount" && !row.chained,
                 clickLeft: (row) => {
