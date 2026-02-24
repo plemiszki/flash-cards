@@ -9,6 +9,7 @@ class Quiz < ActiveRecord::Base
 
   class NoVerbFormError < RuntimeError; end
   class UncountableNounError < RuntimeError; end
+  class NoCardError < RuntimeError; end
 
   def run
     result = []
@@ -40,7 +41,7 @@ class Quiz < ActiveRecord::Base
       quiz_question.get_quiz_run_amount.times do
         begin
           obj = generate_question_data(quiz_question)
-        rescue NoVerbFormError
+        rescue NoVerbFormError, NoCardError
           next
         end
         children = quiz_question.children
@@ -51,7 +52,7 @@ class Quiz < ActiveRecord::Base
           quiz_question.children.each do |quiz_question|
             begin
               current_chain << generate_question_data(quiz_question)
-            rescue NoVerbFormError
+            rescue NoVerbFormError, NoCardError
               next
             rescue UncountableNounError
               next
@@ -80,6 +81,7 @@ class Quiz < ActiveRecord::Base
     case question.name
     when 'Card'
       card = @cards.pop
+      raise NoCardError if card.nil?
       obj = {
         entityName: 'card',
         question: card.question,
