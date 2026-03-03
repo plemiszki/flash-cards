@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_22_224841) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_03_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -132,6 +132,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_22_224841) do
     t.datetime "updated_at", null: false
     t.string "url", default: ""
     t.boolean "use_etre", default: false
+  end
+
+  create_table "highlights", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "highlightable_id", null: false
+    t.string "highlightable_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["highlightable_type", "highlightable_id"], name: "index_highlights_on_highlightable_type_and_highlightable_id"
   end
 
   create_table "jobs", force: :cascade do |t|

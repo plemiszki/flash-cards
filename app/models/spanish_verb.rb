@@ -8,6 +8,7 @@ class SpanishVerb < ActiveRecord::Base
 
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags
+  has_many :highlights, as: :highlightable, dependent: :destroy
 
   def stem
     reflexive? ? spanish[0..-5] : spanish[0..-3]

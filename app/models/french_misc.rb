@@ -5,6 +5,7 @@ class FrenchMisc < ActiveRecord::Base
 
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags
+  has_many :highlights, as: :highlightable, dependent: :destroy
 
   def synonyms
     FrenchMisc.where(english: self.english)
