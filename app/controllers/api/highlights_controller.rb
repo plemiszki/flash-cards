@@ -12,6 +12,7 @@ class Api::HighlightsController < AdminController
       render json: { error: 'invalid entity' }, status: :bad_request and return
     end
 
+    @entity_type = entity
     @highlights = Highlight.where(highlightable_type: entity).includes(:highlightable)
     render 'index', formats: [:json], handlers: [:jbuilder]
   end
