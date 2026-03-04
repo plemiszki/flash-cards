@@ -57,6 +57,10 @@ The entry point is `frontend/entry.jsx`. On `DOMContentLoaded`, it scans for kno
 
 Custom components live in `frontend/containers/` for complex pages (quiz details, quiz run, card details, language-specific word details).
 
+### Frontend Conventions
+
+- Always import React explicitly: `import React, { useState, ... } from 'react'`. Do not remove the React import even if a linter flags it as unused.
+
 ### JSON Convention
 
 API responses use **camelCase keys**. The `RenderErrors` concern transforms ActiveRecord error keys with `camelize(:lower)` and returns 422. Jbuilder templates in `app/views/api/` follow this convention. The frontend expects camelCase throughout.

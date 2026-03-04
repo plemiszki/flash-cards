@@ -21,6 +21,7 @@ import FrenchCountryDetails from "./containers/french-country-details";
 import FrenchCityDetails from "./containers/french-city-details";
 import FrenchMiscDetails from "./containers/french-misc-details";
 import CardDetails from "./containers/card-details";
+import HighlightsIndex from "./containers/highlights-index";
 import QuizDetails from "./containers/quiz-details";
 import QuizRun from "./containers/quiz-run";
 import Vocabulary from "./containers/vocabulary";
@@ -141,6 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const vocabularyNode = document.getElementById("vocabulary");
   if (vocabularyNode) {
     createRoot(vocabularyNode).render(<Vocabulary />);
+  }
+
+  const highlightsIndexNode = document.getElementById("highlights-index");
+  if (highlightsIndexNode) {
+    createRoot(highlightsIndexNode).render(<HighlightsIndex />);
   }
 
   renderSearchIndex(

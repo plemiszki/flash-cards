@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root to: 'quizzes#index'
   resources :cards, only: [:index, :show]
+  resources :highlights, only: [:index]
   resources :nouns, only: [:index, :show]
   resources :verbs, only: [:index, :show]
   resources :adjectives, only: [:index, :show]
@@ -47,5 +48,6 @@ Rails.application.routes.draw do
     resources :match_bins, only: [:create, :destroy]
     resources :match_items, only: [:create, :destroy]
     resources :jobs, only: [:create, :show]
+    resources :highlights, only: [:index]
   end
 end
