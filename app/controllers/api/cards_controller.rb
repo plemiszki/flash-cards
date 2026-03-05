@@ -16,12 +16,14 @@ class Api::CardsController < AdminController
 
   def create
     @card = Card.new(card_params)
-    if @card.save
-      CardTag.create(cardtagable: @card, cardtagable_type: 'Card', tag_id: params[:tag_id]) if params[:tag_id]
-      render 'create', formats: [:json], handlers: [:jbuilder]
-    else
-      render_errors(@card)
+    ActiveRecord::Base.transaction do
+      @card.save!
+      CardTag.create!(cardtagable: @card, cardtagable_type: 'Card', tag_id: params[:tag_id]) if params[:tag_id]
+      Highlight.create!(highlightable: @card)
     end
+    render 'create', formats: [:json], handlers: [:jbuilder]
+  rescue ActiveRecord::RecordInvalid => e
+    render_errors(e.record)
   end
 
   def show
