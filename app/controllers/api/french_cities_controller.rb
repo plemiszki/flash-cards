@@ -12,10 +12,7 @@ class Api::FrenchCitiesController < AdminController
   def create
     @french_city = FrenchCity.new(french_city_params)
     if @french_city.save
-      if params[:french_city][:needs_attention] == true
-        tag_id = Tag.find_by_name('Needs Attention').id
-        CardTag.create(cardtagable_type: 'FrenchCity', cardtagable_id: @french_city.id, tag_id: tag_id)
-      end
+      Highlight.create!(highlightable: @french_city) if params[:french_city][:highlight]
       @french_cities = FrenchCity.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else

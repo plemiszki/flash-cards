@@ -276,8 +276,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "noun",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
           <div key="2" className="row">
@@ -328,8 +328,8 @@ export default class NewEntity extends React.Component {
             {Details.renderCheckbox.bind(this)({
               columnWidth: 2,
               entity: "verb",
-              property: "needsAttention",
-              columnHeader: "N.A. Tag",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
         ];
@@ -344,8 +344,8 @@ export default class NewEntity extends React.Component {
             {Details.renderCheckbox.bind(this)({
               columnWidth: 2,
               entity: "adjective",
-              property: "needsAttention",
-              columnHeader: "N.A. Tag",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
           <div key="2" className="row">
@@ -530,8 +530,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "spanishNoun",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
           <div key="2" className="row">
@@ -579,8 +579,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "frenchNoun",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
           <div key="2" className="row">
@@ -620,8 +620,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "spanishVerb",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
         ];
@@ -641,8 +641,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "frenchVerb",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
         ];
@@ -669,8 +669,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "spanishAdjective",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
             {Details.renderField.bind(this)({
               columnWidth: 4,
@@ -707,8 +707,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "frenchAdjective",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
             {Details.renderField.bind(this)({
               columnWidth: 4,
@@ -751,8 +751,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "spanishMisc",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
         ];
@@ -772,8 +772,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "frenchMisc",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
           <div key="2" className="row">
@@ -817,8 +817,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "frenchCountry",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
         ];
@@ -838,8 +838,8 @@ export default class NewEntity extends React.Component {
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
               entity: "frenchCity",
-              property: "needsAttention",
-              columnHeader: "Needs Attention",
+              property: "highlight",
+              columnHeader: "Highlight",
             })}
           </div>,
         ];

@@ -12,10 +12,7 @@ class Api::VerbsController < AdminController
   def create
     @verb = Verb.new(verb_params)
     if @verb.save
-      if params[:verb][:needs_attention] == true
-        tag_id = Tag.find_by_name('Needs Attention').id
-        CardTag.create(cardtagable_type: 'Verb', cardtagable_id: @verb.id, tag_id: tag_id)
-      end
+      Highlight.create!(highlightable: @verb) if params[:verb][:highlight]
       @verbs = Verb.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else

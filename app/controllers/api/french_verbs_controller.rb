@@ -10,13 +10,9 @@ class Api::FrenchVerbsController < AdminController
   end
 
   def create
-    needs_attention = french_verb_params[:needs_attention]
-    @french_verb = FrenchVerb.new(french_verb_params.except(:needs_attention))
+    @french_verb = FrenchVerb.new(french_verb_params)
     if @french_verb.save
-      if needs_attention
-        tag_id = Tag.find_by_name('Needs Attention').id
-        CardTag.create(cardtagable_type: 'FrenchVerb', cardtagable_id: @french_verb.id, tag_id: tag_id)
-      end
+      Highlight.create!(highlightable: @french_verb) if params[:french_verb][:highlight]
       render 'show', formats: [:json], handlers: [:jbuilder]
     else
       render_errors(@french_verb)
@@ -62,7 +58,6 @@ class Api::FrenchVerbsController < AdminController
       :streak,
       :last_streak_add,
       :note,
-      :needs_attention,
       :forms,
       :streak_freeze_expiration,
       :url,

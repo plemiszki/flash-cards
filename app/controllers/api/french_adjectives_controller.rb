@@ -12,10 +12,7 @@ class Api::FrenchAdjectivesController < AdminController
   def create
     @french_adjective = FrenchAdjective.new(french_adjective_params)
     if @french_adjective.save
-      if params[:french_adjective][:needs_attention] == true
-        tag_id = Tag.find_by_name('Needs Attention').id
-        CardTag.create(cardtagable_type: 'FrenchAdjective', cardtagable_id: @french_adjective.id, tag_id: tag_id)
-      end
+      Highlight.create!(highlightable: @french_adjective) if params[:french_adjective][:highlight]
       @french_adjectives = FrenchAdjective.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else

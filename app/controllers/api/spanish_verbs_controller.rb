@@ -10,13 +10,9 @@ class Api::SpanishVerbsController < AdminController
   end
 
   def create
-    needs_attention = spanish_verb_params[:needs_attention]
-    @spanish_verb = SpanishVerb.new(spanish_verb_params.except(:needs_attention))
+    @spanish_verb = SpanishVerb.new(spanish_verb_params)
     if @spanish_verb.save
-      if needs_attention
-        tag_id = Tag.find_by_name('Needs Attention').id
-        CardTag.create(cardtagable_type: 'SpanishVerb', cardtagable_id: @spanish_verb.id, tag_id: tag_id)
-      end
+      Highlight.create!(highlightable: @spanish_verb) if params[:spanish_verb][:highlight]
       @spanish_verbs = SpanishVerb.all
       render 'index', formats: [:json], handlers: [:jbuilder]
     else
@@ -55,7 +51,6 @@ class Api::SpanishVerbsController < AdminController
       :streak,
       :last_streak_add,
       :note,
-      :needs_attention,
       :forms,
       :streak_freeze_expiration,
     )
