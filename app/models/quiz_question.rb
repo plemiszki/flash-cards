@@ -58,15 +58,9 @@ class QuizQuestion < ActiveRecord::Base
     return chain_root.get_amount if chained
     return amount if manual_amount?
     return count_tagged_entities if everything?
-    if all_highlighted?
-      needs_attention_tag_id = Tag.find_by_name('Needs Attention')&.id
-      return 0 unless needs_attention_tag_id
-      highlighted_ids = CardTag.where(tag_id: needs_attention_tag_id, cardtagable_type: question.entity).pluck(:cardtagable_id)
+    if all_highlighted? || all_non_archived?
+      highlighted_ids = Highlight.where(highlightable_type: question.entity).pluck(:highlightable_id)
       count_tagged_entities(intersect_with: highlighted_ids)
-    elsif all_non_archived?
-      archived_tag_id = Tag.find_by_name('Archived')&.id
-      archived_ids = archived_tag_id ? CardTag.where(tag_id: archived_tag_id, cardtagable_type: question.entity).pluck(:cardtagable_id) : []
-      count_tagged_entities(exclude: archived_ids)
     end
   end
 

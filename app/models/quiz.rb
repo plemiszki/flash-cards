@@ -184,7 +184,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @noun.french,
         linkUrl: @noun.url,
       }
-    when 'French - Single Verb - Infinitive'
+    when 'French - Verb - Infinitive'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       obj = {
@@ -209,7 +209,7 @@ class Quiz < ActiveRecord::Base
         highlightText: @verb.french,
         linkUrl: @verb.url,
       }
-    when 'French - Single Verb - Present Tense - First Person Singular'
+    when 'French - Verb - Present - First Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["je"]
@@ -237,7 +237,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Present Tense - Second Person Singular (Informal)'
+    when 'French - Verb - Present - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["tu"]
@@ -266,7 +266,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Present Tense - Second Person Singular (Formal)'
+    when 'French - Verb - Present - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["vous"]
@@ -295,7 +295,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Present Tense - First Person Plural'
+    when 'French - Verb - Present - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["nous"]
@@ -324,7 +324,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Present Tense - Third Person Singular'
+    when 'French - Verb - Present - Third Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["il"]
@@ -353,7 +353,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Present Tense - Third Person Plural'
+    when 'French - Verb - Present - Third Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       verb_form = @verb.forms["present"]["ils"]
@@ -382,7 +382,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Imperative Tense - Second Person Singular (Informal)'
+    when 'French - Verb - Imperative - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       raise NoVerbFormError if @verb.forms["imperative"].nil? || @verb.forms["imperative"]["tu"].nil?
@@ -410,7 +410,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Imperative Tense - Second Person Singular (Formal)'
+    when 'French - Verb - Imperative - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       raise NoVerbFormError if @verb.forms["imperative"].nil? || @verb.forms["imperative"]["vous"].nil?
@@ -438,7 +438,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Imperative Tense - First Person Plural'
+    when 'French - Verb - Imperative - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       synonyms = @verb.synonyms
       raise NoVerbFormError if @verb.forms["imperative"].nil? || @verb.forms["imperative"]["nous"].nil?
@@ -465,7 +465,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Future Tense - First Person Singular'
+    when 'French - Verb - Future - First Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       check_for_future_form(@verb, "je")
       synonyms = @verb.synonyms
@@ -492,7 +492,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Future Tense - Second Person Singular (Informal)'
+    when 'French - Verb - Future - Second Person Singular (Informal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       check_for_future_form(@verb, "tu")
       synonyms = @verb.synonyms
@@ -520,7 +520,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Future Tense - Third Person Singular'
+    when 'French - Verb - Future - Third Person Singular'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       check_for_future_form(@verb, "il")
       synonyms = @verb.synonyms
@@ -547,7 +547,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Future Tense - First Person Plural'
+    when 'French - Verb - Future - First Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       check_for_future_form(@verb, "nous")
       synonyms = @verb.synonyms
@@ -574,7 +574,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Future Tense - Second Person Singular (Formal)'
+    when 'French - Verb - Future - Second Person Singular (Formal)'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       check_for_future_form(@verb, "vous")
       synonyms = @verb.synonyms
@@ -602,7 +602,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Future Tense - Third Person Plural'
+    when 'French - Verb - Future - Third Person Plural'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       check_for_future_form(@verb, "ils")
       synonyms = @verb.synonyms
@@ -629,7 +629,7 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
-    when 'French - Single Verb - Past Participle'
+    when 'French - Verb - Past Participle'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       raise NoVerbFormError if @verb.forms["past_perfect"].nil?
       past_participle = @verb.forms["past_perfect"]["participle"]
@@ -996,7 +996,7 @@ class Quiz < ActiveRecord::Base
         description: 'noun',
         tags: noun.tags.pluck(:name)
       }
-    when 'Hindi - Single Verb'
+    when 'Hindi - Verb'
       verb = get_verb(quiz_question)
       obj = {
         wordId: verb.id,
@@ -1580,7 +1580,7 @@ class Quiz < ActiveRecord::Base
         tags: noun.tags.pluck(:name),
         note: noun.note
       }
-    when 'Spanish - Single Verb'
+    when 'Spanish - Verb'
       verb = Spanish::get_verb(quiz_question, @spanish_verbs)
       synonyms = verb.synonyms
       obj = {

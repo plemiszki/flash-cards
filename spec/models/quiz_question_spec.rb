@@ -5,9 +5,6 @@ RSpec.describe QuizQuestion, type: :model do
     # Uses question id: 1 ("Hindi - Single Noun"), entity: "Noun"
     let(:quiz)                { Quiz.create!(name: 'Test Quiz', max_questions: 10) }
     let(:quiz_tag)            { Tag.create!(name: 'Beginner') }
-    let(:needs_attention_tag) { Tag.create!(name: 'Needs Attention') }
-    let(:archived_tag)        { Tag.create!(name: 'Archived') }
-
     let(:quiz_question) do
       QuizQuestion.create!(
         quiz: quiz,
@@ -25,12 +22,10 @@ RSpec.describe QuizQuestion, type: :model do
 
     before do
       QuizQuestionTag.create!(quiz_question: quiz_question, tag: quiz_tag)
-      # Both nouns belong to the quiz tag
+      # Both nouns belong to the quiz tag; only noun1 is highlighted
       CardTag.create!(tag: quiz_tag, cardtagable: noun1)
       CardTag.create!(tag: quiz_tag, cardtagable: noun2)
-      # Only noun1 needs attention; only noun2 is archived
-      CardTag.create!(tag: needs_attention_tag, cardtagable: noun1)
-      CardTag.create!(tag: archived_tag, cardtagable: noun2)
+      Highlight.create!(highlightable: noun1)
     end
 
     context 'when type is manual_amount' do
@@ -50,7 +45,7 @@ RSpec.describe QuizQuestion, type: :model do
     context 'when type is all_highlighted' do
       before { quiz_question.update!(quiz_question_type: :all_highlighted) }
 
-      it 'returns the count of entities that also have the Needs Attention tag' do
+      it 'returns the count of entities that have a Highlight record' do
         expect(quiz_question.get_amount).to eq(1)
       end
     end
@@ -58,7 +53,7 @@ RSpec.describe QuizQuestion, type: :model do
     context 'when type is all_non_archived' do
       before { quiz_question.update!(quiz_question_type: :all_non_archived) }
 
-      it 'returns the count of entities that do not have the Archived tag' do
+      it 'returns the count of entities that have a Highlight record' do
         expect(quiz_question.get_amount).to eq(1)
       end
     end

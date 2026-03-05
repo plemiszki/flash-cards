@@ -41,64 +41,64 @@
   name: French - Single Noun with Article, Singular or Plural
   entity: FrenchNoun
 - id: 112
-  name: French - Single Verb - Conditional Tense - First Person Plural
+  name: French - Verb - Conditional - First Person Plural
 - id: 113
-  name: French - Single Verb - Conditional Tense - First Person Singular
+  name: French - Verb - Conditional - First Person Singular
 - id: 114
-  name: French - Single Verb - Conditional Tense - Second Person Singular (Formal)
+  name: French - Verb - Conditional - Second Person Singular (Formal)
 - id: 115
-  name: French - Single Verb - Conditional Tense - Second Person Singular (Informal)
+  name: French - Verb - Conditional - Second Person Singular (Informal)
 - id: 116
-  name: French - Single Verb - Conditional Tense - Third Person Plural
+  name: French - Verb - Conditional - Third Person Plural
 - id: 117
-  name: French - Single Verb - Conditional Tense - Third Person Singular
+  name: French - Verb - Conditional - Third Person Singular
 - id: 176
-  name: French - Single Verb - Future Tense - First Person Plural
+  name: French - Verb - Future - First Person Plural
 - id: 175
-  name: French - Single Verb - Future Tense - First Person Singular
+  name: French - Verb - Future - First Person Singular
 - id: 177
-  name: French - Single Verb - Future Tense - Second Person Singular (Formal)
+  name: French - Verb - Future - Second Person Singular (Formal)
 - id: 178
-  name: French - Single Verb - Future Tense - Second Person Singular (Informal)
+  name: French - Verb - Future - Second Person Singular (Informal)
 - id: 180
-  name: French - Single Verb - Future Tense - Third Person Plural
+  name: French - Verb - Future - Third Person Plural
 - id: 179
-  name: French - Single Verb - Future Tense - Third Person Singular
+  name: French - Verb - Future - Third Person Singular
 - id: 174
-  name: French - Single Verb - Imperative Tense - First Person Plural
+  name: French - Verb - Imperative - First Person Plural
 - id: 172
-  name: French - Single Verb - Imperative Tense - Second Person Singular (Formal)
+  name: French - Verb - Imperative - Second Person Singular (Formal)
 - id: 173
-  name: French - Single Verb - Imperative Tense - Second Person Singular (Informal)
+  name: French - Verb - Imperative - Second Person Singular (Informal)
 - id: 106
-  name: French - Single Verb - Imperfect Tense - First Person Plural
+  name: French - Verb - Imperfect - First Person Plural
 - id: 107
-  name: French - Single Verb - Imperfect Tense - First Person Singular
+  name: French - Verb - Imperfect - First Person Singular
 - id: 108
-  name: French - Single Verb - Imperfect Tense - Second Person Singular (Formal)
+  name: French - Verb - Imperfect - Second Person Singular (Formal)
 - id: 109
-  name: French - Single Verb - Imperfect Tense - Second Person Singular (Informal)
+  name: French - Verb - Imperfect - Second Person Singular (Informal)
 - id: 110
-  name: French - Single Verb - Imperfect Tense - Third Person Plural
+  name: French - Verb - Imperfect - Third Person Plural
 - id: 111
-  name: French - Single Verb - Imperfect Tense - Third Person Singular
+  name: French - Verb - Imperfect - Third Person Singular
 - id: 58
-  name: French - Single Verb - Infinitive
+  name: French - Verb - Infinitive
   entity: FrenchVerb
 - id: 139
-  name: French - Single Verb - Past Participle
+  name: French - Verb - Past Participle
 - id: 105
-  name: French - Single Verb - Present Tense - First Person Plural
+  name: French - Verb - Present - First Person Plural
 - id: 100
-  name: French - Single Verb - Present Tense - First Person Singular
+  name: French - Verb - Present - First Person Singular
 - id: 102
-  name: French - Single Verb - Present Tense - Second Person Singular (Formal)
+  name: French - Verb - Present - Second Person Singular (Formal)
 - id: 101
-  name: French - Single Verb - Present Tense - Second Person Singular (Informal)
+  name: French - Verb - Present - Second Person Singular (Informal)
 - id: 104
-  name: French - Single Verb - Present Tense - Third Person Plural
+  name: French - Verb - Present - Third Person Plural
 - id: 103
-  name: French - Single Verb - Present Tense - Third Person Singular
+  name: French - Verb - Present - Third Person Singular
 - id: 39
   name: Hindi - Age
 - id: 34
@@ -136,7 +136,7 @@
   name: Hindi - Single Noun
   entity: Noun
 - id: 2
-  name: Hindi - Single Verb
+  name: Hindi - Verb
   entity: Verb
 - id: 40
   name: Hindi - Subject can Verb
@@ -188,7 +188,7 @@
   name: Spanish - Single Noun
   entity: SpanishNoun
 - id: 27
-  name: Spanish - Single Verb
+  name: Spanish - Verb
   entity: SpanishVerb
 - id: 42
   name: Spanish - Subject is Adjective
