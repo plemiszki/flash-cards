@@ -2,7 +2,7 @@ class Api::CardsController < AdminController
 
   include SearchIndex
 
-  after_action :archive, only: [:update]
+  after_action :remove_highlight_if_ready, only: [:update]
 
   def index
     @cards = perform_search(model: 'Card', associations: [:tags])
@@ -17,7 +17,7 @@ class Api::CardsController < AdminController
   def create
     @card = Card.new(card_params)
     if @card.save
-      tag = CardTag.create(cardtagable: @card, cardtagable_type: 'Card', tag_id: params[:tag_id]) if params[:tag_id]
+      CardTag.create(cardtagable: @card, cardtagable_type: 'Card', tag_id: params[:tag_id]) if params[:tag_id]
       render 'create', formats: [:json], handlers: [:jbuilder]
     else
       render_errors(@card)
@@ -70,11 +70,10 @@ class Api::CardsController < AdminController
     result
   end
 
-  def archive
+  def remove_highlight_if_ready
     if @card.streak >= 5
-      unless @card.tags.pluck(:name).include?('Archived')
-        CardTag.create(cardtagable_id: @card.id, tag_id: Tag.find_by_name('Archived').id, cardtagable_type: 'Card')
-      end
+      highlight = Highlight.find_by(highlightable: @card)
+      highlight.destroy if highlight
     end
   end
 

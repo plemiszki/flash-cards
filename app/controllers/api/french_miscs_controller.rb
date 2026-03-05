@@ -2,7 +2,7 @@ class Api::FrenchMiscsController < AdminController
 
   include Wordable
 
-  after_action :remove_needs_attention, only: [:update]
+  after_action :remove_highlight_if_ready, only: [:update]
 
   def index
     @french_miscs = FrenchMisc.all

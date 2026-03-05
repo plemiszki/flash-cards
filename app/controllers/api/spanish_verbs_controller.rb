@@ -2,7 +2,7 @@ class Api::SpanishVerbsController < AdminController
 
   include Wordable
 
-  after_action :remove_needs_attention, only: [:update]
+  after_action :remove_highlight_if_ready, only: [:update]
 
   def index
     @spanish_verbs = SpanishVerb.all

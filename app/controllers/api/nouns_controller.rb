@@ -2,7 +2,7 @@ class Api::NounsController < AdminController
 
   include Wordable
 
-  after_action :remove_needs_attention, only: [:update]
+  after_action :remove_highlight_if_ready, only: [:update]
 
   def index
     @nouns = Noun.all
