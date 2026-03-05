@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       newEntity: {
-        initialEntity: { english: "", spanish: "", needsAttention: true },
+        initialEntity: { english: "", spanish: "", highlight: true },
       },
     }
   );
@@ -427,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       newEntity: {
-        initialEntity: { english: "", spanish: "", needsAttention: true },
+        initialEntity: { english: "", spanish: "", highlight: true },
       },
     }
   );
@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       newEntity: {
-        initialEntity: { english: "", french: "", needsAttention: true },
+        initialEntity: { english: "", french: "", highlight: true },
         buttonText: "Add French Misc Word",
       },
     }
@@ -495,7 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       newEntity: {
-        initialEntity: { english: "", french: "", needsAttention: true },
+        initialEntity: { english: "", french: "", highlight: true },
         buttonText: "Add French City",
       },
     }
