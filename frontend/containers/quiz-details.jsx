@@ -21,7 +21,6 @@ import QuizQuestionNew from "./quiz-question-new.jsx";
 const QUIZ_QUESTION_TYPE_LABELS = {
   manual_amount: "Manual Amount",
   all_highlighted: "Highlighted",
-  all_non_archived: "Non-Archived",
   everything: "All",
 };
 

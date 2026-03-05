@@ -40,23 +40,6 @@ RSpec.describe Quiz, type: :model do
       end
     end
 
-    context 'all_non_archived' do
-      it 'returns only highlighted tagged cards' do
-        card1 = make_card(question: 'Highlighted 1')
-        card2 = make_card(question: 'Highlighted 2')
-        plain_card = make_card(question: 'Plain')
-        CardTag.create!(tag: tag, cardtagable: card1)
-        CardTag.create!(tag: tag, cardtagable: card2)
-        CardTag.create!(tag: tag, cardtagable: plain_card)
-        Highlight.create!(highlightable: card1)
-        Highlight.create!(highlightable: card2)
-        make_quiz_question(type: :all_non_archived, amount: 2)
-
-        result = quiz.run
-
-        expect(result.map { |q| q[:cardId] }).to contain_exactly(card1.id, card2.id)
-      end
-    end
 
     context 'all_highlighted' do
       it 'returns only cards that have a Highlight record' do

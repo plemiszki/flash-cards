@@ -50,12 +50,5 @@ RSpec.describe QuizQuestion, type: :model do
       end
     end
 
-    context 'when type is all_non_archived' do
-      before { quiz_question.update!(quiz_question_type: :all_non_archived) }
-
-      it 'returns the count of entities that have a Highlight record' do
-        expect(quiz_question.get_amount).to eq(1)
-      end
-    end
   end
 end

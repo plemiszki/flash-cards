@@ -5,7 +5,7 @@ class QuizQuestion < ActiveRecord::Base
   validates_numericality_of :amount, greater_than_or_equal_to: 0, only_integer: true
   validate :first_question_no_chain, unless: :reordering?
 
-  enum :quiz_question_type, { manual_amount: 0, all_highlighted: 1, all_non_archived: 2, everything: 3 }
+  enum :quiz_question_type, { manual_amount: 0, all_highlighted: 1, everything: 3 }
 
   belongs_to :quiz
   belongs_to :tag, optional: true
@@ -58,7 +58,7 @@ class QuizQuestion < ActiveRecord::Base
     return chain_root.get_amount if chained
     return amount if manual_amount?
     return count_tagged_entities if everything?
-    if all_highlighted? || all_non_archived?
+    if all_highlighted?
       highlighted_ids = Highlight.where(highlightable_type: question.entity).pluck(:highlightable_id)
       count_tagged_entities(intersect_with: highlighted_ids)
     end

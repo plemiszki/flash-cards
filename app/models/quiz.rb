@@ -1889,7 +1889,7 @@ class Quiz < ActiveRecord::Base
       all_tagged_cards = Card.includes(:tags).where(tags: { id: tag_ids }).distinct
       if quiz_question.everything?
         result += all_tagged_cards
-      elsif quiz_question.all_non_archived? || quiz_question.all_highlighted?
+      elsif quiz_question.all_highlighted?
         result += all_tagged_cards.select { |card| all_highlighted_card_ids.include?(card.id) }
       else
         n = quiz_question.amount

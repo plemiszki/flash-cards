@@ -4,10 +4,10 @@ end
 
 puts "Done."
 
-# Backfill: change all_non_archived to all_highlighted
-count = QuizQuestion.all_non_archived.count
+# Backfill: change all_non_archived (2) to all_highlighted (1)
+count = QuizQuestion.where(quiz_question_type: 2).count
 puts "Found #{count} QuizQuestion record(s) with type all_non_archived"
 
-QuizQuestion.all_non_archived.update_all(quiz_question_type: :all_highlighted)
+QuizQuestion.where(quiz_question_type: 2).update_all(quiz_question_type: 1)
 
 puts "Updated #{count} record(s) to all_highlighted"

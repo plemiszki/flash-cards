@@ -172,7 +172,6 @@ export default class QuizQuestionNew extends React.Component {
               options: [
                 { value: "manual_amount", label: "Manual Amount" },
                 { value: "all_highlighted", label: "Highlighted" },
-                { value: "all_non_archived", label: "Non-Archived" },
                 { value: "everything", label: "All" },
               ],
               optionDisplayProperty: "label",
