@@ -85,8 +85,6 @@ export function runQuiz(id) {
       (response) => dispatch({
         type: 'RUN_QUIZ',
         quiz: response.quiz,
-        archivedTagId: response.archivedTagId,
-        needsAttentionTagId: response.needsAttentionTagId
       }),
       (response) => dispatch({
         type: 'ERRORS',

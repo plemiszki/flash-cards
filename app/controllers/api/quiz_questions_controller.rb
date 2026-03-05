@@ -42,7 +42,7 @@ class Api::QuizQuestionsController < AdminController
   end
 
   def quiz_question_params
-    params[:quiz_question].permit(:quiz_id, :question_id, :tag_id, :amount, :use_all_available, :chained, :position, :quiz_question_type)
+    params[:quiz_question].permit(:quiz_id, :question_id, :tag_id, :amount, :chained, :position, :quiz_question_type)
   end
 
 end

@@ -23,7 +23,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :cards, only: [:index, :new, :show, :create, :update, :destroy]
-    get '/cards_archived' => 'cards#index_archived'
     resources :nouns, only: [:index, :show, :create, :update, :destroy]
     resources :verbs, only: [:index, :show, :create, :update, :destroy]
     resources :adjectives, only: [:index, :show, :create, :update, :destroy]

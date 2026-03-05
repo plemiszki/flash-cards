@@ -12,7 +12,6 @@ RSpec.describe QuizQuestion, type: :model do
         amount: 5,
         position: 0,
         chained: false,
-        use_all_available: false,
         quiz_question_type: :manual_amount,
       )
     end

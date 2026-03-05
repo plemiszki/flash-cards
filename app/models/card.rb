@@ -34,14 +34,6 @@ class Card < ActiveRecord::Base
     result
   end
 
-  def self.archived
-    self.joins(:tags).where(tags: { name: 'Archived' })
-  end
-
-  def self.unarchived
-    self.all - self.joins(:tags).where(tags: { name: 'Archived' })
-  end
-
   def match_answer
     result = ""
     match_bins.each do |match_bin|

@@ -30,7 +30,7 @@ module AvailableQuestions
       if quiz_question.chained
         chain_root_position = quiz_question.chain_root.position
         chain_root = quiz_questions[chain_root_position]
-        quiz_question.chained_amount = chain_root.use_all_available ? chain_root.available : chain_root.amount
+        quiz_question.chained_amount = chain_root.all_highlighted? ? chain_root.available : chain_root.amount
       else
         quiz_question.chained_amount = 0
       end
@@ -46,13 +46,13 @@ module AvailableQuestions
       when 'Card'
         if quiz_question.tag_id
           tagged_card_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: 'Card').includes(:cardtagable).map(&:cardtagable).pluck(:id)
-          quiz_question.unarchived = (tagged_card_ids & highlighted_card_ids).count
-          quiz_question.archived = (tagged_card_ids - highlighted_card_ids).count
+          quiz_question.highlighted_count = (tagged_card_ids & highlighted_card_ids).count
+          quiz_question.non_highlighted_count = (tagged_card_ids - highlighted_card_ids).count
           quiz_question.available = tagged_card_ids.count
         else
           card_count = Card.count
-          quiz_question.unarchived = highlighted_card_ids.count
-          quiz_question.archived = card_count - highlighted_card_ids.count
+          quiz_question.highlighted_count = highlighted_card_ids.count
+          quiz_question.non_highlighted_count = card_count - highlighted_card_ids.count
           quiz_question.available = card_count
         end
       when 'Spanish - Single Noun',
@@ -80,11 +80,11 @@ module AvailableQuestions
           available_count = model_name.constantize.count
         end
         quiz_question.available = available_count
-        quiz_question.unarchived = 0
-        quiz_question.archived = 0
+        quiz_question.highlighted_count = 0
+        quiz_question.non_highlighted_count = 0
       else
-        quiz_question.unarchived = 0
-        quiz_question.archived = 0
+        quiz_question.highlighted_count = 0
+        quiz_question.non_highlighted_count = 0
         quiz_question.available = 0
       end
     end

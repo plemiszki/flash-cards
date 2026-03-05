@@ -3,12 +3,7 @@ require 'rails_helper'
 RSpec.describe Quiz, type: :model do
   describe '#run' do
     let(:quiz) { Quiz.create!(name: 'Test Quiz', max_questions: 0) }
-    let(:tag)                 { Tag.create!(name: 'Test') }
-    let(:archived_tag)        { Tag.create!(name: 'Archived') }
-    let(:needs_attention_tag) { Tag.create!(name: 'Needs Attention') }
-
-    # get_available_questions calls Tag.find_by_name('Archived').id — must exist in every example
-    before { archived_tag }
+    let(:tag) { Tag.create!(name: 'Test') }
 
     def make_card(question: 'Q', answer: 'A')
       Card.create!(question: question, answer: answer, config: {})
@@ -21,7 +16,6 @@ RSpec.describe Quiz, type: :model do
         amount: amount,
         position: position,
         chained: false,
-        use_all_available: false,
         quiz_question_type: type,
       )
       QuizQuestionTag.create!(quiz_question: qq, tag: tag)
@@ -59,17 +53,17 @@ RSpec.describe Quiz, type: :model do
     end
 
     context 'everything' do
-      it 'returns all tagged cards including archived ones' do
-        normal_card   = make_card(question: 'Normal')
-        archived_card = make_card(question: 'Archived')
-        CardTag.create!(tag: tag, cardtagable: normal_card)
-        CardTag.create!(tag: tag, cardtagable: archived_card)
-        CardTag.create!(tag: archived_tag, cardtagable: archived_card)
+      it 'returns all tagged cards regardless of highlight status' do
+        highlighted_card     = make_card(question: 'Highlighted')
+        non_highlighted_card = make_card(question: 'Non-highlighted')
+        CardTag.create!(tag: tag, cardtagable: highlighted_card)
+        CardTag.create!(tag: tag, cardtagable: non_highlighted_card)
+        Highlight.create!(highlightable: highlighted_card)
         make_quiz_question(type: :everything, amount: 2)
 
         result = quiz.run
 
-        expect(result.map { |q| q[:cardId] }).to contain_exactly(normal_card.id, archived_card.id)
+        expect(result.map { |q| q[:cardId] }).to contain_exactly(highlighted_card.id, non_highlighted_card.id)
       end
     end
 

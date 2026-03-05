@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_03_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_225419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -194,7 +194,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_000001) do
     t.integer "quiz_id", null: false
     t.integer "quiz_question_type", default: 0, null: false
     t.integer "tag_id"
-    t.boolean "use_all_available", default: false
     t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id"
     t.index ["tag_id"], name: "index_quiz_questions_on_tag_id"
   end

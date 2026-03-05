@@ -16,7 +16,7 @@ class QuizQuestion < ActiveRecord::Base
     Question.find(question_id)
   end
 
-  attr_accessor :unarchived, :archived, :available, :chained_amount, :reordering
+  attr_accessor :highlighted_count, :non_highlighted_count, :available, :chained_amount, :reordering
 
   def first_question_no_chain
     if position.zero? && chained
@@ -51,7 +51,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def get_quiz_run_amount
     return 0 if chained
-    use_all_available ? (question.name == 'Card' ? unarchived : available) : amount
+    all_highlighted? ? (question.name == 'Card' ? highlighted_count : available) : amount
   end
 
   def get_amount
