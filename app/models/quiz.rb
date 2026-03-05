@@ -1847,27 +1847,24 @@ class Quiz < ActiveRecord::Base
 
   def get_cards(quiz_questions)
     result = []
-    all_archived_cards = Card.includes(:tags).where(tags: { name: 'Archived' })
+    all_highlighted_card_ids = Highlight.where(highlightable_type: 'Card').pluck(:highlightable_id).to_set
     quiz_questions.each do |quiz_question|
       tag_ids = quiz_question.quiz_question_tags.map(&:tag_id)
       next if tag_ids.empty?
       all_tagged_cards = Card.includes(:tags).where(tags: { id: tag_ids }).distinct
       if quiz_question.everything?
         result += all_tagged_cards
-      elsif quiz_question.all_non_archived?
-        result += (all_tagged_cards - all_archived_cards)
-      elsif quiz_question.all_highlighted?
-        needs_attention_cards = Card.includes(:tags).where(tags: { name: 'Needs Attention' })
-        result += (all_tagged_cards & needs_attention_cards)
+      elsif quiz_question.all_non_archived? || quiz_question.all_highlighted?
+        result += all_tagged_cards.select { |card| all_highlighted_card_ids.include?(card.id) }
       else
         n = quiz_question.amount
-        archived_tagged_cards = (all_tagged_cards & all_archived_cards).shuffle
-        unarchived_tagged_cards = (all_tagged_cards - all_archived_cards).shuffle
-        if n <= unarchived_tagged_cards.length
-          result += unarchived_tagged_cards.take(n)
+        highlighted_tagged_cards = all_tagged_cards.select { |card| all_highlighted_card_ids.include?(card.id) }.shuffle
+        non_highlighted_tagged_cards = all_tagged_cards.reject { |card| all_highlighted_card_ids.include?(card.id) }.shuffle
+        if n <= non_highlighted_tagged_cards.length
+          result += non_highlighted_tagged_cards.take(n)
         else
-          result += unarchived_tagged_cards
-          result += archived_tagged_cards.take(n - unarchived_tagged_cards.length)
+          result += non_highlighted_tagged_cards
+          result += highlighted_tagged_cards.take(n - non_highlighted_tagged_cards.length)
         end
       end
     end

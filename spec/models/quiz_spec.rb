@@ -41,14 +41,15 @@ RSpec.describe Quiz, type: :model do
     end
 
     context 'all_non_archived' do
-      it 'returns only non-archived tagged cards' do
-        card1 = make_card(question: 'Non-archived 1')
-        card2 = make_card(question: 'Non-archived 2')
-        archived_card = make_card(question: 'Archived')
+      it 'returns only highlighted tagged cards' do
+        card1 = make_card(question: 'Highlighted 1')
+        card2 = make_card(question: 'Highlighted 2')
+        plain_card = make_card(question: 'Plain')
         CardTag.create!(tag: tag, cardtagable: card1)
         CardTag.create!(tag: tag, cardtagable: card2)
-        CardTag.create!(tag: tag, cardtagable: archived_card)
-        CardTag.create!(tag: archived_tag, cardtagable: archived_card)
+        CardTag.create!(tag: tag, cardtagable: plain_card)
+        Highlight.create!(highlightable: card1)
+        Highlight.create!(highlightable: card2)
         make_quiz_question(type: :all_non_archived, amount: 2)
 
         result = quiz.run
@@ -58,14 +59,14 @@ RSpec.describe Quiz, type: :model do
     end
 
     context 'all_highlighted' do
-      it 'returns only cards that also have the Needs Attention tag' do
+      it 'returns only cards that have a Highlight record' do
         plain_card1  = make_card(question: 'Plain 1')
         plain_card2  = make_card(question: 'Plain 2')
         highlighted  = make_card(question: 'Highlighted')
         CardTag.create!(tag: tag, cardtagable: plain_card1)
         CardTag.create!(tag: tag, cardtagable: plain_card2)
         CardTag.create!(tag: tag, cardtagable: highlighted)
-        CardTag.create!(tag: needs_attention_tag, cardtagable: highlighted)
+        Highlight.create!(highlightable: highlighted)
         make_quiz_question(type: :all_highlighted, amount: 1)
 
         result = quiz.run
