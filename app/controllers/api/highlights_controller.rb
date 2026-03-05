@@ -17,4 +17,15 @@ class Api::HighlightsController < AdminController
     render 'index', formats: [:json], handlers: [:jbuilder]
   end
 
+  def create
+    type = params[:highlight][:highlightable_type]
+    unless VALID_ENTITY_TYPES.include?(type)
+      render json: { error: 'invalid entity' }, status: :bad_request and return
+    end
+    klass = type.constantize
+    entity = klass.find(params[:highlight][:highlightable_id])
+    highlight = Highlight.find_or_create_by!(highlightable: entity)
+    render json: highlight
+  end
+
 end

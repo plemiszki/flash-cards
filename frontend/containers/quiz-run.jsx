@@ -4,7 +4,6 @@ import {
   Button,
   Common,
   createEntity,
-  deleteEntity,
   GrayedOut,
   objectsAreEqual,
   OutlineButton,
@@ -219,10 +218,8 @@ export default class QuizRun extends React.Component {
       status: "question",
       showAnswers: false,
       incorrectQuestionIds: [],
-      renderUnarchiveButton: true,
       wrongAnswerCount: 0,
       showHighlightButton: true,
-      showArchiveButton: true,
       justIncrementedStreak: false,
       justResetStreak: false,
       diagram: [],
@@ -238,12 +235,11 @@ export default class QuizRun extends React.Component {
     const id = window.location.pathname.split("/")[2];
     sendRequest(`/api/quizzes/${id}/run`).then(
       (response) => {
-        const { quiz, needsAttentionTagId } = response;
+        const { quiz } = response;
         const firstQuestion = quiz.questions[0];
         const diagram = [this.generateDiagramFromQuestions(quiz.questions)];
         this.setState(
           {
-            needsAttentionTagId,
             spinner: false,
             quiz,
             answer: (firstQuestion && firstQuestion.answerPlaceholder) || "",
@@ -280,9 +276,6 @@ export default class QuizRun extends React.Component {
     if (e.metaKey && e.key === "h") {
       if (this.renderHighlightButton()) {
         this.clickHighlight();
-      }
-      if (this.renderUnarchiveButton()) {
-        this.clickUnarchive(this.currentQuestion());
       }
     }
   }
@@ -445,12 +438,10 @@ export default class QuizRun extends React.Component {
             {
               quiz,
               showHighlightButton: true,
-              showArchiveButton: true,
               questionNumber: 0,
               answer: repeatQuestions[0].answerPlaceholder || "",
               status: "question",
               showAnswers: false,
-              renderUnarchiveButton: true,
               currentRotation: repeatQuestions,
               rotationNumber: rotationNumber + 1,
               repeatQuestions: [],
@@ -501,12 +492,10 @@ export default class QuizRun extends React.Component {
         this.setState(
           {
             showHighlightButton: true,
-            showArchiveButton: true,
             questionNumber: nextQuestionNumber,
             answer: currentRotation[nextQuestionNumber].answerPlaceholder || "",
             status: "question",
             showAnswers: false,
-            renderUnarchiveButton: true,
             justIncrementedStreak: false,
             justResetStreak: false,
             gotQuestionWrongThisRound: false,
@@ -601,52 +590,26 @@ export default class QuizRun extends React.Component {
     return result;
   }
 
-  clickUnarchive(currentQuestion) {
-    this.setState({
-      renderUnarchiveButton: false,
-      spinner: true,
-    });
-    deleteEntity({
-      directory: "card_tags",
-      id: currentQuestion.tags.find((tag) => {
-        return tag["name"] === "Archived";
-      }).id,
-    }).then(() => {
-      const { highlightData } = this.state;
-      highlightData.push({
-        entityName: "Card",
-        entityId: currentQuestion.cardId,
-        header: "Card",
-        text: currentQuestion.question,
-      });
-      this.setState({
-        spinner: false,
-        highlightData,
-      });
-    });
-  }
-
   clickHighlight() {
-    const { needsAttentionTagId } = this.state;
     const currentQuestion = this.currentQuestion();
-    const { wordId, entityName } = currentQuestion;
+    const { wordId, cardId, entityName } = currentQuestion;
+    const entityId = wordId || cardId;
     this.setState({
       spinner: true,
       showHighlightButton: false,
     });
     createEntity({
-      directory: "card_tags",
-      entityName: "cardTag",
+      directory: "highlights",
+      entityName: "highlight",
       entity: {
-        tagId: needsAttentionTagId,
-        cardtagableId: wordId,
-        cardtagableType: pascalCase(entityName),
+        highlightableId: entityId,
+        highlightableType: pascalCase(entityName),
       },
     }).then(() => {
       const { highlightData } = this.state;
       highlightData.push({
         entityName,
-        entityId: wordId,
+        entityId,
         header: titleCase(entityName),
         text: currentQuestion.highlightText || currentQuestion.question,
       });
@@ -852,30 +815,13 @@ export default class QuizRun extends React.Component {
   renderHighlightButton() {
     const currentQuestion = this.currentQuestion();
     const { showHighlightButton, highlightData } = this.state;
+    const entityId = currentQuestion && (currentQuestion.wordId || currentQuestion.cardId);
     return (
       currentQuestion &&
       showHighlightButton &&
       currentQuestion.highlightButton &&
-      currentQuestion.tags.indexOf("Needs Attention") === -1 &&
-      highlightData
-        .map((datum) => datum.entityId)
-        .includes(currentQuestion.wordId) === false
-    );
-  }
-
-  renderUnarchiveButton() {
-    const currentQuestion = this.currentQuestion();
-    const { renderUnarchiveButton, highlightData } = this.state;
-    return (
-      currentQuestion &&
-      renderUnarchiveButton &&
-      currentQuestion.unarchiveButton &&
-      currentQuestion.tags.find((tag) => {
-        return tag["name"] === "Archived";
-      }) &&
-      highlightData
-        .map((datum) => datum.entityId)
-        .includes(currentQuestion.cardId) === false
+      !currentQuestion.highlighted &&
+      highlightData.map((datum) => datum.entityId).includes(entityId) === false
     );
   }
 
@@ -1018,15 +964,6 @@ export default class QuizRun extends React.Component {
                   color="#5F5F5F"
                   float
                 />
-                {this.renderUnarchiveButton() && (
-                  <div className="unarchive-button-container">
-                    <div
-                      className="unarchive-button"
-                      onClick={() => this.clickUnarchive(currentQuestion)}
-                    ></div>
-                    <div className="archive-button"></div>
-                  </div>
-                )}
                 {this.renderHighlightButton() && (
                   <div
                     className="highlight-button"

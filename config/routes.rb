@@ -48,6 +48,6 @@ Rails.application.routes.draw do
     resources :match_bins, only: [:create, :destroy]
     resources :match_items, only: [:create, :destroy]
     resources :jobs, only: [:create, :show]
-    resources :highlights, only: [:index]
+    resources :highlights, only: [:index, :create]
   end
 end

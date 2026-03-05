@@ -48,9 +48,6 @@ class Api::QuizzesController < AdminController
       name: quiz.name,
       questions: quiz.run.map { |element| element.transform_keys { |key| key.to_s.camelize(:lower) } },
     }
-    @archived_tag_id = Tag.find_by_name('Archived').id
-    @needs_attention_tag_id = Tag.find_by_name('Needs Attention').id
-
     if @quiz[:questions].empty?
       @errors = ['No Questions']
       render 'run', formats: [:json], handlers: [:jbuilder], status: 422
