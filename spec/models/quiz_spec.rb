@@ -32,6 +32,24 @@ RSpec.describe Quiz, type: :model do
         expect(result.length).to eq(2)
         expect(result).to all(include(entityName: 'card'))
       end
+
+      it 'prioritizes highlighted cards over non-highlighted cards' do
+        highlighted1 = make_card(question: 'H1')
+        highlighted2 = make_card(question: 'H2')
+        non_highlighted1 = make_card(question: 'N1')
+        non_highlighted2 = make_card(question: 'N2')
+        non_highlighted3 = make_card(question: 'N3')
+        [highlighted1, highlighted2, non_highlighted1, non_highlighted2, non_highlighted3].each do |card|
+          CardTag.create!(tag: tag, cardtagable: card)
+        end
+        Highlight.create!(highlightable: highlighted1)
+        Highlight.create!(highlightable: highlighted2)
+        make_quiz_question(type: :manual_amount, amount: 2)
+
+        result = quiz.run
+
+        expect(result.map { |q| q[:cardId] }).to contain_exactly(highlighted1.id, highlighted2.id)
+      end
     end
 
 

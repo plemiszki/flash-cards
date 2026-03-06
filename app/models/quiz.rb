@@ -1895,11 +1895,11 @@ class Quiz < ActiveRecord::Base
         n = quiz_question.amount
         highlighted_tagged_cards = all_tagged_cards.select { |card| all_highlighted_card_ids.include?(card.id) }.shuffle
         non_highlighted_tagged_cards = all_tagged_cards.reject { |card| all_highlighted_card_ids.include?(card.id) }.shuffle
-        if n <= non_highlighted_tagged_cards.length
-          result += non_highlighted_tagged_cards.take(n)
+        if n <= highlighted_tagged_cards.length
+          result += highlighted_tagged_cards.take(n)
         else
-          result += non_highlighted_tagged_cards
-          result += highlighted_tagged_cards.take(n - non_highlighted_tagged_cards.length)
+          result += highlighted_tagged_cards
+          result += non_highlighted_tagged_cards.take(n - highlighted_tagged_cards.length)
         end
       end
     end
