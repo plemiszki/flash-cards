@@ -815,7 +815,8 @@ export default class QuizRun extends React.Component {
   renderHighlightButton() {
     const currentQuestion = this.currentQuestion();
     const { showHighlightButton, highlightData } = this.state;
-    const entityId = currentQuestion && (currentQuestion.wordId || currentQuestion.cardId);
+    const entityId =
+      currentQuestion && (currentQuestion.wordId || currentQuestion.cardId);
     return (
       currentQuestion &&
       showHighlightButton &&
@@ -838,7 +839,6 @@ export default class QuizRun extends React.Component {
       quiz,
       rotationNumber,
       showAnswers,
-      showHighlightButton,
       spinner,
       status,
       wrongAnswerCount,

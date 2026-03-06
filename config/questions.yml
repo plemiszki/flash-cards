@@ -1,104 +1,147 @@
 - id: 9
   name: Card
   entity: Card
+  highlightable: true
 - id: 66
   name: French - Adjective Feminine Plural
   entity: FrenchAdjective
+  highlightable: true
 - id: 65
   name: French - Adjective Feminine Singular
   entity: FrenchAdjective
+  highlightable: true
 - id: 64
   name: French - Adjective Masculine Plural
   entity: FrenchAdjective
+  highlightable: true
 - id: 63
   name: French - Adjective Masculine Singular
   entity: FrenchAdjective
+  highlightable: true
 - id: 67
   name: French - City
   entity: FrenchCity
+  highlightable: true
 - id: 68
   name: French - Country
   entity: FrenchCountry
+  highlightable: true
 - id: 69
   name: French - Country Gender
   entity: FrenchCountry
+  highlightable: true
 - id: 56
   name: French - Misc Word
   entity: FrenchMisc
+  highlightable: true
 - id: 62
   name: French - Noun Gender
   entity: FrenchNoun
+  highlightable: true
 - id: 61
   name: French - Noun Plural
   entity: FrenchNoun
+  highlightable: true
 - id: 60
   name: French - Noun Singular
   entity: FrenchNoun
+  highlightable: true
 - id: 59
   name: French - Single Adjective, Any Agreement
   entity: FrenchAdjective
+  highlightable: true
 - id: 57
   name: French - Single Noun with Article, Singular or Plural
   entity: FrenchNoun
+  highlightable: true
 - id: 112
   name: French - Verb - Conditional - First Person Plural
+  highlightable: true
 - id: 113
   name: French - Verb - Conditional - First Person Singular
+  highlightable: true
 - id: 114
   name: French - Verb - Conditional - Second Person Singular (Formal)
+  highlightable: true
 - id: 115
   name: French - Verb - Conditional - Second Person Singular (Informal)
+  highlightable: true
 - id: 116
   name: French - Verb - Conditional - Third Person Plural
+  highlightable: true
 - id: 117
   name: French - Verb - Conditional - Third Person Singular
+  highlightable: true
 - id: 176
   name: French - Verb - Future - First Person Plural
+  highlightable: true
 - id: 175
   name: French - Verb - Future - First Person Singular
+  highlightable: true
 - id: 177
   name: French - Verb - Future - Second Person Singular (Formal)
+  highlightable: true
 - id: 178
   name: French - Verb - Future - Second Person Singular (Informal)
+  highlightable: true
 - id: 180
   name: French - Verb - Future - Third Person Plural
+  highlightable: true
 - id: 179
   name: French - Verb - Future - Third Person Singular
+  highlightable: true
 - id: 174
   name: French - Verb - Imperative - First Person Plural
+  highlightable: true
 - id: 172
   name: French - Verb - Imperative - Second Person Singular (Formal)
+  highlightable: true
 - id: 173
   name: French - Verb - Imperative - Second Person Singular (Informal)
+  highlightable: true
 - id: 106
   name: French - Verb - Imperfect - First Person Plural
+  highlightable: true
 - id: 107
   name: French - Verb - Imperfect - First Person Singular
+  highlightable: true
 - id: 108
   name: French - Verb - Imperfect - Second Person Singular (Formal)
+  highlightable: true
 - id: 109
   name: French - Verb - Imperfect - Second Person Singular (Informal)
+  highlightable: true
 - id: 110
   name: French - Verb - Imperfect - Third Person Plural
+  highlightable: true
 - id: 111
   name: French - Verb - Imperfect - Third Person Singular
+  highlightable: true
 - id: 58
   name: French - Verb - Infinitive
   entity: FrenchVerb
+  highlightable: true
 - id: 139
   name: French - Verb - Past Participle
+  highlightable: true
 - id: 105
   name: French - Verb - Present - First Person Plural
+  highlightable: true
 - id: 100
   name: French - Verb - Present - First Person Singular
+  highlightable: true
 - id: 102
   name: French - Verb - Present - Second Person Singular (Formal)
+  highlightable: true
 - id: 101
   name: French - Verb - Present - Second Person Singular (Informal)
+  highlightable: true
 - id: 104
   name: French - Verb - Present - Third Person Plural
+  highlightable: true
 - id: 103
   name: French - Verb - Present - Third Person Singular
+  highlightable: true
 - id: 39
   name: Hindi - Age
 - id: 34
@@ -171,6 +214,7 @@
 - id: 50
   name: Spanish - Misc Word
   entity: SpanishMisc
+  highlightable: true
 - id: 51
   name: Spanish - Month
 - id: 43
@@ -184,12 +228,15 @@
 - id: 28
   name: Spanish - Single Adjective
   entity: SpanishAdjective
+  highlightable: true
 - id: 26
   name: Spanish - Single Noun
   entity: SpanishNoun
+  highlightable: true
 - id: 27
   name: Spanish - Verb
   entity: SpanishVerb
+  highlightable: true
 - id: 42
   name: Spanish - Subject is Adjective
 - id: 52
