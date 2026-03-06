@@ -1,15 +1,16 @@
 class Question
 
-  attr_reader :id, :name, :entity
+  attr_reader :id, :name, :entity, :highlightable
 
-  def initialize(id, name, entity)
+  def initialize(id, name, entity, highlightable)
     @id = id
     @name = name
     @entity = entity
+    @highlightable = highlightable
   end
 
   RECORDS = YAML.load_file(Rails.root.join("config", "questions.yml"))
-    .map { |attrs| new(attrs["id"], attrs["name"], attrs["entity"]) }
+    .map { |attrs| new(attrs["id"], attrs["name"], attrs["entity"], attrs["highlightable"]) }
     .freeze
 
   def self.all

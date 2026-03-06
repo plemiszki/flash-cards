@@ -92,7 +92,7 @@ class Quiz < ActiveRecord::Base
         imageUrl: card.cloudinary_url,
         matchBins: card.match_bins_and_items,
         matchBinsShuffled: card.match_bins_and_items_shuffled,
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: card.highlights.exists?,
         cardId: card.id,
         streak: card.streak,
@@ -130,7 +130,7 @@ class Quiz < ActiveRecord::Base
           noun.french
         end,
         description: 'noun singular',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @noun.highlights.exists?,
         tags: @noun.tags.pluck(:name),
         note: @noun.note,
@@ -156,7 +156,7 @@ class Quiz < ActiveRecord::Base
           noun.french_plural
         end,
         description: 'noun plural',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @noun.highlights.exists?,
         tags: @noun.tags.pluck(:name),
         note: @noun.note,
@@ -179,7 +179,7 @@ class Quiz < ActiveRecord::Base
         ],
         validIf: '^(m|f)$',
         description: 'noun gender',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @noun.highlights.exists?,
         tags: @noun.tags.pluck(:name),
         note: @noun.note,
@@ -205,7 +205,7 @@ class Quiz < ActiveRecord::Base
           @verb.french
         ],
         description: 'verb',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -232,7 +232,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @verb.present(subject: "je"),
         ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -262,7 +262,7 @@ class Quiz < ActiveRecord::Base
           @verb.present(subject: "tu")
         ],
         description: 'informal',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -292,7 +292,7 @@ class Quiz < ActiveRecord::Base
           @verb.present(subject: "vous")
         ],
         description: 'formal',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -322,7 +322,7 @@ class Quiz < ActiveRecord::Base
           @verb.present(subject: "nous")
         ],
         description: nil,
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -352,7 +352,7 @@ class Quiz < ActiveRecord::Base
           @verb.present(subject: "il")
         ],
         description: nil,
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -382,7 +382,7 @@ class Quiz < ActiveRecord::Base
           @verb.present(subject: "ils")
         ],
         description: nil,
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -412,7 +412,7 @@ class Quiz < ActiveRecord::Base
           @verb.imperative(subject: "tu")
         ],
         description: 'informal',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -441,7 +441,7 @@ class Quiz < ActiveRecord::Base
           @verb.imperative(subject: "vous")
         ],
         description: 'formal',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -469,7 +469,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @verb.imperative(subject: "nous")
         ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -496,7 +496,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @verb.future(subject: "je")
         ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -525,7 +525,7 @@ class Quiz < ActiveRecord::Base
           @verb.future(subject: "tu")
         ],
         description: 'informal',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -553,7 +553,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @verb.future(subject: "il")
         ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -581,7 +581,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @verb.future(subject: "nous")
         ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -610,7 +610,7 @@ class Quiz < ActiveRecord::Base
           @verb.future(subject: "vous")
         ],
         description: 'formal',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -638,7 +638,7 @@ class Quiz < ActiveRecord::Base
         answers: [
           @verb.future(subject: "ils")
         ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -664,7 +664,7 @@ class Quiz < ActiveRecord::Base
           past_participle,
         ],
         description: nil,
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @verb.highlights.exists?,
         tags: @verb.tags.pluck(:name),
         note: @verb.note,
@@ -691,7 +691,7 @@ class Quiz < ActiveRecord::Base
           [ adjective.masculine ]
         end.flatten,
         description: 'adjective masculine singular',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @adjective.highlights.exists?,
         tags: @adjective.tags.pluck(:name),
         editLink: "/french_adjectives/#{@adjective.id}",
@@ -717,7 +717,7 @@ class Quiz < ActiveRecord::Base
           [ adjective.feminine ]
         end.flatten,
         description: 'adjective feminine singular',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @adjective.highlights.exists?,
         tags: @adjective.tags.pluck(:name),
         editLink: "/french_adjectives/#{@adjective.id}",
@@ -743,7 +743,7 @@ class Quiz < ActiveRecord::Base
           [ adjective.masculine_plural ]
         end.flatten,
         description: 'adjective masculine plural',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @adjective.highlights.exists?,
         tags: @adjective.tags.pluck(:name),
         editLink: "/french_adjectives/#{@adjective.id}",
@@ -769,7 +769,7 @@ class Quiz < ActiveRecord::Base
           [ adjective.feminine_plural ]
         end.flatten,
         description: 'adjective feminine plural',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @adjective.highlights.exists?,
         tags: @adjective.tags.pluck(:name),
         editLink: "/french_adjectives/#{@adjective.id}",
@@ -796,7 +796,7 @@ class Quiz < ActiveRecord::Base
           plural ? "les #{noun.french_plural}" : "#{noun.definite_article}#{noun.french}"
         end,
         description: 'noun',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: noun.highlights.exists?,
         tags: noun.tags.pluck(:name),
         note: noun.note,
@@ -823,7 +823,7 @@ class Quiz < ActiveRecord::Base
           [ adjective.masculine, adjective.feminine ]
         end.flatten,
         description: 'adjective',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: adjective.highlights.exists?,
         tags: adjective.tags.pluck(:name),
         editLink: "/french_adjectives/#{adjective.id}",
@@ -845,7 +845,7 @@ class Quiz < ActiveRecord::Base
           synonym.french
         end,
         answers: [ word.french ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: word.highlights.exists?,
         tags: word.tags.pluck(:name),
         editLink: "/french_miscs/#{word.id}",
@@ -863,7 +863,7 @@ class Quiz < ActiveRecord::Base
         streakFreezeExpiration: word.streak_freeze_expiration.to_i,
         question: word.english.capitalize,
         answers: [ word.french ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: word.highlights.exists?,
         tags: word.tags.pluck(:name),
         editLink: "/french_cities/#{word.id}",
@@ -880,7 +880,7 @@ class Quiz < ActiveRecord::Base
         streakFreezeExpiration: @country.streak_freeze_expiration.to_i,
         question: @country.english.capitalize,
         answers: [ @country.french ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @country.highlights.exists?,
         tags: @country.tags.pluck(:name),
         editLink: "/french_countries/#{@country.id}",
@@ -901,7 +901,7 @@ class Quiz < ActiveRecord::Base
         ],
         indeterminate: [],
         description: 'country gender',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: @country.highlights.exists?,
         tags: @country.tags.pluck(:name),
         editLink: "/french_countries/#{@country.id}",
@@ -1607,7 +1607,7 @@ class Quiz < ActiveRecord::Base
           (plural ? noun.spanish_plural : noun.spanish)
         end,
         description: 'noun',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: noun.highlights.exists?,
         tags: noun.tags.pluck(:name),
         note: noun.note
@@ -1629,7 +1629,7 @@ class Quiz < ActiveRecord::Base
           verb.spanish
         ],
         description: 'verb',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: verb.highlights.exists?,
         tags: verb.tags.pluck(:name),
         note: verb.note
@@ -1652,7 +1652,7 @@ class Quiz < ActiveRecord::Base
           [ adjective.masculine, adjective.feminine ]
         end.flatten,
         description: 'adjective',
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: adjective.highlights.exists?,
         tags: adjective.tags.pluck(:name)
       }
@@ -1666,7 +1666,7 @@ class Quiz < ActiveRecord::Base
         lastStreakAdd: word.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
         question: word.english.capitalize,
         answers: [ word.spanish ],
-        highlightButton: true,
+        highlightButton: question.highlightable,
         highlighted: word.highlights.exists?,
         tags: word.tags.pluck(:name)
       }
