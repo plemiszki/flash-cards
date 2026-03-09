@@ -74,10 +74,12 @@ module AvailableQuestions
         'French - Country',
         'French - Country Gender'
         model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
+        highlighted_ids = Highlight.where(highlightable_type: model_name).pluck(:highlightable_id)
         if quiz_question.tag_id
-          available_count = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).includes(:cardtagable).map(&:cardtagable).count
+          tagged_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).pluck(:cardtagable_id)
+          available_count = quiz_question.all_highlighted? ? (tagged_ids & highlighted_ids).count : tagged_ids.count
         else
-          available_count = model_name.constantize.count
+          available_count = quiz_question.all_highlighted? ? highlighted_ids.count : model_name.constantize.count
         end
         quiz_question.available = available_count
         quiz_question.highlighted_count = 0

@@ -60,17 +60,21 @@ class QuizQuestion < ActiveRecord::Base
     return count_tagged_entities if everything?
     if all_highlighted?
       highlighted_ids = Highlight.where(highlightable_type: question.entity).pluck(:highlightable_id)
-      count_tagged_entities(intersect_with: highlighted_ids)
+      count_tagged_entities(intersect_with: highlighted_ids, all_when_no_tags: true)
     end
   end
 
   private
 
-  def count_tagged_entities(intersect_with: nil, exclude: nil)
+  def count_tagged_entities(intersect_with: nil, exclude: nil, all_when_no_tags: false)
     return 0 unless question.entity
     tag_ids = quiz_question_tags.map(&:tag_id)
-    return 0 if tag_ids.empty?
-    entity_ids = CardTag.where(tag_id: tag_ids, cardtagable_type: question.entity).pluck(:cardtagable_id).uniq
+    entity_ids = if tag_ids.empty?
+      return 0 unless all_when_no_tags
+      question.entity.constantize.all.pluck(:id)
+    else
+      CardTag.where(tag_id: tag_ids, cardtagable_type: question.entity).pluck(:cardtagable_id).uniq
+    end
     entity_ids &= intersect_with if intersect_with
     entity_ids -= exclude if exclude
     entity_ids.count

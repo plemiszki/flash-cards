@@ -26,10 +26,12 @@ module French
         end
         noun = tagged_nouns.sample
         nouns.reject! { |n| n == noun }
+        noun
+      elsif quiz_question.all_highlighted?
+        pop_highlighted(nouns, FrenchNoun)
       else
-        noun = nouns.pop
+        nouns.pop
       end
-      noun
     end
 
     def get_verb(quiz_question, verbs)
@@ -45,10 +47,12 @@ module French
         end
         verb = tagged_verbs.sample
         verbs.reject! { |v| v == verb }
+        verb
+      elsif quiz_question.all_highlighted?
+        pop_highlighted(verbs, FrenchVerb)
       else
-        verb = verbs.pop
+        verbs.pop
       end
-      verb
     end
 
     def get_adjective(quiz_question, adjectives)
@@ -64,10 +68,12 @@ module French
         end
         adjective = tagged_adjectives.sample
         adjectives.reject! { |v| v == adjective }
+        adjective
+      elsif quiz_question.all_highlighted?
+        pop_highlighted(adjectives, FrenchAdjective)
       else
-        adjective = adjectives.pop
+        adjectives.pop
       end
-      adjective
     end
 
     def get_misc_word(quiz_question, words)
@@ -83,10 +89,12 @@ module French
         end
         word = tagged_words.sample
         words.reject! { |v| v == word }
+        word
+      elsif quiz_question.all_highlighted?
+        pop_highlighted(words, FrenchMisc)
       else
-        word = words.pop
+        words.pop
       end
-      word
     end
 
     def get_city(quiz_question, words)
@@ -102,10 +110,12 @@ module French
         end
         word = tagged_words.sample
         words.reject! { |v| v == word }
+        word
+      elsif quiz_question.all_highlighted?
+        pop_highlighted(words, FrenchCity)
       else
-        word = words.pop
+        words.pop
       end
-      word
     end
 
     def get_country(quiz_question, words)
@@ -121,10 +131,27 @@ module French
         end
         word = tagged_words.sample
         words.reject! { |v| v == word }
+        word
+      elsif quiz_question.all_highlighted?
+        pop_highlighted(words, FrenchCountry)
       else
-        word = words.pop
+        words.pop
       end
-      word
+    end
+
+    private
+
+    def pop_highlighted(items, model_class)
+      highlighted_ids = Highlight.where(highlightable_type: model_class.name).pluck(:highlightable_id)
+      highlighted = items.select { |item| highlighted_ids.include?(item.id) }
+      if highlighted.empty?
+        new_items = model_class.where(id: highlighted_ids).to_a
+        items.concat(new_items.reject { |n| items.map(&:id).include?(n.id) })
+        highlighted = items.select { |item| highlighted_ids.include?(item.id) }
+      end
+      item = highlighted.sample
+      items.delete(item) if item
+      item
     end
 
     def display_plural_with_notification(args)

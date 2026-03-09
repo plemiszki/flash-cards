@@ -1,6 +1,41 @@
 require 'rails_helper'
 
 RSpec.describe Quiz, type: :model do
+  def make_french_noun(english:)
+    FrenchNoun.create!(
+      english: english,
+      english_plural: "#{english}s",
+      french: english,
+      french_plural: "#{english}s",
+      gender: 1,
+    )
+  end
+
+  describe '#get_available_questions' do
+    let(:quiz) { Quiz.create!(name: 'Test Quiz', max_questions: 0) }
+
+    context 'French Noun / all_highlighted / no tags' do
+      it 'sets available to the count of highlighted French nouns, not total count' do
+        highlighted = make_french_noun(english: 'cat')
+        _other      = make_french_noun(english: 'dog')
+        Highlight.create!(highlightable: highlighted)
+
+        qq = QuizQuestion.create!(
+          quiz: quiz,
+          question_id: 60,  # French - Noun Singular
+          amount: 0,
+          position: 0,
+          chained: false,
+          quiz_question_type: :all_highlighted,
+        )
+
+        result = quiz.get_available_questions(quiz_questions: [qq], quiz: quiz)
+
+        expect(result.first.available).to eq(1)
+      end
+    end
+  end
+
   describe '#run' do
     let(:quiz) { Quiz.create!(name: 'Test Quiz', max_questions: 0) }
     let(:tag) { Tag.create!(name: 'Test') }
@@ -53,7 +88,29 @@ RSpec.describe Quiz, type: :model do
     end
 
 
-    context 'all_highlighted' do
+    context 'all_highlighted / French Noun / no tags' do
+      it 'returns only highlighted French nouns' do
+        highlighted = make_french_noun(english: 'cat')
+        _other      = make_french_noun(english: 'dog')
+        Highlight.create!(highlightable: highlighted)
+
+        QuizQuestion.create!(
+          quiz: quiz,
+          question_id: 60,  # French - Noun Singular
+          amount: 0,
+          position: 0,
+          chained: false,
+          quiz_question_type: :all_highlighted,
+        )
+
+        result = quiz.run
+
+        expect(result.length).to eq(1)
+        expect(result.first[:wordId]).to eq(highlighted.id)
+      end
+    end
+
+    context 'all_highlighted / Card' do
       it 'returns only cards that have a Highlight record' do
         plain_card1  = make_card(question: 'Plain 1')
         plain_card2  = make_card(question: 'Plain 2')
