@@ -147,6 +147,8 @@ export default class QuizDetails extends React.Component {
       currentModalTagCount,
     } = this.state;
 
+    const anyTags = quizQuestions.some((qq) => qq.quizQuestionTags?.length > 0);
+
     const modalHeight =
       currentModalTagCount === 0 ? 340 : 335 + currentModalTagCount * 32;
 
@@ -196,6 +198,7 @@ export default class QuizDetails extends React.Component {
               {
                 name: "tagNames",
                 header: "Tags",
+                include: anyTags,
                 displayFunction: (row) =>
                   row.chained
                     ? ""
