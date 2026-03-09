@@ -2,20 +2,24 @@
   name: Card
   entity: Card
   highlightable: true
-- id: 66
-  name: French - Adjective Feminine Plural
-  entity: FrenchAdjective
-  highlightable: true
-- id: 65
-  name: French - Adjective Feminine Singular
+- id: 63
+  name: French - Adjective Masculine Singular
   entity: FrenchAdjective
   highlightable: true
 - id: 64
   name: French - Adjective Masculine Plural
   entity: FrenchAdjective
   highlightable: true
-- id: 63
-  name: French - Adjective Masculine Singular
+- id: 65
+  name: French - Adjective Feminine Singular
+  entity: FrenchAdjective
+  highlightable: true
+- id: 66
+  name: French - Adjective Feminine Plural
+  entity: FrenchAdjective
+  highlightable: true
+- id: 59
+  name: French - Single Adjective, Any Agreement
   entity: FrenchAdjective
   highlightable: true
 - id: 67
@@ -34,88 +38,21 @@
   name: French - Misc Word
   entity: FrenchMisc
   highlightable: true
-- id: 62
-  name: French - Noun Gender
+- id: 60
+  name: French - Noun Singular
   entity: FrenchNoun
   highlightable: true
 - id: 61
   name: French - Noun Plural
   entity: FrenchNoun
   highlightable: true
-- id: 60
-  name: French - Noun Singular
+- id: 62
+  name: French - Noun Gender
   entity: FrenchNoun
-  highlightable: true
-- id: 59
-  name: French - Single Adjective, Any Agreement
-  entity: FrenchAdjective
   highlightable: true
 - id: 57
   name: French - Single Noun with Article, Singular or Plural
   entity: FrenchNoun
-  highlightable: true
-- id: 112
-  name: French - Verb - Conditional - First Person Plural
-  highlightable: true
-- id: 113
-  name: French - Verb - Conditional - First Person Singular
-  highlightable: true
-- id: 114
-  name: French - Verb - Conditional - Second Person Singular (Formal)
-  highlightable: true
-- id: 115
-  name: French - Verb - Conditional - Second Person Singular (Informal)
-  highlightable: true
-- id: 116
-  name: French - Verb - Conditional - Third Person Plural
-  highlightable: true
-- id: 117
-  name: French - Verb - Conditional - Third Person Singular
-  highlightable: true
-- id: 176
-  name: French - Verb - Future - First Person Plural
-  highlightable: true
-- id: 175
-  name: French - Verb - Future - First Person Singular
-  highlightable: true
-- id: 177
-  name: French - Verb - Future - Second Person Singular (Formal)
-  highlightable: true
-- id: 178
-  name: French - Verb - Future - Second Person Singular (Informal)
-  highlightable: true
-- id: 180
-  name: French - Verb - Future - Third Person Plural
-  highlightable: true
-- id: 179
-  name: French - Verb - Future - Third Person Singular
-  highlightable: true
-- id: 174
-  name: French - Verb - Imperative - First Person Plural
-  highlightable: true
-- id: 172
-  name: French - Verb - Imperative - Second Person Singular (Formal)
-  highlightable: true
-- id: 173
-  name: French - Verb - Imperative - Second Person Singular (Informal)
-  highlightable: true
-- id: 106
-  name: French - Verb - Imperfect - First Person Plural
-  highlightable: true
-- id: 107
-  name: French - Verb - Imperfect - First Person Singular
-  highlightable: true
-- id: 108
-  name: French - Verb - Imperfect - Second Person Singular (Formal)
-  highlightable: true
-- id: 109
-  name: French - Verb - Imperfect - Second Person Singular (Informal)
-  highlightable: true
-- id: 110
-  name: French - Verb - Imperfect - Third Person Plural
-  highlightable: true
-- id: 111
-  name: French - Verb - Imperfect - Third Person Singular
   highlightable: true
 - id: 58
   name: French - Verb - Infinitive
@@ -123,37 +60,179 @@
   highlightable: true
 - id: 139
   name: French - Verb - Past Participle
-  highlightable: true
-- id: 105
-  name: French - Verb - Present - First Person Plural
+  entity: FrenchVerb
   highlightable: true
 - id: 100
   name: French - Verb - Present - First Person Singular
-  highlightable: true
-- id: 102
-  name: French - Verb - Present - Second Person Singular (Formal)
+  entity: FrenchVerb
   highlightable: true
 - id: 101
   name: French - Verb - Present - Second Person Singular (Informal)
+  entity: FrenchVerb
   highlightable: true
-- id: 104
-  name: French - Verb - Present - Third Person Plural
+- id: 102
+  name: French - Verb - Present - Second Person Singular (Formal)
+  entity: FrenchVerb
   highlightable: true
 - id: 103
   name: French - Verb - Present - Third Person Singular
+  entity: FrenchVerb
   highlightable: true
-- id: 39
-  name: Hindi - Age
-- id: 34
-  name: Hindi - Availability
-- id: 37
-  name: Hindi - Does Subject know that...?
-- id: 30
-  name: Hindi - Does Subject like Noun?
-- id: 32
-  name: Hindi - Does Subject want a Noun?
-- id: 33
-  name: Hindi - General Statement
+- id: 104
+  name: French - Verb - Present - Third Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 105
+  name: French - Verb - Present - First Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 106
+  name: French - Verb - Imperfect - First Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 107
+  name: French - Verb - Imperfect - First Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 108
+  name: French - Verb - Imperfect - Second Person Singular (Formal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 109
+  name: French - Verb - Imperfect - Second Person Singular (Informal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 110
+  name: French - Verb - Imperfect - Third Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 111
+  name: French - Verb - Imperfect - Third Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 112
+  name: French - Verb - Conditional - First Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 113
+  name: French - Verb - Conditional - First Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 114
+  name: French - Verb - Conditional - Second Person Singular (Formal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 115
+  name: French - Verb - Conditional - Second Person Singular (Informal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 116
+  name: French - Verb - Conditional - Third Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 117
+  name: French - Verb - Conditional - Third Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 172
+  name: French - Verb - Imperative - Second Person Singular (Formal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 173
+  name: French - Verb - Imperative - Second Person Singular (Informal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 174
+  name: French - Verb - Imperative - First Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 175
+  name: French - Verb - Future - First Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 176
+  name: French - Verb - Future - First Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 177
+  name: French - Verb - Future - Second Person Singular (Formal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 178
+  name: French - Verb - Future - Second Person Singular (Informal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 179
+  name: French - Verb - Future - Third Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 180
+  name: French - Verb - Future - Third Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 26
+  name: Spanish - Single Noun
+  entity: SpanishNoun
+  highlightable: true
+- id: 28
+  name: Spanish - Single Adjective
+  entity: SpanishAdjective
+  highlightable: true
+- id: 27
+  name: Spanish - Verb
+  entity: SpanishVerb
+  highlightable: true
+- id: 50
+  name: Spanish - Misc Word
+  entity: SpanishMisc
+  highlightable: true
+- id: 42
+  name: Spanish - Subject is Adjective
+- id: 43
+  name: Spanish - Noun is Adjective
+- id: 44
+  name: Spanish - Number
+- id: 49
+  name: Spanish - Weekdays
+- id: 51
+  name: Spanish - Month
+- id: 52
+  name: Spanish - Verb Forms
+- id: 53
+  name: Spanish - Present Simple Tense
+- id: 54
+  name: Spanish - Present Continuous Tense
+- id: 1
+  name: Hindi - Single Noun
+  entity: Noun
+- id: 2
+  name: Hindi - Verb
+  entity: Verb
+- id: 3
+  name: Hindi - Single Adjective
+  entity: Adjective
+- id: 5
+  name: Hindi - Subject is Adjective
+- id: 6
+  name: Hindi - Subject is a Noun
+- id: 7
+  name: Hindi - Noun is Adjective
+- id: 8
+  name: Hindi - Subject is an Adjective Noun
+- id: 12
+  name: Hindi - Noun Gender
+- id: 13
+  name: Hindi - Subject has a Noun
+- id: 15
+  name: Hindi - Subject has an Adjective Noun
+- id: 16
+  name: Hindi - Where is Subject's Noun?
+- id: 17
+  name: Hindi - The Noun is Preposition the Adjective Noun
+- id: 18
+  name: Hindi - There is a Noun Preposition the Adjective Noun
+- id: 19
+  name: Hindi - Noun Plural
 - id: 20
   name: Hindi - Imperative
 - id: 23
@@ -162,84 +241,33 @@
   name: Hindi - Imperfective Present Question
 - id: 25
   name: Hindi - Imperfective Present Yes/No Question
-- id: 41
-  name: Hindi - Let Subject Verb
-- id: 12
-  name: Hindi - Noun Gender
-- id: 7
-  name: Hindi - Noun is Adjective
-- id: 19
-  name: Hindi - Noun Plural
-- id: 38
-  name: Hindi - Noun's Noun
-- id: 3
-  name: Hindi - Single Adjective
-  entity: Adjective
-- id: 1
-  name: Hindi - Single Noun
-  entity: Noun
-- id: 2
-  name: Hindi - Verb
-  entity: Verb
-- id: 40
-  name: Hindi - Subject can Verb
-- id: 13
-  name: Hindi - Subject has a Noun
-- id: 15
-  name: Hindi - Subject has an Adjective Noun
-- id: 6
-  name: Hindi - Subject is a Noun
-- id: 5
-  name: Hindi - Subject is Adjective
-- id: 8
-  name: Hindi - Subject is an Adjective Noun
-- id: 36
-  name: Hindi - Subject knows that...
-- id: 45
-  name: Hindi - Subject lets Subject Verb
 - id: 29
   name: Hindi - Subject likes Noun
+- id: 30
+  name: Hindi - Does Subject like Noun?
 - id: 31
   name: Hindi - Subject wants a Noun
-- id: 17
-  name: Hindi - The Noun is Preposition the Adjective Noun
-- id: 18
-  name: Hindi - There is a Noun Preposition the Adjective Noun
-- id: 48
-  name: Hindi - Weekdays
+- id: 32
+  name: Hindi - Does Subject want a Noun?
+- id: 33
+  name: Hindi - General Statement
+- id: 34
+  name: Hindi - Availability
 - id: 35
   name: Hindi - Where can you get Adjective Nouns?
-- id: 16
-  name: Hindi - Where is Subject's Noun?
-- id: 50
-  name: Spanish - Misc Word
-  entity: SpanishMisc
-  highlightable: true
-- id: 51
-  name: Spanish - Month
-- id: 43
-  name: Spanish - Noun is Adjective
-- id: 44
-  name: Spanish - Number
-- id: 54
-  name: Spanish - Present Continuous Tense
-- id: 53
-  name: Spanish - Present Simple Tense
-- id: 28
-  name: Spanish - Single Adjective
-  entity: SpanishAdjective
-  highlightable: true
-- id: 26
-  name: Spanish - Single Noun
-  entity: SpanishNoun
-  highlightable: true
-- id: 27
-  name: Spanish - Verb
-  entity: SpanishVerb
-  highlightable: true
-- id: 42
-  name: Spanish - Subject is Adjective
-- id: 52
-  name: Spanish - Verb Forms
-- id: 49
-  name: Spanish - Weekdays
+- id: 36
+  name: Hindi - Subject knows that...
+- id: 37
+  name: Hindi - Does Subject know that...?
+- id: 38
+  name: Hindi - Noun's Noun
+- id: 39
+  name: Hindi - Age
+- id: 40
+  name: Hindi - Subject can Verb
+- id: 41
+  name: Hindi - Let Subject Verb
+- id: 45
+  name: Hindi - Subject lets Subject Verb
+- id: 48
+  name: Hindi - Weekdays
