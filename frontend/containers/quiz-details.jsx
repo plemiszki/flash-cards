@@ -307,7 +307,7 @@ export default class QuizDetails extends React.Component {
             height: modalHeight,
           })}
         >
-          <QuizQuestionNew
+          {newQuizQuestionModalOpen && <QuizQuestionNew
             entity={
               selectedQuizQuestionId
                 ? quizQuestions.find(
@@ -329,7 +329,7 @@ export default class QuizDetails extends React.Component {
             onTagsChange={(count) =>
               this.setState({ currentModalTagCount: count })
             }
-          />
+          />}
         </Modal>
       </div>
     );

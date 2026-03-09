@@ -12,7 +12,7 @@ json.quizQuestions @quiz_questions do |quiz_question|
   json.position quiz_question.position
   json.quizQuestionType quiz_question.quiz_question_type
   json.chained quiz_question.chained
-  json.quizQuestionTags quiz_question.quiz_question_tags.map { |qqt| { id: qqt.id, name: qqt.tag.name } }
+  json.quizQuestionTags quiz_question.quiz_question_tags.filter_map { |qqt| { id: qqt.id, name: qqt.tag.name } if qqt.tag }
 end
 json.questions @questions do |question|
   json.id question.id

@@ -34,7 +34,14 @@ bundle exec rails test test/models/card_test.rb:42
 
 # Database migrations
 bundle exec rails db:migrate
+
+# Run a one-off production script
+bundle exec rails runner scripts/my_script.rb
 ```
+
+## Production Scripts
+
+One-off maintenance scripts live in `/scripts/` as plain Ruby files (no rake tasks). Run them with `bundle exec rails runner scripts/script_name.rb`.
 
 ## Architecture Overview
 
