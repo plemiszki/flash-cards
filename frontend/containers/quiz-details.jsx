@@ -149,6 +149,15 @@ export default class QuizDetails extends React.Component {
 
     const anyTags = quizQuestions.some((qq) => qq.quizQuestionTags?.length > 0);
 
+    const chainableIds = new Set(
+      quizQuestions.filter((qq, i) => {
+        if (i === 0) return false;
+        const prevEntity = questions.find((q) => q.id === quizQuestions[i - 1].questionId)?.entity;
+        const curEntity = questions.find((q) => q.id === qq.questionId)?.entity;
+        return prevEntity && curEntity && prevEntity === curEntity;
+      }).map((qq) => qq.id)
+    );
+
     const modalHeight =
       currentModalTagCount === 0 ? 340 : 335 + currentModalTagCount * 32;
 
@@ -255,7 +264,7 @@ export default class QuizDetails extends React.Component {
                   this.updateQuizQuestion(quizQuestion);
                 },
                 switchChecked: (row) => row.chained,
-                displayIf: (row) => row.position > 0 && !row.useAllAvailable,
+                displayIf: (row) => chainableIds.has(row.id) && !row.useAllAvailable,
                 centered: true,
               },
               {

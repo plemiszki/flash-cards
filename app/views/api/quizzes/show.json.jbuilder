@@ -17,6 +17,7 @@ end
 json.questions @questions do |question|
   json.id question.id
   json.name question.name
+  json.entity question.entity
 end
 json.tags @tags do |tag|
   json.id tag.id
