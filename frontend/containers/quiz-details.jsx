@@ -203,6 +203,8 @@ export default class QuizDetails extends React.Component {
               {
                 name: "questionName",
                 header: "Question",
+                displayFunction: (row) =>
+                  row.chained ? `↳  ${row.questionName}` : row.questionName,
               },
               {
                 name: "tagNames",
