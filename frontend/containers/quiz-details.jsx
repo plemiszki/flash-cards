@@ -269,6 +269,14 @@ export default class QuizDetails extends React.Component {
               },
               {
                 isEditButton: true,
+                displayIf: (row) => !row.chained,
+                width: 40,
+                centered: true,
+              },
+              {
+                isDeleteButton: true,
+                width: 40,
+                centered: true,
               },
             ]}
             rows={quizQuestions}
