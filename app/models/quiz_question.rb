@@ -51,6 +51,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def get_quiz_run_amount
     return 0 if chained
+    return count_tagged_entities if everything?
     all_highlighted? ? (question.name == 'Card' ? highlighted_count : available) : amount
   end
 

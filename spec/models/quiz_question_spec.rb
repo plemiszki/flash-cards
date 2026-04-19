@@ -50,4 +50,42 @@ RSpec.describe QuizQuestion, type: :model do
     end
 
   end
+
+  describe '#get_quiz_run_amount' do
+    let(:quiz)          { Quiz.create!(name: 'Test Quiz', max_questions: 10) }
+    let(:quiz_tag)      { Tag.create!(name: 'Beginner') }
+    let(:quiz_question) do
+      QuizQuestion.create!(
+        quiz: quiz,
+        question_id: 1,
+        amount: 5,
+        position: 0,
+        chained: false,
+        quiz_question_type: :manual_amount,
+      )
+    end
+
+    let(:noun1) { Noun.create!(english: 'dog', english_plural: 'dogs', foreign: 'kutta', foreign_plural: 'kutte', gender: 1) }
+    let(:noun2) { Noun.create!(english: 'cat', english_plural: 'cats', foreign: 'billi', foreign_plural: 'billian', gender: 2) }
+
+    before do
+      QuizQuestionTag.create!(quiz_question: quiz_question, tag: quiz_tag)
+      CardTag.create!(tag: quiz_tag, cardtagable: noun1)
+      CardTag.create!(tag: quiz_tag, cardtagable: noun2)
+    end
+
+    context 'when type is everything' do
+      before { quiz_question.update!(quiz_question_type: :everything) }
+
+      it 'returns the count of all tagged entities, not the amount column' do
+        expect(quiz_question.get_quiz_run_amount).to eq(2)
+      end
+    end
+
+    context 'when type is manual_amount' do
+      it 'returns the amount column value' do
+        expect(quiz_question.get_quiz_run_amount).to eq(5)
+      end
+    end
+  end
 end
