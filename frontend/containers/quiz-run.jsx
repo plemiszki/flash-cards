@@ -292,6 +292,18 @@ export default class QuizRun extends React.Component {
     });
   }
 
+  handleInputKeyDown(e) {
+    if (e.shiftKey && e.key === "ArrowRight") {
+      e.preventDefault();
+      const { answer } = this.state;
+      const { selectionStart, selectionEnd } = e.target;
+      const newAnswer = answer.slice(0, selectionStart) + "→" + answer.slice(selectionEnd);
+      this.setState({ answer: newAnswer }, () => {
+        e.target.setSelectionRange(selectionStart + 1, selectionStart + 1);
+      });
+    }
+  }
+
   checkKey(e) {
     if (e.charCode === 96) {
       if (!this.answerIncludesBacktick()) {
@@ -1199,6 +1211,7 @@ export default class QuizRun extends React.Component {
             rows="6"
             columns="12"
             className={status === "wrong" ? "error" : null}
+            onKeyDown={this.handleInputKeyDown.bind(this)}
             onChange={this.changeAnswer.bind(this)}
             value={answer}
             style={
@@ -1234,6 +1247,7 @@ export default class QuizRun extends React.Component {
           id="answer-field"
           style={style}
           className={status === "wrong" ? "error" : null}
+          onKeyDown={this.handleInputKeyDown.bind(this)}
           onKeyPress={this.checkKey.bind(this)}
           onChange={this.changeAnswer.bind(this)}
           value={answer || ""}
