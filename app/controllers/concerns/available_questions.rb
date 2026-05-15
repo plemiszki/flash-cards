@@ -42,8 +42,8 @@ module AvailableQuestions
     highlighted_card_ids = Highlight.where(highlightable_type: 'Card').pluck(:highlightable_id)
 
     quiz_questions.each do |quiz_question|
-      case quiz_question.question.name
-      when 'Card'
+      entity = quiz_question.question.entity
+      if entity == 'Card'
         if quiz_question.tag_id
           tagged_card_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: 'Card').includes(:cardtagable).map(&:cardtagable).pluck(:id)
           quiz_question.highlighted_count = (tagged_card_ids & highlighted_card_ids).count
@@ -55,31 +55,13 @@ module AvailableQuestions
           quiz_question.non_highlighted_count = card_count - highlighted_card_ids.count
           quiz_question.available = card_count
         end
-      when 'Spanish - Single Noun',
-        'Spanish - Verb',
-        'Spanish - Single Adjective',
-        'Spanish - Misc Word',
-        'French - Noun Singular',
-        'French - Noun Plural',
-        'French - Noun Gender',
-        'French - Adjective Masculine Singular',
-        'French - Adjective Masculine Plural',
-        'French - Adjective Feminine Singular',
-        'French - Adjective Feminine Plural',
-        'French - Single Noun with Article, Singular or Plural',
-        'French - Verb - Infinitive',
-        'French - Single Adjective, Any Agreement',
-        'French - Misc Word',
-        'French - City',
-        'French - Country',
-        'French - Country Gender'
-        model_name = QUESTION_MODELS_MAP[quiz_question.question.name.to_sym]
-        highlighted_ids = Highlight.where(highlightable_type: model_name).pluck(:highlightable_id)
+      elsif entity
+        highlighted_ids = Highlight.where(highlightable_type: entity).pluck(:highlightable_id)
         if quiz_question.tag_id
-          tagged_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: model_name).pluck(:cardtagable_id)
+          tagged_ids = CardTag.where(tag_id: quiz_question.tag_id, cardtagable_type: entity).pluck(:cardtagable_id)
           available_count = quiz_question.all_highlighted? ? (tagged_ids & highlighted_ids).count : tagged_ids.count
         else
-          available_count = quiz_question.all_highlighted? ? highlighted_ids.count : model_name.constantize.count
+          available_count = quiz_question.all_highlighted? ? highlighted_ids.count : entity.constantize.count
         end
         quiz_question.available = available_count
         quiz_question.highlighted_count = 0

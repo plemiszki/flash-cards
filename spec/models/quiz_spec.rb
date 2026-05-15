@@ -14,6 +14,46 @@ RSpec.describe Quiz, type: :model do
   describe '#get_available_questions' do
     let(:quiz) { Quiz.create!(name: 'Test Quiz', max_questions: 0) }
 
+    context 'Hindi - Single Noun / manual_amount / no tags' do
+      it 'sets available to the total count of Hindi nouns' do
+        Noun.create!(english: 'dog', english_plural: 'dogs', foreign: 'kutta', foreign_plural: 'kutte', gender: 1)
+        Noun.create!(english: 'cat', english_plural: 'cats', foreign: 'billi', foreign_plural: 'billian', gender: 2)
+
+        qq = QuizQuestion.create!(
+          quiz: quiz,
+          question_id: 1,  # Hindi - Single Noun, entity: Noun
+          amount: 5,
+          position: 0,
+          chained: false,
+          quiz_question_type: :manual_amount,
+        )
+
+        result = quiz.get_available_questions(quiz_questions: [qq], quiz: quiz)
+
+        expect(result.first.available).to eq(2)
+      end
+    end
+
+    context 'French - Verb - Present - First Person Singular / manual_amount / no tags' do
+      it 'sets available to the total count of French verbs' do
+        FrenchVerb.create!(english: 'to be', french: 'être')
+        FrenchVerb.create!(english: 'to have', french: 'avoir')
+
+        qq = QuizQuestion.create!(
+          quiz: quiz,
+          question_id: 100,  # French - Verb - Present - First Person Singular, entity: FrenchVerb
+          amount: 5,
+          position: 0,
+          chained: false,
+          quiz_question_type: :manual_amount,
+        )
+
+        result = quiz.get_available_questions(quiz_questions: [qq], quiz: quiz)
+
+        expect(result.first.available).to eq(2)
+      end
+    end
+
     context 'French Noun / all_highlighted / no tags' do
       it 'sets available to the count of highlighted French nouns, not total count' do
         highlighted = make_french_noun(english: 'cat')
@@ -87,6 +127,27 @@ RSpec.describe Quiz, type: :model do
       end
     end
 
+
+    context 'manual_amount / French Noun / amount exceeds available' do
+      it 'returns at most the number of available nouns without repeats' do
+        make_french_noun(english: 'cat')
+        make_french_noun(english: 'dog')
+
+        QuizQuestion.create!(
+          quiz: quiz,
+          question_id: 60,  # French - Noun Singular, entity: FrenchNoun
+          amount: 10,
+          position: 0,
+          chained: false,
+          quiz_question_type: :manual_amount,
+        )
+
+        result = quiz.run
+
+        expect(result.length).to eq(2)
+        expect(result.map { |q| q[:wordId] }.uniq.length).to eq(2)
+      end
+    end
 
     context 'all_highlighted / French Noun / no tags' do
       it 'returns only highlighted French nouns' do

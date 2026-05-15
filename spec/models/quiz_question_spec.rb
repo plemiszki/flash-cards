@@ -83,8 +83,32 @@ RSpec.describe QuizQuestion, type: :model do
     end
 
     context 'when type is manual_amount' do
-      it 'returns the amount column value' do
+      it 'returns the amount column value when available is not set' do
         expect(quiz_question.get_quiz_run_amount).to eq(5)
+      end
+
+      context 'when available is set and amount does not exceed it' do
+        before { quiz_question.available = 10 }
+
+        it 'returns the amount column value' do
+          expect(quiz_question.get_quiz_run_amount).to eq(5)
+        end
+      end
+
+      context 'when available is set and amount exceeds it' do
+        before { quiz_question.available = 2 }
+
+        it 'returns available instead of amount' do
+          expect(quiz_question.get_quiz_run_amount).to eq(2)
+        end
+      end
+
+      context 'when available is 0 (question type without entity tracking)' do
+        before { quiz_question.available = 0 }
+
+        it 'returns amount unchanged' do
+          expect(quiz_question.get_quiz_run_amount).to eq(5)
+        end
       end
     end
   end
