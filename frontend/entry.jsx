@@ -21,6 +21,7 @@ import FrenchCountryDetails from "./containers/french-country-details";
 import FrenchCityDetails from "./containers/french-city-details";
 import FrenchMiscDetails from "./containers/french-misc-details";
 import CardDetails from "./containers/card-details";
+import CardAddBulk from "./containers/card-add-bulk";
 import HighlightsIndex from "./containers/highlights-index";
 import QuizDetails from "./containers/quiz-details";
 import QuizRun from "./containers/quiz-run";
@@ -73,6 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const cardDetailsNode = document.getElementById("card-details");
   if (cardDetailsNode) {
     createRoot(cardDetailsNode).render(<CardDetails />);
+  }
+
+  const cardAddBulkNode = document.getElementById("card-add-bulk");
+  if (cardAddBulkNode) {
+    createRoot(cardAddBulkNode).render(<CardAddBulk />);
   }
 
   const quizDetailsNode = document.getElementById("quiz-details");

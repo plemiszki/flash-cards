@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root to: 'quizzes#index'
+  get '/cards/bulk_add' => 'cards#bulk_add'
   resources :cards, only: [:index, :show]
   resources :highlights, only: [:index]
   resources :nouns, only: [:index, :show]

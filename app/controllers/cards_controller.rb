@@ -9,4 +9,8 @@ class CardsController < AdminController
     render 'show', formats: [:html], handlers: [:erb]
   end
 
+  def bulk_add
+    render 'bulk_add', formats: [:html], handlers: [:erb]
+  end
+
 end
