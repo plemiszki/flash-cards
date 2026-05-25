@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Common } from "handy-components";
+import { Button, Common, Spinner, GrayedOut, createEntity } from "handy-components";
 
 const CARDS = [
   { question: "When was the 1st Amendment ratified?", answer: "1791" },
@@ -41,6 +41,7 @@ export default function CardAddBulk() {
   const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, active: true })));
   const [editing, setEditing] = useState(null); // { index, field }
   const [editValue, setEditValue] = useState("");
+  const [processing, setProcessing] = useState(false);
 
   const startEdit = (index, field, currentValue) => {
     setEditing({ index, field });
@@ -66,6 +67,20 @@ export default function CardAddBulk() {
         i === index ? { ...card, active: !card.active } : card
       )
     );
+  };
+
+  const handleAdd = () => {
+    setProcessing(true);
+    const activeCards = cards.filter((c) => c.active);
+    Promise.all(
+      activeCards.map((card) =>
+        createEntity({
+          entityName: "card",
+          directory: "cards",
+          entity: { question: card.question, answer: card.answer },
+        })
+      )
+    ).finally(() => setProcessing(false));
   };
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
@@ -137,6 +152,8 @@ export default function CardAddBulk() {
     <div className="handy-component full-index">
       <h1>Add Cards</h1>
       <div className="white-box">
+        <GrayedOut visible={processing} />
+        <Spinner visible={processing} />
         <div className="cards-grid">
           {cards.map((card, index) => (
             <div key={index} className="card-row">
@@ -154,7 +171,7 @@ export default function CardAddBulk() {
             </div>
           ))}
         </div>
-        <Button text="Add" style={{ marginTop: 20 }} />
+        <Button text="Add" onClick={handleAdd} disabled={processing} style={{ marginTop: 20 }} />
       </div>
       <style jsx>{`
         .cards-grid {
