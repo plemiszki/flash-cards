@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "handy-components";
+import { Button, Common } from "handy-components";
 
 const CARDS = [
   { question: "When was the 1st Amendment ratified?", answer: "1791" },
@@ -38,7 +38,7 @@ const CARDS = [
 ];
 
 export default function CardAddBulk() {
-  const [cards, setCards] = useState(CARDS);
+  const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, active: true })));
   const [editing, setEditing] = useState(null); // { index, field }
   const [editValue, setEditValue] = useState("");
 
@@ -59,6 +59,14 @@ export default function CardAddBulk() {
 
   const isEditing = (index, field) =>
     editing && editing.index === index && editing.field === field;
+
+  const toggleActive = (index) => {
+    setCards((prev) =>
+      prev.map((card, i) =>
+        i === index ? { ...card, active: !card.active } : card
+      )
+    );
+  };
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
 
@@ -132,6 +140,15 @@ export default function CardAddBulk() {
         <div className="cards-grid">
           {cards.map((card, index) => (
             <div key={index} className="card-row">
+              <div style={{ position: "absolute", top: 10, right: 12 }}>
+                {Common.renderSwitchComponent({
+                  checked: card.active,
+                  onChange: () => toggleActive(index),
+                  height: 18,
+                  width: 32,
+                  circleSize: 10,
+                })}
+              </div>
               {renderField(card, index, "question", false)}
               {renderField(card, index, "answer", true)}
             </div>
@@ -146,9 +163,10 @@ export default function CardAddBulk() {
           gap: 10px;
         }
         .card-row {
+          position: relative;
           border: 1px solid #ccc;
           border-radius: 6px;
-          padding: 12px 16px;
+          padding: 12px 56px 12px 16px;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
       `}</style>
