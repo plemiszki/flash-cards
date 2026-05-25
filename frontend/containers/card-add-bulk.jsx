@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button } from "handy-components";
 
 const CARDS = [
   { question: "When was the 1st Amendment ratified?", answer: "1791" },
@@ -28,21 +29,115 @@ const CARDS = [
   { question: "When was the 25th Amendment ratified?", answer: "1967" },
   { question: "When was the 26th Amendment ratified?", answer: "1971" },
   { question: "When was the 27th Amendment ratified?", answer: "1992" },
+  {
+    question:
+      "What does the 1st Amendment protect? List all five freedoms. List all five freedoms.",
+    answer:
+      "Religion, speech, press,\npeaceful assembly,\npetition the government.",
+  },
 ];
 
 export default function CardAddBulk() {
+  const [cards, setCards] = useState(CARDS);
+  const [editing, setEditing] = useState(null); // { index, field }
+  const [editValue, setEditValue] = useState("");
+
+  const startEdit = (index, field, currentValue) => {
+    setEditing({ index, field });
+    setEditValue(currentValue);
+  };
+
+  const commitEdit = () => {
+    if (!editing) return;
+    setCards((prev) =>
+      prev.map((card, i) =>
+        i === editing.index ? { ...card, [editing.field]: editValue } : card,
+      ),
+    );
+    setEditing(null);
+  };
+
+  const isEditing = (index, field) =>
+    editing && editing.index === index && editing.field === field;
+
+  const isLong = (value) => value.includes("\n") || value.length > 60;
+
+  const renderField = (card, index, field, isAnswer) => {
+    const label = field === "question" ? "Question" : "Answer";
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 6,
+          marginTop: isAnswer ? 8 : 0,
+          userSelect: "none",
+        }}
+      >
+        <span style={{ fontFamily: "TeachableSans-Bold", flexShrink: 0, textAlign: "right", width: 70 }}>
+          {label}:
+        </span>
+        {isEditing(index, field) ? (
+          isLong(editValue) ? (
+            <textarea
+              autoFocus
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={commitEdit}
+              style={{
+                border: "1px solid #aaa",
+                borderRadius: 3,
+                outline: "none",
+                fontSize: "inherit",
+                fontFamily: "inherit",
+                padding: "4px 8px",
+                flex: 1,
+                resize: "vertical",
+              }}
+            />
+          ) : (
+            <input
+              autoFocus
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && commitEdit()}
+              onBlur={commitEdit}
+              style={{
+                border: "1px solid #aaa",
+                borderRadius: 3,
+                outline: "none",
+                fontSize: "inherit",
+                fontFamily: "inherit",
+                padding: "4px 8px",
+                flex: 1,
+              }}
+            />
+          )
+        ) : (
+          <span
+            style={{ cursor: "pointer", userSelect: "none" }}
+            onClick={() => startEdit(index, field, card[field])}
+          >
+            {card[field]}
+          </span>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="handy-component full-index">
       <h1>Add Cards</h1>
       <div className="white-box">
         <div className="cards-grid">
-          {CARDS.map((card, index) => (
+          {cards.map((card, index) => (
             <div key={index} className="card-row">
-              <div><span className="card-label">Question:</span> {card.question}</div>
-              <div className="card-answer"><span className="card-label">Answer:</span> {card.answer}</div>
+              {renderField(card, index, "question", false)}
+              {renderField(card, index, "answer", true)}
             </div>
           ))}
         </div>
+        <Button text="Add" style={{ marginTop: 20 }} />
       </div>
       <style jsx>{`
         .cards-grid {
@@ -55,12 +150,6 @@ export default function CardAddBulk() {
           border-radius: 6px;
           padding: 12px 16px;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-        .card-answer {
-          margin-top: 8px;
-        }
-        .card-label {
-          font-family: "TeachableSans-Bold";
         }
       `}</style>
     </div>
