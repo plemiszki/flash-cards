@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_225419) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_26_004515) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -53,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_225419) do
     t.string "question", null: false
     t.integer "streak", default: 0
     t.datetime "streak_freeze_expiration", precision: nil
+    t.index ["question", "image_url"], name: "index_cards_on_question_and_image_url", unique: true
   end
 
   create_table "french_adjectives", force: :cascade do |t|

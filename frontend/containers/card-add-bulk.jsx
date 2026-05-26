@@ -38,7 +38,7 @@ const CARDS = [
 ];
 
 export default function CardAddBulk() {
-  const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, active: true })));
+  const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, active: true, result: null, error: null })));
   const [editing, setEditing] = useState(null); // { index, field }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -64,28 +64,44 @@ export default function CardAddBulk() {
   const toggleActive = (index) => {
     setCards((prev) =>
       prev.map((card, i) =>
-        i === index ? { ...card, active: !card.active } : card
+        i === index
+          ? { ...card, active: !card.active, result: card.active ? null : card.result, error: card.active ? null : card.error }
+          : card
       )
     );
   };
 
   const handleAdd = () => {
     setProcessing(true);
-    const activeCards = cards.filter((c) => c.active);
+    const activeIndices = cards.reduce((acc, card, i) => {
+      if (card.active && card.result !== "success") acc.push(i);
+      return acc;
+    }, []);
     Promise.all(
-      activeCards.map((card) =>
+      activeIndices.map((i) =>
         createEntity({
           entityName: "card",
           directory: "cards",
-          entity: { question: card.question, answer: card.answer },
+          entity: { question: cards[i].question, answer: cards[i].answer },
         })
+          .then(() => {
+            setCards((prev) =>
+              prev.map((c, j) => (j === i ? { ...c, result: "success", error: null } : c))
+            );
+          })
+          .catch((err) => {
+            const message = err?.errors ? Object.values(err.errors).flat().join(", ") : "Save failed.";
+            setCards((prev) =>
+              prev.map((c, j) => (j === i ? { ...c, result: "error", error: message } : c))
+            );
+          })
       )
     ).finally(() => setProcessing(false));
   };
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
 
-  const renderField = (card, index, field, isAnswer) => {
+  const renderField = (card, index, field, isAnswer, locked = false) => {
     const label = field === "question" ? "Question" : "Answer";
     return (
       <div
@@ -100,7 +116,7 @@ export default function CardAddBulk() {
         <span style={{ fontFamily: "TeachableSans-Bold", flexShrink: 0, textAlign: "right", width: 70 }}>
           {label}:
         </span>
-        {isEditing(index, field) ? (
+        {!locked && isEditing(index, field) ? (
           isLong(editValue) ? (
             <textarea
               autoFocus
@@ -138,8 +154,8 @@ export default function CardAddBulk() {
           )
         ) : (
           <span
-            style={{ cursor: "pointer", userSelect: "none" }}
-            onClick={() => startEdit(index, field, card[field])}
+            style={{ cursor: locked ? "default" : "pointer", userSelect: "none", textDecoration: !locked && !card.active ? "line-through" : "none" }}
+            onClick={() => !locked && startEdit(index, field, card[field])}
           >
             {card[field]}
           </span>
@@ -156,22 +172,33 @@ export default function CardAddBulk() {
         <Spinner visible={processing} />
         <div className="cards-grid">
           {cards.map((card, index) => (
-            <div key={index} className="card-row">
+            <div
+              key={index}
+              className="card-row"
+              style={card.result === "error" ? { border: "1px solid red" } : {}}
+            >
               <div style={{ position: "absolute", top: 10, right: 12 }}>
-                {Common.renderSwitchComponent({
-                  checked: card.active,
-                  onChange: () => toggleActive(index),
-                  height: 18,
-                  width: 32,
-                  circleSize: 10,
-                })}
+                {card.result === "success" ? (
+                  <span style={{ color: "#4caf50", fontSize: 18, userSelect: "none" }}>&#10003;</span>
+                ) : (
+                  Common.renderSwitchComponent({
+                    checked: card.active,
+                    onChange: () => toggleActive(index),
+                    height: 18,
+                    width: 32,
+                    circleSize: 10,
+                  })
+                )}
               </div>
-              {renderField(card, index, "question", false)}
-              {renderField(card, index, "answer", true)}
+              {renderField(card, index, "question", false, card.result === "success")}
+              {renderField(card, index, "answer", true, card.result === "success")}
+              {card.result === "error" && (
+                <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>{card.error}</div>
+              )}
             </div>
           ))}
         </div>
-        <Button text="Add" onClick={handleAdd} disabled={processing} style={{ marginTop: 20 }} />
+        <Button text="Add" onClick={handleAdd} disabled={processing || !cards.some((c) => c.active && c.result !== "success")} style={{ marginTop: 20 }} />
       </div>
       <style jsx>{`
         .cards-grid {
