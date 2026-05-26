@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Common, Spinner, GrayedOut, createEntity } from "handy-components";
+import { Button, Spinner, GrayedOut, createEntity } from "handy-components";
 
 const CARDS = [
   { question: "When was the 1st Amendment ratified?", answer: "1791" },
@@ -38,7 +38,7 @@ const CARDS = [
 ];
 
 export default function CardAddBulk() {
-  const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, active: true, result: null, error: null })));
+  const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, result: null, error: null })));
   const [editing, setEditing] = useState(null); // { index, field }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -61,20 +61,14 @@ export default function CardAddBulk() {
   const isEditing = (index, field) =>
     editing && editing.index === index && editing.field === field;
 
-  const toggleActive = (index) => {
-    setCards((prev) =>
-      prev.map((card, i) =>
-        i === index
-          ? { ...card, active: !card.active, result: card.active ? null : card.result, error: card.active ? null : card.error }
-          : card
-      )
-    );
+  const deleteCard = (index) => {
+    setCards((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleAdd = () => {
     setProcessing(true);
     const activeIndices = cards.reduce((acc, card, i) => {
-      if (card.active && card.result !== "success") acc.push(i);
+      if (card.result !== "success") acc.push(i);
       return acc;
     }, []);
     Promise.all(
@@ -154,7 +148,7 @@ export default function CardAddBulk() {
           )
         ) : (
           <span
-            style={{ cursor: locked ? "default" : "pointer", userSelect: "none", textDecoration: !locked && !card.active ? "line-through" : "none" }}
+            style={{ cursor: locked ? "default" : "pointer", userSelect: "none" }}
             onClick={() => !locked && startEdit(index, field, card[field])}
           >
             {card[field]}
@@ -181,13 +175,12 @@ export default function CardAddBulk() {
                 {card.result === "success" ? (
                   <span style={{ color: "#4caf50", fontSize: 18, userSelect: "none" }}>&#10003;</span>
                 ) : (
-                  Common.renderSwitchComponent({
-                    checked: card.active,
-                    onChange: () => toggleActive(index),
-                    height: 18,
-                    width: 32,
-                    circleSize: 10,
-                  })
+                  <span
+                    onClick={() => deleteCard(index)}
+                    style={{ cursor: "pointer", userSelect: "none", fontSize: 16, color: "#aaa" }}
+                  >
+                    &#128465;
+                  </span>
                 )}
               </div>
               {renderField(card, index, "question", false, card.result === "success")}
@@ -198,7 +191,7 @@ export default function CardAddBulk() {
             </div>
           ))}
         </div>
-        <Button text="Add" onClick={handleAdd} disabled={processing || !cards.some((c) => c.active && c.result !== "success")} style={{ marginTop: 20 }} />
+        <Button text="Add" onClick={handleAdd} disabled={processing || !cards.some((c) => c.result !== "success")} style={{ marginTop: 20 }} />
       </div>
       <style jsx>{`
         .cards-grid {
