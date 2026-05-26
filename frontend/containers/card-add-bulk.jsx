@@ -2,16 +2,6 @@ import React, { useState } from "react";
 import { Button, Spinner, GrayedOut, createEntity } from "handy-components";
 
 const CARDS = [
-  { question: "When was the 1st Amendment ratified?", answer: "1791" },
-  { question: "When was the 2nd Amendment ratified?", answer: "1791" },
-  { question: "When was the 3rd Amendment ratified?", answer: "1791" },
-  { question: "When was the 4th Amendment ratified?", answer: "1791" },
-  { question: "When was the 5th Amendment ratified?", answer: "1791" },
-  { question: "When was the 6th Amendment ratified?", answer: "1791" },
-  { question: "When was the 7th Amendment ratified?", answer: "1791" },
-  { question: "When was the 8th Amendment ratified?", answer: "1791" },
-  { question: "When was the 9th Amendment ratified?", answer: "1791" },
-  { question: "When was the 10th Amendment ratified?", answer: "1791" },
   { question: "When was the 11th Amendment ratified?", answer: "1795" },
   { question: "When was the 12th Amendment ratified?", answer: "1804" },
   { question: "When was the 13th Amendment ratified?", answer: "1865" },
@@ -20,15 +10,6 @@ const CARDS = [
   { question: "When was the 16th Amendment ratified?", answer: "1913" },
   { question: "When was the 17th Amendment ratified?", answer: "1913" },
   { question: "When was the 18th Amendment ratified?", answer: "1919" },
-  { question: "When was the 19th Amendment ratified?", answer: "1920" },
-  { question: "When was the 20th Amendment ratified?", answer: "1933" },
-  { question: "When was the 21st Amendment ratified?", answer: "1933" },
-  { question: "When was the 22nd Amendment ratified?", answer: "1951" },
-  { question: "When was the 23rd Amendment ratified?", answer: "1961" },
-  { question: "When was the 24th Amendment ratified?", answer: "1964" },
-  { question: "When was the 25th Amendment ratified?", answer: "1967" },
-  { question: "When was the 26th Amendment ratified?", answer: "1971" },
-  { question: "When was the 27th Amendment ratified?", answer: "1992" },
   {
     question:
       "What does the 1st Amendment protect? List all five freedoms. List all five freedoms.",
@@ -38,7 +19,9 @@ const CARDS = [
 ];
 
 export default function CardAddBulk() {
-  const [cards, setCards] = useState(CARDS.map((c) => ({ ...c, result: null, error: null })));
+  const [cards, setCards] = useState(
+    CARDS.map((c) => ({ ...c, result: null, error: null })),
+  );
   const [editing, setEditing] = useState(null); // { index, field }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -47,7 +30,9 @@ export default function CardAddBulk() {
     setEditing({ index, field });
     setEditValue(currentValue);
     setCards((prev) =>
-      prev.map((card, i) => (i === index ? { ...card, result: null, error: null } : card))
+      prev.map((card, i) =>
+        i === index ? { ...card, result: null, error: null } : card,
+      ),
     );
   };
 
@@ -83,16 +68,22 @@ export default function CardAddBulk() {
         })
           .then(() => {
             setCards((prev) =>
-              prev.map((c, j) => (j === i ? { ...c, result: "success", error: null } : c))
+              prev.map((c, j) =>
+                j === i ? { ...c, result: "success", error: null } : c,
+              ),
             );
           })
           .catch((err) => {
-            const message = err?.errors ? Object.values(err.errors).flat().join(", ") : "Save failed.";
+            const message = err?.errors
+              ? Object.values(err.errors).flat().join(", ")
+              : "Save failed.";
             setCards((prev) =>
-              prev.map((c, j) => (j === i ? { ...c, result: "error", error: message } : c))
+              prev.map((c, j) =>
+                j === i ? { ...c, result: "error", error: message } : c,
+              ),
             );
-          })
-      )
+          }),
+      ),
     ).finally(() => setProcessing(false));
   };
 
@@ -110,7 +101,14 @@ export default function CardAddBulk() {
           userSelect: "none",
         }}
       >
-        <span style={{ fontFamily: "TeachableSans-Bold", flexShrink: 0, textAlign: "right", width: 70 }}>
+        <span
+          style={{
+            fontFamily: "TeachableSans-Bold",
+            flexShrink: 0,
+            textAlign: "right",
+            width: 70,
+          }}
+        >
           {label}:
         </span>
         {!locked && isEditing(index, field) ? (
@@ -151,7 +149,10 @@ export default function CardAddBulk() {
           )
         ) : (
           <span
-            style={{ cursor: locked ? "default" : "pointer", userSelect: "none" }}
+            style={{
+              cursor: locked ? "default" : "pointer",
+              userSelect: "none",
+            }}
             onClick={() => !locked && startEdit(index, field, card[field])}
           >
             {card[field]}
@@ -176,28 +177,72 @@ export default function CardAddBulk() {
             >
               <div style={{ position: "absolute", top: 10, right: 12 }}>
                 {card.result === "success" ? (
-                  <span style={{ color: "#4caf50", fontSize: 18, userSelect: "none" }}>&#10003;</span>
+                  <span
+                    style={{
+                      color: "#4caf50",
+                      fontSize: 18,
+                      userSelect: "none",
+                    }}
+                  >
+                    &#10003;
+                  </span>
                 ) : (
                   <span
                     onClick={() => deleteCard(index)}
-                    style={{ cursor: "pointer", userSelect: "none", fontSize: 16, color: "#aaa" }}
+                    style={{
+                      cursor: "pointer",
+                      userSelect: "none",
+                      fontSize: 16,
+                      color: "#aaa",
+                    }}
                   >
                     &#128465;
                   </span>
                 )}
               </div>
-              {renderField(card, index, "question", false, card.result === "success")}
-              {renderField(card, index, "answer", true, card.result === "success")}
+              {renderField(
+                card,
+                index,
+                "question",
+                false,
+                card.result === "success",
+              )}
+              {renderField(
+                card,
+                index,
+                "answer",
+                true,
+                card.result === "success",
+              )}
               {card.result === "error" && (
-                <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>{card.error}</div>
+                <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>
+                  {card.error}
+                </div>
               )}
             </div>
           ))}
         </div>
         <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-          <Button text="Add" onClick={handleAdd} disabled={processing || !cards.some((c) => c.result !== "success")} />
+          <Button
+            text="Add"
+            onClick={handleAdd}
+            disabled={processing || !cards.some((c) => c.result !== "success")}
+          />
           {cards.some((c) => c.result === "success") && (
-            <Button text="Clear Saved" onClick={() => setCards((prev) => prev.filter((c) => c.result !== "success"))} />
+            <Button
+              text="Clear Saved"
+              onClick={() =>
+                setCards((prev) => prev.filter((c) => c.result !== "success"))
+              }
+            />
+          )}
+          {cards.some((c) => c.result !== "success") && (
+            <Button
+              text="Delete All"
+              onClick={() =>
+                setCards((prev) => prev.filter((c) => c.result === "success"))
+              }
+            />
           )}
         </div>
       </div>
