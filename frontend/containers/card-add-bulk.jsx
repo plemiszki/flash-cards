@@ -29,12 +29,12 @@ export default function CardAddBulk() {
   const [cards, setCards] = useState(
     CARDS.map((c) => ({ ...c, result: null, error: null })),
   );
-  const [editing, setEditing] = useState(null); // { index, field }
+  const [editing, setEditing] = useState(null); // { index, field, binIndex? }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
 
-  const startEdit = (index, field, currentValue) => {
-    setEditing({ index, field });
+  const startEdit = (index, field, currentValue, binIndex = null) => {
+    setEditing({ index, field, binIndex });
     setEditValue(currentValue);
     setCards((prev) =>
       prev.map((card, i) =>
@@ -45,16 +45,33 @@ export default function CardAddBulk() {
 
   const commitEdit = () => {
     if (!editing) return;
-    setCards((prev) =>
-      prev.map((card, i) =>
-        i === editing.index ? { ...card, [editing.field]: editValue } : card,
-      ),
-    );
+    if (editing.field === "matchBinLabel") {
+      if (editValue.trim() !== "") {
+        setCards((prev) =>
+          prev.map((card, i) => {
+            if (i !== editing.index) return card;
+            const matchBins = card.matchBins.map((bin, j) =>
+              j === editing.binIndex ? { ...bin, label: editValue } : bin
+            );
+            return { ...card, matchBins };
+          })
+        );
+      }
+    } else {
+      setCards((prev) =>
+        prev.map((card, i) =>
+          i === editing.index ? { ...card, [editing.field]: editValue } : card,
+        ),
+      );
+    }
     setEditing(null);
   };
 
-  const isEditing = (index, field) =>
-    editing && editing.index === index && editing.field === field;
+  const isEditing = (index, field, binIndex = null) =>
+    editing &&
+    editing.index === index &&
+    editing.field === field &&
+    editing.binIndex === binIndex;
 
   const deleteCard = (index) => {
     setCards((prev) => prev.filter((_, i) => i !== index));
@@ -96,11 +113,37 @@ export default function CardAddBulk() {
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
 
-  const renderMatchBins = (card) => (
+  const renderMatchBins = (card, cardIndex) => (
     <div style={{ display: "flex", gap: 12 }}>
       {card.matchBins.map((bin, i) => (
         <div key={i} style={{ flex: 1, border: "1px solid #ccc", borderRadius: 6, padding: "6px 10px" }}>
-          <div style={{ fontFamily: "TeachableSans-Bold", marginBottom: 4 }}>{bin.label}</div>
+          {isEditing(cardIndex, "matchBinLabel", i) ? (
+            <input
+              autoFocus
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && commitEdit()}
+              onBlur={commitEdit}
+              style={{
+                border: "1px solid #aaa",
+                borderRadius: 3,
+                outline: "none",
+                fontSize: "inherit",
+                fontFamily: "TeachableSans-Bold",
+                padding: "2px 4px",
+                width: "100%",
+                boxSizing: "border-box",
+                marginBottom: 4,
+              }}
+            />
+          ) : (
+            <div
+              style={{ fontFamily: "TeachableSans-Bold", marginBottom: 4, cursor: "pointer" }}
+              onClick={() => startEdit(cardIndex, "matchBinLabel", bin.label, i)}
+            >
+              {bin.label}
+            </div>
+          )}
           {bin.items.map((item, j) => (
             <div key={j} style={{ fontSize: "0.9em" }}>{item}</div>
           ))}
@@ -211,7 +254,7 @@ export default function CardAddBulk() {
                 {card.matchBins ? (
                   <React.Fragment key="matchBins">
                     <span style={{ fontFamily: "TeachableSans-Bold", textAlign: "right", alignSelf: "start", userSelect: "none" }}>Matches:</span>
-                    <div>{renderMatchBins(card)}</div>
+                    <div>{renderMatchBins(card, index)}</div>
                   </React.Fragment>
                 ) : renderField(card, index, "answer", card.result === "success")}
               </div>
