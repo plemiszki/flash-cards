@@ -57,6 +57,17 @@ export default function CardAddBulk() {
           })
         );
       }
+    } else if (editing.field === "matchBinItems") {
+      setCards((prev) =>
+        prev.map((card, i) => {
+          if (i !== editing.index) return card;
+          const items = editValue.split("\n").map((s) => s.trim()).filter(Boolean);
+          const matchBins = card.matchBins.map((bin, j) =>
+            j === editing.binIndex ? { ...bin, items } : bin
+          );
+          return { ...card, matchBins };
+        })
+      );
     } else {
       setCards((prev) =>
         prev.map((card, i) =>
@@ -144,9 +155,39 @@ export default function CardAddBulk() {
               {bin.label}
             </div>
           )}
-          {bin.items.map((item, j) => (
-            <div key={j} style={{ fontSize: "0.9em" }}>{item}</div>
-          ))}
+          {isEditing(cardIndex, "matchBinItems", i) ? (
+            <textarea
+              autoFocus
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={commitEdit}
+              style={{
+                border: "1px solid #aaa",
+                borderRadius: 3,
+                outline: "none",
+                fontSize: "0.9em",
+                fontFamily: "inherit",
+                padding: "2px 4px",
+                width: "100%",
+                boxSizing: "border-box",
+                resize: "vertical",
+                minHeight: 60,
+              }}
+            />
+          ) : (
+            <div
+              style={{ cursor: "pointer", minHeight: 20 }}
+              onClick={() => startEdit(cardIndex, "matchBinItems", bin.items.join("\n"), i)}
+            >
+              {bin.items.length === 0 ? (
+                <span style={{ color: "#bbb", fontSize: "0.9em" }}>Click to add items...</span>
+              ) : (
+                bin.items.map((item, j) => (
+                  <div key={j} style={{ fontSize: "0.9em" }}>{item}</div>
+                ))
+              )}
+            </div>
+          )}
         </div>
       ))}
     </div>
