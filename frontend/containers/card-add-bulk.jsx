@@ -16,6 +16,13 @@ const CARDS = [
     answer:
       "Religion, speech, press,\npeaceful assembly,\npetition the government.",
   },
+  {
+    question: "Match up the colors to either primary or secondary.",
+    matchBins: [
+      { label: "Primary", items: ["Red", "Yellow", "Blue"] },
+      { label: "Secondary", items: ["Orange", "Green", "Purple"] },
+    ],
+  },
 ];
 
 export default function CardAddBulk() {
@@ -89,76 +96,75 @@ export default function CardAddBulk() {
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
 
-  const renderField = (card, index, field, isAnswer, locked = false) => {
+  const renderMatchBins = (card) => (
+    <div style={{ display: "flex", gap: 12 }}>
+      {card.matchBins.map((bin, i) => (
+        <div key={i} style={{ flex: 1, border: "1px solid #ccc", borderRadius: 6, padding: "6px 10px" }}>
+          <div style={{ fontFamily: "TeachableSans-Bold", marginBottom: 4 }}>{bin.label}</div>
+          {bin.items.map((item, j) => (
+            <div key={j} style={{ fontSize: "0.9em" }}>{item}</div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderField = (card, index, field, locked = false) => {
     const label = field === "question" ? "Question" : "Answer";
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 6,
-          marginTop: isAnswer ? 8 : 0,
-          userSelect: "none",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "TeachableSans-Bold",
-            flexShrink: 0,
-            textAlign: "right",
-            width: 70,
-          }}
-        >
+      <React.Fragment key={field}>
+        <span style={{ fontFamily: "TeachableSans-Bold", textAlign: "right", alignSelf: "start", userSelect: "none" }}>
           {label}:
         </span>
-        {!locked && isEditing(index, field) ? (
-          isLong(editValue) ? (
-            <textarea
-              autoFocus
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onBlur={commitEdit}
-              style={{
-                border: "1px solid #aaa",
-                borderRadius: 3,
-                outline: "none",
-                fontSize: "inherit",
-                fontFamily: "inherit",
-                padding: "4px 8px",
-                flex: 1,
-                resize: "vertical",
-              }}
-            />
+        <div style={{ userSelect: "none" }}>
+          {!locked && isEditing(index, field) ? (
+            isLong(editValue) ? (
+              <textarea
+                autoFocus
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onBlur={commitEdit}
+                style={{
+                  border: "1px solid #aaa",
+                  borderRadius: 3,
+                  outline: "none",
+                  fontSize: "inherit",
+                  fontFamily: "inherit",
+                  padding: "4px 8px",
+                  width: "100%",
+                  resize: "vertical",
+                  boxSizing: "border-box",
+                }}
+              />
+            ) : (
+              <input
+                autoFocus
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && commitEdit()}
+                onBlur={commitEdit}
+                style={{
+                  border: "1px solid #aaa",
+                  borderRadius: 3,
+                  outline: "none",
+                  fontSize: "inherit",
+                  fontFamily: "inherit",
+                  padding: "4px 8px",
+                  width: "100%",
+                  boxSizing: "border-box",
+                }}
+              />
+            )
           ) : (
-            <input
-              autoFocus
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && commitEdit()}
-              onBlur={commitEdit}
-              style={{
-                border: "1px solid #aaa",
-                borderRadius: 3,
-                outline: "none",
-                fontSize: "inherit",
-                fontFamily: "inherit",
-                padding: "4px 8px",
-                flex: 1,
-              }}
-            />
-          )
-        ) : (
-          <span
-            style={{
-              cursor: locked ? "default" : "pointer",
-              userSelect: "none",
-            }}
-            onClick={() => !locked && startEdit(index, field, card[field])}
-          >
-            {card[field]}
-          </span>
-        )}
-      </div>
+            <span
+              style={{ cursor: locked ? "default" : "pointer", userSelect: "none" }}
+              onClick={() => !locked && startEdit(index, field, card[field])}
+            >
+              {card[field]}
+            </span>
+          )}
+        </div>
+      </React.Fragment>
     );
   };
 
@@ -200,20 +206,15 @@ export default function CardAddBulk() {
                   </span>
                 )}
               </div>
-              {renderField(
-                card,
-                index,
-                "question",
-                false,
-                card.result === "success",
-              )}
-              {renderField(
-                card,
-                index,
-                "answer",
-                true,
-                card.result === "success",
-              )}
+              <div style={{ display: "grid", gridTemplateColumns: "max-content 1fr", columnGap: 6, rowGap: 8 }}>
+                {renderField(card, index, "question", card.result === "success")}
+                {card.matchBins ? (
+                  <React.Fragment key="matchBins">
+                    <span style={{ fontFamily: "TeachableSans-Bold", textAlign: "right", alignSelf: "start", userSelect: "none" }}>Matches:</span>
+                    <div>{renderMatchBins(card)}</div>
+                  </React.Fragment>
+                ) : renderField(card, index, "answer", card.result === "success")}
+              </div>
               {card.result === "error" && (
                 <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>
                   {card.error}
@@ -247,6 +248,9 @@ export default function CardAddBulk() {
         </div>
       </div>
       <style jsx>{`
+        .white-box * {
+          user-select: none;
+        }
         .cards-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
