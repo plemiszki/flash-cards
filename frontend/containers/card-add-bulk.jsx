@@ -69,11 +69,13 @@ export default function CardAddBulk() {
         })
       );
     } else {
-      setCards((prev) =>
-        prev.map((card, i) =>
-          i === editing.index ? { ...card, [editing.field]: editValue } : card,
-        ),
-      );
+      if (editing.field !== "question" || editValue.trim() !== "") {
+        setCards((prev) =>
+          prev.map((card, i) =>
+            i === editing.index ? { ...card, [editing.field]: editValue } : card,
+          ),
+        );
+      }
     }
     setEditing(null);
   };
