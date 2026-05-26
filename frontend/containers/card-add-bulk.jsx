@@ -46,6 +46,9 @@ export default function CardAddBulk() {
   const startEdit = (index, field, currentValue) => {
     setEditing({ index, field });
     setEditValue(currentValue);
+    setCards((prev) =>
+      prev.map((card, i) => (i === index ? { ...card, result: null, error: null } : card))
+    );
   };
 
   const commitEdit = () => {
@@ -191,7 +194,12 @@ export default function CardAddBulk() {
             </div>
           ))}
         </div>
-        <Button text="Add" onClick={handleAdd} disabled={processing || !cards.some((c) => c.result !== "success")} style={{ marginTop: 20 }} />
+        <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+          <Button text="Add" onClick={handleAdd} disabled={processing || !cards.some((c) => c.result !== "success")} />
+          {cards.some((c) => c.result === "success") && (
+            <Button text="Clear Saved" onClick={() => setCards((prev) => prev.filter((c) => c.result !== "success"))} />
+          )}
+        </div>
       </div>
       <style jsx>{`
         .cards-grid {
