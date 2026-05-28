@@ -331,6 +331,19 @@ export default function CardAddBulk() {
       <div className="white-box">
         <GrayedOut visible={processing} />
         <Spinner visible={processing} />
+        {cards.length === 0 && (
+          <div
+            style={{
+              background: "#f0f0f0",
+              border: "1px solid lightgray",
+              borderRadius: 4,
+              padding: "10px 14px",
+              color: "black",
+            }}
+          >
+            No cards.
+          </div>
+        )}
         <div className="cards-grid">
           {cards.map((card, index) => (
             <div
