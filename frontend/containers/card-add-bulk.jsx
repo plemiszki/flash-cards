@@ -1,21 +1,27 @@
 import React, { useState } from "react";
-import { Button, Spinner, GrayedOut, createEntity } from "handy-components";
+import {
+  Button,
+  Spinner,
+  GrayedOut,
+  createEntity,
+  sendRequest,
+} from "handy-components";
 
 const CARDS = [
-  { question: "When was the 11th Amendment ratified?", answer: "1795" },
-  { question: "When was the 12th Amendment ratified?", answer: "1804" },
-  { question: "When was the 13th Amendment ratified?", answer: "1865" },
-  { question: "When was the 14th Amendment ratified?", answer: "1868" },
-  { question: "When was the 15th Amendment ratified?", answer: "1870" },
-  { question: "When was the 16th Amendment ratified?", answer: "1913" },
-  { question: "When was the 17th Amendment ratified?", answer: "1913" },
-  { question: "When was the 18th Amendment ratified?", answer: "1919" },
-  {
-    question:
-      "What does the 1st Amendment protect? List all five freedoms. List all five freedoms.",
-    answer:
-      "Religion, speech, press,\npeaceful assembly,\npetition the government.",
-  },
+  // { question: "When was the 11th Amendment ratified?", answer: "1795" },
+  // { question: "When was the 12th Amendment ratified?", answer: "1804" },
+  // { question: "When was the 13th Amendment ratified?", answer: "1865" },
+  // { question: "When was the 14th Amendment ratified?", answer: "1868" },
+  // { question: "When was the 15th Amendment ratified?", answer: "1870" },
+  // { question: "When was the 16th Amendment ratified?", answer: "1913" },
+  // { question: "When was the 17th Amendment ratified?", answer: "1913" },
+  // { question: "When was the 18th Amendment ratified?", answer: "1919" },
+  // {
+  //   question:
+  //     "What does the 1st Amendment protect? List all five freedoms. List all five freedoms.",
+  //   answer:
+  //     "Religion, speech, press,\npeaceful assembly,\npetition the government.",
+  // },
   {
     question: "Match up the colors to either primary or secondary.",
     matchBins: [
@@ -51,28 +57,33 @@ export default function CardAddBulk() {
           prev.map((card, i) => {
             if (i !== editing.index) return card;
             const matchBins = card.matchBins.map((bin, j) =>
-              j === editing.binIndex ? { ...bin, label: editValue } : bin
+              j === editing.binIndex ? { ...bin, label: editValue } : bin,
             );
             return { ...card, matchBins };
-          })
+          }),
         );
       }
     } else if (editing.field === "matchBinItems") {
       setCards((prev) =>
         prev.map((card, i) => {
           if (i !== editing.index) return card;
-          const items = editValue.split("\n").map((s) => s.trim()).filter(Boolean);
+          const items = editValue
+            .split("\n")
+            .map((s) => s.trim())
+            .filter(Boolean);
           const matchBins = card.matchBins.map((bin, j) =>
-            j === editing.binIndex ? { ...bin, items } : bin
+            j === editing.binIndex ? { ...bin, items } : bin,
           );
           return { ...card, matchBins };
-        })
+        }),
       );
     } else {
       if (editing.field !== "question" || editValue.trim() !== "") {
         setCards((prev) =>
           prev.map((card, i) =>
-            i === editing.index ? { ...card, [editing.field]: editValue } : card,
+            i === editing.index
+              ? { ...card, [editing.field]: editValue }
+              : card,
           ),
         );
       }
@@ -96,13 +107,43 @@ export default function CardAddBulk() {
       if (card.result !== "success") acc.push(i);
       return acc;
     }, []);
-    Promise.all(
-      activeIndices.map((i) =>
-        createEntity({
+    const saveCard = (card) => {
+      if (card.matchBins) {
+        return createEntity({
           entityName: "card",
           directory: "cards",
-          entity: { question: cards[i].question, answer: cards[i].answer },
-        })
+          entity: { question: card.question, answer: "MATCHING" },
+        }).then(({ card: { id: cardId } }) =>
+          Promise.all(
+            card.matchBins.map((bin) =>
+              sendRequest("/api/match_bins", {
+                method: "POST",
+                data: { match_bin: { name: bin.label, card_id: cardId } },
+              }).then(({ matchBins }) => {
+                const binId = matchBins.find((b) => b.name === bin.label).id;
+                return Promise.all(
+                  bin.items.map((item) =>
+                    sendRequest("/api/match_items", {
+                      method: "POST",
+                      data: { match_item: { name: item, match_bin_id: binId } },
+                    }),
+                  ),
+                );
+              }),
+            ),
+          ),
+        );
+      }
+      return createEntity({
+        entityName: "card",
+        directory: "cards",
+        entity: { question: card.question, answer: card.answer },
+      });
+    };
+
+    Promise.all(
+      activeIndices.map((i) =>
+        saveCard(cards[i])
           .then(() => {
             setCards((prev) =>
               prev.map((c, j) =>
@@ -129,7 +170,15 @@ export default function CardAddBulk() {
   const renderMatchBins = (card, cardIndex) => (
     <div style={{ display: "flex", gap: 12 }}>
       {card.matchBins.map((bin, i) => (
-        <div key={i} style={{ flex: 1, border: "1px solid #ccc", borderRadius: 6, padding: "6px 10px" }}>
+        <div
+          key={i}
+          style={{
+            flex: 1,
+            border: "1px solid #ccc",
+            borderRadius: 6,
+            padding: "6px 10px",
+          }}
+        >
           {isEditing(cardIndex, "matchBinLabel", i) ? (
             <input
               autoFocus
@@ -151,8 +200,14 @@ export default function CardAddBulk() {
             />
           ) : (
             <div
-              style={{ fontFamily: "TeachableSans-Bold", marginBottom: 4, cursor: "pointer" }}
-              onClick={() => startEdit(cardIndex, "matchBinLabel", bin.label, i)}
+              style={{
+                fontFamily: "TeachableSans-Bold",
+                marginBottom: 4,
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                startEdit(cardIndex, "matchBinLabel", bin.label, i)
+              }
             >
               {bin.label}
             </div>
@@ -179,13 +234,19 @@ export default function CardAddBulk() {
           ) : (
             <div
               style={{ cursor: "pointer", minHeight: 20 }}
-              onClick={() => startEdit(cardIndex, "matchBinItems", bin.items.join("\n"), i)}
+              onClick={() =>
+                startEdit(cardIndex, "matchBinItems", bin.items.join("\n"), i)
+              }
             >
               {bin.items.length === 0 ? (
-                <span style={{ color: "#bbb", fontSize: "0.9em" }}>Click to add items...</span>
+                <span style={{ color: "#bbb", fontSize: "0.9em" }}>
+                  Click to add items...
+                </span>
               ) : (
                 bin.items.map((item, j) => (
-                  <div key={j} style={{ fontSize: "0.9em" }}>{item}</div>
+                  <div key={j} style={{ fontSize: "0.9em" }}>
+                    {item}
+                  </div>
                 ))
               )}
             </div>
@@ -199,7 +260,14 @@ export default function CardAddBulk() {
     const label = field === "question" ? "Question" : "Answer";
     return (
       <React.Fragment key={field}>
-        <span style={{ fontFamily: "TeachableSans-Bold", textAlign: "right", alignSelf: "start", userSelect: "none" }}>
+        <span
+          style={{
+            fontFamily: "TeachableSans-Bold",
+            textAlign: "right",
+            alignSelf: "start",
+            userSelect: "none",
+          }}
+        >
           {label}:
         </span>
         <div style={{ userSelect: "none" }}>
@@ -243,7 +311,10 @@ export default function CardAddBulk() {
             )
           ) : (
             <span
-              style={{ cursor: locked ? "default" : "pointer", userSelect: "none" }}
+              style={{
+                cursor: locked ? "default" : "pointer",
+                userSelect: "none",
+              }}
               onClick={() => !locked && startEdit(index, field, card[field])}
             >
               {card[field]}
@@ -292,14 +363,37 @@ export default function CardAddBulk() {
                   </span>
                 )}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "max-content 1fr", columnGap: 6, rowGap: 8 }}>
-                {renderField(card, index, "question", card.result === "success")}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "max-content 1fr",
+                  columnGap: 6,
+                  rowGap: 8,
+                }}
+              >
+                {renderField(
+                  card,
+                  index,
+                  "question",
+                  card.result === "success",
+                )}
                 {card.matchBins ? (
                   <React.Fragment key="matchBins">
-                    <span style={{ fontFamily: "TeachableSans-Bold", textAlign: "right", alignSelf: "start", userSelect: "none" }}>Matches:</span>
+                    <span
+                      style={{
+                        fontFamily: "TeachableSans-Bold",
+                        textAlign: "right",
+                        alignSelf: "start",
+                        userSelect: "none",
+                      }}
+                    >
+                      Matches:
+                    </span>
                     <div>{renderMatchBins(card, index)}</div>
                   </React.Fragment>
-                ) : renderField(card, index, "answer", card.result === "success")}
+                ) : (
+                  renderField(card, index, "answer", card.result === "success")
+                )}
               </div>
               {card.result === "error" && (
                 <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>
