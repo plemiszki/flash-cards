@@ -7,34 +7,10 @@ import {
   sendRequest,
 } from "handy-components";
 
-const CARDS = [
-  // { question: "When was the 11th Amendment ratified?", answer: "1795" },
-  // { question: "When was the 12th Amendment ratified?", answer: "1804" },
-  // { question: "When was the 13th Amendment ratified?", answer: "1865" },
-  // { question: "When was the 14th Amendment ratified?", answer: "1868" },
-  // { question: "When was the 15th Amendment ratified?", answer: "1870" },
-  // { question: "When was the 16th Amendment ratified?", answer: "1913" },
-  // { question: "When was the 17th Amendment ratified?", answer: "1913" },
-  // { question: "When was the 18th Amendment ratified?", answer: "1919" },
-  // {
-  //   question:
-  //     "What does the 1st Amendment protect? List all five freedoms. List all five freedoms.",
-  //   answer:
-  //     "Religion, speech, press,\npeaceful assembly,\npetition the government.",
-  // },
-  {
-    question: "Match up the colors to either primary or secondary.",
-    matchBins: [
-      { label: "Primary", items: ["Red", "Yellow", "Blue"] },
-      { label: "Secondary", items: ["Orange", "Green", "Purple"] },
-    ],
-  },
-];
 
 export default function CardAddBulk() {
-  const [cards, setCards] = useState(
-    CARDS.map((c) => ({ ...c, result: null, error: null })),
-  );
+  const [prompt, setPrompt] = useState("");
+  const [cards, setCards] = useState([]);
   const [editing, setEditing] = useState(null); // { index, field, binIndex? }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -331,6 +307,12 @@ export default function CardAddBulk() {
       <div className="white-box">
         <GrayedOut visible={processing} />
         <Spinner visible={processing} />
+        <textarea
+          rows={5}
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          style={{ width: "100%", boxSizing: "border-box", marginBottom: 10 }}
+        />
         {cards.length === 0 && (
           <div
             style={{
