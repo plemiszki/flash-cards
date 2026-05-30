@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_26_004515) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_30_152754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -46,7 +46,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_004515) do
     t.string "cloudinary_url", default: ""
     t.jsonb "config", default: {}
     t.string "hint", default: ""
-    t.string "image_url", default: ""
     t.date "last_streak_add"
     t.boolean "multiple_choice", default: false
     t.string "notes", default: ""

@@ -56,7 +56,6 @@ class Api::CardsController < AdminController
       :question,
       :answer,
       :answer_placeholder,
-      :image_url,
       :cloudinary_url,
       :multiple_choice,
       :streak,
