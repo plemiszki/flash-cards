@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Button,
   Spinner,
@@ -7,14 +7,20 @@ import {
   sendRequest,
 } from "handy-components";
 
-
 export default function CardAddBulk() {
   const [prompt, setPrompt] = useState("");
   const [cards, setCards] = useState([]);
   const [editing, setEditing] = useState(null); // { index, field, binIndex? }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   const startEdit = (index, field, currentValue, binIndex = null) => {
     setEditing({ index, field, binIndex });
@@ -108,23 +114,23 @@ export default function CardAddBulk() {
                 );
               }),
             ),
-          ),
+          ).then(() => cardId),
         );
       }
       return createEntity({
         entityName: "card",
         directory: "cards",
         entity: { question: card.question, answer: card.answer },
-      });
+      }).then(({ card: { id } }) => id);
     };
 
     Promise.all(
       activeIndices.map((i) =>
         saveCard(cards[i])
-          .then(() => {
+          .then((savedId) => {
             setCards((prev) =>
               prev.map((c, j) =>
-                j === i ? { ...c, result: "success", error: null } : c,
+                j === i ? { ...c, result: "success", error: null, savedId } : c,
               ),
             );
           })
@@ -144,19 +150,27 @@ export default function CardAddBulk() {
 
   const handleGenerate = () => {
     if (!prompt.trim()) return;
-    setProcessing(true);
+    const submittedPrompt = prompt.trim();
+    setGenerating(true);
     setGenerationError("");
+    setPrompt("");
+    setChatHistory((prev) => [
+      ...prev,
+      { role: "user", content: submittedPrompt },
+    ]);
     sendRequest("/api/card_generations", {
       method: "POST",
-      data: { prompt },
+      data: { prompt: submittedPrompt, cards },
     })
-      .then(({ cards: generated }) => {
-        setCards(generated);
+      .then(({ cards: generated, message }) => {
+        if (Array.isArray(generated)) setCards(generated);
+        setChatHistory((prev) => [...prev, { role: "assistant", message }]);
+        textareaRef.current?.focus();
       })
       .catch((err) => {
         setGenerationError(err?.error || "Card generation failed.");
       })
-      .finally(() => setProcessing(false));
+      .finally(() => setGenerating(false));
   };
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
@@ -325,17 +339,54 @@ export default function CardAddBulk() {
       <div className="white-box">
         <GrayedOut visible={processing} />
         <Spinner visible={processing} />
+        <div className="chat-history">
+          {chatHistory.length === 0 ? (
+            <div className="chat-history-empty">(No chat history)</div>
+          ) : (
+            chatHistory.map((entry, i) =>
+              entry.role === "user" ? (
+                <div key={i} className="chat-bubble chat-bubble-user">
+                  {entry.content}
+                </div>
+              ) : (
+                <div key={i} className="chat-bubble chat-bubble-assistant">
+                  {entry.message}
+                </div>
+              ),
+            )
+          )}
+          {generating && (
+            <div className="chat-bubble chat-bubble-assistant chat-bubble-pending">
+              <span className="dot" />
+              <span className="dot" />
+              <span className="dot" />
+            </div>
+          )}
+        </div>
         <textarea
+          ref={textareaRef}
           rows={5}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          style={{ width: "100%", boxSizing: "border-box", marginBottom: 10 }}
+          disabled={generating}
+          onKeyDown={(e) => {
+            if (
+              e.key === "Enter" &&
+              e.shiftKey &&
+              prompt.trim() &&
+              !generating
+            ) {
+              e.preventDefault();
+              handleGenerate();
+            }
+          }}
+          style={{ display: "block", width: "100%", boxSizing: "border-box", marginBottom: 20 }}
         />
-        <div style={{ marginBottom: 10 }}>
+        <div style={{ marginBottom: 30 }}>
           <Button
-            text="Generate"
+            text="Send"
             onClick={handleGenerate}
-            disabled={processing || !prompt.trim()}
+            disabled={generating || !prompt.trim()}
           />
         </div>
         {generationError && (
@@ -343,6 +394,7 @@ export default function CardAddBulk() {
             {generationError}
           </div>
         )}
+        <hr />
         {cards.length === 0 && (
           <div
             style={{
@@ -366,10 +418,12 @@ export default function CardAddBulk() {
               <div style={{ position: "absolute", top: 10, right: 12 }}>
                 {card.result === "success" ? (
                   <span
+                    onClick={() => window.open(`/cards/${card.savedId}`, "_blank")}
                     style={{
                       color: "#4caf50",
                       fontSize: 18,
                       userSelect: "none",
+                      cursor: "pointer",
                     }}
                   >
                     &#10003;
@@ -467,6 +521,63 @@ export default function CardAddBulk() {
           border-radius: 6px;
           padding: 12px 56px 12px 16px;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        .chat-history {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          gap: 8px;
+          height: 180px;
+          overflow-y: auto;
+          border: 1px solid #e4e9ed;
+          border-radius: 4px;
+          padding: 10px;
+          margin-bottom: 12px;
+          box-sizing: border-box;
+        }
+        .chat-history-empty {
+          margin: auto;
+          color: #aaa;
+          font-size: 13px;
+          user-select: none;
+        }
+        .chat-bubble {
+          max-width: 75%;
+          padding: 8px 12px;
+          border-radius: 12px;
+          font-size: 13px;
+          line-height: 1.4;
+          user-select: text;
+        }
+        .chat-bubble-user {
+          align-self: flex-end;
+          background: #d1e8ff;
+          border-bottom-right-radius: 3px;
+        }
+        .chat-bubble-assistant {
+          align-self: flex-start;
+          background: #f0f0f0;
+          border-bottom-left-radius: 3px;
+        }
+        .chat-bubble-pending {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          padding: 10px 14px;
+        }
+        .dot {
+          display: inline-block;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #aaa;
+          animation: dot-pulse 1.2s infinite ease-in-out;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dot-pulse {
+          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+          40% { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </div>
