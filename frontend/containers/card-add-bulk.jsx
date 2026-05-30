@@ -16,10 +16,12 @@ export default function CardAddBulk() {
   const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [availableTags, setAvailableTags] = useState([]);
   const textareaRef = useRef(null);
 
   useEffect(() => {
     textareaRef.current?.focus();
+    sendRequest("/api/tags").then(({ tags }) => setAvailableTags(tags));
   }, []);
 
   const startEdit = (index, field, currentValue, binIndex = null) => {
@@ -90,6 +92,30 @@ export default function CardAddBulk() {
       if (card.result !== "success") acc.push(i);
       return acc;
     }, []);
+    const saveTagsForCard = (cardId, card) => {
+      const tagNames = (card.tags || "").split(",").map((s) => s.trim()).filter(Boolean);
+      const matchedTags = tagNames.flatMap((name) => {
+        const found = availableTags.find(
+          (t) => t.name.toLowerCase() === name.toLowerCase(),
+        );
+        return found ? [found] : [];
+      });
+      return Promise.all(
+        matchedTags.map((tag) =>
+          sendRequest("/api/card_tags", {
+            method: "POST",
+            data: {
+              card_tag: {
+                tag_id: tag.id,
+                cardtagable_id: cardId,
+                cardtagable_type: "Card",
+              },
+            },
+          }),
+        ),
+      );
+    };
+
     const saveCard = (card) => {
       if (card.matchBins) {
         return createEntity({
@@ -97,8 +123,8 @@ export default function CardAddBulk() {
           directory: "cards",
           entity: { question: card.question, answer: "MATCHING" },
         }).then(({ card: { id: cardId } }) =>
-          Promise.all(
-            card.matchBins.map((bin) =>
+          Promise.all([
+            ...card.matchBins.map((bin) =>
               sendRequest("/api/match_bins", {
                 method: "POST",
                 data: { match_bin: { name: bin.label, card_id: cardId } },
@@ -114,14 +140,15 @@ export default function CardAddBulk() {
                 );
               }),
             ),
-          ).then(() => cardId),
+            saveTagsForCard(cardId, card),
+          ]).then(() => cardId),
         );
       }
       return createEntity({
         entityName: "card",
         directory: "cards",
         entity: { question: card.question, answer: card.answer },
-      }).then(({ card: { id } }) => id);
+      }).then(({ card: { id } }) => saveTagsForCard(id, card).then(() => id));
     };
 
     Promise.all(
@@ -163,7 +190,13 @@ export default function CardAddBulk() {
       data: { prompt: submittedPrompt, cards },
     })
       .then(({ cards: generated, message }) => {
-        if (Array.isArray(generated)) setCards(generated);
+        if (Array.isArray(generated))
+          setCards(
+            generated.map((c) => ({
+              ...c,
+              tags: Array.isArray(c.tags) ? c.tags.join(", ") : (c.tags || ""),
+            })),
+          );
         setChatHistory((prev) => [...prev, { role: "assistant", message }]);
         textareaRef.current?.focus();
       })
@@ -264,8 +297,8 @@ export default function CardAddBulk() {
     </div>
   );
 
-  const renderField = (card, index, field, locked = false) => {
-    const label = field === "question" ? "Question" : "Answer";
+  const renderField = (card, index, field, locked = false, label = null) => {
+    label = label || (field === "question" ? "Question" : "Answer");
     return (
       <React.Fragment key={field}>
         <span
@@ -473,6 +506,7 @@ export default function CardAddBulk() {
                 ) : (
                   renderField(card, index, "answer", card.result === "success")
                 )}
+                {renderField(card, index, "tags", card.result === "success", "Tags")}
               </div>
               {card.result === "error" && (
                 <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>

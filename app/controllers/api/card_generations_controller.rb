@@ -18,6 +18,11 @@ class Api::CardGenerationsController < AdminController
             properties: {
               question: { type: "string" },
               answer:   { type: "string" },
+              tags: {
+                type: "array",
+                description: "Tag names from the available tags list to associate with this card. Pick the single most relevant tag unless the user specifies otherwise. Omit if no relevant tag is available.",
+                items: { type: "string" },
+              },
               matchBins: {
                 type: "array",
                 items: {
@@ -47,6 +52,12 @@ class Api::CardGenerationsController < AdminController
 
     existing_cards = Array(params[:cards])
     system_prompt = "You generate flash cards used in quizzes where the user must type the answer. Answers must be short — a word, name, date, or brief phrase. Never write a sentence as an answer. If a fact would naturally produce a long answer, reframe the question so the short fact becomes the answer. For example, instead of Q: 'What was New France?' A: 'New France was the area colonized by France...', write Q: 'What was the name of the area colonized by France in North America in the early 17th century?' A: 'New France'. For simple Q&A cards include 'question' and 'answer'. For matching/categorization cards include 'question' and 'matchBins' (array of {label, items}) but no 'answer'. If the prompt is ambiguous or needs clarification, ask the user questions in the message field and omit cards. If you have all the information you need, generate the cards and set message to 'Done.'"
+
+    available_tags = Tag.order(:name).pluck(:name)
+    if available_tags.any?
+      system_prompt += "\n\nAvailable tags: #{available_tags.join(', ')}. Unless the user specifies tags, pick the single most relevant tag for each card from this list. Omit tags if no relevant tag is available."
+    end
+
     if existing_cards.any?
       card_list = existing_cards.map { |c| "- #{c[:question]}" }.join("\n")
       system_prompt += "\n\nCards currently in the review queue:\n#{card_list}"
