@@ -53,7 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_004515) do
     t.string "question", null: false
     t.integer "streak", default: 0
     t.datetime "streak_freeze_expiration", precision: nil
-    t.index ["question", "image_url"], name: "index_cards_on_question_and_image_url", unique: true
+    t.index ["question", "cloudinary_url"], name: "index_cards_on_question_and_cloudinary_url", unique: true
   end
 
   create_table "french_adjectives", force: :cascade do |t|
