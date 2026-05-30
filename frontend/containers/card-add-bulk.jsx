@@ -14,6 +14,7 @@ export default function CardAddBulk() {
   const [editing, setEditing] = useState(null); // { index, field, binIndex? }
   const [editValue, setEditValue] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [generationError, setGenerationError] = useState("");
 
   const startEdit = (index, field, currentValue, binIndex = null) => {
     setEditing({ index, field, binIndex });
@@ -139,6 +140,23 @@ export default function CardAddBulk() {
           }),
       ),
     ).finally(() => setProcessing(false));
+  };
+
+  const handleGenerate = () => {
+    if (!prompt.trim()) return;
+    setProcessing(true);
+    setGenerationError("");
+    sendRequest("/api/card_generations", {
+      method: "POST",
+      data: { prompt },
+    })
+      .then(({ cards: generated }) => {
+        setCards(generated);
+      })
+      .catch((err) => {
+        setGenerationError(err?.error || "Card generation failed.");
+      })
+      .finally(() => setProcessing(false));
   };
 
   const isLong = (value) => value.includes("\n") || value.length > 60;
@@ -313,6 +331,18 @@ export default function CardAddBulk() {
           onChange={(e) => setPrompt(e.target.value)}
           style={{ width: "100%", boxSizing: "border-box", marginBottom: 10 }}
         />
+        <div style={{ marginBottom: 10 }}>
+          <Button
+            text="Generate"
+            onClick={handleGenerate}
+            disabled={processing || !prompt.trim()}
+          />
+        </div>
+        {generationError && (
+          <div style={{ color: "red", fontSize: 13, marginBottom: 8 }}>
+            {generationError}
+          </div>
+        )}
         {cards.length === 0 && (
           <div
             style={{

@@ -49,5 +49,6 @@ Rails.application.routes.draw do
     resources :match_items, only: [:create, :destroy]
     resources :jobs, only: [:create, :show]
     resources :highlights, only: [:index, :create]
+    resources :card_generations, only: [:create]
   end
 end
