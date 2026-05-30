@@ -209,7 +209,7 @@ export default function CardAddBulk() {
   const isLong = (value) => value.includes("\n") || value.length > 60;
 
   const renderMatchBins = (card, cardIndex) => (
-    <div style={{ display: "flex", gap: 12 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
       {card.matchBins.map((bin, i) => (
         <div
           key={i}
