@@ -31,6 +31,7 @@ class Api::CardsController < AdminController
     @card_tags = @card.card_tags
     @tags = Tag.all.order(:name)
     @match_bins = @card.match_bins.includes(:match_items)
+    @highlighted = @card.highlights.exists?
     render 'show', formats: [:json], handlers: [:jbuilder]
   end
 

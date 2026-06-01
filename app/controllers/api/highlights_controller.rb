@@ -28,4 +28,10 @@ class Api::HighlightsController < AdminController
     render json: highlight
   end
 
+  def destroy
+    highlight = Highlight.find(params[:id])
+    highlight.destroy
+    render json: {}
+  end
+
 end

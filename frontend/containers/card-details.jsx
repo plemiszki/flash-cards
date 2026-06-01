@@ -9,6 +9,7 @@ import {
   fetchEntity,
   updateEntity,
   deleteEntity,
+  sendRequest,
   BottomButtons,
   objectsAreEqual,
   deepCopy,
@@ -35,6 +36,8 @@ export default class CardDetails extends React.Component {
       cardSaved: emptyCard,
       cardTags: [],
       errors: [],
+      highlighted: false,
+      highlightId: null,
       matchBins: [],
       newCardTagModalOpen: false,
       tags: [],
@@ -49,13 +52,15 @@ export default class CardDetails extends React.Component {
     document.body.appendChild(script);
 
     fetchEntity().then((response) => {
-      const { card, cardTags, tags, matchBins } = response;
+      const { card, cardTags, highlighted, highlightId, tags, matchBins } = response;
       this.setState(
         {
           spinner: false,
           card,
           cardSaved: deepCopy(card),
           cardTags,
+          highlighted,
+          highlightId,
           tags,
           matchBins,
           changesToSave: false,
@@ -159,6 +164,8 @@ export default class CardDetails extends React.Component {
       card,
       cardSaved,
       cardTags,
+      highlighted,
+      highlightId,
       tags,
       justSaved,
       changesToSave,
@@ -256,6 +263,32 @@ export default class CardDetails extends React.Component {
                 entity: "card",
                 property: "multipleChoice",
               })}
+            </div>
+            <div className="row">
+              <div className="col-xs-12">
+                <div className={`highlight-status ${highlighted ? "highlight-status-active" : ""}`}>
+                  {highlighted ? "This card is highlighted." : "This card is not highlighted."}
+                  <span
+                    className="highlight-toggle"
+                    onClick={() => {
+                      if (highlighted) {
+                        sendRequest(`/api/highlights/${highlightId}`, { method: "DELETE" }).then(() => {
+                          this.setState({ highlighted: false, highlightId: null });
+                        });
+                      } else {
+                        sendRequest("/api/highlights", {
+                          method: "POST",
+                          data: { highlight: { highlightable_type: "Card", highlightable_id: card.id } },
+                        }).then((response) => {
+                          this.setState({ highlighted: true, highlightId: response.id });
+                        });
+                      }
+                    }}
+                  >
+                    {highlighted ? "Remove Highlight" : "Highlight"}
+                  </span>
+                </div>
+              </div>
             </div>
             <div className="row switches">
               {Details.renderSwitch.bind(this)({
@@ -424,6 +457,27 @@ export default class CardDetails extends React.Component {
           }
           img {
             max-width: 100%;
+          }
+          .highlight-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: "TeachableSans-Medium";
+            font-size: 12px;
+            color: #2c2f33;
+            margin-bottom: 30px;
+          }
+          .highlight-status-active {
+            background: #fffde7;
+            border-color: #f9c700;
+          }
+          .highlight-toggle {
+            cursor: pointer;
+            text-decoration: underline;
           }
         `}</style>
       </>

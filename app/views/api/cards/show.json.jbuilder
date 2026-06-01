@@ -22,6 +22,8 @@ json.tags @tags do |tag|
   json.id tag.id
   json.name tag.name
 end
+json.highlighted @highlighted
+json.highlightId @highlighted ? @card.highlights.first.id : nil
 json.matchBins @match_bins do |match_bin|
   json.id match_bin.id
   json.name match_bin.name
