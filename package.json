@@ -7,6 +7,9 @@
   "dependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.0.1",
     "babel-loader": "^9.0.0",
     "change-case": "^4.0.0",
     "handy-components": "^3.0.0",

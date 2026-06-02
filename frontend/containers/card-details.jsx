@@ -14,9 +14,11 @@ import {
   objectsAreEqual,
   deepCopy,
   OutlineButton,
-  Table,
   Button,
+  ConfirmDelete,
 } from "handy-components";
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
 import NewEntity from "./new-entity.jsx";
 import TagsSection from "./tags-section";
 import StreakInfo from "./streak-info";
@@ -39,6 +41,7 @@ export default class CardDetails extends React.Component {
       highlighted: false,
       highlightId: null,
       matchBins: [],
+      confirmDeleteBinId: null,
       newCardTagModalOpen: false,
       tags: [],
       newEntityModalOpen: false,
@@ -52,7 +55,8 @@ export default class CardDetails extends React.Component {
     document.body.appendChild(script);
 
     fetchEntity().then((response) => {
-      const { card, cardTags, highlighted, highlightId, tags, matchBins } = response;
+      const { card, cardTags, highlighted, highlightId, tags, matchBins } =
+        response;
       this.setState(
         {
           spinner: false,
@@ -70,14 +74,14 @@ export default class CardDetails extends React.Component {
             selector: "select",
             func: Details.changeField.bind(this, this.changeFieldArgs()),
           });
-        }
+        },
       );
     });
   }
 
   componentWillUnmount() {
     const script = document.querySelector(
-      'script[src="https://upload-widget.cloudinary.com/global/all.js"]'
+      'script[src="https://upload-widget.cloudinary.com/global/all.js"]',
     );
     if (script) {
       script.remove();
@@ -122,9 +126,9 @@ export default class CardDetails extends React.Component {
               spinner: false,
               errors,
             });
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -146,7 +150,7 @@ export default class CardDetails extends React.Component {
             changesToSave: true,
           });
         }
-      }
+      },
     );
   }
 
@@ -170,6 +174,7 @@ export default class CardDetails extends React.Component {
       justSaved,
       changesToSave,
       matchBins,
+      confirmDeleteBinId,
       newMatchBinModalOpen,
       newMatchItemModalOpen,
       selectedMatchBinId,
@@ -179,22 +184,6 @@ export default class CardDetails extends React.Component {
     const answerIsRegEx =
       answerCharacters[0] === "/" &&
       answerCharacters[answerCharacters.length - 1] === "/";
-
-    let matchBinsRows = [];
-    matchBins.forEach((matchBin) => {
-      matchBinsRows.push({
-        text: matchBin.name,
-        type: "bin",
-        id: matchBin.id,
-      });
-      matchBin.matchItems.forEach((matchItem) => {
-        matchBinsRows.push({
-          text: matchItem.name,
-          type: "item",
-          id: matchItem.id,
-        });
-      });
-    });
 
     return (
       <>
@@ -232,11 +221,13 @@ export default class CardDetails extends React.Component {
                 columnHeader: "Note",
               })}
             </div>
-            <div className="row">
-              <div className="col-xs-3">
-                <img src={card.cloudinaryUrl} />
+            {card.cloudinaryUrl && (
+              <div className="row">
+                <div className="col-xs-3">
+                  <img src={card.cloudinaryUrl} />
+                </div>
               </div>
-            </div>
+            )}
             <div className="row">
               {Details.renderField.bind(this)({
                 type: "textbox",
@@ -266,21 +257,38 @@ export default class CardDetails extends React.Component {
             </div>
             <div className="row">
               <div className="col-xs-12">
-                <div className={`highlight-status ${highlighted ? "highlight-status-active" : ""}`}>
-                  {highlighted ? "This card is highlighted." : "This card is not highlighted."}
+                <div
+                  className={`highlight-status ${highlighted ? "highlight-status-active" : ""}`}
+                >
+                  {highlighted
+                    ? "This card is highlighted."
+                    : "This card is not highlighted."}
                   <span
                     className="highlight-toggle"
                     onClick={() => {
                       if (highlighted) {
-                        sendRequest(`/api/highlights/${highlightId}`, { method: "DELETE" }).then(() => {
-                          this.setState({ highlighted: false, highlightId: null });
+                        sendRequest(`/api/highlights/${highlightId}`, {
+                          method: "DELETE",
+                        }).then(() => {
+                          this.setState({
+                            highlighted: false,
+                            highlightId: null,
+                          });
                         });
                       } else {
                         sendRequest("/api/highlights", {
                           method: "POST",
-                          data: { highlight: { highlightable_type: "Card", highlightable_id: card.id } },
+                          data: {
+                            highlight: {
+                              highlightable_type: "Card",
+                              highlightable_id: card.id,
+                            },
+                          },
                         }).then((response) => {
-                          this.setState({ highlighted: true, highlightId: response.id });
+                          this.setState({
+                            highlighted: true,
+                            highlightId: response.id,
+                          });
                         });
                       }
                     }}
@@ -334,56 +342,53 @@ export default class CardDetails extends React.Component {
             {cardSaved.answer === "MATCHING" && (
               <>
                 <hr />
-                <Table
-                  columns={[
-                    {
-                      name: "text",
-                      header: "Match Bins",
-                      boldIf: (row) => row.type === "bin",
-                    },
-                    {
-                      isButton: true,
-                      buttonText: "Add Item",
-                      width: 120,
-                      clickButton: (row) => {
-                        this.setState({
-                          newMatchItemModalOpen: true,
-                          selectedMatchBinId: row.id,
-                        });
-                      },
-                      displayIf: (row) => row.type === "bin",
-                    },
-                  ]}
-                  rows={matchBinsRows}
-                  links={false}
-                  sortable={false}
-                  clickDelete={(row) => {
-                    const { type, id } = row;
-                    this.setState({ spinner: true });
-                    if (type === "bin") {
-                      deleteEntity({
-                        directory: "match_bins",
-                        id,
-                      }).then((response) => {
-                        this.setState({
-                          spinner: false,
-                          matchBins: response.matchBins,
-                        });
-                      });
-                    } else {
-                      deleteEntity({
-                        directory: "match_items",
-                        id,
-                      }).then((response) => {
-                        this.setState({
-                          spinner: false,
-                          matchBins: response.matchBins,
-                        });
-                      });
-                    }
-                  }}
-                  marginBottom
-                />
+                <div className="match-bins-header">Match Bins</div>
+                <div className="match-bins-grid">
+                  {matchBins.map((bin) => (
+                    <div key={bin.id} className="match-bin-container">
+                      <div className="match-bin-header">
+                        <div className="match-bin-name">{bin.name}</div>
+                        <div className="match-bin-icons">
+                          <AddIcon
+                            className="match-bin-icon"
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => this.setState({ newMatchItemModalOpen: true, selectedMatchBinId: bin.id })}
+                          />
+                          <ClearIcon
+                            className="match-bin-icon"
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              if (bin.matchItems.length > 0) {
+                                this.setState({ confirmDeleteBinId: bin.id });
+                              } else {
+                                this.setState({ spinner: true });
+                                deleteEntity({ directory: "match_bins", id: bin.id }).then((response) => {
+                                  this.setState({ spinner: false, matchBins: response.matchBins });
+                                });
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {bin.matchItems.map((item) => (
+                        <div key={item.id} className="match-bin-item">
+                          <span>{item.name}</span>
+                          <span className="match-item-delete-icon">
+                            <ClearIcon
+                              sx={{ cursor: "pointer", fontSize: 14 }}
+                              onClick={() => {
+                                this.setState({ spinner: true });
+                                deleteEntity({ directory: "match_items", id: item.id }).then((response) => {
+                                  this.setState({ spinner: false, matchBins: response.matchBins });
+                                });
+                              }}
+                            />
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
                 <OutlineButton
                   color="#5F5F5F"
                   text="Add Bin"
@@ -417,6 +422,7 @@ export default class CardDetails extends React.Component {
               entityName="matchBin"
               initialEntity={{ cardId: card.id, name: "" }}
               callback={this.updateMatchBins.bind(this)}
+              buttonText="Add Bin"
             />
           </Modal>
           <Modal
@@ -430,6 +436,7 @@ export default class CardDetails extends React.Component {
               initialEntity={{ matchBinId: selectedMatchBinId, name: "" }}
               callback={this.updateMatchBins.bind(this)}
               responseKey="matchBins"
+              buttonText="Add Item"
             />
           </Modal>
           <Modal
@@ -449,6 +456,17 @@ export default class CardDetails extends React.Component {
               redirectAfterCreate={true}
             />
           </Modal>
+          <ConfirmDelete
+            isOpen={confirmDeleteBinId !== null}
+            closeModal={() => this.setState({ confirmDeleteBinId: null })}
+            entityName="matchBin"
+            confirmDelete={() => {
+              this.setState({ spinner: true, confirmDeleteBinId: null });
+              deleteEntity({ directory: "match_bins", id: confirmDeleteBinId }).then((response) => {
+                this.setState({ spinner: false, matchBins: response.matchBins });
+              });
+            }}
+          />
         </div>
         <style jsx>{`
           img,
@@ -478,6 +496,69 @@ export default class CardDetails extends React.Component {
           .highlight-toggle {
             cursor: pointer;
             text-decoration: underline;
+          }
+          .match-bins-header {
+            font-family: "TeachableSans-SemiBold";
+            color: black;
+            font-size: 12px;
+            padding-left: 10px;
+            margin-bottom: 20px;
+          }
+          .match-bins-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+          }
+          .match-bin-container {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 12px;
+          }
+          .match-bin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+          .match-bin-icons {
+            display: none;
+            gap: 6px;
+          }
+          .match-bin-container:hover .match-bin-icons {
+            display: flex;
+          }
+          .match-bin-icon {
+            cursor: pointer;
+            font-size: 15px;
+            user-select: none;
+            color: #96939b;
+          }
+          .match-bin-icon:hover {
+            color: black;
+          }
+          .match-bin-name {
+            font-family: "TeachableSans-SemiBold";
+            color: black;
+            font-size: 12px;
+            user-select: none;
+          }
+          .match-bin-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #96939b;
+            line-height: 17px;
+            margin-bottom: 4px;
+            user-select: none;
+          }
+          .match-item-delete-icon {
+            display: none;
+            line-height: 0;
+          }
+          .match-bin-item:hover .match-item-delete-icon {
+            display: inline;
           }
         `}</style>
       </>
