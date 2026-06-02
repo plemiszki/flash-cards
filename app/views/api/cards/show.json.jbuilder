@@ -13,6 +13,7 @@ json.card do
   json.streak @card.streak
   json.streakFreezeExpiration @card.streak_freeze_expiration.to_i || ''
   json.notes @card.notes
+  json.questionType @card.question_type
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_30_152754) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_02_174519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -50,6 +50,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_30_152754) do
     t.boolean "multiple_choice", default: false
     t.string "notes", default: ""
     t.string "question", null: false
+    t.string "question_type", default: "standard", null: false
     t.integer "streak", default: 0
     t.datetime "streak_freeze_expiration", precision: nil
     t.index ["question", "cloudinary_url"], name: "index_cards_on_question_and_cloudinary_url", unique: true

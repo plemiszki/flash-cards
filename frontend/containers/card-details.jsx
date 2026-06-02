@@ -30,6 +30,7 @@ export default class CardDetails extends React.Component {
     let emptyCard = {
       question: "",
       answer: "",
+      questionType: "standard",
     };
 
     this.state = {
@@ -73,7 +74,7 @@ export default class CardDetails extends React.Component {
         () => {
           setUpNiceSelect({
             selector: "select",
-            func: Details.changeField.bind(this, this.changeFieldArgs()),
+            func: Details.changeDropdownField.bind(this),
           });
         },
       );
@@ -221,8 +222,18 @@ export default class CardDetails extends React.Component {
                 entity: "card",
                 property: "question",
               })}
+              {Details.renderDropDown.bind(this)({
+                columnWidth: 3,
+                entity: "card",
+                property: "questionType",
+                options: [
+                  { value: "standard", text: "Standard" },
+                  { value: "matching", text: "Matching" },
+                  { value: "multiple_choice", text: "Multiple Choice" },
+                ],
+              })}
               {Details.renderField.bind(this)({
-                columnWidth: 6,
+                columnWidth: 3,
                 entity: "card",
                 property: "hint",
               })}
@@ -367,19 +378,37 @@ export default class CardDetails extends React.Component {
                   {matchBins.map((bin) => (
                     <div key={bin.id} className="match-bin-container">
                       <div className="match-bin-header">
-                        {editing && editing.type === "bin" && editing.id === bin.id ? (
+                        {editing &&
+                        editing.type === "bin" &&
+                        editing.id === bin.id ? (
                           <input
                             autoFocus
                             className="match-edit-input"
                             value={editing.value}
-                            onChange={(e) => this.setState({ editing: { ...editing, value: e.target.value } })}
+                            onChange={(e) =>
+                              this.setState({
+                                editing: { ...editing, value: e.target.value },
+                              })
+                            }
                             onBlur={() => this.commitEdit()}
-                            onKeyDown={(e) => { if (e.key === "Enter") this.commitEdit(); if (e.key === "Escape") this.setState({ editing: null }); }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") this.commitEdit();
+                              if (e.key === "Escape")
+                                this.setState({ editing: null });
+                            }}
                           />
                         ) : (
                           <div
                             className="match-bin-name"
-                            onClick={() => this.setState({ editing: { type: "bin", id: bin.id, value: bin.name } })}
+                            onClick={() =>
+                              this.setState({
+                                editing: {
+                                  type: "bin",
+                                  id: bin.id,
+                                  value: bin.name,
+                                },
+                              })
+                            }
                           >
                             {bin.name}
                           </div>
@@ -388,7 +417,12 @@ export default class CardDetails extends React.Component {
                           <AddIcon
                             className="match-bin-icon"
                             sx={{ cursor: "pointer" }}
-                            onClick={() => this.setState({ newMatchItemModalOpen: true, selectedMatchBinId: bin.id })}
+                            onClick={() =>
+                              this.setState({
+                                newMatchItemModalOpen: true,
+                                selectedMatchBinId: bin.id,
+                              })
+                            }
                           />
                           <ClearIcon
                             className="match-bin-icon"
@@ -398,8 +432,14 @@ export default class CardDetails extends React.Component {
                                 this.setState({ confirmDeleteBinId: bin.id });
                               } else {
                                 this.setState({ spinner: true });
-                                deleteEntity({ directory: "match_bins", id: bin.id }).then((response) => {
-                                  this.setState({ spinner: false, matchBins: response.matchBins });
+                                deleteEntity({
+                                  directory: "match_bins",
+                                  id: bin.id,
+                                }).then((response) => {
+                                  this.setState({
+                                    spinner: false,
+                                    matchBins: response.matchBins,
+                                  });
                                 });
                               }
                             }}
@@ -408,19 +448,40 @@ export default class CardDetails extends React.Component {
                       </div>
                       {bin.matchItems.map((item) => (
                         <div key={item.id} className="match-bin-item">
-                          {editing && editing.type === "item" && editing.id === item.id ? (
+                          {editing &&
+                          editing.type === "item" &&
+                          editing.id === item.id ? (
                             <input
                               autoFocus
                               className="match-edit-input"
                               value={editing.value}
-                              onChange={(e) => this.setState({ editing: { ...editing, value: e.target.value } })}
+                              onChange={(e) =>
+                                this.setState({
+                                  editing: {
+                                    ...editing,
+                                    value: e.target.value,
+                                  },
+                                })
+                              }
                               onBlur={() => this.commitEdit()}
-                              onKeyDown={(e) => { if (e.key === "Enter") this.commitEdit(); if (e.key === "Escape") this.setState({ editing: null }); }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") this.commitEdit();
+                                if (e.key === "Escape")
+                                  this.setState({ editing: null });
+                              }}
                             />
                           ) : (
                             <span
                               className="match-item-name"
-                              onClick={() => this.setState({ editing: { type: "item", id: item.id, value: item.name } })}
+                              onClick={() =>
+                                this.setState({
+                                  editing: {
+                                    type: "item",
+                                    id: item.id,
+                                    value: item.name,
+                                  },
+                                })
+                              }
                             >
                               {item.name}
                             </span>
@@ -430,8 +491,14 @@ export default class CardDetails extends React.Component {
                               sx={{ cursor: "pointer", fontSize: 14 }}
                               onClick={() => {
                                 this.setState({ spinner: true });
-                                deleteEntity({ directory: "match_items", id: item.id }).then((response) => {
-                                  this.setState({ spinner: false, matchBins: response.matchBins });
+                                deleteEntity({
+                                  directory: "match_items",
+                                  id: item.id,
+                                }).then((response) => {
+                                  this.setState({
+                                    spinner: false,
+                                    matchBins: response.matchBins,
+                                  });
                                 });
                               }}
                             />
@@ -514,8 +581,14 @@ export default class CardDetails extends React.Component {
             entityName="matchBin"
             confirmDelete={() => {
               this.setState({ spinner: true, confirmDeleteBinId: null });
-              deleteEntity({ directory: "match_bins", id: confirmDeleteBinId }).then((response) => {
-                this.setState({ spinner: false, matchBins: response.matchBins });
+              deleteEntity({
+                directory: "match_bins",
+                id: confirmDeleteBinId,
+              }).then((response) => {
+                this.setState({
+                  spinner: false,
+                  matchBins: response.matchBins,
+                });
               });
             }}
           />

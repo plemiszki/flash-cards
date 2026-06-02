@@ -2,6 +2,8 @@ class Card < ActiveRecord::Base
 
   SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'card.json')).to_s
 
+  enum :question_type, { standard: "standard", matching: "matching", multiple_choice: "multiple_choice" }
+
   validates :question, :answer, presence: true
   validates :question, uniqueness: { scope: :cloudinary_url }
   validates :config, json: { schema: JSON.parse(File.read(SCHEMA)) }
