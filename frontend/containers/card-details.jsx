@@ -259,33 +259,30 @@ export default class CardDetails extends React.Component {
                 </div>
               </div>
             )}
-            <div className="row">
-              {Details.renderField.bind(this)({
-                type: "textbox",
-                rows: 5,
-                columnWidth: 5,
-                entity: "card",
-                property: "answer",
-                styles: answerIsRegEx
-                  ? {
-                      fontSize: 16,
-                      fontFamily: "Inconsolata",
-                    }
-                  : {},
-              })}
-              {Details.renderField.bind(this)({
-                type: "textbox",
-                rows: 5,
-                columnWidth: 5,
-                entity: "card",
-                property: "answerPlaceholder",
-              })}
-              {Details.renderSwitch.bind(this)({
-                columnWidth: 2,
-                entity: "card",
-                property: "multipleChoice",
-              })}
-            </div>
+            {card.questionType !== "matching" && (
+              <div className="row">
+                {Details.renderField.bind(this)({
+                  type: "textbox",
+                  rows: 5,
+                  columnWidth: 6,
+                  entity: "card",
+                  property: "answer",
+                  styles: answerIsRegEx
+                    ? {
+                        fontSize: 16,
+                        fontFamily: "Inconsolata",
+                      }
+                    : {},
+                })}
+                {Details.renderField.bind(this)({
+                  type: "textbox",
+                  rows: 5,
+                  columnWidth: 6,
+                  entity: "card",
+                  property: "answerPlaceholder",
+                })}
+              </div>
+            )}
             <div className="row">
               <div className="col-xs-12">
                 <div
@@ -370,7 +367,7 @@ export default class CardDetails extends React.Component {
               }}
               marginBottom
             />
-            {cardSaved.answer === "MATCHING" && (
+            {card.questionType === "matching" && (
               <>
                 <hr />
                 <div className="match-bins-header">Match Bins</div>
