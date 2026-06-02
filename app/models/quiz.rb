@@ -86,12 +86,12 @@ class Quiz < ActiveRecord::Base
         entityName: 'card',
         question: card.question,
         hint: card.hint,
-        answers: (card.match_bins.present? ? [card.match_answer] : [card.answer]),
+        answers: (card.matching? ? [card.match_answer] : [card.answer]),
         answer_placeholder: card.answer_placeholder,
-        textbox: card.answer.include?("\n"),
+        textbox: !card.matching? && card.answer.include?("\n"),
         imageUrl: card.cloudinary_url,
-        matchBins: card.match_bins_and_items,
-        matchBinsShuffled: card.match_bins_and_items_shuffled,
+        matchBins: card.matching? ? card.match_bins_and_items : {},
+        matchBinsShuffled: card.matching? ? card.match_bins_and_items_shuffled : {},
         highlightButton: question.highlightable,
         highlighted: card.highlights.exists?,
         cardId: card.id,
@@ -106,7 +106,7 @@ class Quiz < ActiveRecord::Base
         editLink: "/cards/#{card.id}",
         editLinkText: "Edit Card",
       }
-      if card.multiple_choice
+      if card.multiple_choice?
         tag_id = card.tags.first.id
         unless @other_answers_cache[tag_id].present?
           @other_answers_cache[tag_id] = CardTag.includes(:cardtagable).where(tag_id: tag_id, cardtagable_type: "Card").map(&:cardtagable).pluck(:answer)
