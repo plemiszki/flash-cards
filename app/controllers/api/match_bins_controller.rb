@@ -10,6 +10,13 @@ class Api::MatchBinsController < AdminController
     end
   end
 
+  def update
+    match_bin = MatchBin.find(params[:id])
+    match_bin.update!(match_bin_params)
+    @match_bins = MatchBin.where(card_id: match_bin.card_id)
+    render 'index', formats: [:json], handlers: [:jbuilder]
+  end
+
   def destroy
     match_bin = MatchBin.find(params[:id])
     match_bin.destroy

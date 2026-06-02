@@ -41,6 +41,7 @@ export default class CardDetails extends React.Component {
       highlighted: false,
       highlightId: null,
       matchBins: [],
+      editing: null,
       confirmDeleteBinId: null,
       newCardTagModalOpen: false,
       tags: [],
@@ -162,6 +163,24 @@ export default class CardDetails extends React.Component {
     });
   }
 
+  commitEdit() {
+    const { editing } = this.state;
+    if (!editing || editing.value.trim() === "") {
+      this.setState({ editing: null });
+      return;
+    }
+    const { type, id, value } = editing;
+    const directory = type === "bin" ? "match_bins" : "match_items";
+    const bodyKey = type === "bin" ? "match_bin" : "match_item";
+    this.setState({ editing: null });
+    sendRequest(`/api/${directory}/${id}`, {
+      method: "PATCH",
+      data: { [bodyKey]: { name: value } },
+    }).then(({ matchBins }) => {
+      this.setState({ matchBins });
+    });
+  }
+
   render() {
     const {
       spinner,
@@ -174,6 +193,7 @@ export default class CardDetails extends React.Component {
       justSaved,
       changesToSave,
       matchBins,
+      editing,
       confirmDeleteBinId,
       newMatchBinModalOpen,
       newMatchItemModalOpen,
@@ -347,7 +367,23 @@ export default class CardDetails extends React.Component {
                   {matchBins.map((bin) => (
                     <div key={bin.id} className="match-bin-container">
                       <div className="match-bin-header">
-                        <div className="match-bin-name">{bin.name}</div>
+                        {editing && editing.type === "bin" && editing.id === bin.id ? (
+                          <input
+                            autoFocus
+                            className="match-edit-input"
+                            value={editing.value}
+                            onChange={(e) => this.setState({ editing: { ...editing, value: e.target.value } })}
+                            onBlur={() => this.commitEdit()}
+                            onKeyDown={(e) => { if (e.key === "Enter") this.commitEdit(); if (e.key === "Escape") this.setState({ editing: null }); }}
+                          />
+                        ) : (
+                          <div
+                            className="match-bin-name"
+                            onClick={() => this.setState({ editing: { type: "bin", id: bin.id, value: bin.name } })}
+                          >
+                            {bin.name}
+                          </div>
+                        )}
                         <div className="match-bin-icons">
                           <AddIcon
                             className="match-bin-icon"
@@ -372,7 +408,23 @@ export default class CardDetails extends React.Component {
                       </div>
                       {bin.matchItems.map((item) => (
                         <div key={item.id} className="match-bin-item">
-                          <span>{item.name}</span>
+                          {editing && editing.type === "item" && editing.id === item.id ? (
+                            <input
+                              autoFocus
+                              className="match-edit-input"
+                              value={editing.value}
+                              onChange={(e) => this.setState({ editing: { ...editing, value: e.target.value } })}
+                              onBlur={() => this.commitEdit()}
+                              onKeyDown={(e) => { if (e.key === "Enter") this.commitEdit(); if (e.key === "Escape") this.setState({ editing: null }); }}
+                            />
+                          ) : (
+                            <span
+                              className="match-item-name"
+                              onClick={() => this.setState({ editing: { type: "item", id: item.id, value: item.name } })}
+                            >
+                              {item.name}
+                            </span>
+                          )}
                           <span className="match-item-delete-icon">
                             <ClearIcon
                               sx={{ cursor: "pointer", fontSize: 14 }}
@@ -542,6 +594,20 @@ export default class CardDetails extends React.Component {
             color: black;
             font-size: 12px;
             user-select: none;
+            cursor: pointer;
+          }
+          .match-item-name {
+            cursor: pointer;
+          }
+          .match-edit-input {
+            font-family: "TeachableSans-SemiBold";
+            font-size: 12px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            padding: 0;
+            width: 100%;
+            background: transparent;
           }
           .match-bin-item {
             display: flex;
