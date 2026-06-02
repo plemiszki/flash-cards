@@ -58,7 +58,6 @@ class Api::CardsController < AdminController
       :answer,
       :answer_placeholder,
       :cloudinary_url,
-      :multiple_choice,
       :streak,
       :last_streak_add,
       :hint,

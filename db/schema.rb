@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_02_174519) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_02_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -47,7 +47,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_174519) do
     t.jsonb "config", default: {}
     t.string "hint", default: ""
     t.date "last_streak_add"
-    t.boolean "multiple_choice", default: false
     t.string "notes", default: ""
     t.string "question", null: false
     t.string "question_type", default: "standard", null: false
