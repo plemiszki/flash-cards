@@ -13,6 +13,8 @@ class Card < ActiveRecord::Base
   has_many :highlights, as: :highlightable, dependent: :destroy
   has_many :match_bins, -> { order(:name) }
 
+  after_update :sync_match_bin_positions, if: :saved_change_to_match_bins_fixed_positions?
+
   def match_bins_and_items
     result = {}
     match_bins.each do |match_bin|
@@ -47,5 +49,15 @@ class Card < ActiveRecord::Base
     result
   end
 
+  private
+
+  def sync_match_bin_positions
+    match_bins.update_all(position: nil)
+    if match_bins_fixed_positions
+      match_bins.order(:name).each_with_index do |bin, index|
+        bin.update_column(:position, index + 1)
+      end
+    end
+  end
 
 end
