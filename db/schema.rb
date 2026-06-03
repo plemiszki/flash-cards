@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_02_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_164050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -47,6 +47,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_180000) do
     t.jsonb "config", default: {}
     t.string "hint", default: ""
     t.date "last_streak_add"
+    t.boolean "match_bins_fixed_positions", default: false, null: false
     t.string "notes", default: ""
     t.string "question", null: false
     t.string "question_type", default: "standard", null: false
@@ -156,6 +157,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_180000) do
   create_table "match_bins", force: :cascade do |t|
     t.integer "card_id", null: false
     t.string "name", null: false
+    t.integer "position"
+    t.index ["card_id", "position"], name: "index_match_bins_on_card_id_and_position", unique: true
   end
 
   create_table "match_items", force: :cascade do |t|

@@ -370,7 +370,25 @@ export default class CardDetails extends React.Component {
             {card.questionType === "matching" && (
               <>
                 <hr />
-                <div className="match-bins-header">Match Bins</div>
+                <div className="match-bins-section-header">
+                  <div className="match-bins-header">Match Bins</div>
+                  <label className="fixed-positions-label">
+                    Use Fixed Positions
+                    <div className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={!!card.matchBinsFixedPositions}
+                        onChange={(e) => {
+                          this.setState(
+                            { card: { ...card, matchBinsFixedPositions: e.target.checked } },
+                            () => this.setState({ changesToSave: this.checkForChanges() }),
+                          );
+                        }}
+                      />
+                      <span className="toggle-slider" />
+                    </div>
+                  </label>
+                </div>
                 <div className="match-bins-grid">
                   {matchBins.map((bin) => (
                     <div key={bin.id} className="match-bin-container">
@@ -619,12 +637,63 @@ export default class CardDetails extends React.Component {
             cursor: pointer;
             text-decoration: underline;
           }
+          .match-bins-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+          }
           .match-bins-header {
             font-family: "TeachableSans-SemiBold";
             color: black;
             font-size: 12px;
             padding-left: 10px;
-            margin-bottom: 20px;
+          }
+          .fixed-positions-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: "TeachableSans-Medium";
+            font-size: 12px;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+          }
+          .toggle-switch {
+            position: relative;
+            width: 36px;
+            height: 20px;
+          }
+          .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+          }
+          .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+          }
+          .toggle-slider:before {
+            content: "";
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+          }
+          .toggle-switch input:checked + .toggle-slider {
+            background: #013adf;
+          }
+          .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(16px);
           }
           .match-bins-grid {
             display: grid;
