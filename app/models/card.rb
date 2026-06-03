@@ -28,7 +28,8 @@ class Card < ActiveRecord::Base
 
   def match_bins_and_items_shuffled
     result = {}
-    match_bins.shuffle.each do |match_bin|
+    ordered_bins = match_bins_fixed_positions ? match_bins.order(:position) : match_bins.shuffle
+    ordered_bins.each do |match_bin|
       result[match_bin.name] = []
       match_bin.match_items.shuffle.each do |match_item|
         result[match_bin.name] << match_item.name
