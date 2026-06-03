@@ -18,6 +18,8 @@ import {
   ConfirmDelete,
 } from "handy-components";
 import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ClearIcon from "@mui/icons-material/Clear";
 import NewEntity from "./new-entity.jsx";
 import TagsSection from "./tags-section";
@@ -390,7 +392,15 @@ export default class CardDetails extends React.Component {
                   </label>
                 </div>
                 <div className="match-bins-grid">
-                  {matchBins.map((bin) => (
+                  {(cardSaved.matchBinsFixedPositions
+                    ? [...matchBins].sort((a, b) => a.position - b.position)
+                    : matchBins
+                  ).map((bin) => {
+                    const fixedPositions = cardSaved.matchBinsFixedPositions;
+                    const positions = matchBins.map((b) => b.position).filter((p) => p != null);
+                    const minPosition = fixedPositions ? Math.min(...positions) : null;
+                    const maxPosition = fixedPositions ? Math.max(...positions) : null;
+                    return (
                     <div key={bin.id} className="match-bin-container">
                       <div className="match-bin-header">
                         {editing &&
@@ -429,6 +439,30 @@ export default class CardDetails extends React.Component {
                           </div>
                         )}
                         <div className="match-bin-icons">
+                          {fixedPositions && bin.position !== minPosition && (
+                            <ArrowBackIcon
+                              className="match-bin-icon"
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                sendRequest(`/api/match_bins/${bin.id}/move`, {
+                                  method: "PATCH",
+                                  data: { direction: "left" },
+                                }).then(({ matchBins }) => this.setState({ matchBins }))
+                              }
+                            />
+                          )}
+                          {fixedPositions && bin.position !== maxPosition && (
+                            <ArrowForwardIcon
+                              className="match-bin-icon"
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                sendRequest(`/api/match_bins/${bin.id}/move`, {
+                                  method: "PATCH",
+                                  data: { direction: "right" },
+                                }).then(({ matchBins }) => this.setState({ matchBins }))
+                              }
+                            />
+                          )}
                           <AddIcon
                             className="match-bin-icon"
                             sx={{ cursor: "pointer" }}
@@ -521,7 +555,8 @@ export default class CardDetails extends React.Component {
                         </div>
                       ))}
                     </div>
-                  ))}
+                  );
+                  })}
                 </div>
                 <OutlineButton
                   color="#5F5F5F"
