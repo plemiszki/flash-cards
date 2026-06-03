@@ -215,6 +215,7 @@ export default class QuizRun extends React.Component {
       answer: "",
       matchedItems: {},
       unmatchedItems: [],
+      selectedItems: [],
       status: "question",
       showAnswers: false,
       incorrectQuestionIds: [],
@@ -464,6 +465,7 @@ export default class QuizRun extends React.Component {
               gotQuestionWrongThisRound: false,
               matchedItems: {},
               unmatchedItems: [],
+              selectedItems: [],
             },
             () => {
               this.setUpMatching.call(this);
@@ -651,6 +653,7 @@ export default class QuizRun extends React.Component {
         {
           matchedItems,
           unmatchedItems: shuffle(unmatchedItems),
+          selectedItems: [],
         },
         this.setUpDragAndDrop.bind(this),
       );
@@ -658,6 +661,7 @@ export default class QuizRun extends React.Component {
       this.setState({
         matchedItems: {},
         unmatchedItems: [],
+        selectedItems: [],
       });
     }
   }
@@ -695,6 +699,18 @@ export default class QuizRun extends React.Component {
     e.target.classList.remove("selected");
   }
 
+  handleUnmatchedItemClick(e, itemName) {
+    if (e.shiftKey) {
+      e.preventDefault();
+      const { selectedItems } = this.state;
+      if (selectedItems.includes(itemName)) {
+        this.setState({ selectedItems: selectedItems.filter((i) => i !== itemName) });
+      } else {
+        this.setState({ selectedItems: [...selectedItems, itemName] });
+      }
+    }
+  }
+
   dragOverHandler(e) {
     e.target.classList.add("selected");
   }
@@ -716,16 +732,19 @@ export default class QuizRun extends React.Component {
       return;
     }
     let itemName = ui.draggable.attr("data-name");
-    let unmatchedItems = this.state.unmatchedItems;
-    unmatchedItems = removeFromArray(unmatchedItems, itemName);
-    let matchedItems = this.state.matchedItems;
-    let bin = matchedItems[binName];
-    bin.push(itemName);
-    let sortedBin = bin.sort();
-    matchedItems[binName] = sortedBin;
+    let { unmatchedItems, matchedItems, selectedItems } = this.state;
+
+    const itemsToDrop = selectedItems.includes(itemName) ? selectedItems : [itemName];
+    itemsToDrop.forEach((name) => {
+      unmatchedItems = removeFromArray(unmatchedItems, name);
+      matchedItems[binName].push(name);
+    });
+    matchedItems[binName] = matchedItems[binName].sort();
+
     this.setState({
       matchedItems,
       unmatchedItems,
+      selectedItems: [],
       status: "question",
     });
   }
@@ -1088,7 +1107,7 @@ export default class QuizRun extends React.Component {
   }
 
   renderInput(currentQuestion) {
-    const { answer, unmatchedItems, status } = this.state;
+    const { answer, unmatchedItems, selectedItems, status } = this.state;
     if (
       currentQuestion &&
       currentQuestion.matchBins &&
@@ -1110,12 +1129,14 @@ export default class QuizRun extends React.Component {
           </ul>
           <ul key="2" className="unmatched-items-container">
             {unmatchedItems.map((itemName, index) => {
+              const isShiftSelected = selectedItems.includes(itemName);
               return (
                 <li
                   key={index}
-                  className="unmatched-item"
+                  className={`unmatched-item${isShiftSelected ? " shift-selected" : ""}`}
                   onMouseDown={this.mouseDownHandler}
                   onMouseUp={this.mouseUpHandler}
+                  onClick={(e) => this.handleUnmatchedItemClick(e, itemName)}
                   data-name={itemName}
                 >
                   {itemName}
@@ -1154,6 +1175,9 @@ export default class QuizRun extends React.Component {
             }
             .unmatched-item.selected {
               background-color: #ceecf5;
+            }
+            .unmatched-item.shift-selected {
+              border: solid 2px black;
             }
             .unmatched-item:not(:last-of-type) {
               margin-right: 10px;
