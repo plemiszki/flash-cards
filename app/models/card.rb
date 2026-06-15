@@ -28,8 +28,7 @@ class Card < ActiveRecord::Base
 
   def match_bins_and_items_shuffled
     result = {}
-    ordered_bins = match_bins_fixed_positions ? match_bins.order(:position) : match_bins.shuffle
-    ordered_bins.each do |match_bin|
+    ordered_match_bins.each do |match_bin|
       result[match_bin.name] = []
       match_bin.match_items.shuffle.each do |match_item|
         result[match_bin.name] << match_item.name
@@ -40,7 +39,7 @@ class Card < ActiveRecord::Base
 
   def match_answer
     result = ""
-    match_bins.each do |match_bin|
+    ordered_match_bins.each do |match_bin|
       result += "#{match_bin.name.upcase}:\n"
       match_bin.match_items.each do |match_item|
         result += "#{match_item.name}\n"
@@ -51,6 +50,10 @@ class Card < ActiveRecord::Base
   end
 
   private
+
+  def ordered_match_bins
+    match_bins_fixed_positions ? match_bins.order(:position) : match_bins.shuffle
+  end
 
   def sync_match_bin_positions
     match_bins.update_all(position: nil)
