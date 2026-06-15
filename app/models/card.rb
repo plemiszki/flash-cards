@@ -52,7 +52,7 @@ class Card < ActiveRecord::Base
   private
 
   def ordered_match_bins
-    match_bins_fixed_positions ? match_bins.order(:position) : match_bins.shuffle
+    match_bins_fixed_positions ? match_bins.reorder(:position) : match_bins.shuffle
   end
 
   def sync_match_bin_positions
