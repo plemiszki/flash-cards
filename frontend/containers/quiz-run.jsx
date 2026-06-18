@@ -317,7 +317,7 @@ export default class QuizRun extends React.Component {
   }
 
   answerIncludesBacktick() {
-    const question = this.state.quiz.questions[this.state.questionNumber];
+    const question = this.currentQuestion();
     let included = false;
     question.answers.forEach((answer) => {
       if (answer.indexOf("`") >= 0) {
