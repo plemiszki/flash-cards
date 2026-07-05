@@ -205,6 +205,8 @@ export default class QuizRun extends React.Component {
   constructor(props) {
     super(props);
 
+    this.arrowUpHeld = false;
+
     this.state = {
       spinner: true,
       errors: [],
@@ -330,6 +332,20 @@ export default class QuizRun extends React.Component {
   }
 
   handleInputKeyDown(e) {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      this.arrowUpHeld = true;
+    }
+    if (this.arrowUpHeld && e.key === "2") {
+      e.preventDefault();
+      const { answer } = this.state;
+      const { selectionStart, selectionEnd } = e.target;
+      const newAnswer = answer.slice(0, selectionStart) + "²" + answer.slice(selectionEnd);
+      this.setState({ answer: newAnswer }, () => {
+        e.target.setSelectionRange(selectionStart + 1, selectionStart + 1);
+      });
+      return;
+    }
     if (e.shiftKey && e.key === "ArrowRight") {
       e.preventDefault();
       const { answer } = this.state;
@@ -338,6 +354,12 @@ export default class QuizRun extends React.Component {
       this.setState({ answer: newAnswer }, () => {
         e.target.setSelectionRange(selectionStart + 1, selectionStart + 1);
       });
+    }
+  }
+
+  handleInputKeyUp(e) {
+    if (e.key === "ArrowUp") {
+      this.arrowUpHeld = false;
     }
   }
 
@@ -1299,6 +1321,7 @@ export default class QuizRun extends React.Component {
             columns="12"
             className={status === "wrong" ? "error" : null}
             onKeyDown={this.handleInputKeyDown.bind(this)}
+            onKeyUp={this.handleInputKeyUp.bind(this)}
             onChange={this.changeAnswer.bind(this)}
             value={answer}
             style={
@@ -1335,6 +1358,7 @@ export default class QuizRun extends React.Component {
           style={style}
           className={status === "wrong" ? "error" : null}
           onKeyDown={this.handleInputKeyDown.bind(this)}
+          onKeyUp={this.handleInputKeyUp.bind(this)}
           onKeyPress={this.checkKey.bind(this)}
           onChange={this.changeAnswer.bind(this)}
           value={answer || ""}
