@@ -15,6 +15,7 @@ import {
 } from "handy-components";
 import { shuffle } from "lodash";
 import { pascalCase, snakeCase } from "change-case";
+import cable from "../cable";
 
 const SECONDS_IN_DAY = 86400;
 
@@ -227,11 +228,17 @@ export default class QuizRun extends React.Component {
       gotQuestionWrongThisRound: false,
       highlightedModalOpen: false,
       highlightData: [],
+      outdatedCardIds: [],
     };
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.onKeyDown.bind(this));
+    this.boundOnKeyDown = this.onKeyDown.bind(this);
+    document.addEventListener("keydown", this.boundOnKeyDown);
+
+    this.cardsSubscription = cable.subscriptions.create("CardsChannel", {
+      received: (data) => this.handleCardBroadcast(data),
+    });
 
     const id = window.location.pathname.split("/")[2];
     sendRequest(`/api/quizzes/${id}/run`).then(
@@ -260,6 +267,35 @@ export default class QuizRun extends React.Component {
         });
       },
     );
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.boundOnKeyDown);
+    if (this.cardsSubscription) {
+      cable.subscriptions.remove(this.cardsSubscription);
+    }
+  }
+
+  handleCardBroadcast(data) {
+    const { cardId } = data;
+    const { outdatedCardIds } = this.state;
+    if (!outdatedCardIds.includes(cardId)) {
+      this.setState({ outdatedCardIds: [...outdatedCardIds, cardId] });
+    }
+  }
+
+  reloadCard() {
+    const currentQuestion = this.currentQuestion();
+    const { cardId } = currentQuestion;
+    this.setState({ spinner: true });
+    sendRequest(`/api/cards/${cardId}/quiz_data`).then((response) => {
+      Object.assign(currentQuestion, response);
+      const { outdatedCardIds } = this.state;
+      this.setState({
+        spinner: false,
+        outdatedCardIds: outdatedCardIds.filter((id) => id !== cardId),
+      });
+    });
   }
 
   focusAnswerField() {
@@ -857,6 +893,16 @@ export default class QuizRun extends React.Component {
     );
   }
 
+  renderReloadButton() {
+    const currentQuestion = this.currentQuestion();
+    const { outdatedCardIds } = this.state;
+    return (
+      currentQuestion &&
+      currentQuestion.cardId &&
+      outdatedCardIds.includes(currentQuestion.cardId)
+    );
+  }
+
   render() {
     const {
       currentRotation,
@@ -1003,6 +1049,14 @@ export default class QuizRun extends React.Component {
                     }}
                   />
                 )}
+                {this.renderReloadButton() && (
+                  <div
+                    className="reload-button"
+                    onClick={() => {
+                      this.reloadCard();
+                    }}
+                  />
+                )}
               </form>
               <Spinner visible={spinner} />
               <GrayedOut visible={spinner} />
@@ -1087,6 +1141,15 @@ export default class QuizRun extends React.Component {
               cursor: pointer;
             }
             div.highlight-button {
+              margin-top: 2px;
+              float: right;
+              margin-right: 20px;
+              width: 25px;
+              height: 25px;
+              background-size: contain;
+              cursor: pointer;
+            }
+            div.reload-button {
               margin-top: 2px;
               float: right;
               margin-right: 20px;

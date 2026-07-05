@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
+
   root to: 'quizzes#index'
   get '/cards/bulk_add' => 'cards#bulk_add'
   resources :cards, only: [:index, :show]
@@ -23,7 +25,11 @@ Rails.application.routes.draw do
   resources :vocabulary, only: [:index]
 
   namespace :api do
-    resources :cards, only: [:index, :new, :show, :create, :update, :destroy]
+    resources :cards, only: [:index, :new, :show, :create, :update, :destroy] do
+      member do
+        get :quiz_data
+      end
+    end
     resources :nouns, only: [:index, :show, :create, :update, :destroy]
     resources :verbs, only: [:index, :show, :create, :update, :destroy]
     resources :adjectives, only: [:index, :show, :create, :update, :destroy]

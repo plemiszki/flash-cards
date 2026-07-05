@@ -50,6 +50,11 @@ class Api::CardsController < AdminController
     render json: card
   end
 
+  def quiz_data
+    @card = Card.find(params[:id])
+    render 'quiz_data', formats: [:json], handlers: [:jbuilder]
+  end
+
   private
 
   def card_params

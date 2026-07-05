@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_164050) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_05_220959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -45,6 +45,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_164050) do
     t.string "answer_placeholder", default: ""
     t.string "cloudinary_url", default: ""
     t.jsonb "config", default: {}
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "hint", default: ""
     t.date "last_streak_add"
     t.boolean "match_bins_fixed_positions", default: false, null: false
@@ -53,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_164050) do
     t.string "question_type", default: "standard", null: false
     t.integer "streak", default: 0
     t.datetime "streak_freeze_expiration", precision: nil
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["question", "cloudinary_url"], name: "index_cards_on_question_and_cloudinary_url", unique: true
   end
 

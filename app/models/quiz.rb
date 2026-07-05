@@ -84,28 +84,15 @@ class Quiz < ActiveRecord::Base
       raise NoCardError if card.nil?
       obj = {
         entityName: 'card',
-        question: card.question,
-        hint: card.hint,
-        answers: (card.matching? ? [card.match_answer] : [card.answer]),
-        answer_placeholder: card.answer_placeholder,
-        textbox: !card.matching? && card.answer.include?("\n"),
-        imageUrl: card.cloudinary_url,
-        matchBins: card.matching? ? card.match_bins_and_items : {},
-        matchBinsShuffled: card.matching? ? card.match_bins_and_items_shuffled : {},
         highlightButton: question.highlightable,
         highlighted: card.highlights.exists?,
         cardId: card.id,
         streak: card.streak,
         streakFreezeExpiration: card.streak_freeze_expiration.to_i,
         lastStreakAdd: card.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
-        tags: card.card_tags.includes(:tag).map { |card_tag| { name: card_tag.tag.name, id: card_tag.id } },
-        lineCount: card.config.dig("options", "line_count"),
-        inconsolata: card.config.dig("options", "inconsolata"),
-        noRepeat: card.config.dig("options", "no_repeat"),
-        screamingSnake: card.config.dig("options", "screaming_snake"),
         editLink: "/cards/#{card.id}",
         editLinkText: "Edit Card",
-      }
+      }.merge(card.quiz_content_data)
       if card.multiple_choice?
         tag_id = card.tags.first.id
         unless @other_answers_cache[tag_id].present?
