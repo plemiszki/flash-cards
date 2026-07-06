@@ -1368,16 +1368,20 @@ export default class QuizRun extends React.Component {
   }
 
   renderMatchedItems(binName) {
+    const { showAnswers } = this.state;
     let matchedItems = this.state.matchedItems[binName];
     if (matchedItems && matchedItems.length > 0) {
+      const correctItems = this.currentQuestion().matchBins[binName] || [];
       return (
         <>
           <ul className="bin-items-container">
             {matchedItems.map((itemName) => {
+              const isIncorrect =
+                showAnswers && !correctItems.includes(itemName);
               return (
                 <li
                   key={itemName}
-                  className="bin-item"
+                  className={`bin-item${isIncorrect ? " incorrect" : ""}`}
                   onClick={this.removeMatchItem.bind(this)}
                 >
                   {itemName}
@@ -1394,6 +1398,9 @@ export default class QuizRun extends React.Component {
               font-size: 12px;
               text-align: center;
               cursor: pointer;
+            }
+            .bin-item.incorrect {
+              color: red;
             }
           `}</style>
         </>
