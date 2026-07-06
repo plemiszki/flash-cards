@@ -1411,18 +1411,51 @@ export default class QuizRun extends React.Component {
   renderAnswers(currentQuestion) {
     const { showAnswers } = this.state;
     if (currentQuestion && showAnswers) {
-      const { answers, matchBins } = currentQuestion;
-      if (matchBins && matchBins.length > 0) {
-        const answer = answers[0];
+      const { matchBins } = currentQuestion;
+      if (matchBins && Object.keys(matchBins).length > 0) {
         return (
           <>
-            <div className="answers-container">
-              <pre>{answer}</pre>
+            <div className="match-answers-container">
+              {Object.keys(matchBins).map((binName) => (
+                <div key={binName} className="match-answer-bin">
+                  <div className="match-answer-bin-name">{binName}</div>
+                  <ul className="match-answer-items">
+                    {matchBins[binName].map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
             <style jsx>{`
-              .answers-container {
-                margin-top: -15px;
+              .match-answers-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                margin-top: -5px;
                 margin-bottom: 15px;
+              }
+              .match-answer-bin {
+                border-radius: 5px;
+                padding: 10px 15px;
+                min-width: 120px;
+                background-color: #ddf5ce;
+              }
+              .match-answer-bin-name {
+                font-family: "TeachableSans-SemiBold";
+                font-size: 12px;
+                text-transform: uppercase;
+                color: #5f5f5f;
+                margin-bottom: 8px;
+              }
+              .match-answer-items {
+                margin: 0;
+                padding-left: 0;
+                list-style: none;
+                font-size: 14px;
+              }
+              .match-answer-items li:not(:last-of-type) {
+                margin-bottom: 4px;
               }
             `}</style>
           </>
