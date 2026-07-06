@@ -2,13 +2,14 @@ class Card < ActiveRecord::Base
 
   SCHEMA = Pathname.new(Rails.root.join('config', 'schemas', 'card.json')).to_s
 
-  CONTENT_COLUMNS = %w[question answer answer_placeholder cloudinary_url hint config question_type match_bins_fixed_positions].freeze
+  CONTENT_COLUMNS = %w[question answer answer_placeholder cloudinary_url hint config question_type match_bins_fixed_positions match_max_items].freeze
 
   enum :question_type, { standard: "standard", matching: "matching", multiple_choice: "multiple_choice" }
 
   validates :question, :answer, presence: true
   validates :question, uniqueness: { scope: :cloudinary_url }
   validates :config, json: { schema: JSON.parse(File.read(SCHEMA)) }
+  validates_numericality_of :match_max_items, greater_than_or_equal_to: 0, only_integer: true
 
   has_many :card_tags, as: :cardtagable, dependent: :destroy
   has_many :tags, through: :card_tags
@@ -40,10 +41,7 @@ class Card < ActiveRecord::Base
   def match_bins_and_items
     result = {}
     match_bins.each do |match_bin|
-      result[match_bin.name] = []
-      match_bin.match_items.each do |match_item|
-        result[match_bin.name] << match_item.name
-      end
+      result[match_bin.name] = selected_match_items(match_bin).map(&:name)
     end
     result
   end
@@ -51,10 +49,7 @@ class Card < ActiveRecord::Base
   def match_bins_and_items_shuffled
     result = {}
     ordered_match_bins.each do |match_bin|
-      result[match_bin.name] = []
-      match_bin.match_items.shuffle.each do |match_item|
-        result[match_bin.name] << match_item.name
-      end
+      result[match_bin.name] = selected_match_items(match_bin).shuffle.map(&:name)
     end
     result
   end
@@ -63,7 +58,7 @@ class Card < ActiveRecord::Base
     result = ""
     ordered_match_bins.each do |match_bin|
       result += "#{match_bin.name.upcase}:\n"
-      match_bin.match_items.each do |match_item|
+      selected_match_items(match_bin).each do |match_item|
         result += "#{match_item.name}\n"
       end
       result += "\n"
@@ -75,6 +70,17 @@ class Card < ActiveRecord::Base
 
   def ordered_match_bins
     match_bins_fixed_positions ? match_bins.reorder(:position) : match_bins.shuffle
+  end
+
+  def selected_match_items(match_bin)
+    match_bin.match_items.select { |item| selected_match_item_ids.include?(item.id) }
+  end
+
+  def selected_match_item_ids
+    @selected_match_item_ids ||= begin
+      all_ids = match_bins.flat_map(&:match_items).map(&:id)
+      match_max_items > 0 ? all_ids.sample(match_max_items) : all_ids
+    end
   end
 
   def sync_match_bin_positions

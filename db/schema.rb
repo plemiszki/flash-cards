@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_05_220959) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_06_172519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -49,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_220959) do
     t.string "hint", default: ""
     t.date "last_streak_add"
     t.boolean "match_bins_fixed_positions", default: false, null: false
+    t.integer "match_max_items", default: 0, null: false
     t.string "notes", default: ""
     t.string "question", null: false
     t.string "question_type", default: "standard", null: false

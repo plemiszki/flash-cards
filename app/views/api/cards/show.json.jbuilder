@@ -14,6 +14,7 @@ json.card do
   json.notes @card.notes
   json.questionType @card.question_type
   json.matchBinsFixedPositions @card.match_bins_fixed_positions
+  json.matchMaxItems @card.match_max_items
 end
 json.cardTags @card_tags do |card_tag|
   json.id card_tag.id

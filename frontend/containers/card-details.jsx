@@ -237,21 +237,29 @@ export default class CardDetails extends React.Component {
               {Details.renderField.bind(this)({
                 columnWidth: 3,
                 entity: "card",
-                property: "hint",
+                property: "matchMaxItems",
+                columnHeader: "Max Items",
+                visible: card.questionType === "matching",
               })}
             </div>
             <div className="row">
               {Details.renderField.bind(this)({
-                columnWidth: 6,
+                columnWidth: 4,
                 entity: "card",
                 property: "cloudinaryUrl",
                 uploadLinkFunction: this.clickUploadImage.bind(this),
               })}
               {Details.renderField.bind(this)({
-                columnWidth: 6,
+                columnWidth: 4,
+                entity: "card",
+                property: "hint",
+                columnHeader: "Hint (Visible)",
+              })}
+              {Details.renderField.bind(this)({
+                columnWidth: 4,
                 entity: "card",
                 property: "notes",
-                columnHeader: "Note",
+                columnHeader: "Note (Not Visible)",
               })}
             </div>
             {card.cloudinaryUrl && (
@@ -382,8 +390,16 @@ export default class CardDetails extends React.Component {
                         checked={!!card.matchBinsFixedPositions}
                         onChange={(e) => {
                           this.setState(
-                            { card: { ...card, matchBinsFixedPositions: e.target.checked } },
-                            () => this.setState({ changesToSave: this.checkForChanges() }),
+                            {
+                              card: {
+                                ...card,
+                                matchBinsFixedPositions: e.target.checked,
+                              },
+                            },
+                            () =>
+                              this.setState({
+                                changesToSave: this.checkForChanges(),
+                              }),
                           );
                         }}
                       />
@@ -397,109 +413,21 @@ export default class CardDetails extends React.Component {
                     : matchBins
                   ).map((bin) => {
                     const fixedPositions = cardSaved.matchBinsFixedPositions;
-                    const positions = matchBins.map((b) => b.position).filter((p) => p != null);
-                    const minPosition = fixedPositions ? Math.min(...positions) : null;
-                    const maxPosition = fixedPositions ? Math.max(...positions) : null;
+                    const positions = matchBins
+                      .map((b) => b.position)
+                      .filter((p) => p != null);
+                    const minPosition = fixedPositions
+                      ? Math.min(...positions)
+                      : null;
+                    const maxPosition = fixedPositions
+                      ? Math.max(...positions)
+                      : null;
                     return (
-                    <div key={bin.id} className="match-bin-container">
-                      <div className="match-bin-header">
-                        {editing &&
-                        editing.type === "bin" &&
-                        editing.id === bin.id ? (
-                          <input
-                            autoFocus
-                            className="match-edit-input"
-                            value={editing.value}
-                            onChange={(e) =>
-                              this.setState({
-                                editing: { ...editing, value: e.target.value },
-                              })
-                            }
-                            onBlur={() => this.commitEdit()}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") this.commitEdit();
-                              if (e.key === "Escape")
-                                this.setState({ editing: null });
-                            }}
-                          />
-                        ) : (
-                          <div
-                            className="match-bin-name"
-                            onClick={() =>
-                              this.setState({
-                                editing: {
-                                  type: "bin",
-                                  id: bin.id,
-                                  value: bin.name,
-                                },
-                              })
-                            }
-                          >
-                            {bin.name}
-                          </div>
-                        )}
-                        <div className="match-bin-icons">
-                          {fixedPositions && bin.position !== minPosition && (
-                            <ArrowBackIcon
-                              className="match-bin-icon"
-                              sx={{ cursor: "pointer" }}
-                              onClick={() =>
-                                sendRequest(`/api/match_bins/${bin.id}/move`, {
-                                  method: "PATCH",
-                                  data: { direction: "left" },
-                                }).then(({ matchBins }) => this.setState({ matchBins }))
-                              }
-                            />
-                          )}
-                          {fixedPositions && bin.position !== maxPosition && (
-                            <ArrowForwardIcon
-                              className="match-bin-icon"
-                              sx={{ cursor: "pointer" }}
-                              onClick={() =>
-                                sendRequest(`/api/match_bins/${bin.id}/move`, {
-                                  method: "PATCH",
-                                  data: { direction: "right" },
-                                }).then(({ matchBins }) => this.setState({ matchBins }))
-                              }
-                            />
-                          )}
-                          <AddIcon
-                            className="match-bin-icon"
-                            sx={{ cursor: "pointer" }}
-                            onClick={() =>
-                              this.setState({
-                                newMatchItemModalOpen: true,
-                                selectedMatchBinId: bin.id,
-                              })
-                            }
-                          />
-                          <ClearIcon
-                            className="match-bin-icon"
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => {
-                              if (bin.matchItems.length > 0) {
-                                this.setState({ confirmDeleteBinId: bin.id });
-                              } else {
-                                this.setState({ spinner: true });
-                                deleteEntity({
-                                  directory: "match_bins",
-                                  id: bin.id,
-                                }).then((response) => {
-                                  this.setState({
-                                    spinner: false,
-                                    matchBins: response.matchBins,
-                                  });
-                                });
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                      {bin.matchItems.map((item) => (
-                        <div key={item.id} className="match-bin-item">
+                      <div key={bin.id} className="match-bin-container">
+                        <div className="match-bin-header">
                           {editing &&
-                          editing.type === "item" &&
-                          editing.id === item.id ? (
+                          editing.type === "bin" &&
+                          editing.id === bin.id ? (
                             <input
                               autoFocus
                               className="match-edit-input"
@@ -520,42 +448,149 @@ export default class CardDetails extends React.Component {
                               }}
                             />
                           ) : (
-                            <span
-                              className="match-item-name"
+                            <div
+                              className="match-bin-name"
                               onClick={() =>
                                 this.setState({
                                   editing: {
-                                    type: "item",
-                                    id: item.id,
-                                    value: item.name,
+                                    type: "bin",
+                                    id: bin.id,
+                                    value: bin.name,
                                   },
                                 })
                               }
                             >
-                              {item.name}
-                            </span>
+                              {bin.name}
+                            </div>
                           )}
-                          <span className="match-item-delete-icon">
+                          <div className="match-bin-icons">
+                            {fixedPositions && bin.position !== minPosition && (
+                              <ArrowBackIcon
+                                className="match-bin-icon"
+                                sx={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  sendRequest(
+                                    `/api/match_bins/${bin.id}/move`,
+                                    {
+                                      method: "PATCH",
+                                      data: { direction: "left" },
+                                    },
+                                  ).then(({ matchBins }) =>
+                                    this.setState({ matchBins }),
+                                  )
+                                }
+                              />
+                            )}
+                            {fixedPositions && bin.position !== maxPosition && (
+                              <ArrowForwardIcon
+                                className="match-bin-icon"
+                                sx={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  sendRequest(
+                                    `/api/match_bins/${bin.id}/move`,
+                                    {
+                                      method: "PATCH",
+                                      data: { direction: "right" },
+                                    },
+                                  ).then(({ matchBins }) =>
+                                    this.setState({ matchBins }),
+                                  )
+                                }
+                              />
+                            )}
+                            <AddIcon
+                              className="match-bin-icon"
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                this.setState({
+                                  newMatchItemModalOpen: true,
+                                  selectedMatchBinId: bin.id,
+                                })
+                              }
+                            />
                             <ClearIcon
-                              sx={{ cursor: "pointer", fontSize: 14 }}
+                              className="match-bin-icon"
+                              sx={{ cursor: "pointer" }}
                               onClick={() => {
-                                this.setState({ spinner: true });
-                                deleteEntity({
-                                  directory: "match_items",
-                                  id: item.id,
-                                }).then((response) => {
-                                  this.setState({
-                                    spinner: false,
-                                    matchBins: response.matchBins,
+                                if (bin.matchItems.length > 0) {
+                                  this.setState({ confirmDeleteBinId: bin.id });
+                                } else {
+                                  this.setState({ spinner: true });
+                                  deleteEntity({
+                                    directory: "match_bins",
+                                    id: bin.id,
+                                  }).then((response) => {
+                                    this.setState({
+                                      spinner: false,
+                                      matchBins: response.matchBins,
+                                    });
                                   });
-                                });
+                                }
                               }}
                             />
-                          </span>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  );
+                        {bin.matchItems.map((item) => (
+                          <div key={item.id} className="match-bin-item">
+                            {editing &&
+                            editing.type === "item" &&
+                            editing.id === item.id ? (
+                              <input
+                                autoFocus
+                                className="match-edit-input"
+                                value={editing.value}
+                                onChange={(e) =>
+                                  this.setState({
+                                    editing: {
+                                      ...editing,
+                                      value: e.target.value,
+                                    },
+                                  })
+                                }
+                                onBlur={() => this.commitEdit()}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") this.commitEdit();
+                                  if (e.key === "Escape")
+                                    this.setState({ editing: null });
+                                }}
+                              />
+                            ) : (
+                              <span
+                                className="match-item-name"
+                                onClick={() =>
+                                  this.setState({
+                                    editing: {
+                                      type: "item",
+                                      id: item.id,
+                                      value: item.name,
+                                    },
+                                  })
+                                }
+                              >
+                                {item.name}
+                              </span>
+                            )}
+                            <span className="match-item-delete-icon">
+                              <ClearIcon
+                                sx={{ cursor: "pointer", fontSize: 14 }}
+                                onClick={() => {
+                                  this.setState({ spinner: true });
+                                  deleteEntity({
+                                    directory: "match_items",
+                                    id: item.id,
+                                  }).then((response) => {
+                                    this.setState({
+                                      spinner: false,
+                                      matchBins: response.matchBins,
+                                    });
+                                  });
+                                }}
+                              />
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    );
                   })}
                 </div>
                 <OutlineButton
