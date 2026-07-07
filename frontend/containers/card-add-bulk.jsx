@@ -178,6 +178,7 @@ export default function CardAddBulk() {
   const handleGenerate = () => {
     if (!prompt.trim()) return;
     const submittedPrompt = prompt.trim();
+    const priorHistory = chatHistory;
     setGenerating(true);
     setGenerationError("");
     setPrompt("");
@@ -187,7 +188,7 @@ export default function CardAddBulk() {
     ]);
     sendRequest("/api/card_generations", {
       method: "POST",
-      data: { prompt: submittedPrompt, cards },
+      data: { prompt: submittedPrompt, cards, chatHistory: priorHistory },
     })
       .then(({ cards: generated, message }) => {
         if (Array.isArray(generated))
@@ -197,7 +198,10 @@ export default function CardAddBulk() {
               tags: Array.isArray(c.tags) ? c.tags.join(", ") : (c.tags || ""),
             })),
           );
-        setChatHistory((prev) => [...prev, { role: "assistant", message }]);
+        setChatHistory((prev) => [
+          ...prev,
+          { role: "assistant", message, cards: generated },
+        ]);
         textareaRef.current?.focus();
       })
       .catch((err) => {
