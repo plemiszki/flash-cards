@@ -7,6 +7,10 @@
     <% unless controller_name == "sessions" %>
       <%= javascript_include_tag 'application' %>
     <% end %>
+    <%= vite_client_tag %>
+    <%= vite_react_refresh_tag %>
+    <%= vite_javascript_tag 'application.jsx' %>
+
   </head>
   <body class="admin">
     <% if controller_name == "sessions" %>

@@ -13,7 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require_tree .
+//= require cable
+//= require errors
+//= require library/jquery.nice-select
 
 $(document).ready(function() {
   $('#admin-sidebar ul a').each(function() {

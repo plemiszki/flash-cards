@@ -1,17 +1,13 @@
 {
   "name": "flash-cards",
   "scripts": {
-    "heroku-postbuild": "webpack --mode production",
-    "dev": "webpack --watch"
+    "dev": "vite dev"
   },
   "dependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.1",
     "@rails/actioncable": "^8.1.300",
-    "babel-loader": "^9.0.0",
     "change-case": "^4.0.0",
     "handy-components": "^3.0.0",
     "jquery": "^3.0.0",
@@ -21,11 +17,14 @@
     "react-dom": "^19.0.0",
     "react-modal": "^3.0.0",
     "styled-jsx": "^5.0.0",
-    "title-case": "^3.0.0",
-    "webpack": "^5.0.0",
-    "webpack-cli": "^5.0.0"
+    "title-case": "^3.0.0"
   },
   "engines": {
     "node": "24.x"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.3",
+    "vite": "^8.1.3",
+    "vite-plugin-ruby": "^5.2.2"
   }
 }

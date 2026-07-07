@@ -25,6 +25,7 @@ gem 'redis'
 gem 'sassc-rails'
 gem 'sidekiq'
 gem 'uglifier'
+gem 'vite_rails'
 
 group :test do
   gem 'rspec-rails'

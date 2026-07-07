@@ -93,7 +93,10 @@ export default function CardAddBulk() {
       return acc;
     }, []);
     const saveTagsForCard = (cardId, card) => {
-      const tagNames = (card.tags || "").split(",").map((s) => s.trim()).filter(Boolean);
+      const tagNames = (card.tags || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
       const matchedTags = tagNames.flatMap((name) => {
         const found = availableTags.find(
           (t) => t.name.toLowerCase() === name.toLowerCase(),
@@ -195,7 +198,7 @@ export default function CardAddBulk() {
           setCards(
             generated.map((c) => ({
               ...c,
-              tags: Array.isArray(c.tags) ? c.tags.join(", ") : (c.tags || ""),
+              tags: Array.isArray(c.tags) ? c.tags.join(", ") : c.tags || "",
             })),
           );
         setChatHistory((prev) => [
@@ -417,7 +420,12 @@ export default function CardAddBulk() {
               handleGenerate();
             }
           }}
-          style={{ display: "block", width: "100%", boxSizing: "border-box", marginBottom: 20 }}
+          style={{
+            display: "block",
+            width: "100%",
+            boxSizing: "border-box",
+            marginBottom: 20,
+          }}
         />
         <div style={{ marginBottom: 30 }}>
           <Button
@@ -455,7 +463,9 @@ export default function CardAddBulk() {
               <div style={{ position: "absolute", top: 10, right: 12 }}>
                 {card.result === "success" ? (
                   <span
-                    onClick={() => window.open(`/cards/${card.savedId}`, "_blank")}
+                    onClick={() =>
+                      window.open(`/cards/${card.savedId}`, "_blank")
+                    }
                     style={{
                       color: "#4caf50",
                       fontSize: 18,
@@ -510,7 +520,13 @@ export default function CardAddBulk() {
                 ) : (
                   renderField(card, index, "answer", card.result === "success")
                 )}
-                {renderField(card, index, "tags", card.result === "success", "Tags")}
+                {renderField(
+                  card,
+                  index,
+                  "tags",
+                  card.result === "success",
+                  "Tags",
+                )}
               </div>
               {card.result === "error" && (
                 <div style={{ marginTop: 8, color: "red", fontSize: 12 }}>
@@ -611,11 +627,23 @@ export default function CardAddBulk() {
           background: #aaa;
           animation: dot-pulse 1.2s infinite ease-in-out;
         }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
+        .dot:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+        .dot:nth-child(3) {
+          animation-delay: 0.4s;
+        }
         @keyframes dot-pulse {
-          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-          40% { opacity: 1; transform: scale(1); }
+          0%,
+          80%,
+          100% {
+            opacity: 0.3;
+            transform: scale(0.8);
+          }
+          40% {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
       `}</style>
     </div>
