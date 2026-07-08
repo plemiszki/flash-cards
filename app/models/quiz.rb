@@ -636,6 +636,176 @@ class Quiz < ActiveRecord::Base
         linkUrl: @verb.url,
         validIf: '.*\.$',
       }
+    when 'French - Verb - Past - First Person Singular'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
+      synonyms = @verb.synonyms
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "I #{@verb.english_past_tense}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          verb.past(subject: "je")
+        end,
+        answers: [
+          @verb.past(subject: "je"),
+        ],
+        highlightButton: question.highlightable,
+        highlighted: @verb.highlights.exists?,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Je ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Verb - Past - First Person Plural'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
+      synonyms = @verb.synonyms
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "We #{@verb.english_past_tense}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          verb.past(subject: "nous")
+        end,
+        answers: [
+          @verb.past(subject: "nous"),
+        ],
+        highlightButton: question.highlightable,
+        highlighted: @verb.highlights.exists?,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Nous ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Verb - Past - Second Person Singular (Formal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
+      synonyms = @verb.synonyms
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You #{@verb.english_past_tense}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          verb.past(subject: "vous")
+        end,
+        answers: [
+          @verb.past(subject: "vous"),
+        ],
+        description: 'formal',
+        highlightButton: question.highlightable,
+        highlighted: @verb.highlights.exists?,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Vous ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Verb - Past - Second Person Singular (Informal)'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
+      synonyms = @verb.synonyms
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "You #{@verb.english_past_tense}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          verb.past(subject: "tu")
+        end,
+        answers: [
+          @verb.past(subject: "tu"),
+        ],
+        description: 'informal',
+        highlightButton: question.highlightable,
+        highlighted: @verb.highlights.exists?,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Tu ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Verb - Past - Third Person Singular'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
+      synonyms = @verb.synonyms
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "He #{@verb.english_past_tense}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          verb.past(subject: "il")
+        end,
+        answers: [
+          @verb.past(subject: "il"),
+        ],
+        highlightButton: question.highlightable,
+        highlighted: @verb.highlights.exists?,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Il ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
+    when 'French - Verb - Past - Third Person Plural'
+      @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
+      synonyms = @verb.synonyms
+      obj = {
+        wordId: @verb.id,
+        entityName: 'frenchVerb',
+        streak: @verb.streak,
+        streakFreezeExpiration: @verb.streak_freeze_expiration.to_i,
+        lastStreakAdd: @verb.last_streak_add.try(:in_time_zone, "America/New_York").try(:to_time).try(:to_i),
+        question: "They #{@verb.english_past_tense}.".capitalize,
+        indeterminate: @verb.just_synonyms.map do |verb|
+          verb.past(subject: "ils")
+        end,
+        answers: [
+          @verb.past(subject: "ils"),
+        ],
+        highlightButton: question.highlightable,
+        highlighted: @verb.highlights.exists?,
+        tags: @verb.tags.pluck(:name),
+        note: @verb.note,
+        editLink: "/french_verbs/#{@verb.id}",
+        editLinkText: "Edit Verb",
+        highlightText: @verb.french,
+        answerPlaceholder: "Ils ",
+        linkUrl: @verb.url,
+        validIf: '.*\.$',
+      }
     when 'French - Verb - Past Participle'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
       raise NoVerbFormError if @verb.forms["past_perfect"].nil?

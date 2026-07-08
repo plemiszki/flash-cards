@@ -11,6 +11,24 @@ class FrenchVerb < ActiveRecord::Base
     "ils" => "se"
   }
 
+  AVOIR_CONJUGATIONS = {
+    "je" => "ai",
+    "tu" => "as",
+    "il" => "a",
+    "nous" => "avons",
+    "vous" => "avez",
+    "ils" => "ont"
+  }
+
+  ETRE_CONJUGATIONS = {
+    "je" => "suis",
+    "tu" => "es",
+    "il" => "est",
+    "nous" => "sommes",
+    "vous" => "êtes",
+    "ils" => "sont"
+  }
+
   validates_presence_of :english, :french, :english_past_tense
   validates_uniqueness_of :english, scope: :french, message: '/ French combo already used'
   validates :forms, json: { schema: JSON.parse(File.read(SCHEMA)) }
@@ -64,6 +82,28 @@ class FrenchVerb < ActiveRecord::Base
         "#{subject[0]}'#{form}.".capitalize
       else
         "#{subject} #{form}.".capitalize
+      end
+    end
+  end
+
+  def past(subject:)
+    participle = forms["past_perfect"]["participle"]
+    auxiliary = (reflexive? || use_etre?) ? ETRE_CONJUGATIONS[subject] : AVOIR_CONJUGATIONS[subject]
+    vowel_sound = French.vowel_sound?(auxiliary[0])
+    if reflexive?
+      reflexive_pronoun = REFLEXIVE_PRONOUN_MAP[subject]
+      reflexive_pronoun_elides = reflexive_pronoun.ends_with?('e')
+      if vowel_sound && reflexive_pronoun_elides
+        "#{subject} #{reflexive_pronoun[0]}'#{auxiliary} #{participle}.".capitalize
+      else
+        "#{subject} #{reflexive_pronoun} #{auxiliary} #{participle}.".capitalize
+      end
+    else
+      subject_elides = (subject == 'je')
+      if vowel_sound && subject_elides
+        "#{subject[0]}'#{auxiliary} #{participle}.".capitalize
+      else
+        "#{subject} #{auxiliary} #{participle}.".capitalize
       end
     end
   end

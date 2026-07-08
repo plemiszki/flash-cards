@@ -170,6 +170,30 @@
   name: French - Verb - Future - Third Person Plural
   entity: FrenchVerb
   highlightable: true
+- id: 181
+  name: French - Verb - Past - First Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 182
+  name: French - Verb - Past - First Person Plural
+  entity: FrenchVerb
+  highlightable: true
+- id: 183
+  name: French - Verb - Past - Second Person Singular (Formal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 184
+  name: French - Verb - Past - Second Person Singular (Informal)
+  entity: FrenchVerb
+  highlightable: true
+- id: 185
+  name: French - Verb - Past - Third Person Singular
+  entity: FrenchVerb
+  highlightable: true
+- id: 186
+  name: French - Verb - Past - Third Person Plural
+  entity: FrenchVerb
+  highlightable: true
 - id: 26
   name: Spanish - Single Noun
   entity: SpanishNoun
