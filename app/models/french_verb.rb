@@ -11,7 +11,7 @@ class FrenchVerb < ActiveRecord::Base
     "ils" => "se"
   }
 
-  validates_presence_of :english, :french
+  validates_presence_of :english, :french, :english_past_tense
   validates_uniqueness_of :english, scope: :french, message: '/ French combo already used'
   validates :forms, json: { schema: JSON.parse(File.read(SCHEMA)) }
 

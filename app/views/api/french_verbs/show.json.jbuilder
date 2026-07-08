@@ -1,6 +1,7 @@
 json.frenchVerb do
   json.id @french_verb.id
   json.english @french_verb.english
+  json.englishPastTense @french_verb.english_past_tense
   json.french @french_verb.french
   json.note @french_verb.note
   json.forms @french_verb.forms

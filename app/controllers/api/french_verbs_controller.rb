@@ -54,6 +54,7 @@ class Api::FrenchVerbsController < AdminController
   def french_verb_params
     result = params[:french_verb].permit(
       :english,
+      :english_past_tense,
       :french,
       :streak,
       :last_streak_add,

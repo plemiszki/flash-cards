@@ -58,7 +58,7 @@ export default class FrenchVerbDetails extends React.Component {
             selector: "select",
             func: Details.changeDropdownField.bind(this),
           });
-        }
+        },
       );
     });
   }
@@ -104,9 +104,9 @@ export default class FrenchVerbDetails extends React.Component {
               spinner: false,
               errors,
             });
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -126,17 +126,23 @@ export default class FrenchVerbDetails extends React.Component {
         <div className="white-box">
           <div className="row">
             {Details.renderField.bind(this)({
-              columnWidth: 4,
-              entity: "frenchVerb",
-              property: "english",
-            })}
-            {Details.renderField.bind(this)({
-              columnWidth: 4,
+              columnWidth: 3,
               entity: "frenchVerb",
               property: "french",
             })}
             {Details.renderField.bind(this)({
-              columnWidth: 4,
+              columnWidth: 3,
+              entity: "frenchVerb",
+              property: "english",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 3,
+              entity: "frenchVerb",
+              property: "englishPastTense",
+              columnHeader: "English - Past Tense",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 3,
               entity: "frenchVerb",
               property: "note",
             })}
@@ -211,7 +217,7 @@ export default class FrenchVerbDetails extends React.Component {
                     this.setState({
                       errors,
                     });
-                  }
+                  },
                 );
               }}
             />

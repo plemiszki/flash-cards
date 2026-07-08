@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_08_144937) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_08_150232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -126,7 +126,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_08_144937) do
   create_table "french_verbs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "english", null: false
-    t.string "english_past_tense"
+    t.string "english_past_tense", null: false
     t.jsonb "forms", default: {}
     t.string "french", null: false
     t.date "last_streak_add"
