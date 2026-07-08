@@ -88,7 +88,11 @@ class FrenchVerb < ActiveRecord::Base
 
   def past(subject:)
     participle = forms["past_perfect"]["participle"]
-    auxiliary = (reflexive? || use_etre?) ? ETRE_CONJUGATIONS[subject] : AVOIR_CONJUGATIONS[subject]
+    takes_etre = reflexive? || use_etre?
+    if takes_etre && ["nous", "ils"].include?(subject) && !participle.ends_with?('s') && !participle.ends_with?('x')
+      participle = "#{participle}s"
+    end
+    auxiliary = takes_etre ? ETRE_CONJUGATIONS[subject] : AVOIR_CONJUGATIONS[subject]
     vowel_sound = French.vowel_sound?(auxiliary[0])
     if reflexive?
       reflexive_pronoun = REFLEXIVE_PRONOUN_MAP[subject]
