@@ -123,7 +123,7 @@ export default class NewEntity extends React.Component {
           if (callback) {
             callback(
               response[responseKey || entityNamePlural],
-              entityNamePlural
+              entityNamePlural,
             );
           }
           if (callbackFullProps) {
@@ -142,9 +142,9 @@ export default class NewEntity extends React.Component {
               selector: ".admin-modal select",
               func: Details.changeField.bind(this, this.changeFieldArgs()),
             });
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -182,7 +182,7 @@ export default class NewEntity extends React.Component {
           if (callback) {
             callback(
               response[responseKey || entityNamePlural],
-              entityNamePlural
+              entityNamePlural,
             );
           }
           if (callbackFullProps) {
@@ -201,9 +201,9 @@ export default class NewEntity extends React.Component {
               selector: ".admin-modal select",
               func: Details.changeField.bind(this, this.changeFieldArgs()),
             });
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -262,7 +262,7 @@ export default class NewEntity extends React.Component {
               <select
                 onChange={Details.changeField.bind(
                   this,
-                  this.changeFieldArgs()
+                  this.changeFieldArgs(),
                 )}
                 value={this.state.noun.gender}
                 data-entity="noun"
@@ -516,7 +516,7 @@ export default class NewEntity extends React.Component {
               <select
                 onChange={Details.changeField.bind(
                   this,
-                  this.changeFieldArgs()
+                  this.changeFieldArgs(),
                 )}
                 value={this.state.spanishNoun.gender}
                 data-entity="spanishNoun"
@@ -565,7 +565,7 @@ export default class NewEntity extends React.Component {
               <select
                 onChange={Details.changeField.bind(
                   this,
-                  this.changeFieldArgs()
+                  this.changeFieldArgs(),
                 )}
                 value={this.state.frenchNoun.gender}
                 data-entity="frenchNoun"
@@ -629,14 +629,20 @@ export default class NewEntity extends React.Component {
         return [
           <div key="1" className="row">
             {Details.renderField.bind(this)({
-              columnWidth: 5,
+              columnWidth: 4,
               entity: "frenchVerb",
               property: "french",
             })}
             {Details.renderField.bind(this)({
-              columnWidth: 5,
+              columnWidth: 3,
               entity: "frenchVerb",
               property: "english",
+            })}
+            {Details.renderField.bind(this)({
+              columnWidth: 3,
+              entity: "frenchVerb",
+              property: "englishPastTense",
+              columnHeader: "English - Past Tense",
             })}
             {Details.renderSwitch.bind(this)({
               columnWidth: 2,
@@ -803,7 +809,7 @@ export default class NewEntity extends React.Component {
               <select
                 onChange={Details.changeField.bind(
                   this,
-                  this.changeFieldArgs()
+                  this.changeFieldArgs(),
                 )}
                 value={this.state.frenchCountry.gender}
                 data-entity="frenchCountry"
