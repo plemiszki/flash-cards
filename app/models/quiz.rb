@@ -808,7 +808,7 @@ class Quiz < ActiveRecord::Base
       }
     when 'French - Verb - Past Participle'
       @verb = French::get_verb(quiz_question, @french_verbs) unless quiz_question.chained
-      raise NoVerbFormError if @verb.forms["past_perfect"].nil?
+      raise NoVerbFormError if @verb.forms.dig("past_perfect", "participle").blank?
       past_participle = @verb.forms["past_perfect"]["participle"]
       obj = {
         wordId: @verb.id,
@@ -1946,10 +1946,7 @@ class Quiz < ActiveRecord::Base
   private
 
   def check_for_future_form(verb, pronoun)
-    future_forms = verb.forms["future"]
-    raise NoVerbFormError if future_forms.nil?
-    verb_form = future_forms["je"]
-    raise NoVerbFormError unless verb_form.present?
+    raise NoVerbFormError if verb.forms.dig("future", pronoun).blank?
   end
 
   def set_past_symbols
